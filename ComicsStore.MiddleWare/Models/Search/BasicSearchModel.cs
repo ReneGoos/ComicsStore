@@ -1,0 +1,16 @@
+﻿using ComicsStore.Data.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ComicsStore.MiddleWare.Models.Search
+{
+    public class BasicSearchModel
+    {
+        public string Name { get; set; }
+        public string Remark { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime DateUpdate { get; set; }
+    }
+}
