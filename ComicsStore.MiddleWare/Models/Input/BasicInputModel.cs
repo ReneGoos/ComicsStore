@@ -4,6 +4,7 @@ namespace ComicsStore.MiddleWare.Models.Input
 {
     public class BasicInputModel
     {
+        public string Name { get; set; }
         public string Remark { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime DateUpdate { get; set; }

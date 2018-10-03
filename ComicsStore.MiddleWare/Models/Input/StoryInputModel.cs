@@ -6,8 +6,6 @@ namespace ComicsStore.MiddleWare.Models.Input
 {
     public class StoryInputModel : BasicInputModel
     {
-        [Required(ErrorMessage = "Story Name is required"), MaxLength(255)]
-        public string StoryName { get; set; }
         [EnumDataType(typeof(StoryType), ErrorMessage = "Story type value doesn't exist within enum")]
         public StoryType StoryType { get; set; }
         public int? StoryNumber { get; set; }

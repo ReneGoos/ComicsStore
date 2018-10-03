@@ -19,7 +19,7 @@ namespace ComicsStore.Data.Model
 
         public int Id { get; set; }
         [Required(ErrorMessage = "Book Name is required"), MaxLength(255)]
-        public string BookName { get; set; }
+        public string Name { get; set; }
         [EnumDataType(typeof(BookType), ErrorMessage = "Book type value doesn't exist within enum")]
         public BookType BookType { get; set; }
         [EnumDataType(typeof(Active), ErrorMessage = "Active value doesn't exist within enum")]

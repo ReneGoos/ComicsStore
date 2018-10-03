@@ -8,7 +8,6 @@ namespace ComicsStore.MiddleWare.Models.Output
 {
     public class StoryOutputModel : BasicOutputModel
     {
-        public string StoryName { get; set; }
         public StoryType StoryType { get; set; }
         public int? StoryNumber { get; set; }
         public double? Pages { get; set; }

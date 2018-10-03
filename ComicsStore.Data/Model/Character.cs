@@ -16,7 +16,7 @@ namespace ComicsStore.Data.Model
 
         public int Id { get; set; }
         [Required(ErrorMessage = "Character Name is required"), MaxLength(255)]
-        public string CharacterName { get; set; }
+        public string Name { get; set; }
         public string Remark { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime DateUpdate { get; set; }

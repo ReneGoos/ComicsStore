@@ -4,8 +4,6 @@ namespace ComicsStore.Data.Model
 {
     public class ComicsStoreDbContext : DbContext
     {
-        private readonly string _conn;
-
         public ComicsStoreDbContext(DbContextOptions<ComicsStoreDbContext> options)
             : base(options)
         {
@@ -71,7 +69,7 @@ namespace ComicsStore.Data.Model
                 .WithMany(p => p.BookPublisher);
 
             modelBuilder.Entity<Code>()
-                .HasIndex(c => c.CodeName)
+                .HasIndex(c => c.Name)
                 .IsUnique(true);
         }
 

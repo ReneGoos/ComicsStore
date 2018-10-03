@@ -38,7 +38,7 @@ namespace ComicsStore.MiddleWare.Repositories
                 .Include(s => s.StoryArtist).ThenInclude(sa => sa.Artist)
                 .Include(s => s.StoryCharacter).ThenInclude(sc => sc.Character)
                 .Include(s => s.StoryBook).ThenInclude(sb => sb.Book)
-                .Where(s => model.Name == null || s.StoryName.ToLower().Contains(model.Name.ToLower())).ToListAsync();
+                .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
 
             return stories;
         }

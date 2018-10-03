@@ -16,7 +16,7 @@ namespace ComicsStore.Data.Model
 
         public int Id { get; set; }
         [Required(ErrorMessage = "Series Name is required"), MaxLength(255)]
-        public string SeriesName { get; set; }
+        public string Name { get; set; }
         public string Remark { get; set; }
         public int? SeriesNumber { get; set; }
         [Required(ErrorMessage = "Two character language id is required"), MaxLength(2)]

@@ -7,7 +7,6 @@ namespace ComicsStore.MiddleWare.Models.Output
 {
     public class BookOutputModel : BasicOutputModel
     {
-        public string BookName { get; set; }
         public BookType BookType { get; set; }
         public Active Active { get; set; }
         public int FirstYear { get; set; }

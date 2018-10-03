@@ -18,7 +18,7 @@ namespace ComicsStore.Data.Model
 
         public int Id { get; set; }
         [Required(ErrorMessage = "Story Name is required"), MaxLength(255)]
-        public string StoryName { get; set; }
+        public string Name { get; set; }
         [EnumDataType(typeof(StoryType), ErrorMessage = "Story type value doesn't exist within enum")]
         public StoryType StoryType { get; set; }
         public int? StoryNumber { get; set; }

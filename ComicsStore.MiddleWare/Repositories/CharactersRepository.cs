@@ -34,7 +34,7 @@ namespace ComicsStore.MiddleWare.Repositories
         public Task<List<Character>> GetAsync(BasicSearchModel model)
         {
             var characters = _context.Characters
-                .Where(s => model.Name == null || s.CharacterName.ToLower().Contains(model.Name.ToLower())).ToListAsync();
+                .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
 
             return characters;
         }

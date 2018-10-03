@@ -98,7 +98,9 @@ namespace ComicsStore.API
                 using (var context = serviceProvider.GetService<ComicsStoreDbContext>())
                 {
 //                  context.Database.SetInitializer(new CreateDatabaseIfNotExists<ComicsStoreDbContext>());
-//                    context.Database.Migrate();
+//                  context.Database.Migrate();
+                    context.Database.EnsureCreated();
+                    context.Database.ExecuteSqlCommand("PRAGMA foreign_keys = ON");
                 }
                 app.UseDeveloperExceptionPage();
             }
