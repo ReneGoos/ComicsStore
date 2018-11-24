@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace ComicsStore.MiddleWare.Models.Output
 {
     public class PublisherOutputModel : BasicOutputModel
     {
-        public ICollection<BookOutputModel> BookPublisher { get; set; }
+        public ICollection<BasicBookOutputModel> BookPublisher { get; set; }
     }
 }

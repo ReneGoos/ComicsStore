@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace ComicsStore.MiddleWare.Models.Output
+﻿namespace ComicsStore.MiddleWare.Models.Output
 {
-    public class BookSeriesOutputModel : BasicOutputModel
+    public class BookSeriesOutputModel
     {
+        public int SeriesId { get; set; }
         public string SeriesNr { get; set; }
         public int? SeriesOrder { get; set; }
-        public int? SeriesNumber { get; set; }
-        public string SeriesLanguage { get; set; }
+
+        public SeriesOnlyOutputModel Series { get; set; }
     }
 }

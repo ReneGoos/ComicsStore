@@ -12,10 +12,16 @@ namespace ComicsStore.MiddleWare.Services
     public class BooksService : IComicsStoreService<BookInputModel, BookOutputModel, BasicSearchModel>
     {
         private readonly IComicsStoreRepository<Book, BasicSearchModel> _booksRepository;
+        private readonly IComicsStoreCrossRepository<BookPublisher> _bookPublishersRepository;
+        private readonly IComicsStoreCrossRepository<BookSeries> _bookSeriesRepository;
 
-        public BooksService(IComicsStoreRepository<Book, BasicSearchModel> booksRepository)
+        public BooksService(IComicsStoreRepository<Book, BasicSearchModel> booksRepository,
+            IComicsStoreCrossRepository<BookPublisher> bookPublishersRepository,
+            IComicsStoreCrossRepository<BookSeries> bookSeriesRepository)
         {
             _booksRepository = booksRepository;
+            _bookPublishersRepository = bookPublishersRepository;
+            _bookSeriesRepository = bookSeriesRepository;
         }
 
         public async Task<BookOutputModel> AddAsync(BookInputModel bookInput)

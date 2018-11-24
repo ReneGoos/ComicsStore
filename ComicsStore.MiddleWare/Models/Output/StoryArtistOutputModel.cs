@@ -1,12 +1,13 @@
 ﻿using ComicsStore.Data.Model;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace ComicsStore.MiddleWare.Models.Output
 {
-    public class StoryArtistOutputModel : BasicOutputModel
+    public class StoryArtistOutputModel
     {
-        public ArtistType ArtistType { get; set; }
+        public int ArtistId { get; set; }
+        public List<string> ArtistType { get; set; }
+
+        public ArtistOnlyOutputModel Artist { get; set; }
     }
 }

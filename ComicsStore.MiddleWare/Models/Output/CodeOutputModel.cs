@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace ComicsStore.MiddleWare.Models.Output
 {
     public class CodeOutputModel : BasicOutputModel
     {
-        public ICollection<SeriesOutputModel> SeriesCode { get; set; }
-        public ICollection<StoryOutputModel> StoryCode { get; set; }
+        public ICollection<StoryOutputModel> Story { get; set; }
+        public ICollection<SeriesOutputModel> Series { get; set; }
     }
 }

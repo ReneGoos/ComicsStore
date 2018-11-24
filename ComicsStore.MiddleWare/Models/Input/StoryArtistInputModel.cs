@@ -1,10 +1,12 @@
-﻿using ComicsStore.Data.Model;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace ComicsStore.MiddleWare.Models.Input
 {
-    public class StoryArtistInputModel : BasicInputModel
+    public class StoryArtistInputModel
     {
-        public ArtistType ArtistType { get; set; }
+        public int ArtistId { get; set; }
+        public List<string> ArtistType { get; set; }
+
+        public ArtistInputModel Artist { get; set; }
     }
 }

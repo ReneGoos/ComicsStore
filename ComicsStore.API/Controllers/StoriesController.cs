@@ -26,7 +26,8 @@ namespace ComicsStore.API.Controllers
         [ProducesResponseType(typeof(List<StoryOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAsync([FromQuery] StorySearchModel storySearchModel)
         {
-            return Ok(await _storiesService.GetAsync(storySearchModel));
+            var result = await _storiesService.GetAsync(storySearchModel);
+            return Ok(result);
         }
 
         [HttpGet("{id}", Name = "StoryGetAsync")]

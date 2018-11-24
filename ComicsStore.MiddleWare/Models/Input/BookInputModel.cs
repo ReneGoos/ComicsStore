@@ -1,22 +1,17 @@
-﻿using ComicsStore.Data.Model;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace ComicsStore.MiddleWare.Models.Input
 {
     public class BookInputModel : BasicInputModel
     {
-        [EnumDataType(typeof(BookType), ErrorMessage = "Book type value doesn't exist within enum")]
-        public BookType BookType { get; set; }
-        [EnumDataType(typeof(Active), ErrorMessage = "Active value doesn't exist within enum")]
-        public Active Active { get; set; }
+        public string BookType { get; set; }
+        public string Active { get; set; }
         public int FirstYear { get; set; }
         public int? ThisYear { get; set; }
         public int? FirstPrint { get; set; }
 
         public ICollection<BookSeriesInputModel> BookSeries { get; set; }
-        public ICollection<PublisherInputModel> BookPublisher { get; set; }
-        public ICollection<StoryInputModel> StoryBook { get; set; }
+        public ICollection<BookPublisherInputModel> BookPublisher { get; set; }
+        public ICollection<BookStoryInputModel> StoryBook { get; set; }
     }
 }

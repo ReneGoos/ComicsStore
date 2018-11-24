@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,27 +7,21 @@ using ComicsStore.MiddleWare.Models.Search;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class BooksRepository : ComicsStoreRepository, IComicsStoreRepository<Book, BasicSearchModel>
+    public class BooksRepository : ComicsStoreMainRepository<Book>, IComicsStoreRepository<Book, BasicSearchModel>
     {
         public BooksRepository(ComicsStoreDbContext context)
             : base(context)
         {
         }
 
-        public async Task<Book> AddAsync(Book book)
+        public Task<Book> AddAsync(Book book)
         {
-            var bookEntity = await _context.Books.AddAsync(book);
-
-            await SaveChangesAsync();
-
-            return bookEntity.Entity;
+            return AddItemAsync(_context.Books, book);
         }
 
-        public async Task DeleteAsync(Book book)
+        public Task DeleteAsync(Book book)
         {
-            _context.Books.Remove(book);
-
-            await SaveChangesAsync();
+            return RemoveItemAsync(_context.Books, book);
         }
 
         public Task<List<Book>> GetAsync(BasicSearchModel model)
@@ -41,16 +34,12 @@ namespace ComicsStore.MiddleWare.Repositories
 
         public Task<Book> GetAsync(int bookId)
         {
-            return _context.Books.SingleOrDefaultAsync(s => s.Id == bookId);
+            return _context.Books.FindAsync(bookId);
         }
 
-        public async Task<Book> UpdateAsync(Book book)
+        public Task<Book> UpdateAsync(Book book)
         {
-            var bookEntity = _context.Books.Update(book);
-
-            await SaveChangesAsync();
-
-            return bookEntity.Entity;
+            return UpdateItemAsync(_context.Books, book);
         }
     }
 }

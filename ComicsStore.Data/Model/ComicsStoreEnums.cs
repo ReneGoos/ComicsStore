@@ -1,4 +1,6 @@
-﻿namespace ComicsStore.Data.Model
+﻿using System;
+
+namespace ComicsStore.Data.Model
 {
     public enum Active
     {
@@ -15,24 +17,20 @@
 
     public enum StoryType
     {
-        sequential = 0,
-        single = 1,
+        story = 0,
+        one = 1,
         gag = 2,
         cartoon = 3
     }
 
+    [Flags]
     public enum ArtistType
     {
-        artist = 0,
-        penciller = 1,
-        inker = 2,
-        colorist = 3,
-        writer = 4,
-        writer_artist = 5,
-        writer_penciller = 6,
-        writer_inker = 7,
-        writer_colorist = 8,
-        inspiration = 9
+        artist = 1,
+        writer = 2,
+        penciller = 4,
+        inker = 8,
+        colorist = 16,
+        teacher = 32
     }
-
 }

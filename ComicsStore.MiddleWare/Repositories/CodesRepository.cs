@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,27 +7,21 @@ using ComicsStore.MiddleWare.Models.Search;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class CodesRepository : ComicsStoreRepository, IComicsStoreRepository<Code, BasicSearchModel>
+    public class CodesRepository : ComicsStoreMainRepository<Code>, IComicsStoreRepository<Code, BasicSearchModel>
     {
         public CodesRepository(ComicsStoreDbContext context)
             : base(context)
         {
         }
 
-        public async Task<Code> AddAsync(Code code)
+        public Task<Code> AddAsync(Code code)
         {
-            var codeEntity = await _context.Codes.AddAsync(code);
-
-            await SaveChangesAsync();
-
-            return codeEntity.Entity;
+            return AddItemAsync(_context.Codes, code);
         }
 
-        public async Task DeleteAsync(Code code)
+        public Task DeleteAsync(Code code)
         {
-            _context.Codes.Remove(code);
-
-            await SaveChangesAsync();
+            return RemoveItemAsync(_context.Codes, code);
         }
 
         public Task<List<Code>> GetAsync(BasicSearchModel model)
@@ -41,16 +34,12 @@ namespace ComicsStore.MiddleWare.Repositories
 
         public Task<Code> GetAsync(int codeId)
         {
-            return _context.Codes.SingleOrDefaultAsync(s => s.Id == codeId);
+            return _context.Codes.FindAsync(codeId);
         }
 
-        public async Task<Code> UpdateAsync(Code code)
+        public Task<Code> UpdateAsync(Code code)
         {
-            var codeEntity = _context.Codes.Update(code);
-
-            await SaveChangesAsync();
-
-            return codeEntity.Entity;
+            return UpdateItemAsync(_context.Codes, code);
         }
     }
 }

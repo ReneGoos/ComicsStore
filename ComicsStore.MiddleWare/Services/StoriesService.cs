@@ -4,6 +4,7 @@ using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,10 +13,20 @@ namespace ComicsStore.MiddleWare.Services
     public class StoriesService : IStoriesService
     {
         private readonly IStoriesRepository _storiesRepository;
+        private readonly IComicsStoreCrossRepository<StoryArtist> _storyArtistsRepository;
+        private readonly IComicsStoreCrossRepository<StoryBook> _storyBooksRepository;
+        private readonly IComicsStoreCrossRepository<StoryCharacter> _storyCharactersRepository;
 
-        public StoriesService(IStoriesRepository storiesRepository)
+        public StoriesService(IStoriesRepository storiesRepository,
+            IComicsStoreCrossRepository<StoryArtist> storyArtistsRepository,
+            IComicsStoreCrossRepository<StoryBook> storyBooksRepository,
+            IComicsStoreCrossRepository<StoryCharacter> storyCharactersRepository
+            )
         {
             _storiesRepository = storiesRepository;
+            _storyArtistsRepository = storyArtistsRepository;
+            _storyBooksRepository = storyBooksRepository;
+            _storyCharactersRepository = storyCharactersRepository;
         }
 
         public async Task<StoryOutputModel> AddAsync(StoryInputModel storyInput)
@@ -46,9 +57,18 @@ namespace ComicsStore.MiddleWare.Services
 
         public async Task<IEnumerable<StoryOutputModel>> GetAsync(StorySearchModel searchModel)
         {
-            var stories =  await _storiesRepository.GetAsync(searchModel);
+            var stories = await _storiesRepository.GetAsync(searchModel);
 
-            return Mapper.Map<List<StoryOutputModel>>(stories);
+            try
+            {
+                var storiesOutput = Mapper.Map<List<StoryOutputModel>>(stories);
+
+                return storiesOutput;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<StoryOutputModel> GetAsync(int id)

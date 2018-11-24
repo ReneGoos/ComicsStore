@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,36 +7,29 @@ using ComicsStore.MiddleWare.Models.Search;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class StoriesRepository : ComicsStoreRepository, IStoriesRepository
+    public class StoriesRepository : ComicsStoreMainRepository<Story>, IStoriesRepository
     {
         public StoriesRepository(ComicsStoreDbContext context)
             : base(context)
         {
         }
 
-        public async Task<Story> AddAsync(Story story)
+        public Task<Story> AddAsync(Story story)
         {
-            var storyEntity = await _context.Stories.AddAsync(story);
-
-            await SaveChangesAsync();
-
-            return storyEntity.Entity;
+            return AddItemAsync(_context.Stories, story);
         }
 
-        public async Task DeleteAsync(Story story)
+        public Task DeleteAsync(Story story)
         {
-            _context.Stories.Remove(story);
-
-            await SaveChangesAsync();
+            return RemoveItemAsync(_context.Stories, story);
         }
 
         public Task<List<Story>> GetAsync(StorySearchModel model)
         {
             var stories = _context.Stories
-                .Include(s => s.Code)
-                .Include(s => s.StoryArtist).ThenInclude(sa => sa.Artist)
-                .Include(s => s.StoryCharacter).ThenInclude(sc => sc.Character)
-                .Include(s => s.StoryBook).ThenInclude(sb => sb.Book)
+                .Include(s => s.StoryArtist)
+                .Include(s => s.StoryCharacter)
+                .Include(s => s.StoryBook)
                 .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
 
             return stories;
@@ -45,7 +37,15 @@ namespace ComicsStore.MiddleWare.Repositories
 
         public Task<Story> GetAsync(int storyId)
         {
-            return _context.Stories.SingleOrDefaultAsync(s => s.Id == storyId);
+            return _context.Stories
+                .Include(s => s.Code)
+                .Include(s => s.StoryArtist)
+                .ThenInclude(sa => sa.Artist)
+                .Include(s => s.StoryCharacter)
+                .ThenInclude(sc => sc.Character)
+                .Include(s => s.StoryBook)
+                .ThenInclude(sb => sb.Book)
+                .SingleOrDefaultAsync(s => s.Id == storyId);
         }
 
         public Task<string> GetExportAsync()
@@ -88,13 +88,9 @@ namespace ComicsStore.MiddleWare.Repositories
             return null;
         }
 
-        public async Task<Story> UpdateAsync(Story story)
+        public Task<Story> UpdateAsync(Story story)
         {
-            var storyEntity = _context.Stories.Update(story);
-
-            await SaveChangesAsync();
-
-            return storyEntity.Entity;
+            return UpdateItemAsync(_context.Stories, story);
         }
     }
 }

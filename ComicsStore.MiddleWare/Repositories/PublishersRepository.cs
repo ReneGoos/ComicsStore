@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,27 +7,21 @@ using ComicsStore.MiddleWare.Models.Search;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class PublishersRepository : ComicsStoreRepository, IComicsStoreRepository<Publisher, BasicSearchModel>
+    public class PublishersRepository : ComicsStoreMainRepository<Publisher>, IComicsStoreRepository<Publisher, BasicSearchModel>
     {
         public PublishersRepository(ComicsStoreDbContext context)
             : base(context)
         {
         }
 
-        public async Task<Publisher> AddAsync(Publisher publisher)
+        public Task<Publisher> AddAsync(Publisher publisher)
         {
-            var publisherEntity = await _context.Publishers.AddAsync(publisher);
-
-            await SaveChangesAsync();
-
-            return publisherEntity.Entity;
+            return AddItemAsync(_context.Publishers, publisher);
         }
 
-        public async Task DeleteAsync(Publisher publisher)
+        public Task DeleteAsync(Publisher publisher)
         {
-            _context.Publishers.Remove(publisher);
-
-            await SaveChangesAsync();
+            return RemoveItemAsync(_context.Publishers, publisher);
         }
 
         public Task<List<Publisher>> GetAsync(BasicSearchModel model)
@@ -41,16 +34,12 @@ namespace ComicsStore.MiddleWare.Repositories
 
         public Task<Publisher> GetAsync(int publisherId)
         {
-            return _context.Publishers.SingleOrDefaultAsync(s => s.Id == publisherId);
+            return _context.Publishers.FindAsync(publisherId);
         }
 
-        public async Task<Publisher> UpdateAsync(Publisher publisher)
+        public Task<Publisher> UpdateAsync(Publisher publisher)
         {
-            var publisherEntity = _context.Publishers.Update(publisher);
-
-            await SaveChangesAsync();
-
-            return publisherEntity.Entity;
+            return UpdateItemAsync(_context.Publishers, publisher);
         }
     }
 }

@@ -19,7 +19,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace ComicsStore.API
 {
@@ -35,6 +37,10 @@ namespace ComicsStore.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc().AddJsonOptions(options => {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+            
             //var connSqlServer = @"Server=(localdb)\MSSQLLocalDB;Database=ComicsStoreAPI;Trusted_Connection=True;MultipleActiveResultSets=true;AttachDBFileName=D:\SQLLite\ComicsStoreAPI.mdf";
             var conn = Configuration.GetConnectionString("ComicsStore");
             services.AddDbContext<ComicsStoreDbContext>(options => options.UseSqlite(conn));
@@ -54,6 +60,12 @@ namespace ComicsStore.API
             services.AddScoped<IComicsStoreRepository<Publisher, BasicSearchModel>, PublishersRepository>();
             services.AddScoped<IComicsStoreRepository<Series, BasicSearchModel>, SeriesRepository>();
             services.AddScoped<IStoriesRepository, StoriesRepository>();
+
+            services.AddScoped<IComicsStoreCrossRepository<BookPublisher>, BookPublishersRepository>();
+            services.AddScoped<IComicsStoreCrossRepository<BookSeries>, BookSeriesRepository>();
+            services.AddScoped<IComicsStoreCrossRepository<StoryArtist>, StoryArtistsRepository>();
+            services.AddScoped<IComicsStoreCrossRepository<StoryBook>, StoryBooksRepository>();
+            services.AddScoped<IComicsStoreCrossRepository<StoryCharacter>, StoryCharactersRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
