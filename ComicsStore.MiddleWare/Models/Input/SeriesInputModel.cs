@@ -9,6 +9,7 @@ namespace ComicsStore.MiddleWare.Models.Input
         [RegularExpression("^[a-z]{2}$", ErrorMessage = "Language must be two lowercase characters")]
         public string SeriesLanguage { get; set; }
 
+        public int CodeId { get; set; }
         public CodeInputModel Code { get; set; }
     }
 }

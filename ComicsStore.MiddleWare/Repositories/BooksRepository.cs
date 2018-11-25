@@ -27,6 +27,9 @@ namespace ComicsStore.MiddleWare.Repositories
         public Task<List<Book>> GetAsync(BasicSearchModel model)
         {
             var books = _context.Books
+                .Include(b => b.StoryBook)
+                .Include(b => b.BookSeries)
+                .Include(b => b.BookPublisher)
                 .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
 
             return books;
@@ -34,7 +37,15 @@ namespace ComicsStore.MiddleWare.Repositories
 
         public Task<Book> GetAsync(int bookId)
         {
-            return _context.Books.FindAsync(bookId);
+            return _context.Books
+                .Include(b => b.StoryBook)
+                .ThenInclude(sb => sb.Story)
+                .Include(b => b.BookSeries)
+                .ThenInclude(bs => bs.Series)
+                .ThenInclude(s => s.Code)
+                .Include(b => b.BookPublisher)
+                .ThenInclude(bp => bp.Publisher)
+                .SingleOrDefaultAsync(b => b.Id == bookId);
         }
 
         public Task<Book> UpdateAsync(Book book)

@@ -4,7 +4,7 @@
     {
         public int SeriesId { get; set; }
         public string SeriesNr { get; set; }
-        public int? SeriesOrder { get; set; }
+        public decimal? SeriesOrder { get; set; }
 
         public SeriesOnlyOutputModel Series { get; set; }
     }

@@ -57,6 +57,10 @@ namespace ComicsStore.Data.Model
                 .HasOne(bs => bs.Series)
                 .WithMany(s => s.BookSeries);
 
+            modelBuilder.Entity<BookSeries>()
+                .Property(bs => bs.SeriesOrder)
+                .HasColumnType("numeric(18,2)");
+
             modelBuilder.Entity<BookPublisher>()
                 .HasKey(bp => new { bp.BookId, bp.PublisherId });
 
