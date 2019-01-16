@@ -37,6 +37,11 @@ namespace ComicsStore.MiddleWare.Common
             return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => value.IsSet((T)fi.GetValue(null))).Select(fi => fi.Name).ToList();
         }
 
+        public static string GetName(T value)
+        {
+            return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => value.IsSet((T)fi.GetValue(null))).Select(fi => fi.Name).FirstOrDefault();
+        }
+
         public static IList<string> GetDisplayValues(T value)
         {
             return GetNames(value).Select(obj => GetDisplayValue(Parse(obj))).ToList();

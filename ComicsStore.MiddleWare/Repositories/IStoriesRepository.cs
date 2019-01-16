@@ -6,6 +6,5 @@ namespace ComicsStore.MiddleWare.Repositories
 {
     public interface IStoriesRepository : IComicsStoreRepository<Story, StorySearchModel>
     {
-        Task<string> GetExportAsync();
     }
 }

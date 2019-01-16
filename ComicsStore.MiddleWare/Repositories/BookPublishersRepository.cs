@@ -19,14 +19,40 @@ namespace ComicsStore.MiddleWare.Repositories
             return AddItemAsync(_context.BookPublishers, bookPublisher);
         }
 
+        public Task<List<BookPublisher>> AddAsync(IEnumerable<BookPublisher> value)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task DeleteAsync(BookPublisher bookPublisher)
         {
             return RemoveItemAsync(_context.BookPublishers, bookPublisher);
+        }
+
+        public Task DeleteAsync(IEnumerable<BookPublisher> value)
+        {
+            throw new System.NotImplementedException();
         }
         
         public Task<BookPublisher> UpdateAsync(BookPublisher bookPublisher)
         {
             return UpdateItemAsync(_context.BookPublishers, bookPublisher, bookPublisher.BookId, bookPublisher.PublisherId);
+        }
+
+        public Task<List<BookPublisher>> UpdateAsync(IEnumerable<BookPublisher> value)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<List<BookPublisher>> GetAsync(int? id, int? crossId)
+        {
+            if (id == null && crossId == null)
+                return null;
+
+            return _context.BookPublishers
+                .Include(sa => sa.Publisher)
+                .Where(s => id != null ? s.BookId == id : s.PublisherId == crossId)
+                .ToListAsync();
         }
     }
 }

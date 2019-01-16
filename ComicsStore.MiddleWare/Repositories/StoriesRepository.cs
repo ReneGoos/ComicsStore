@@ -48,49 +48,14 @@ namespace ComicsStore.MiddleWare.Repositories
                 .SingleOrDefaultAsync(s => s.Id == storyId);
         }
 
-        public Task<string> GetExportAsync()
-        {
-            /*
-            var export = new StringBuilder();
-            export.AppendLine("type: event-export");
-            export.AppendLine("format: 1986.2");
-
-            foreach (var story in await _context.Stories.Include(s => s.TimeSlots).Where(s => s.TimeSlots.Any(ts => ts.Day > DateTime.Today)).ToListAsync())
-            {
-                export.AppendLine("=");
-                export.AppendLine($"name: {story.Name}");
-                export.AppendLine($"title: {story.Title}");
-                export.AppendLine($"description:\n{story.Description}");
-                export.AppendLine("dates:");
-
-                foreach (var timeSlot in story.TimeSlots.Where(ts => ts.Day > DateTime.Today))
-                {
-                    export.AppendLine($"\t{timeSlot.Day:dd-MM-yyyy HH:mm}");
-                }
-
-                if (story.RegularPrice > 0 || story.RegularDiscountPrice > 0)
-                {
-                    export.AppendLine("prices:");
-
-                    if (story.RegularPrice > 0)
-                    {
-                        export.AppendLine($"\tregular: {story.RegularPrice:c}");
-                    }
-
-                    if (story.RegularDiscountPrice > 0)
-                    {
-                        export.AppendLine($"\tdiscount: {story.RegularDiscountPrice:c}");
-                    }
-                }
-            }
-            return export.ToString();
-            */
-            return null;
-        }
-
         public Task<Story> UpdateAsync(Story story)
         {
             return UpdateItemAsync(_context.Stories, story);
+        }
+
+        public Task<Story> PatchAsync(int id, IDictionary<string, object> data = null)
+        {
+            return PatchItemAsync(_context.Stories, id, data);
         }
     }
 }

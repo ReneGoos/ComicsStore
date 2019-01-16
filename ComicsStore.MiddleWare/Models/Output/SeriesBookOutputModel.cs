@@ -4,7 +4,7 @@ namespace ComicsStore.MiddleWare.Models.Output
 {
     public class SeriesBookOutputModel : BasicBookOutputModel
     {
-        public string SeriesNr { get; set; }
+        public string Issue { get; set; }
         public decimal? SeriesOrder { get; set; }
     }
 }

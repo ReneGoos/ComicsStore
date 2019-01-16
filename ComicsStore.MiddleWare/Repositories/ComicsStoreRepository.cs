@@ -43,7 +43,7 @@ namespace ComicsStore.MiddleWare.Repositories
             throw new DataException(errMsg);
         }
 
-        public async Task<T> AddItemAsync(DbSet<T> collection, T item)
+        protected async Task<T> AddItemAsync(DbSet<T> collection, T item)
         {
             var entityEntry = await collection.AddAsync(item);
 
@@ -52,7 +52,7 @@ namespace ComicsStore.MiddleWare.Repositories
             return entityEntry.Entity;
         }
 
-        public async Task RemoveItemAsync(DbSet<T> collection, T item)
+        protected async Task RemoveItemAsync(DbSet<T> collection, T item)
         {
             collection.Remove(item);
 

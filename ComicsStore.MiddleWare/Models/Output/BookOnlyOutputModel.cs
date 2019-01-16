@@ -9,6 +9,6 @@ namespace ComicsStore.MiddleWare.Models.Output
         public string Active { get; set; }
         public int FirstYear { get; set; }
         public int? ThisYear { get; set; }
-        public int? FirstPrint { get; set; }
+        public string FirstPrint { get; set; }
     }
 }

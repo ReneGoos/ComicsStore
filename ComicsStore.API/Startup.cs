@@ -1,24 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare;
-using ComicsStore.MiddleWare.Models.Input;
-using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories;
 using ComicsStore.MiddleWare.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -45,13 +37,17 @@ namespace ComicsStore.API
             var conn = Configuration.GetConnectionString("ComicsStore");
             services.AddDbContext<ComicsStoreDbContext>(options => options.UseSqlite(conn));
 
-            services.AddScoped<IComicsStoreService<ArtistInputModel, ArtistOutputModel, BasicSearchModel>, ArtistsService>();
-            services.AddScoped<IComicsStoreService<BookInputModel, BookOutputModel, BasicSearchModel>, BooksService>();
-            services.AddScoped<IComicsStoreService<CharacterInputModel, CharacterOutputModel, BasicSearchModel>, CharactersService>();
-            services.AddScoped<IComicsStoreService<CodeInputModel, CodeOutputModel, BasicSearchModel>, CodesService>();
-            services.AddScoped<IComicsStoreService<PublisherInputModel, PublisherOutputModel, BasicSearchModel>, PublishersService>();
-            services.AddScoped<IComicsStoreService<SeriesInputModel, SeriesOutputModel, BasicSearchModel>, SeriesService>();
+            services.AddScoped<IArtistsService, ArtistsService>();
+            services.AddScoped<IBooksService, BooksService>();
+            services.AddScoped<ICharactersService, CharactersService>();
+            services.AddScoped<ICodesService, CodesService>();
+            services.AddScoped<IPublishersService, PublishersService>();
+            services.AddScoped<ISeriesService, SeriesService>();
             services.AddScoped<IStoriesService, StoriesService>();
+            services.AddScoped<IExportMementoService, ExportMementoService>();
+
+            services.AddScoped<IStoryArtistsService, StoryArtistsService>();
+            services.AddScoped<IBookSeriesService, BookSeriesService>();
 
             services.AddScoped<IComicsStoreRepository<Artist, BasicSearchModel>, ArtistsRepository>();
             services.AddScoped<IComicsStoreRepository<Book, BasicSearchModel>, BooksRepository>();
@@ -60,6 +56,7 @@ namespace ComicsStore.API
             services.AddScoped<IComicsStoreRepository<Publisher, BasicSearchModel>, PublishersRepository>();
             services.AddScoped<IComicsStoreRepository<Series, BasicSearchModel>, SeriesRepository>();
             services.AddScoped<IStoriesRepository, StoriesRepository>();
+            services.AddScoped<IExportMementoRepository, ExportMementoRepository>();
 
             services.AddScoped<IComicsStoreCrossRepository<BookPublisher>, BookPublishersRepository>();
             services.AddScoped<IComicsStoreCrossRepository<BookSeries>, BookSeriesRepository>();

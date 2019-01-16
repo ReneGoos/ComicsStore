@@ -15,9 +15,9 @@ namespace ComicsStore.API.Controllers
     [ApiController]
     public class CharactersController : ControllerBase
     {
-        private readonly IComicsStoreService<CharacterInputModel, CharacterOutputModel, BasicSearchModel> _charactersService;
+        private readonly ICharactersService _charactersService;
 
-        public CharactersController(IComicsStoreService<CharacterInputModel, CharacterOutputModel, BasicSearchModel> charactersService)
+        public CharactersController(ICharactersService charactersService)
         {
             _charactersService = charactersService;
         }

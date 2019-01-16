@@ -1,6 +1,6 @@
 ﻿namespace ComicsStore.MiddleWare.Models.Output
 {
-    public class BookPublisherOutputModel
+    public class BookPublisherOutputModel : BasicCrossOutputModel
     {
         public int PublisherId { get; set; }
 

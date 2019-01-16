@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ComicsStore.Data.Model
 {
@@ -13,5 +14,18 @@ namespace ComicsStore.Data.Model
 
         public Story Story { get; set; }
         public Book Book { get; set; }
+    }
+
+    public class StoryBookComparer : IEqualityComparer<StoryBook>
+    {
+        public bool Equals(StoryBook x, StoryBook y)
+        {
+            return (x.BookId == y.BookId && x.StoryId == y.StoryId);
+        }
+
+        public int GetHashCode(StoryBook x)
+        {
+            return x.StoryId + x.BookId;
+        }
     }
 }

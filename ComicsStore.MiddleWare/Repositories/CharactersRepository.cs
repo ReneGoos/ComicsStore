@@ -41,5 +41,10 @@ namespace ComicsStore.MiddleWare.Repositories
         {
             return UpdateItemAsync(_context.Characters, character);
         }
+
+        public Task<Character> PatchAsync(int id, IDictionary<string, object> data = null)
+        {
+            return PatchItemAsync(_context.Characters, id, data);
+        }
     }
 }

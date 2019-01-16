@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public interface IComicsStoreService<TIn, TOut, TSearch>
+    public interface IComicsStoreService<TIn, TPatch, TOut, TSearch>
         where TIn : BasicInputModel
+        where TPatch : BasicInputModel
         where TOut : BasicOutputModel
         where TSearch : BasicSearchModel
     {
@@ -17,10 +18,12 @@ namespace ComicsStore.MiddleWare.Services
 
         Task<bool> ExistsAsync(int id);
 
-        Task<IEnumerable<TOut>> GetAsync(TSearch searchModel);
+        Task<List<TOut>> GetAsync(TSearch searchModel);
 
         Task<TOut> GetAsync(int id);
 
-        Task<TOut> UpdateAsync(int id, TIn showInput);
+        Task<TOut> UpdateAsync(int id, TIn input);
+
+        Task<TOut> PatchAsync(int id, TPatch input);
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ComicsStore.MiddleWare.Models.Input
 {
-    public class BookPublisherInputModel
+    public class BookPublisherInputModel : BasicCrossInputModel
     {
         public int PublisherId { get; set; }
 

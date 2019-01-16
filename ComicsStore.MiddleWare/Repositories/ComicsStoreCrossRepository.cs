@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using ComicsStore.Data.Model;
@@ -12,7 +13,7 @@ namespace ComicsStore.MiddleWare.Repositories
         {
         }
 
-        public async Task<T> UpdateItemAsync(DbSet<T> collection, T item, int id, int crossId)
+        protected async Task<T> UpdateItemAsync(DbSet<T> collection, T item, int id, int crossId)
         {
             var entity = await collection.FindAsync( id, crossId );
             if (entity == null)

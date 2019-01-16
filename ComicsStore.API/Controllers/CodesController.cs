@@ -15,9 +15,9 @@ namespace ComicsStore.API.Controllers
     [ApiController]
     public class CodesController : ControllerBase
     {
-        private readonly IComicsStoreService<CodeInputModel, CodeOutputModel, BasicSearchModel> _codesService;
+        private readonly ICodesService _codesService;
 
-        public CodesController(IComicsStoreService<CodeInputModel, CodeOutputModel, BasicSearchModel> codesService)
+        public CodesController(ICodesService codesService)
         {
             _codesService = codesService;
         }

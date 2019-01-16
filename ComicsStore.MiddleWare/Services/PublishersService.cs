@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ComicsStore.Data.Model;
+using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public class PublishersService : IComicsStoreService<PublisherInputModel, PublisherOutputModel, BasicSearchModel>
+    public class PublishersService : IPublishersService
     {
         private readonly IComicsStoreRepository<Publisher, BasicSearchModel> _publishersRepository;
 
@@ -44,7 +45,7 @@ namespace ComicsStore.MiddleWare.Services
             return await _publishersRepository.GetAsync(id) != null;
         }
 
-        public async Task<IEnumerable<PublisherOutputModel>> GetAsync(BasicSearchModel searchModel)
+        public async Task<List<PublisherOutputModel>> GetAsync(BasicSearchModel searchModel)
         {
             var publishers =  await _publishersRepository.GetAsync(searchModel);
 
@@ -64,6 +65,15 @@ namespace ComicsStore.MiddleWare.Services
             publisher.Id = id;
 
             publisher = await _publishersRepository.UpdateAsync(publisher);
+
+            return Mapper.Map<PublisherOutputModel>(publisher);
+        }
+
+        public async Task<PublisherOutputModel> PatchAsync(int id, PublisherInputModel publisherInput)
+        {
+            var modifiedData = JsonHelper.ModifiedData<PublisherInputModel, Publisher>(publisherInput);
+
+            var publisher = await _publishersRepository.PatchAsync(id, modifiedData);
 
             return Mapper.Map<PublisherOutputModel>(publisher);
         }

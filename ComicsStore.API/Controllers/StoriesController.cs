@@ -97,5 +97,35 @@ namespace ComicsStore.API.Controllers
 
             return NoContent();
         }
+
+        [Route("{storyId}/Characters")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<StoryCharacterOutputModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetCharacterAsync(int storyId)
+        {
+            var artistOutput = await _storiesService.GetCharactersAsync(storyId);
+
+            if (artistOutput == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(artistOutput);
+        }
+
+        [Route("{storyId}/Books")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<StoryBookOutputModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetBookAsync(int storyId)
+        {
+            var artistOutput = await _storiesService.GetBooksAsync(storyId);
+
+            if (artistOutput == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(artistOutput);
+        }
     }
 }

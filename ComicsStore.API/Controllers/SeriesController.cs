@@ -15,9 +15,9 @@ namespace ComicsStore.API.Controllers
     [ApiController]
     public class SeriesController : ControllerBase
     {
-        private readonly IComicsStoreService<SeriesInputModel, SeriesOutputModel, BasicSearchModel> _seriesService;
+        private readonly ISeriesService _seriesService;
 
-        public SeriesController(IComicsStoreService<SeriesInputModel, SeriesOutputModel, BasicSearchModel> seriesService)
+        public SeriesController(ISeriesService seriesService)
         {
             _seriesService = seriesService;
         }

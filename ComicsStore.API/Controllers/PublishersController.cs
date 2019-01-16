@@ -15,9 +15,9 @@ namespace ComicsStore.API.Controllers
     [ApiController]
     public class PublishersController : ControllerBase
     {
-        private readonly IComicsStoreService<PublisherInputModel, PublisherOutputModel, BasicSearchModel> _publishersService;
+        private readonly IPublishersService _publishersService;
 
-        public PublishersController(IComicsStoreService<PublisherInputModel, PublisherOutputModel, BasicSearchModel> publishersService)
+        public PublishersController(IPublishersService publishersService)
         {
             _publishersService = publishersService;
         }

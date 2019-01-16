@@ -15,9 +15,9 @@ namespace ComicsStore.API.Controllers
     [ApiController]
     public class ArtistsController : ControllerBase
     {
-        private readonly IComicsStoreService<ArtistInputModel, ArtistOutputModel, BasicSearchModel> _artistsService;
+        private readonly IArtistsService _artistsService;
 
-        public ArtistsController(IComicsStoreService<ArtistInputModel, ArtistOutputModel, BasicSearchModel> artistsService)
+        public ArtistsController(IArtistsService artistsService)
         {
             _artistsService = artistsService;
         }

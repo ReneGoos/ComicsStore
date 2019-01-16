@@ -66,5 +66,19 @@ namespace ComicsStore.Tests
             Assert.NotEmpty(result);
             Assert.Equal(1, result.Count);
         }
+
+        [Fact]
+        public void EnumHelper_Name()
+        {
+            //
+            var bookType = BookType.book;
+
+            //Act
+            var result = EnumHelper<BookType>.GetName(bookType);
+
+            //Assert
+            Assert.NotEmpty(result);
+            Assert.Equal("book", result);
+        }
     }
 }

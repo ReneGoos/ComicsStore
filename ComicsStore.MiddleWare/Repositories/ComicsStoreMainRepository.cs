@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using ComicsStore.Data.Model;
@@ -22,6 +23,22 @@ namespace ComicsStore.MiddleWare.Repositories
 
             item.CreationDate = entity.CreationDate;
             _context.Entry(entity).CurrentValues.SetValues(item);
+
+            await SaveChangesAsync();
+
+            return entity;
+        }
+
+        public async Task<T> PatchItemAsync(DbSet<T> collection, int id, IDictionary<string,object> data)
+        {
+            var entity = await collection.FindAsync(id);
+            if (entity == null)
+            {
+                return null;
+            }
+
+            data["DateUpdate"] = DateTime.Today;
+            _context.Entry(entity).CurrentValues.SetValues(data);
 
             await SaveChangesAsync();
 

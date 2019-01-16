@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Models.Input;
@@ -15,9 +13,9 @@ namespace ComicsStore.API.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly IComicsStoreService<BookInputModel, BookOutputModel, BasicSearchModel> _booksService;
+        private readonly IBooksService _booksService;
 
-        public BooksController(IComicsStoreService<BookInputModel, BookOutputModel, BasicSearchModel> booksService)
+        public BooksController(IBooksService booksService)
         {
             _booksService = booksService;
         }
@@ -88,6 +86,26 @@ namespace ComicsStore.API.Controllers
             return Ok(result);
         }
 
+        [HttpPatch("{id}")]
+        [ProducesResponseType(typeof(BookOutputModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> PatchAsync(int id, [FromBody] BookInputPatchModel value)
+        {
+            if (value == null)
+            {
+                return BadRequest("Invalid input");
+            }
+
+            var result = await _booksService.PatchAsync(id, value);
+
+            if (result == null)
+            {
+                return BadRequest($"Update of book {id} failed");
+            }
+
+            return Ok(result);
+        }
+
         [HttpDelete("{id}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteAsync(int id)
@@ -95,6 +113,21 @@ namespace ComicsStore.API.Controllers
             await _booksService.DeleteAsync(id);
 
             return NoContent();
+        }
+
+        [Route("{bookId}/Publishers")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<BookPublisherOutputModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetPublisherAsync(int bookId)
+        {
+            var publisherOutput = await _booksService.GetPublishersAsync(bookId);
+
+            if (publisherOutput == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(publisherOutput);
         }
     }
 }

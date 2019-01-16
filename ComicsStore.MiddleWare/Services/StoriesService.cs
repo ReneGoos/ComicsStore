@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ComicsStore.Data.Model;
+using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
@@ -55,7 +56,7 @@ namespace ComicsStore.MiddleWare.Services
             return await _storiesRepository.GetAsync(id) != null;
         }
 
-        public async Task<IEnumerable<StoryOutputModel>> GetAsync(StorySearchModel searchModel)
+        public async Task<List<StoryOutputModel>> GetAsync(StorySearchModel searchModel)
         {
             var stories = await _storiesRepository.GetAsync(searchModel);
 
@@ -65,7 +66,7 @@ namespace ComicsStore.MiddleWare.Services
 
                 return storiesOutput;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -78,9 +79,32 @@ namespace ComicsStore.MiddleWare.Services
             return Mapper.Map<StoryOutputModel>(story);
         }
 
-        public Task<string> GetExportAsync()
+        public async Task<List<StoryBookOutputModel>> GetBooksAsync(int storyId)
         {
-            return _storiesRepository.GetExportAsync();
+            var storyBooks = await _storyBooksRepository.GetAsync(storyId, null);
+
+            try
+            {
+                return Mapper.Map<List<StoryBookOutputModel>>(storyBooks);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<StoryCharacterOutputModel>> GetCharactersAsync(int storyId)
+        {
+            var storyCharacters = await _storyCharactersRepository.GetAsync(storyId, null);
+
+            try
+            {
+                return Mapper.Map<List<StoryCharacterOutputModel>>(storyCharacters);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<StoryOutputModel> UpdateAsync(int id, StoryInputModel storyInput)
@@ -89,6 +113,15 @@ namespace ComicsStore.MiddleWare.Services
             story.Id = id;
 
             story = await _storiesRepository.UpdateAsync(story);
+
+            return Mapper.Map<StoryOutputModel>(story);
+        }
+
+        public async Task<StoryOutputModel> PatchAsync(int id, StoryInputPatchModel storyInput)
+        {
+            var modifiedData = JsonHelper.ModifiedData<StoryInputPatchModel, Story>(storyInput);
+
+            var story = await _storiesRepository.PatchAsync(id, modifiedData);
 
             return Mapper.Map<StoryOutputModel>(story);
         }

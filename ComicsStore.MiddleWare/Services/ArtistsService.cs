@@ -1,21 +1,26 @@
 ﻿using AutoMapper;
 using ComicsStore.Data.Model;
+using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public class ArtistsService : IComicsStoreService<ArtistInputModel, ArtistOutputModel, BasicSearchModel>
+    public class ArtistsService : IArtistsService
     {
         private readonly IComicsStoreRepository<Artist, BasicSearchModel> _artistsRepository;
+        private readonly IComicsStoreCrossRepository<StoryArtist> _storyArtistsRepository;
 
-        public ArtistsService(IComicsStoreRepository<Artist, BasicSearchModel> artistsRepository)
+        public ArtistsService(IComicsStoreRepository<Artist, BasicSearchModel> artistsRepository,
+            IComicsStoreCrossRepository<StoryArtist> storyArtistsRepository)
         {
             _artistsRepository = artistsRepository;
+            _storyArtistsRepository = storyArtistsRepository;
         }
 
         public async Task<ArtistOutputModel> AddAsync(ArtistInputModel artistInput)
@@ -44,7 +49,7 @@ namespace ComicsStore.MiddleWare.Services
             return await _artistsRepository.GetAsync(id) != null;
         }
 
-        public async Task<IEnumerable<ArtistOutputModel>> GetAsync(BasicSearchModel searchModel)
+        public async Task<List<ArtistOutputModel>> GetAsync(BasicSearchModel searchModel)
         {
             var artists =  await _artistsRepository.GetAsync(searchModel);
 
@@ -64,6 +69,15 @@ namespace ComicsStore.MiddleWare.Services
             artist.Id = id;
 
             artist = await _artistsRepository.UpdateAsync(artist);
+
+            return Mapper.Map<ArtistOutputModel>(artist);
+        }
+
+        public async Task<ArtistOutputModel> PatchAsync(int id, ArtistInputModel artistInput)
+        {
+            var modifiedData = JsonHelper.ModifiedData<ArtistInputModel, Artist>(artistInput);
+
+            var artist = await _artistsRepository.PatchAsync(id, modifiedData);
 
             return Mapper.Map<ArtistOutputModel>(artist);
         }

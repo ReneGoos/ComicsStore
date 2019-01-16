@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
 using ComicsStore.Data.Model;
+using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public class BooksService : IComicsStoreService<BookInputModel, BookOutputModel, BasicSearchModel>
+    public class BooksService : IBooksService
     {
         private readonly IComicsStoreRepository<Book, BasicSearchModel> _booksRepository;
         private readonly IComicsStoreCrossRepository<BookPublisher> _bookPublishersRepository;
@@ -50,7 +54,7 @@ namespace ComicsStore.MiddleWare.Services
             return await _booksRepository.GetAsync(id) != null;
         }
 
-        public async Task<IEnumerable<BookOutputModel>> GetAsync(BasicSearchModel searchModel)
+        public async Task<List<BookOutputModel>> GetAsync(BasicSearchModel searchModel)
         {
             var books =  await _booksRepository.GetAsync(searchModel);
 
@@ -72,6 +76,29 @@ namespace ComicsStore.MiddleWare.Services
             book = await _booksRepository.UpdateAsync(book);
 
             return Mapper.Map<BookOutputModel>(book);
+        }
+
+        public async Task<BookOutputModel> PatchAsync(int id, BookInputPatchModel bookInput)
+        {
+            var modifiedData = JsonHelper.ModifiedData<BookInputPatchModel, Book>(bookInput);
+
+            var book = await _booksRepository.PatchAsync(id, modifiedData);
+
+            return Mapper.Map<BookOutputModel>(book);
+        }
+
+        public async Task<List<BookPublisherOutputModel>> GetPublishersAsync(int bookId)
+        {
+            var bookPublishers = await _bookPublishersRepository.GetAsync(bookId, null);
+
+            try
+            {
+                return Mapper.Map<List<BookPublisherOutputModel>>(bookPublishers);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

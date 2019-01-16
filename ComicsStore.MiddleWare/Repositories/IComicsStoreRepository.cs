@@ -12,5 +12,6 @@ namespace ComicsStore.MiddleWare.Repositories
         Task<List<T>> GetAsync(TSearch model);
         Task<T> GetAsync(int id);
         Task<T> UpdateAsync(T value);
+        Task<T> PatchAsync(int id, IDictionary<string,object> data);
     }
 }

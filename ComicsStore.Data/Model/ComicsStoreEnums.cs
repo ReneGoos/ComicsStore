@@ -15,6 +15,12 @@ namespace ComicsStore.Data.Model
         periodical = 2
     }
 
+    public enum FirstPrint
+    {
+        yes = 0,
+        no = 1
+    }
+
     public enum StoryType
     {
         story = 0,

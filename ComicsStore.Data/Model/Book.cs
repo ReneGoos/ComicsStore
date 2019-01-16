@@ -14,6 +14,7 @@ namespace ComicsStore.Data.Model
             StoryBook = new HashSet<StoryBook>();
 
             Active = Active.active;
+            FirstPrint = FirstPrint.no;
         }
 
         [EnumDataType(typeof(BookType), ErrorMessage = "Book type value doesn't exist within enum")]
@@ -22,7 +23,7 @@ namespace ComicsStore.Data.Model
         public Active Active { get; set; }
         public int FirstYear { get; set; }
         public int? ThisYear { get; set; }
-        public int? FirstPrint { get; set; }
+        public FirstPrint FirstPrint { get; set; }
 
         public ICollection<BookSeries> BookSeries { get; set; }
         public ICollection<BookPublisher> BookPublisher { get; set; }

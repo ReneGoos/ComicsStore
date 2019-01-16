@@ -2,7 +2,7 @@
 
 namespace ComicsStore.MiddleWare.Models.Input
 {
-    public class StoryArtistInputModel
+    public class StoryArtistInputModel : BasicCrossInputModel
     {
         public int ArtistId { get; set; }
         public List<string> ArtistType { get; set; }

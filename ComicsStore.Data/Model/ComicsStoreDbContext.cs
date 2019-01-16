@@ -75,6 +75,13 @@ namespace ComicsStore.Data.Model
             modelBuilder.Entity<Code>()
                 .HasIndex(c => c.Name)
                 .IsUnique(true);
+
+            modelBuilder.Query<ExportStory>()
+                .ToView("ExportStories");
+
+            modelBuilder.Query<ExportMemento>()
+                .ToView("ExportMementoBooks")
+                .Property(v => v.StoryNumber).HasColumnName("Story Number");
         }
 
         public virtual DbSet<Story> Stories { get; set; }
@@ -90,5 +97,8 @@ namespace ComicsStore.Data.Model
         public virtual DbSet<StoryBook> StoryBooks { get; set; }
         public virtual DbSet<BookSeries> BookSeries { get; set; }
         public virtual DbSet<BookPublisher> BookPublishers { get; set; }
+
+        public virtual DbQuery<ExportMemento> ExportMemento { get; set; }
+        public virtual DbQuery<ExportStory> ExportStory { get; set; }
     }
 }
