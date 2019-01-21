@@ -11,114 +11,204 @@ namespace ComicsStore.MiddleWare.Reports
 {
     public static class Reports
     {
-        public async static Task<string> DataExport(IExportMementoRepository repository, string sFilename, bool pboolBooks, bool pboolPeriodicals, bool pboolDeleted, DateTime pdtPurchaseDate = default)
+        public async static Task<string> DataExport(IExportBooksRepository repository, ExportBooksSearchModel searchModel)
         {
-            string strNames = @"""Title"",""Story number"",""Type"",""BookType"",""Character"",""Artist"",""Issue"",""Issue title"",""Language"",""Series"",""Publisher"",""Year"",""Purchase Date"",""Notes"",""Deleted""";
-            //"Title","Story number","Type","Character","Artist","Writer","Issue","Issue title","Language","Series","Publisher","Year","Purchase Date","Notes","Deleted"
-            //unique key "Title","Story number","Type","Issue","Issue title"
-            //list "Character","Artist","Writer","Series","Publisher"
-            //others "Language","Year","Purchase Date","Notes","Deleted"
+            string columnNames = @"""Title"",""Story number"",""Type"",""BookType"",""Character"",""Artist"",""Issue"",""Issue title"",""Language"",""Series"",""Publisher"",""Year"",""Purchase Date"",""Notes"",""Deleted""";
 
+            Active deleted = default;
+            string title = null;
+            string storyNumber = null;
             StoryType storyType = default;
             BookType bookType = default;
-            Active deleted = default;
-            string strTitle = null, strStoryNumber = null, strType = null, strBookType = null, strIssue = null, strIssueTitle = null;
-            string strLanguage = null, strNotes = null;
-            int iYear = -1;
+            string bookIssue = null;
+            string bookIssueTitle = null;
+            string language = null;
+            string notes = null;
 
-            DateTime dtPurchaseDate = default;
+            int storyId = -1;
+            int bookId = -1;
+            int bookYear = -1;
 
-            var lstCharacter = new SortedSet<string>();
-            var lstArtist = new SortedSet<string>();
-            var lstSeries = new SortedSet<string>();
-            var lstPublisher = new SortedSet<string>();
-            var first = true;
+            DateTime purchaseDate = default;
 
-            StringBuilder saRTF = new StringBuilder();
+            var characters = new SortedSet<string>();
+            var artists = new SortedList<string, ArtistType>();
+            var series = new SortedSet<string>();
+            var publishers = new SortedSet<string>();
 
-            saRTF.AppendLine(strNames);
+            StringBuilder exportText = new StringBuilder();
+
+            exportText.AppendLine(columnNames);
 
             //rsCodes = CodesDataset()
             //SqlDataReader rsStories = BooksDataset(pdbAll, pboolBooks, pboolPeriodicals, pboolDeleted, false);
-            foreach (var rsStories in await repository.GetAsync(new ExportMementoSearchModel { Active = pboolDeleted ? default : Active.active }))
+            foreach (var stories in await repository.GetAsync(searchModel))
             {
-                if (!first)
+                try
                 {
-                    if ((strTitle.Equals(rsStories.Title.Replace('"', '\'')) &&
-                        strStoryNumber.Equals(!rsStories.StoryNumber.HasValue ? rsStories.ExtraInfo : rsStories.StoryNumber.Value.ToString()) &&
-                        storyType == (StoryType)rsStories.StoryType &&
-                        bookType == (BookType)rsStories.BookType &&
-                        strIssue.Equals(rsStories.Issue)) &&
-                        strIssueTitle.Equals(rsStories.IssueTitle.Replace('"', '\'')))
+                    if (storyId == stories.StoryId && bookId == stories.BookId)
                     {
-                        lstCharacter.Add(rsStories.Character.Replace('"', '\''));
-                        lstArtist.Add(rsStories.Artist.Replace('"', '\'') + ' ' + EnumHelper<ArtistType>.GetName((ArtistType)rsStories.ArtistType));
-                        strIssue = rsStories.Issue;
-                        strIssueTitle = rsStories.IssueTitle;
-                        strLanguage = rsStories.Language;
-                        lstSeries.Add(rsStories.Series.Replace('"', '\''));
-                        lstPublisher.Add(rsStories.Publisher.Replace('"', '\''));
+                        characters.Add(stories.Character);
+                        artists[stories.Artist] = (ArtistType)stories.ArtistType;
+                        bookIssue = stories.Issue;
+                        bookIssueTitle = stories.IssueTitle;
+                        language = stories.Language;
+                        series.Add(stories.Series);
+                        publishers.Add(stories.Publisher);
                     }
                     else
-                        AddToOutput(deleted, strTitle, strStoryNumber, strType, strBookType, strIssue, strIssueTitle, strLanguage, strNotes, iYear, dtPurchaseDate, ref lstCharacter, ref lstArtist, ref lstSeries, ref lstPublisher, saRTF);
+                    {
+                        if (title != null)
+                        {
+                            AddToOutput(deleted,
+                                title,
+                                storyNumber,
+                                storyType,
+                                bookType,
+                                bookIssue,
+                                bookIssueTitle,
+                                language,
+                                notes,
+                                bookYear,
+                                purchaseDate,
+                                characters,
+                                artists,
+                                series,
+                                publishers,
+                                exportText);
+                        }
+
+                        characters = new SortedSet<string>();
+                        artists = new SortedList<string, ArtistType>();
+                        series = new SortedSet<string>();
+                        publishers = new SortedSet<string>();
+
+                        storyId = stories.StoryId;
+                        bookId = stories.BookId;
+                        title = stories.Title;
+                        storyNumber = !stories.StoryNumber.HasValue ? stories.ExtraInfo : stories.StoryNumber.Value.ToString();
+                        storyType = (StoryType)stories.StoryType;
+                        bookType = (BookType)stories.BookType;
+                        characters.Add(stories.Character);
+                        artists[stories.Artist] = (ArtistType)stories.ArtistType;
+                        bookIssue = stories.Issue;
+                        bookIssueTitle = stories.IssueTitle;
+                        language = stories.Language.Length == 0 ? "nl" : stories.Language;
+                        series.Add(stories.Series);
+                        publishers.Add(stories.Publisher);
+                        bookYear = !stories.Year.HasValue ? -1 : stories.Year.Value;
+                        purchaseDate = stories.PurchaseDate;
+                        deleted = stories.Deleted;
+                        notes = stories.Notes;
+                    }
                 }
+                catch (Exception e)
+                {
 
-
-                strTitle = rsStories.Title.Replace('"', '\'');
-                strStoryNumber = !rsStories.StoryNumber.HasValue ? rsStories.ExtraInfo : rsStories.StoryNumber.Value.ToString();
-                storyType = (StoryType)rsStories.StoryType;
-                strType = EnumHelper<StoryType>.GetName(storyType);
-                bookType = (BookType)rsStories.BookType;
-                strBookType = EnumHelper<BookType>.GetName(bookType);
-                lstCharacter.Add(rsStories.Character.Replace('"', '\''));
-                lstArtist.Add(rsStories.Artist.Replace('"', '\'') + ' ' + EnumHelper<ArtistType>.GetName((ArtistType)rsStories.ArtistType));
-                strIssue = rsStories.Issue;
-                strIssueTitle = rsStories.IssueTitle.Replace('"', '\'');
-                strLanguage = rsStories.Language.Length == 0 ? "nl" : rsStories.Language;
-                lstSeries.Add(rsStories.Series.Replace('"', '\''));
-                lstPublisher.Add(rsStories.Publisher.Replace('"', '\''));
-                iYear = !rsStories.Year.HasValue ? -1 : rsStories.Year.Value;
-                dtPurchaseDate = rsStories.PurchaseDate;
-                deleted = rsStories.Deleted;
-                strNotes = rsStories.Notes;
-
-                first = false;
+                    throw e;
+                }
             }
 
-            AddToOutput(deleted, strTitle, strStoryNumber, strType, strBookType, strIssue, strIssueTitle, strLanguage, strNotes, iYear, dtPurchaseDate, ref lstCharacter, ref lstArtist, ref lstSeries, ref lstPublisher, saRTF);
+
+            AddToOutput(deleted,
+                    title,
+                    storyNumber,
+                    storyType,
+                    bookType,
+                    bookIssue,
+                    bookIssueTitle,
+                    language,
+                    notes,
+                    bookYear,
+                    purchaseDate,
+                    characters,
+                    artists,
+                    series,
+                    publishers,
+                    exportText);
 
             //    .Visible = True
             //    mdiMain.stbStatus.Panels(1).Text = "Klaar"
-            return saRTF.ToString();
+            return exportText.ToString();
+        }
+  
+        private static string Escape(string input)
+        {
+            if (input == null)
+                return "";
+            return input.Replace('"', '\'');
         }
 
-        private static void AddToOutput(Active deleted, string strTitle, string strStoryNumber, string strType, string strBookType, string strIssue, string strIssueTitle, string strLanguage, string strNotes, int iYear, DateTime dtPurchaseDate, ref SortedSet<string> lstCharacter, ref SortedSet<string> lstArtist, ref SortedSet<string> lstSeries, ref SortedSet<string> lstPublisher, StringBuilder saRTF)
+        private static List<string> ArtistAndShortType(SortedList<string, ArtistType> artists)
         {
-            saRTF.Append('"' + strTitle.Replace('"', '\'') + '"' + ',');
-            saRTF.Append('"' + strStoryNumber + '"' + ',');
-            saRTF.Append('"' + strType + '"' + ',');
-            saRTF.Append('"' + strBookType + '"' + ',');
+            var results = new List<string>();
 
-            saRTF.Append('"' + String.Join(",", lstCharacter) + '"' + ',');
-            saRTF.Append('"' + String.Join(",", lstArtist) + '"' + ',');
+            foreach (var artist in artists)
+            {
+                var result = Escape(artist.Key);
+                var between = " ";
 
-            saRTF.Append('"' + strIssue.ToString() + '"' + ',');
-            saRTF.Append('"' + strIssueTitle.Replace('"', '\'') + '"' + ',');
-            saRTF.Append('"' + strLanguage + '"' + ',');
+                foreach (var name in EnumHelper<ArtistType>.GetNames(artist.Value))
+                {
+                    result += between + name[0].ToString();
+                    between = "+";
+                }
 
-            saRTF.Append('"' + String.Join(",", lstSeries) + '"' + ',');
-            saRTF.Append('"' + String.Join(",", lstPublisher) + '"' + ',');
+                results.Add(result);
+            }
 
-            saRTF.Append('"' + iYear.ToString() + '"' + ',');
-            saRTF.Append('"' + dtPurchaseDate.ToString("MM/dd/yyyy") + '"' + ',');
-            saRTF.Append('"' + (strNotes == null ? "" : strNotes.Replace('"', '\'')) + '"' + ',');
-            saRTF.Append('"' + (deleted == Active.active ? "" : "del") + '"' + ',');
-            saRTF.AppendLine();
+            return results;
+        }
 
-            lstCharacter = new SortedSet<string>();
-            lstArtist = new SortedSet<string>();
-            lstSeries = new SortedSet<string>();
-            lstPublisher = new SortedSet<string>();
+        private static List<string> EscapeList(SortedSet<string> input)
+        {
+            var results = new List<string>();
+
+            foreach (var name in input)
+            {
+                results.Add(Escape(name));
+            }
+
+            return results;
+        }
+
+        private static void AddToOutput(Active deleted,
+            string title,
+            string storyNumber,
+            StoryType storyType,
+            BookType bookType,
+            string bookIssue,
+            string bookIssueTitle,
+            string language,
+            string notes,
+            int bookYear,
+            DateTime purchaseDate,
+            SortedSet<string> characters, 
+            SortedList<string,ArtistType> artists, 
+            SortedSet<string> series, 
+            SortedSet<string> publishers, 
+            StringBuilder exportText)
+        {
+            exportText.Append('"' + Escape(title) + '"' + ',');
+            exportText.Append('"' + storyNumber + '"' + ',');
+            exportText.Append('"' + EnumHelper<StoryType>.GetName(storyType) + '"' + ',');
+            exportText.Append('"' + EnumHelper<BookType>.GetName(bookType) + '"' + ',');
+
+            exportText.Append('"' + String.Join(",", EscapeList(characters)) + '"' + ',');
+            exportText.Append('"' + String.Join(",", ArtistAndShortType(artists)) + '"' + ',');
+
+            exportText.Append('"' + bookIssue.ToString() + '"' + ',');
+            exportText.Append('"' + Escape(bookIssueTitle) + '"' + ',');
+            exportText.Append('"' + language + '"' + ',');
+
+            exportText.Append('"' + String.Join(",", EscapeList(series)) + '"' + ',');
+            exportText.Append('"' + String.Join(",", EscapeList(publishers)) + '"' + ',');
+
+            exportText.Append('"' + bookYear.ToString() + '"' + ',');
+            exportText.Append('"' + purchaseDate.ToString("MM/dd/yyyy") + '"' + ',');
+            exportText.Append('"' + Escape(notes??"") + '"' + ',');
+            exportText.Append('"' + (deleted == Active.active ? "" : "del") + '"' + ',');
+            exportText.AppendLine();
         }
     }
 }

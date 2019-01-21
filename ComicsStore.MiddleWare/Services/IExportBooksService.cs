@@ -5,9 +5,9 @@ using ComicsStore.MiddleWare.Models.Search;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public interface IExportMementoService
+    public interface IExportBooksService
     {
-        Task<List<ExportMementoOutputModel>> GetAsync(ExportMementoSearchModel searchModel);
-        Task<string> GetExportAsync();
+        Task<List<ExportBooksOutputModel>> GetAsync(ExportBooksSearchModel searchModel);
+        Task<string> GetExportAsync(ExportBooksSearchModel searchModel);
     }
 }

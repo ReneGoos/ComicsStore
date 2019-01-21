@@ -79,8 +79,8 @@ namespace ComicsStore.Data.Model
             modelBuilder.Query<ExportStory>()
                 .ToView("ExportStories");
 
-            modelBuilder.Query<ExportMemento>()
-                .ToView("ExportMementoBooks")
+            modelBuilder.Query<ExportBook>()
+                .ToView("ExportBooks")
                 .Property(v => v.StoryNumber).HasColumnName("Story Number");
         }
 
@@ -98,7 +98,7 @@ namespace ComicsStore.Data.Model
         public virtual DbSet<BookSeries> BookSeries { get; set; }
         public virtual DbSet<BookPublisher> BookPublishers { get; set; }
 
-        public virtual DbQuery<ExportMemento> ExportMemento { get; set; }
+        public virtual DbQuery<ExportBook> ExportBooks { get; set; }
         public virtual DbQuery<ExportStory> ExportStory { get; set; }
     }
 }

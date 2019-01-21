@@ -5,8 +5,10 @@ using System.Text;
 
 namespace ComicsStore.Data.Model
 {
-    public class ExportMemento
+    public class ExportBook
     {
+        public int StoryId { get; set; }
+        public int BookId { get; set; }
         public string Title { get; set; }
         [Column("Story number")]
         public int? StoryNumber { get; set; }

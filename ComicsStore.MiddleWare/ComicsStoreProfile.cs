@@ -47,8 +47,8 @@ namespace ComicsStore.MiddleWare
             CreateMap<Publisher, PublisherOutputModel>();
             CreateMap<Series, SeriesOutputModel>();
             CreateMap<Story, StoryOutputModel>();
-            CreateMap<ExportMemento, ExportMementoOutputModel>();
-            CreateMap<ExportStory, ExportMementoOutputModel>();
+            CreateMap<ExportBook, ExportBooksOutputModel>();
+            CreateMap<ExportStory, ExportBooksOutputModel>();
 
             CreateMap<BookSeries, BookSeriesOutputModel>();
             CreateMap<BookPublisher, BookPublisherOutputModel>();

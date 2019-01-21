@@ -19,6 +19,7 @@ namespace ComicsStore.Tests
             var result1 = EnumHelper<ArtistType>.GetDisplayValues(artistType);
             var result2 = EnumHelper<ArtistType>.GetValues(artistType);
             var result3 = EnumHelper<ArtistType>.GetNames(artistType);
+            var results = EnumHelper<ArtistType>.GetName(artistType);
 
             //Assert
             Assert.Equal("writer, inker", result);

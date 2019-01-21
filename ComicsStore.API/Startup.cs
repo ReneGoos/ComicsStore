@@ -44,7 +44,7 @@ namespace ComicsStore.API
             services.AddScoped<IPublishersService, PublishersService>();
             services.AddScoped<ISeriesService, SeriesService>();
             services.AddScoped<IStoriesService, StoriesService>();
-            services.AddScoped<IExportMementoService, ExportMementoService>();
+            services.AddScoped<IExportBooksService, ExportBooksService>();
 
             services.AddScoped<IStoryArtistsService, StoryArtistsService>();
             services.AddScoped<IBookSeriesService, BookSeriesService>();
@@ -56,7 +56,7 @@ namespace ComicsStore.API
             services.AddScoped<IComicsStoreRepository<Publisher, BasicSearchModel>, PublishersRepository>();
             services.AddScoped<IComicsStoreRepository<Series, BasicSearchModel>, SeriesRepository>();
             services.AddScoped<IStoriesRepository, StoriesRepository>();
-            services.AddScoped<IExportMementoRepository, ExportMementoRepository>();
+            services.AddScoped<IExportBooksRepository, ExportBooksRepository>();
 
             services.AddScoped<IComicsStoreCrossRepository<BookPublisher>, BookPublishersRepository>();
             services.AddScoped<IComicsStoreCrossRepository<BookSeries>, BookSeriesRepository>();

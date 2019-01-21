@@ -9,26 +9,33 @@ using System.Threading.Tasks;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class ExportMementoRepository : IExportMementoRepository
+    public class ExportBooksRepository : IExportBooksRepository
     {
         protected readonly ComicsStoreDbContext _context;
 
-        public ExportMementoRepository(ComicsStoreDbContext context)
+        public ExportBooksRepository(ComicsStoreDbContext context)
         {
             _context = context;
         }
 
-        public Task<List<ExportMemento>> GetAsync(ExportMementoSearchModel model)
+        public Task<List<ExportBook>> GetAsync(ExportBooksSearchModel model)
         {
-            var exports = _context.ExportMemento
+            var exports = _context.ExportBooks
                 .Where(s => !model.Active.HasValue || s.Deleted == model.Active.Value)
+                .OrderBy(e => e.Title)
+                .ThenBy(e => e.StoryNumber)
+                .ThenBy(e => e.StoryType)
+                .ThenBy(e => e.Issue)
+                .ThenBy(e => e.IssueTitle)
+                .ThenBy(e => e.StoryId)
+                .ThenBy(e => e.BookId)
                 .AsNoTracking()
                 .ToListAsync();
 
             return exports;
         }
 
-        public Task<List<ExportStory>> GetStoryAsync(ExportMementoSearchModel model)
+        public Task<List<ExportStory>> GetStoryAsync(ExportBooksSearchModel model)
         {
             var exports = _context.ExportStory
                 .AsNoTracking()

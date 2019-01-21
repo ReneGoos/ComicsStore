@@ -3,7 +3,7 @@ using System;
 
 namespace ComicsStore.MiddleWare.Models.Search
 {
-    public class ExportMementoSearchModel
+    public class ExportBooksSearchModel
     {
         public Active? Active { get; set; }
     }
