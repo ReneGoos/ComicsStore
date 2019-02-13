@@ -29,6 +29,7 @@ namespace ComicsStore.MiddleWare.Repositories
                 .ThenBy(e => e.IssueTitle)
                 .ThenBy(e => e.StoryId)
                 .ThenBy(e => e.BookId)
+                .ThenBy(e => e.SeriesId)
                 .AsNoTracking()
                 .ToListAsync();
 

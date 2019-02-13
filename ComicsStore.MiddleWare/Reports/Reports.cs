@@ -27,6 +27,7 @@ namespace ComicsStore.MiddleWare.Reports
 
             int storyId = -1;
             int bookId = -1;
+            int seriesId = -1;
             int bookYear = -1;
 
             DateTime purchaseDate = default;
@@ -46,7 +47,7 @@ namespace ComicsStore.MiddleWare.Reports
             {
                 try
                 {
-                    if (storyId == stories.StoryId && bookId == stories.BookId)
+                    if (storyId == stories.StoryId && bookId == stories.BookId && seriesId == stories.SeriesId)
                     {
                         characters.Add(stories.Character);
                         artists[stories.Artist] = (ArtistType)stories.ArtistType;
@@ -85,6 +86,7 @@ namespace ComicsStore.MiddleWare.Reports
 
                         storyId = stories.StoryId;
                         bookId = stories.BookId;
+                        seriesId = stories.SeriesId;
                         title = stories.Title;
                         storyNumber = !stories.StoryNumber.HasValue ? stories.ExtraInfo : stories.StoryNumber.Value.ToString();
                         storyType = (StoryType)stories.StoryType;

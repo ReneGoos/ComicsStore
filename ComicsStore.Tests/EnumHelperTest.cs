@@ -9,6 +9,42 @@ namespace ComicsStore.Tests
     public class EnumHelperTest
     {
         [Fact]
+        public void EnumHelper_NoFlags()
+        {
+            //
+            var storyType = StoryType.gag;
+
+            //Act
+            var result = EnumHelper<StoryType>.GetDisplayValue(storyType);
+            var result1 = EnumHelper<StoryType>.GetDisplayValues(storyType);
+            var result2 = EnumHelper<StoryType>.GetValues(storyType);
+            var result3 = EnumHelper<StoryType>.GetNames(storyType);
+            var results = EnumHelper<StoryType>.GetName(storyType);
+
+            //Assert
+            Assert.Equal("Gag", result);
+            Assert.Equal(1, result1.Count);
+            Assert.Equal("gag", results);
+        }
+
+        [Fact]
+        public void EnumHelper_Flags_OneValue()
+        {
+            //
+            var artistType = ArtistType.writer;
+
+            //Act
+            var result = EnumHelper<ArtistType>.GetDisplayValue(artistType);
+            var result1 = EnumHelper<ArtistType>.GetDisplayValues(artistType);
+            var result2 = EnumHelper<ArtistType>.GetValues(artistType);
+            var result3 = EnumHelper<ArtistType>.GetNames(artistType);
+            var results = EnumHelper<ArtistType>.GetName(artistType);
+
+            //Assert
+            Assert.Equal("Writer", result);
+        }
+
+        [Fact]
         public void EnumHelper_Flags()
         {
             //
@@ -22,9 +58,8 @@ namespace ComicsStore.Tests
             var results = EnumHelper<ArtistType>.GetName(artistType);
 
             //Assert
-            Assert.Equal("writer, inker", result);
+            Assert.Equal("Writer, inker", result);
         }
-
 
         [Fact]
         public void EnumHelper_FlagsValue()

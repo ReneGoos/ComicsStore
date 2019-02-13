@@ -9,6 +9,15 @@ namespace ComicsStore.MiddleWare.Common
 {
     public static class EnumHelper<T> where T : Enum
     {
+        public static bool IsFlag(T value)
+        {
+            var typeInfo = value.GetType().GetTypeInfo();
+
+            var flagAttribute = typeInfo.GetCustomAttribute<FlagsAttribute>();
+
+            return (flagAttribute != null);
+        }
+
         public static IList<T> GetValues()
         {
             return Enum.GetValues(typeof(T))
@@ -23,29 +32,39 @@ namespace ComicsStore.MiddleWare.Common
 
         public static IList<string> GetDisplayValues()
         {
-            return GetNames().Select(obj => GetDisplayValue(Parse(obj))).ToList();
+            return GetNames().Select(obj => GetDisplayValueOneValue(Parse(obj))).ToList();
         }
 
         public static IList<T> GetValues(T value)
         {
+            if (IsFlag(value))
+                return GetValues().Where(val => value.IsSet(val)).ToList();
 
-            return GetValues().Where(val => value.IsSet(val)).ToList();
+            return new List<T> { value };
         }
 
         public static IList<string> GetNames(T value)
         {
-            return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => value.IsSet((T)fi.GetValue(null))).Select(fi => fi.Name).ToList();
+            if (IsFlag(value))
+                return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => value.IsSet((T)fi.GetValue(null))).Select(fi => fi.Name).ToList();
+
+            return new List<string> { value.ToString() };
         }
 
         public static string GetName(T value)
         {
-            var fields = typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => value.IsSet((T)fi.GetValue(null))).Select(fi => fi.Name).ToList();
-            return string.Join(",", fields);
+            if (IsFlag(value))
+            {
+                var fields = typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => value.IsSet((T)fi.GetValue(null))).Select(fi => fi.Name).ToList();
+                return string.Join(",", fields);
+            }
+
+            return value.ToString();
         }
 
         public static IList<string> GetDisplayValues(T value)
         {
-            return GetNames(value).Select(obj => GetDisplayValue(Parse(obj))).ToList();
+            return GetNames(value).Select(obj => GetDisplayValueOneValue(Parse(obj))).ToList();
         }
 
         public static T Parse(string value)
@@ -79,29 +98,34 @@ namespace ComicsStore.MiddleWare.Common
             return resourceKey; // Fallback with the key name
         }
 
+        private static string GetDisplayValueOneValue(T value)
+        {
+            var fieldInfo = value.GetType().GetField(value.ToString());
+            if (fieldInfo == null)
+                return value.ToString();
+
+            var descriptionAttributes = fieldInfo.GetCustomAttribute<DisplayAttribute>();
+            if (descriptionAttributes == null)
+                return value.ToString();
+
+            if (descriptionAttributes.ResourceType != null)
+                return lookupResource(descriptionAttributes.ResourceType, descriptionAttributes.Name);
+
+            return descriptionAttributes.Name;
+        }
+
         public static string GetDisplayValue(T value)
         {
             var typeInfo = value.GetType().GetTypeInfo();
 
-            //var flagAttribute = typeInfo.GetCustomAttribute<FlagsAttribute>();
+            var flagAttribute = typeInfo.GetCustomAttribute<FlagsAttribute>();
 
-            //if (flagAttribute == null)
-            //{
-                var fieldInfo = value.GetType().GetField(value.ToString());
-                if (fieldInfo == null)
-                    return value.ToString();
+            if (!IsFlag(value))
+            {
+                return GetDisplayValueOneValue(value);
+            }
 
-                var descriptionAttributes = fieldInfo.GetCustomAttribute<DisplayAttribute>();
-                if (descriptionAttributes == null)
-                    return value.ToString();
-
-                if (descriptionAttributes.ResourceType != null)
-                    return lookupResource(descriptionAttributes.ResourceType, descriptionAttributes.Name);
-
-                return descriptionAttributes.Name;
-            //}
-
-            //return String.Join(", ", GetDisplayValues(value));
+            return String.Join(", ", GetDisplayValues(value));
         }
     }
 }

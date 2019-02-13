@@ -9,6 +9,7 @@ namespace ComicsStore.Data.Model
     {
         public int StoryId { get; set; }
         public int BookId { get; set; }
+        public int SeriesId { get; set; }
         public string Title { get; set; }
         [Column("Story number")]
         public int? StoryNumber { get; set; }

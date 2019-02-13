@@ -37,7 +37,7 @@ namespace ComicsStore.MiddleWare.Repositories
                 return null;
             }
 
-            data["DateUpdate"] = DateTime.Today;
+            data["DateUpdate"] = DateTime.Now;
             _context.Entry(entity).CurrentValues.SetValues(data);
 
             await SaveChangesAsync();
