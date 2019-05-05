@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using ComicsStore.Data.Model;
 using Microsoft.EntityFrameworkCore;

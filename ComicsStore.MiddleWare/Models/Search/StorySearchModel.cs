@@ -1,6 +1,4 @@
-﻿using ComicsStore.Data.Model;
-
-namespace ComicsStore.MiddleWare.Models.Search
+﻿namespace ComicsStore.MiddleWare.Models.Search
 {
     public class StorySearchModel : BasicSearchModel
     {

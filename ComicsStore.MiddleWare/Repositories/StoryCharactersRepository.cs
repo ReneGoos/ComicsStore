@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ComicsStore.Data.Model;
-using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.MiddleWare.Repositories.Interfaces;
 
 namespace ComicsStore.MiddleWare.Repositories
 {

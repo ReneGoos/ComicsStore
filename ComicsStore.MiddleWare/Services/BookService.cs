@@ -4,12 +4,11 @@ using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
-using ComicsStore.MiddleWare.Repositories;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using ComicsStore.MiddleWare.Services.Interfaces;
+using ComicsStore.MiddleWare.Repositories.Interfaces;
 
 namespace ComicsStore.MiddleWare.Services
 {

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
-using ComicsStore.MiddleWare.Services;
 using Microsoft.AspNetCore.Mvc;
+using ComicsStore.MiddleWare.Services.Interfaces;
 
 namespace ComicsStore.API.Controllers
 {
@@ -80,6 +78,26 @@ namespace ComicsStore.API.Controllers
             }
 
             var result = await _storiesService.UpdateAsync(id, value);
+
+            if (result == null)
+            {
+                return BadRequest($"Update of story {id} failed");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPatch("{id}")]
+        [ProducesResponseType(typeof(StoryOutputModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> PatchAsync(int id, [FromBody] StoryInputPatchModel value)
+        {
+            if (value == null)
+            {
+                return BadRequest("Invalid input");
+            }
+
+            var result = await _storiesService.PatchAsync(id, value);
 
             if (result == null)
             {

@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using ComicsStore.MiddleWare.Services.Interfaces;
+using ComicsStore.MiddleWare.Repositories.Interfaces;
 
 namespace ComicsStore.API
 {
@@ -25,10 +27,21 @@ namespace ComicsStore.API
         }
 
         public IConfiguration Configuration { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+            /*options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200");
+                });
+            });*/
+
             services.AddMvc().AddJsonOptions(options => {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
@@ -56,7 +69,7 @@ namespace ComicsStore.API
             services.AddScoped<IComicsStoreRepository<Publisher, BasicSearchModel>, PublishersRepository>();
             services.AddScoped<IComicsStoreRepository<Series, BasicSearchModel>, SeriesRepository>();
             services.AddScoped<IStoriesRepository, StoriesRepository>();
-            services.AddScoped<IExportBooksRepository, ExportBooksRepository>();
+            services.AddScoped<IExportBooksRepository, StorySeriesRepository>();
 
             services.AddScoped<IComicsStoreCrossRepository<BookPublisher>, BookPublishersRepository>();
             services.AddScoped<IComicsStoreCrossRepository<BookSeries>, BookSeriesRepository>();
@@ -64,7 +77,7 @@ namespace ComicsStore.API
             services.AddScoped<IComicsStoreCrossRepository<StoryBook>, StoryBooksRepository>();
             services.AddScoped<IComicsStoreCrossRepository<StoryCharacter>, StoryCharactersRepository>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSwaggerGen(c =>
             {
@@ -97,6 +110,13 @@ namespace ComicsStore.API
                 c.AddSecurityRequirement(security);
                 */
             });
+
+            /* Angular *
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ComicsStoreClient/dist";
+            });
+            * Angular */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,6 +138,16 @@ namespace ComicsStore.API
                 app.UseHsts();
             }
 
+            app.UseCors(builder => 
+                builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                       );
+
+            /*options => options.WithOrigins("http://localhost").AllowAnyMethod()
+            );*/
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -129,8 +159,26 @@ namespace ComicsStore.API
 
             Mapper.Initialize(cfg => cfg.AddProfile<ComicsStoreProfile>());
 
+            /* Angular *
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+            * Angular */
+
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            /* Angular *
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ComicsStoreClient";
+                spa.Options.StartupTimeout = new TimeSpan(0, 2, 0);
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+            });
+            * Angular */
         }
     }
 }

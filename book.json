@@ -1,0 +1,63 @@
+{
+    "bookType": "book",
+    "active": "active",
+    "firstYear": 2019,
+    "thisYear": 2019,
+    "firstPrint": "yes",
+    "bookSeries": [
+        {
+            "seriesId": 77002,
+            "issue": "1",
+            "seriesOrder": 1
+        }
+    ],
+    "bookPublisher": [
+        {
+            "publisherId": 6
+        }
+    ],
+    "storyBook": [
+        {"storyId": "118358"},
+{"storyId": "68275"},
+{"storyId": "75304"},
+{"storyId": "119498"},
+{"storyId": "119499"},
+{"storyId": "119500"},
+{"storyId": "119501"},
+{"storyId": "119502"},
+{"storyId": "119503"},
+{"storyId": "119504"},
+{"storyId": "119505"},
+{"storyId": "119506"},
+{"storyId": "119507"},
+{"storyId": "119508"},
+{"storyId": "119509"},
+{"storyId": "119510"},
+{"storyId": "119511"},
+{"storyId": "119512"},
+{"storyId": "119513"},
+{"storyId": "119514"},
+{"storyId": "119515"},
+{"storyId": "119516"},
+{"storyId": "119517"},
+{"storyId": "119518"},
+{"storyId": "119519"},
+{"storyId": "119520"},
+{"storyId": "119521"},
+{"storyId": "119522"},
+{"storyId": "119523"},
+{"storyId": "119524"},
+{"storyId": "119525"},
+{"storyId": "119526"},
+{"storyId": "119527"},
+{"storyId": "119528"},
+{"storyId": "119529"},
+{"storyId": "119530"},
+{"storyId": "119531"},
+{"storyId": "119532"},
+{"storyId": "119533"},
+
+    ],
+    "name": "S. Carmiggelt Kronkels in beeld gebracht door Dick Matena",
+    "remark": ""
+}

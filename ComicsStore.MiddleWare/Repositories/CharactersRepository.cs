@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.MiddleWare.Repositories.Interfaces;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
@@ -34,7 +35,9 @@ namespace ComicsStore.MiddleWare.Repositories
 
         public Task<Character> GetAsync(int characterId)
         {
-            return _context.Characters.FindAsync(characterId);
+            return _context.Characters
+                .Include(c => c.StoryCharacter)
+                .SingleOrDefaultAsync(c => c.Id == characterId); ;
         }
 
         public Task<Character> UpdateAsync(Character character)

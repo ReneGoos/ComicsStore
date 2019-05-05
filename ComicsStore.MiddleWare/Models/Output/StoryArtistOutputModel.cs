@@ -1,5 +1,4 @@
-﻿using ComicsStore.Data.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ComicsStore.MiddleWare.Models.Output
 {

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Models.Search;
-using ComicsStore.MiddleWare.Services;
 using Microsoft.AspNetCore.Mvc;
+using ComicsStore.MiddleWare.Services.Interfaces;
 
 namespace ComicsStore.API.Controllers
 {

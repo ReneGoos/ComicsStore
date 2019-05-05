@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ComicsStore.Data.Model
+﻿namespace ComicsStore.Data.Model
 {
     public class BookSeries : CrossTable
     {

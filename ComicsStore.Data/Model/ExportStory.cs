@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-
-namespace ComicsStore.Data.Model
+﻿namespace ComicsStore.Data.Model
 {
     public class ExportStory
     {

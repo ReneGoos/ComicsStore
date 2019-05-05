@@ -1,11 +1,10 @@
 ﻿using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Models.Search;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using ComicsStore.MiddleWare.Repositories.Interfaces;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
@@ -18,7 +17,7 @@ namespace ComicsStore.MiddleWare.Repositories
             _context = context;
         }
 
-        public Task<List<ExportBook>> GetAsync(ExportBooksSearchModel model)
+        public Task<List<ExportBook>> GetAsync(StorySeriesSearchModel model)
         {
             var exports = _context.ExportBooks
                 .Where(s => !model.Active.HasValue || s.Deleted == model.Active.Value)
@@ -36,7 +35,7 @@ namespace ComicsStore.MiddleWare.Repositories
             return exports;
         }
 
-        public Task<List<ExportStory>> GetStoryAsync(ExportBooksSearchModel model)
+        public Task<List<ExportStory>> GetStoryAsync(StorySeriesSearchModel model)
         {
             var exports = _context.ExportStory
                 .AsNoTracking()

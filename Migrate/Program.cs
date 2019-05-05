@@ -1,5 +1,4 @@
-﻿using ComicsStore.Data.Model;
-using System;
+﻿using System;
 
 namespace Migrate
 {

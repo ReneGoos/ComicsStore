@@ -3,7 +3,6 @@ using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using System;
 using System.Collections.Generic;
 
 namespace ComicsStore.MiddleWare
@@ -30,6 +29,7 @@ namespace ComicsStore.MiddleWare
             CreateMap<StoryInputModel, Story>();
 
             CreateMap<BookInputPatchModel, Book>();
+            CreateMap<StoryInputPatchModel, Story>();
 
             CreateMap<BookPublisherInputModel, BookPublisher>();
             CreateMap<BookSeriesInputModel, BookSeries>();

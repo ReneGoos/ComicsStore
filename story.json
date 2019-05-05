@@ -1,0 +1,29 @@
+
+    {
+      "storyType": "one",
+      "storyNumber": null,
+      "pages": 3,
+      "extraInfo": "",
+      "codeId": 63990,
+      "storyCharacter": [
+        {
+          "characterId": 35768
+        }
+      ],
+      "storyArtist": [
+        {
+            "artistId": 105,
+            "artistType": [
+              "artist"
+            ]
+          },
+          {
+            "artistId": 47405,
+            "artistType": [
+              "Writer"
+            ]
+                }
+              ],
+              "name": "Van enig nut",
+"remark": ""
+    }

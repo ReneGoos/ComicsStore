@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ComicsStore.MiddleWare.Models.Input
+﻿namespace ComicsStore.MiddleWare.Models.Input
 {
     public class BasicInputModel
     {
