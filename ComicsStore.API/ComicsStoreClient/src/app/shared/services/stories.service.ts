@@ -15,11 +15,11 @@ export class StoriesService {
     private http: HttpClient,
     private errorHandleService: ErrorHandleService) { }
 
-    getStories(): Observable<any[]> {
+    getStories(): Observable<IStory[]> {
       const uri = decodeURIComponent(
         `${Constants.locationAPIUrl}/stories`
       );
-      return this.http.get<any[]>(uri)
+      return this.http.get<IStory[]>(uri)
         .pipe(
           tap(_ => console.log('fetched stories')),
           catchError(this.errorHandleService.handleError('getStories', []))

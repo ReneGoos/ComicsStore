@@ -28,12 +28,19 @@ export class StoryListComponent implements OnInit {
   }
 
   constructor(
-    private booksService: StoriesService) {
+    private storiesService: StoriesService) {
     this.ListFilter = '';
   }
 
   async ngOnInit(): Promise<void> {
-    await this.getStories();
+    this.storiesService.getStories().subscribe(
+      stories => {
+        this.stories = stories;
+        this.filterStories = this.ListFilter ? this.performFilter(this.ListFilter) : this.stories;
+      },
+      error => this.errorMessage = <any>error
+    );
+    //await this.getStories();
   }
 
   performFilter(filterBy: string): IStory[] {
@@ -44,7 +51,7 @@ export class StoryListComponent implements OnInit {
 
   async getStories() {
     const promise = new Promise((resolve, reject) => {
-      this.booksService.getStories()
+      this.storiesService.getStories()
         .toPromise()
         .then(
           res => { // Success

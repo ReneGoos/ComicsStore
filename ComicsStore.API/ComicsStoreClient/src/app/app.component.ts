@@ -7,5 +7,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ComicsStoreClient';
-  showStories: boolean = true;
 }

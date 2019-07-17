@@ -29,7 +29,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let story of filterStories">
-            <td>{{story.name}}</td>
+            <td><a [routerLink]="['/stories', story.id]">{{story.name}}</a></td>
             <td>{{story.storyType}}</td>
             <td>{{story.storyNumber}}</td>
             <td>{{story.pages}}</td>

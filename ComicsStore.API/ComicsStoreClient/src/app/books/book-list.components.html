@@ -28,7 +28,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let book of filterBooks">
-            <td>{{book.name}}</td>
+            <td><a [routerLink]="['/books', book.id]">{{book.name}}</a></td>
             <td>{{book.remark}}</td>
             <td>{{book.active}}</td>
             <td>{{book.firstYear}}</td>
