@@ -12,11 +12,13 @@ namespace ComicsStore.MiddleWare.Services
     public class ExportBooksService : IExportBooksService
     {
         private readonly IExportBooksRepository _exportBooksRepository;
+        private readonly IMapper _mapper;
 
-        public ExportBooksService(IExportBooksRepository exportBooksRepository
-            )
+        public ExportBooksService(IExportBooksRepository exportBooksRepository,
+            IMapper mapper)
         {
             _exportBooksRepository = exportBooksRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<ExportBooksOutputModel>> GetAsync(StorySeriesSearchModel searchModel)
@@ -25,7 +27,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                var exportBooksOutput = Mapper.Map<List<ExportBooksOutputModel>>(exportBooks);
+                var exportBooksOutput = _mapper.Map<List<ExportBooksOutputModel>>(exportBooks);
 
                 return exportBooksOutput;
             }

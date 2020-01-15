@@ -14,19 +14,22 @@ namespace ComicsStore.MiddleWare.Services
     public class CharactersService : ICharactersService
     {
         private readonly IComicsStoreRepository<Character, BasicSearchModel> _charactersRepository;
+        private readonly IMapper _mapper;
 
-        public CharactersService(IComicsStoreRepository<Character, BasicSearchModel> charactersRepository)
+        public CharactersService(IComicsStoreRepository<Character, BasicSearchModel> charactersRepository,
+            IMapper mapper)
         {
             _charactersRepository = charactersRepository;
+            _mapper = mapper;
         }
 
         public async Task<CharacterOutputModel> AddAsync(CharacterInputModel characterInput)
         {
-            var character = Mapper.Map<Character>(characterInput);
+            var character = _mapper.Map<Character>(characterInput);
 
             var characterResult = await _charactersRepository.AddAsync(character);
 
-            return Mapper.Map<CharacterOutputModel>(characterResult);
+            return _mapper.Map<CharacterOutputModel>(characterResult);
         }
 
         public async Task DeleteAsync(int id)
@@ -50,33 +53,33 @@ namespace ComicsStore.MiddleWare.Services
         {
             var characters =  await _charactersRepository.GetAsync(searchModel);
 
-            return Mapper.Map<List<CharacterOutputModel>>(characters);
+            return _mapper.Map<List<CharacterOutputModel>>(characters);
         }
 
         public async Task<CharacterOutputModel> GetAsync(int id)
         {
             var character = await _charactersRepository.GetAsync(id);
 
-            return Mapper.Map<CharacterOutputModel>(character);
+            return _mapper.Map<CharacterOutputModel>(character);
         }
 
         public async Task<CharacterOutputModel> UpdateAsync(int id, CharacterInputModel characterInput)
         {
-            var character = Mapper.Map<Character>(characterInput);
+            var character = _mapper.Map<Character>(characterInput);
             character.Id = id;
 
             character = await _charactersRepository.UpdateAsync(character);
 
-            return Mapper.Map<CharacterOutputModel>(character);
+            return _mapper.Map<CharacterOutputModel>(character);
         }
 
         public async Task<CharacterOutputModel> PatchAsync(int id, CharacterInputModel characterInput)
         {
-            var modifiedData = JsonHelper.ModifiedData<CharacterInputModel, Character>(characterInput);
+            var modifiedData = JsonHelper.ModifiedData<CharacterInputModel, Character>(characterInput, _mapper);
 
             var character = await _charactersRepository.PatchAsync(id, modifiedData);
 
-            return Mapper.Map<CharacterOutputModel>(character);
+            return _mapper.Map<CharacterOutputModel>(character);
         }
     }
 }

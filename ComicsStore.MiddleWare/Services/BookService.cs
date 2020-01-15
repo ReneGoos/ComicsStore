@@ -17,23 +17,26 @@ namespace ComicsStore.MiddleWare.Services
         private readonly IComicsStoreRepository<Book, BasicSearchModel> _booksRepository;
         private readonly IComicsStoreCrossRepository<BookPublisher> _bookPublishersRepository;
         private readonly IComicsStoreCrossRepository<BookSeries> _bookSeriesRepository;
+        private readonly IMapper _mapper;
 
         public BooksService(IComicsStoreRepository<Book, BasicSearchModel> booksRepository,
             IComicsStoreCrossRepository<BookPublisher> bookPublishersRepository,
-            IComicsStoreCrossRepository<BookSeries> bookSeriesRepository)
+            IComicsStoreCrossRepository<BookSeries> bookSeriesRepository,
+            IMapper mapper)
         {
             _booksRepository = booksRepository;
             _bookPublishersRepository = bookPublishersRepository;
             _bookSeriesRepository = bookSeriesRepository;
+            _mapper = mapper;
         }
 
         public async Task<BookOutputModel> AddAsync(BookInputModel bookInput)
         {
-            var book = Mapper.Map<Book>(bookInput);
+            var book = _mapper.Map<Book>(bookInput);
 
             var bookResult = await _booksRepository.AddAsync(book);
 
-            return Mapper.Map<BookOutputModel>(bookResult);
+            return _mapper.Map<BookOutputModel>(bookResult);
         }
 
         public async Task DeleteAsync(int id)
@@ -57,33 +60,33 @@ namespace ComicsStore.MiddleWare.Services
         {
             var books =  await _booksRepository.GetAsync(searchModel);
 
-            return Mapper.Map<List<BookOutputModel>>(books);
+            return _mapper.Map<List<BookOutputModel>>(books);
         }
 
         public async Task<BookOutputModel> GetAsync(int id)
         {
             var book = await _booksRepository.GetAsync(id);
 
-            return Mapper.Map<BookOutputModel>(book);
+            return _mapper.Map<BookOutputModel>(book);
         }
 
         public async Task<BookOutputModel> UpdateAsync(int id, BookInputModel bookInput)
         {
-            var book = Mapper.Map<Book>(bookInput);
+            var book = _mapper.Map<Book>(bookInput);
             book.Id = id;
 
             book = await _booksRepository.UpdateAsync(book);
 
-            return Mapper.Map<BookOutputModel>(book);
+            return _mapper.Map<BookOutputModel>(book);
         }
 
         public async Task<BookOutputModel> PatchAsync(int id, BookInputPatchModel bookInput)
         {
-            var modifiedData = JsonHelper.ModifiedData<BookInputPatchModel, Book>(bookInput);
+            var modifiedData = JsonHelper.ModifiedData<BookInputPatchModel, Book>(bookInput, _mapper);
 
             var book = await _booksRepository.PatchAsync(id, modifiedData);
 
-            return Mapper.Map<BookOutputModel>(book);
+            return _mapper.Map<BookOutputModel>(book);
         }
 
         public async Task<List<BookPublisherOutputModel>> GetPublishersAsync(int bookId)
@@ -92,7 +95,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return Mapper.Map<List<BookPublisherOutputModel>>(bookPublishers);
+                return _mapper.Map<List<BookPublisherOutputModel>>(bookPublishers);
             }
             catch (Exception)
             {

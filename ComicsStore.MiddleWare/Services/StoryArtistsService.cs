@@ -16,14 +16,17 @@ namespace ComicsStore.MiddleWare.Services
         private readonly IStoriesRepository _storiesRepository;
         private readonly IComicsStoreRepository<Artist, BasicSearchModel> _artistsRepository;
         private readonly IComicsStoreCrossRepository<StoryArtist> _storyArtistsRepository;
+        private readonly IMapper _mapper;
 
         public StoryArtistsService(IStoriesRepository storiesRepository,
             IComicsStoreRepository<Artist, BasicSearchModel> artistsRepository,
-            IComicsStoreCrossRepository<StoryArtist> storyArtistsRepository)
+            IComicsStoreCrossRepository<StoryArtist> storyArtistsRepository,
+            IMapper mapper)
         {
             _storiesRepository = storiesRepository;
             _artistsRepository = artistsRepository;
             _storyArtistsRepository = storyArtistsRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<ArtistStoryOutputModel>> GetMainAsync(int artistId)
@@ -32,7 +35,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return Mapper.Map<List<ArtistStoryOutputModel>>(storyArtists);
+                return _mapper.Map<List<ArtistStoryOutputModel>>(storyArtists);
             }
             catch (Exception)
             {
@@ -44,7 +47,7 @@ namespace ComicsStore.MiddleWare.Services
         {
             try
             {
-                var storyArtists = Mapper.Map<List<StoryArtist>>(input);
+                var storyArtists = _mapper.Map<List<StoryArtist>>(input);
 
                 foreach (StoryArtist item in storyArtists)
                 {
@@ -66,7 +69,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return Mapper.Map<List<StoryArtistOutputModel>>(storyArtists);
+                return _mapper.Map<List<StoryArtistOutputModel>>(storyArtists);
             }
             catch (Exception)
             {

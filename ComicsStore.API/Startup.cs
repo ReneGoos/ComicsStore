@@ -16,6 +16,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
+using Microsoft.OpenApi.Models;
 
 namespace ComicsStore.API
 {
@@ -32,23 +33,13 @@ namespace ComicsStore.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
-            /*options =>
-            {
-                options.AddPolicy(MyAllowSpecificOrigins,
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200");
-                });
-            });*/
+            services.AddControllersWithViews();
 
-            services.AddMvc().AddJsonOptions(options => {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
-            
             //var connSqlServer = @"Server=(localdb)\MSSQLLocalDB;Database=ComicsStoreAPI;Trusted_Connection=True;MultipleActiveResultSets=true;AttachDBFileName=D:\SQLLite\ComicsStoreAPI.mdf";
             var conn = Configuration.GetConnectionString("ComicsStore");
             services.AddDbContext<ComicsStoreDbContext>(options => options.UseSqlite(conn));
+            
+            services.AddScoped<IArtistsService, ArtistsService>();
 
             services.AddScoped<IArtistsService, ArtistsService>();
             services.AddScoped<IBooksService, BooksService>();
@@ -77,12 +68,19 @@ namespace ComicsStore.API
             services.AddScoped<IComicsStoreCrossRepository<StoryBook>, StoryBooksRepository>();
             services.AddScoped<IComicsStoreCrossRepository<StoryCharacter>, StoryCharactersRepository>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            var mappingConfig = new MapperConfiguration(cfg => {
+                cfg.AddProfile<ComicsStoreProfile>();
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",
-                             new Info
+                             new OpenApiInfo
                              {
                                  Title = "ComicsStoreAPI",
                                  Version = "v1"
@@ -138,12 +136,14 @@ namespace ComicsStore.API
                 app.UseHsts();
             }
 
+            /*
             app.UseCors(builder => 
                 builder.AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials()
                        );
+                       */
 
             /*options => options.WithOrigins("http://localhost").AllowAnyMethod()
             );*/
@@ -156,9 +156,7 @@ namespace ComicsStore.API
                 c.DocumentTitle = "Title Documentation";
                 c.DocExpansion(DocExpansion.None);
             });
-
-            Mapper.Initialize(cfg => cfg.AddProfile<ComicsStoreProfile>());
-
+            
             /* Angular *
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -166,7 +164,22 @@ namespace ComicsStore.API
             * Angular */
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            app.UseRouting();
+            /*IApplicationBuilder applicationBuilder = app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute("DefaultApi", "api/{controller}/{id}");
+                endpoints.MapHealthChecks("/health");
+            });*/
+
+            /*app.UseMvc*/
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Stories}/{action=Get}/{id?}");
+            });
 
             /* Angular *
             app.UseSpa(spa =>

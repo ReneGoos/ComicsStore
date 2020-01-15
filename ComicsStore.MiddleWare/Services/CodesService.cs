@@ -14,19 +14,22 @@ namespace ComicsStore.MiddleWare.Services
     public class CodesService : ICodesService
     {
         private readonly IComicsStoreRepository<Code, BasicSearchModel> _codesRepository;
+        private readonly IMapper _mapper;
 
-        public CodesService(IComicsStoreRepository<Code, BasicSearchModel> codesRepository)
+        public CodesService(IComicsStoreRepository<Code, BasicSearchModel> codesRepository,
+            IMapper mapper)
         {
             _codesRepository = codesRepository;
+            _mapper = mapper;
         }
 
         public async Task<CodeOutputModel> AddAsync(CodeInputModel codeInput)
         {
-            var code = Mapper.Map<Code>(codeInput);
+            var code = _mapper.Map<Code>(codeInput);
 
             var codeResult = await _codesRepository.AddAsync(code);
 
-            return Mapper.Map<CodeOutputModel>(codeResult);
+            return _mapper.Map<CodeOutputModel>(codeResult);
         }
 
         public async Task DeleteAsync(int id)
@@ -50,33 +53,33 @@ namespace ComicsStore.MiddleWare.Services
         {
             var codes =  await _codesRepository.GetAsync(searchModel);
 
-            return Mapper.Map<List<CodeOutputModel>>(codes);
+            return _mapper.Map<List<CodeOutputModel>>(codes);
         }
 
         public async Task<CodeOutputModel> GetAsync(int id)
         {
             var code = await _codesRepository.GetAsync(id);
 
-            return Mapper.Map<CodeOutputModel>(code);
+            return _mapper.Map<CodeOutputModel>(code);
         }
 
         public async Task<CodeOutputModel> UpdateAsync(int id, CodeInputModel codeInput)
         {
-            var code = Mapper.Map<Code>(codeInput);
+            var code = _mapper.Map<Code>(codeInput);
             code.Id = id;
 
             code = await _codesRepository.UpdateAsync(code);
 
-            return Mapper.Map<CodeOutputModel>(code);
+            return _mapper.Map<CodeOutputModel>(code);
         }
 
         public async Task<CodeOutputModel> PatchAsync(int id, CodeInputModel codeInput)
         {
-            var modifiedData = JsonHelper.ModifiedData<CodeInputModel, Code>(codeInput);
+            var modifiedData = JsonHelper.ModifiedData<CodeInputModel, Code>(codeInput, _mapper);
 
             var code = await _codesRepository.PatchAsync(id, modifiedData);
 
-            return Mapper.Map<CodeOutputModel>(code);
+            return _mapper.Map<CodeOutputModel>(code);
         }
     }
 }

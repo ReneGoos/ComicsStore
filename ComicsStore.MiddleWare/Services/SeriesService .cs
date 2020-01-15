@@ -14,19 +14,22 @@ namespace ComicsStore.MiddleWare.Services
     public class SeriesService : ISeriesService
     {
         private readonly IComicsStoreRepository<Series, BasicSearchModel> _seriesRepository;
+        private readonly IMapper _mapper;
 
-        public SeriesService(IComicsStoreRepository<Series, BasicSearchModel> seriesRepository)
+        public SeriesService(IComicsStoreRepository<Series, BasicSearchModel> seriesRepository,
+            IMapper mapper)
         {
             _seriesRepository = seriesRepository;
+            _mapper = mapper;
         }
 
         public async Task<SeriesOutputModel> AddAsync(SeriesInputModel seriesInput)
         {
-            var series = Mapper.Map<Series>(seriesInput);
+            var series = _mapper.Map<Series>(seriesInput);
 
             var seriesResult = await _seriesRepository.AddAsync(series);
 
-            return Mapper.Map<SeriesOutputModel>(seriesResult);
+            return _mapper.Map<SeriesOutputModel>(seriesResult);
         }
 
         public async Task DeleteAsync(int id)
@@ -50,33 +53,33 @@ namespace ComicsStore.MiddleWare.Services
         {
             var series =  await _seriesRepository.GetAsync(searchModel);
 
-            return Mapper.Map<List<SeriesOutputModel>>(series);
+            return _mapper.Map<List<SeriesOutputModel>>(series);
         }
 
         public async Task<SeriesOutputModel> GetAsync(int id)
         {
             var series = await _seriesRepository.GetAsync(id);
 
-            return Mapper.Map<SeriesOutputModel>(series);
+            return _mapper.Map<SeriesOutputModel>(series);
         }
 
         public async Task<SeriesOutputModel> UpdateAsync(int id, SeriesInputModel seriesInput)
         {
-            var series = Mapper.Map<Series>(seriesInput);
+            var series = _mapper.Map<Series>(seriesInput);
             series.Id = id;
 
             series = await _seriesRepository.UpdateAsync(series);
 
-            return Mapper.Map<SeriesOutputModel>(series);
+            return _mapper.Map<SeriesOutputModel>(series);
         }
 
         public async Task<SeriesOutputModel> PatchAsync(int id, SeriesInputModel seriesInput)
         {
-            var modifiedData = JsonHelper.ModifiedData<SeriesInputModel, Series>(seriesInput);
+            var modifiedData = JsonHelper.ModifiedData<SeriesInputModel, Series>(seriesInput, _mapper);
 
             var series = await _seriesRepository.PatchAsync(id, modifiedData);
 
-            return Mapper.Map<SeriesOutputModel>(series);
+            return _mapper.Map<SeriesOutputModel>(series);
         }
     }
 }

@@ -17,12 +17,12 @@ namespace ComicsStore.MiddleWare.Common
                    (token.Type == JTokenType.Null);
         }
 
-        public static IDictionary<string, object> ModifiedData<TInput, TData>(TInput input)
+        public static IDictionary<string, object> ModifiedData<TInput, TData>(TInput input, IMapper mapper)
         {
             var jsonInput = JObject.FromObject(input);
             var modifiedFields = jsonInput.Properties().Where(p => !p.Value.IsNullOrEmpty()).Select(x => x.Name).ToList();
 
-            var data = Mapper.Map<TData>(input);
+            var data = mapper.Map<TData>(input);
 
             var jsonData = JObject.FromObject(data);
             return jsonData.Properties()

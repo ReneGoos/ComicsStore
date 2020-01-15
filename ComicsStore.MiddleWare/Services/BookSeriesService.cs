@@ -16,21 +16,24 @@ namespace ComicsStore.MiddleWare.Services
         private readonly IStoriesRepository _booksRepository;
         private readonly IComicsStoreRepository<Series, BasicSearchModel> _seriesRepository;
         private readonly IComicsStoreCrossRepository<BookSeries> _bookSeriesRepository;
+        private readonly IMapper _mapper;
 
         public BookSeriesService(IStoriesRepository booksRepository,
             IComicsStoreRepository<Series, BasicSearchModel> seriesRepository,
-            IComicsStoreCrossRepository<BookSeries> bookSeriesRepository)
+            IComicsStoreCrossRepository<BookSeries> bookSeriesRepository,
+            IMapper mapper)
         {
             _booksRepository = booksRepository;
             _seriesRepository = seriesRepository;
             _bookSeriesRepository = bookSeriesRepository;
+            _mapper = mapper;
         }
 
         public async Task<bool> AddSubAsync(int mainId, List<BookSeriesInputModel> input)
         {
             try
             {
-                var bookSeries = Mapper.Map<List<BookSeries>>(input);
+                var bookSeries = _mapper.Map<List<BookSeries>>(input);
 
                 foreach (BookSeries item in bookSeries)
                 {
@@ -52,7 +55,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return Mapper.Map<List<BookSeriesOutputModel>>(bookSeries);
+                return _mapper.Map<List<BookSeriesOutputModel>>(bookSeries);
             }
             catch (Exception)
             {
@@ -66,7 +69,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return Mapper.Map<List<SeriesBookOutputModel>>(bookSeries);
+                return _mapper.Map<List<SeriesBookOutputModel>>(bookSeries);
             }
             catch (Exception)
             {

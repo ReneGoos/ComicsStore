@@ -18,26 +18,28 @@ namespace ComicsStore.MiddleWare.Services
         private readonly IComicsStoreCrossRepository<StoryArtist> _storyArtistsRepository;
         private readonly IComicsStoreCrossRepository<StoryBook> _storyBooksRepository;
         private readonly IComicsStoreCrossRepository<StoryCharacter> _storyCharactersRepository;
+        private readonly IMapper _mapper;
 
         public StoriesService(IStoriesRepository storiesRepository,
             IComicsStoreCrossRepository<StoryArtist> storyArtistsRepository,
             IComicsStoreCrossRepository<StoryBook> storyBooksRepository,
-            IComicsStoreCrossRepository<StoryCharacter> storyCharactersRepository
-            )
+            IComicsStoreCrossRepository<StoryCharacter> storyCharactersRepository,
+            IMapper mapper)
         {
             _storiesRepository = storiesRepository;
             _storyArtistsRepository = storyArtistsRepository;
             _storyBooksRepository = storyBooksRepository;
             _storyCharactersRepository = storyCharactersRepository;
+            _mapper = mapper;
         }
 
         public async Task<StoryOutputModel> AddAsync(StoryInputModel storyInput)
         {
-            var story = Mapper.Map<Story>(storyInput);
+            var story = _mapper.Map<Story>(storyInput);
 
             var storyResult = await _storiesRepository.AddAsync(story);
 
-            return Mapper.Map<StoryOutputModel>(storyResult);
+            return _mapper.Map<StoryOutputModel>(storyResult);
         }
 
         public async Task DeleteAsync(int id)
@@ -63,7 +65,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                var storiesOutput = Mapper.Map<List<StoryOutputModel>>(stories);
+                var storiesOutput = _mapper.Map<List<StoryOutputModel>>(stories);
 
                 return storiesOutput;
             }
@@ -77,7 +79,7 @@ namespace ComicsStore.MiddleWare.Services
         {
             var story = await _storiesRepository.GetAsync(id);
 
-            return Mapper.Map<StoryOutputModel>(story);
+            return _mapper.Map<StoryOutputModel>(story);
         }
 
         public async Task<List<StoryBookOutputModel>> GetBooksAsync(int storyId)
@@ -86,7 +88,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return Mapper.Map<List<StoryBookOutputModel>>(storyBooks);
+                return _mapper.Map<List<StoryBookOutputModel>>(storyBooks);
             }
             catch (Exception)
             {
@@ -100,7 +102,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return Mapper.Map<List<StoryCharacterOutputModel>>(storyCharacters);
+                return _mapper.Map<List<StoryCharacterOutputModel>>(storyCharacters);
             }
             catch (Exception)
             {
@@ -110,21 +112,21 @@ namespace ComicsStore.MiddleWare.Services
 
         public async Task<StoryOutputModel> UpdateAsync(int id, StoryInputModel storyInput)
         {
-            var story = Mapper.Map<Story>(storyInput);
+            var story = _mapper.Map<Story>(storyInput);
             story.Id = id;
 
             story = await _storiesRepository.UpdateAsync(story);
 
-            return Mapper.Map<StoryOutputModel>(story);
+            return _mapper.Map<StoryOutputModel>(story);
         }
 
         public async Task<StoryOutputModel> PatchAsync(int id, StoryInputPatchModel storyInput)
         {
-            var modifiedData = JsonHelper.ModifiedData<StoryInputPatchModel, Story>(storyInput);
+            var modifiedData = JsonHelper.ModifiedData<StoryInputPatchModel, Story>(storyInput, _mapper);
 
             var story = await _storiesRepository.PatchAsync(id, modifiedData);
 
-            return Mapper.Map<StoryOutputModel>(story);
+            return _mapper.Map<StoryOutputModel>(story);
         }
     }
 }
