@@ -37,6 +37,7 @@ namespace ComicsStore.MiddleWare.Repositories
         {
             return _context.Characters
                 .Include(c => c.StoryCharacter)
+                .ThenInclude(sc => sc.Story)
                 .SingleOrDefaultAsync(c => c.Id == characterId); ;
         }
 
