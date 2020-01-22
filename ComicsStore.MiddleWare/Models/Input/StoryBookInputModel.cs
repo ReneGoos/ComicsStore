@@ -1,6 +1,6 @@
 ﻿namespace ComicsStore.MiddleWare.Models.Input
 {
-    public class BasicBookInputModel
+    public class StoryBookInputModel
     {
         public int BookId { get; set; }
 

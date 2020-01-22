@@ -14,7 +14,7 @@ namespace ComicsStore.MiddleWare.Models.Input
         public int CodeId { get; set; }
         public CodeInputModel Code { get; set; }
 
-        public ICollection<BasicBookInputModel> StoryBook { get; set; }
+        public ICollection<StoryBookInputModel> StoryBook { get; set; }
         public ICollection<StoryCharacterInputModel> StoryCharacter { get; set; }
         public ICollection<StoryArtistInputModel> StoryArtist { get; set; }
     }

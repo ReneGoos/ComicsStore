@@ -1,22 +1,20 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories;
+using ComicsStore.MiddleWare.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services;
+using ComicsStore.MiddleWare.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerUI;
-using ComicsStore.MiddleWare.Services.Interfaces;
-using ComicsStore.MiddleWare.Repositories.Interfaces;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
 
 namespace ComicsStore.API
 {
@@ -33,12 +31,15 @@ namespace ComicsStore.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options => { 
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
 
             //var connSqlServer = @"Server=(localdb)\MSSQLLocalDB;Database=ComicsStoreAPI;Trusted_Connection=True;MultipleActiveResultSets=true;AttachDBFileName=D:\SQLLite\ComicsStoreAPI.mdf";
             var conn = Configuration.GetConnectionString("ComicsStore");
             services.AddDbContext<ComicsStoreDbContext>(options => options.UseSqlite(conn));
-            
+
             services.AddScoped<IArtistsService, ArtistsService>();
 
             services.AddScoped<IArtistsService, ArtistsService>();
@@ -68,9 +69,8 @@ namespace ComicsStore.API
             services.AddScoped<IComicsStoreCrossRepository<StoryBook>, StoryBooksRepository>();
             services.AddScoped<IComicsStoreCrossRepository<StoryCharacter>, StoryCharactersRepository>();
 
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            var mappingConfig = new MapperConfiguration(cfg => {
+            var mappingConfig = new MapperConfiguration(cfg =>
+            {
                 cfg.AddProfile<ComicsStoreProfile>();
             });
 
@@ -85,36 +85,7 @@ namespace ComicsStore.API
                                  Title = "ComicsStoreAPI",
                                  Version = "v1"
                              });
-
-                /* Swagger 2.+ support
-                var security = new Dictionary<string, IEnumerable<string>>
-                               {
-                                   {
-                                       "Bearer", new string[]
-                                                 {
-                                                 }
-                                   }
-                               };
-
-                c.AddSecurityDefinition("Bearer",
-                                        new ApiKeyScheme
-                                        {
-                                            Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                                            Name = "Authorization",
-                                            In = "header",
-                                            Type = "apiKey"
-                                        });
-
-                c.AddSecurityRequirement(security);
-                */
             });
-
-            /* Angular *
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ComicsStoreClient/dist";
-            });
-            * Angular */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -124,8 +95,8 @@ namespace ComicsStore.API
             {
                 using (var context = serviceProvider.GetService<ComicsStoreDbContext>())
                 {
-//                  context.Database.SetInitializer(new CreateDatabaseIfNotExists<ComicsStoreDbContext>());
-//                  context.Database.Migrate();
+                    //                  context.Database.SetInitializer(new CreateDatabaseIfNotExists<ComicsStoreDbContext>());
+                    //                  context.Database.Migrate();
                     context.Database.EnsureCreated();
                     context.Database.ExecuteSqlCommand("PRAGMA foreign_keys = ON");
                 }
@@ -136,18 +107,6 @@ namespace ComicsStore.API
                 app.UseHsts();
             }
 
-            /*
-            app.UseCors(builder => 
-                builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials()
-                       );
-                       */
-
-            /*options => options.WithOrigins("http://localhost").AllowAnyMethod()
-            );*/
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -156,23 +115,10 @@ namespace ComicsStore.API
                 c.DocumentTitle = "Title Documentation";
                 c.DocExpansion(DocExpansion.None);
             });
-            
-            /* Angular *
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
-            * Angular */
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            /*IApplicationBuilder applicationBuilder = app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute("DefaultApi", "api/{controller}/{id}");
-                endpoints.MapHealthChecks("/health");
-            });*/
-
-            /*app.UseMvc*/
 
             app.UseEndpoints(endpoints =>
             {
@@ -180,18 +126,6 @@ namespace ComicsStore.API
                     name: "default",
                     pattern: "{controller=Stories}/{action=Get}/{id?}");
             });
-
-            /* Angular *
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ComicsStoreClient";
-                spa.Options.StartupTimeout = new TimeSpan(0, 2, 0);
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
-            });
-            * Angular */
         }
     }
 }

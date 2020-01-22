@@ -34,9 +34,9 @@ namespace ComicsStore.MiddleWare
             CreateMap<BookPublisherInputModel, BookPublisher>();
             CreateMap<BookSeriesInputModel, BookSeries>();
             CreateMap<StoryArtistInputModel, StoryArtist>();
-            CreateMap<BasicBookInputModel, StoryBook>();
-            CreateMap<BasicBookInputModel, BookPublisher>();
-            CreateMap<BasicBookInputModel, BookSeries>();
+            CreateMap<StoryBookInputModel, StoryBook>();
+            CreateMap<StoryBookInputModel, BookPublisher>();
+            CreateMap<StoryBookInputModel, BookSeries>();
             CreateMap<BookStoryInputModel, StoryBook>();
             CreateMap<StoryCharacterInputModel, StoryCharacter>();
 
@@ -47,7 +47,15 @@ namespace ComicsStore.MiddleWare
             CreateMap<Publisher, PublisherOutputModel>();
             CreateMap<Series, SeriesOutputModel>();
             CreateMap<Story, StoryOutputModel>();
+
+            CreateMap<Artist, ArtistOnlyOutputModel>();
+            CreateMap<Book, BookOnlyOutputModel>();
+            CreateMap<Character, CharacterOnlyOutputModel>();
+            CreateMap<Code, CodeOnlyOutputModel>();
+            CreateMap<Publisher, PublisherOnlyOutputModel>();
+            CreateMap<Series, SeriesOnlyOutputModel>(); 
             CreateMap<Story, StoryOnlyOutputModel>();
+
             CreateMap<ExportBook, ExportBooksOutputModel>();
             CreateMap<ExportStory, ExportBooksOutputModel>();
 
