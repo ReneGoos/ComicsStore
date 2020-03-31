@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare;
 using ComicsStore.MiddleWare.Models.Search;
@@ -8,15 +8,16 @@ using ComicsStore.MiddleWare.Services;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
 
-namespace ComicsStore.API
+namespace ComicsStore
 {
     public class Startup
     {
@@ -26,21 +27,21 @@ namespace ComicsStore.API
         }
 
         public IConfiguration Configuration { get; }
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews()
-                .AddNewtonsoftJson(options => { 
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                });
+            services.AddControllersWithViews();
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ComicsStoreClient/dist";
+            });
 
+            //from here copied
             //var connSqlServer = @"Server=(localdb)\MSSQLLocalDB;Database=ComicsStoreAPI;Trusted_Connection=True;MultipleActiveResultSets=true;AttachDBFileName=D:\SQLLite\ComicsStoreAPI.mdf";
             var conn = Configuration.GetConnectionString("ComicsStore");
             services.AddDbContext<ComicsStoreDbContext>(options => options.UseSqlite(conn));
-
-            services.AddScoped<IArtistsService, ArtistsService>();
 
             services.AddScoped<IArtistsService, ArtistsService>();
             services.AddScoped<IBooksService, BooksService>();
@@ -89,23 +90,24 @@ namespace ComicsStore.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                using (var context = serviceProvider.GetService<ComicsStoreDbContext>())
-                {
-                    //                  context.Database.SetInitializer(new CreateDatabaseIfNotExists<ComicsStoreDbContext>());
-                    //                  context.Database.Migrate();
-                    context.Database.EnsureCreated();
-                    context.Database.ExecuteSqlCommand("PRAGMA foreign_keys = ON");
-                }
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            //app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("*");
+            });
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -117,6 +119,11 @@ namespace ComicsStore.API
             });
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            if (!env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
+            }
 
             app.UseRouting();
 
@@ -124,7 +131,20 @@ namespace ComicsStore.API
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Stories}/{action=Get}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "ComicsStoreClient";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
         }
     }

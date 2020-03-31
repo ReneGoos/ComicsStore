@@ -76,14 +76,17 @@ namespace ComicsStore.Data.Model
                 .HasIndex(c => c.Name)
                 .IsUnique(true);
 
-            modelBuilder.Query<ExportStory>()
+            modelBuilder.Entity<ExportStory>()
+                .HasNoKey()
                 .ToView("ExportStories");
 
-            modelBuilder.Query<ExportBook>()
+            modelBuilder.Entity<ExportBook>()
+                .HasNoKey()
                 .ToView("ExportBooks")
                 .Property(v => v.StoryNumber).HasColumnName("Story Number");
 
-            modelBuilder.Query<StorySeries>()
+            modelBuilder.Entity<StorySeries>()
+                .HasNoKey()
                 .ToView("StorySeries");
         }
 
@@ -101,8 +104,8 @@ namespace ComicsStore.Data.Model
         public virtual DbSet<BookSeries> BookSeries { get; set; }
         public virtual DbSet<BookPublisher> BookPublishers { get; set; }
 
-        public virtual DbQuery<ExportBook> ExportBooks { get; set; }
-        public virtual DbQuery<ExportStory> ExportStory { get; set; }
-        public virtual DbQuery<StorySeries> StorySeries { get; set; }
+        public virtual DbSet<ExportBook> ExportBooks { get; set; }
+        public virtual DbSet<ExportStory> ExportStory { get; set; }
+        public virtual DbSet<StorySeries> StorySeries { get; set; }
     }
 }
