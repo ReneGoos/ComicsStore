@@ -12,6 +12,7 @@ import { StoryDetailComponent } from './stories/story-detail.component';
 import { RouterModule } from '@angular/router';
 import { WelcomeComponent } from './home/welcome.component';
 import { ArtistDetailComponent } from './artists/artist-detail.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ArtistDetailComponent } from './artists/artist-detail.component';
         { path: 'welcome', component: WelcomeComponent },
         { path: '', redirectTo: 'welcome', pathMatch: 'full' },
         { path: '**', redirectTo: 'welcome', pathMatch: 'full' }
-      ])
+      ]),
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
