@@ -6,7 +6,5 @@ namespace ComicsStore.MiddleWare.Models.Input
     {
         public int ArtistId { get; set; }
         public List<string> ArtistType { get; set; }
-
-        public ArtistInputModel Artist { get; set; }
     }
 }

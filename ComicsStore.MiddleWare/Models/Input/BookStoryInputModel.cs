@@ -3,7 +3,5 @@
     public class BookStoryInputModel
     {
         public int StoryId { get; set; }
-
-        public StoryInputModel Story { get; set; }
     }
 }

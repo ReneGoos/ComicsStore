@@ -5,7 +5,5 @@
         public int SeriesId { get; set; }
         public string Issue { get; set; }
         public decimal? SeriesOrder { get; set; }
-
-        public SeriesInputModel Series { get; set; }
     }
 }

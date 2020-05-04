@@ -26,7 +26,6 @@ namespace ComicsStore.Data.Model
     {
         story = 0,
         one = 1,
-        [Display(Name = "Gag")]
         gag = 2,
         cartoon = 3
     }
@@ -35,11 +34,11 @@ namespace ComicsStore.Data.Model
     public enum ArtistType
     {
         artist = 1,
-        [Display(Name = "Writer")]
         writer = 2,
         penciller = 4,
         inker = 8,
         colorist = 16,
+        [Display(Name = "inspiration")]
         teacher = 32
     }
 }
