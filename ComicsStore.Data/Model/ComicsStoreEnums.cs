@@ -39,6 +39,8 @@ namespace ComicsStore.Data.Model
         inker = 8,
         colorist = 16,
         [Display(Name = "inspiration")]
-        teacher = 32
+        master = 32,
+        letterer = 64,
+        translator = 128
     }
 }

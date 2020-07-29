@@ -22,7 +22,7 @@ namespace ComicsStore.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(List<SeriesOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync([FromQuery] BasicSearchModel seriesSearchModel)
+        public async Task<IActionResult> GetAsync([FromQuery] SeriesSearchModel seriesSearchModel)
         {
             return Ok(await _seriesService.GetAsync(seriesSearchModel));
         }
@@ -93,6 +93,21 @@ namespace ComicsStore.API.Controllers
             await _seriesService.DeleteAsync(id);
 
             return NoContent();
+        }
+
+        [Route("{seriesId}/Books")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<SeriesBookOutputModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetBooksAsync(int seriesId)
+        {
+            var bookOutput = await _seriesService.GetBooksAsync(seriesId);
+
+            if (bookOutput == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(bookOutput);
         }
     }
 }

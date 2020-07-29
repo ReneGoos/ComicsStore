@@ -116,6 +116,21 @@ namespace ComicsStore.API.Controllers
             return NoContent();
         }
 
+        [Route("api/Stories/{storyId}/Artists")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<StoryArtistOutputModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetArtistsAsync(int storyId)
+        {
+            var artistOutput = await _storiesService.GetArtistsAsync(storyId);
+
+            if (artistOutput == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(artistOutput);
+        }
+
         [Route("{storyId}/Characters")]
         [HttpGet]
         [ProducesResponseType(typeof(List<StoryCharacterOutputModel>), (int)HttpStatusCode.OK)]
@@ -133,17 +148,17 @@ namespace ComicsStore.API.Controllers
 
         [Route("{storyId}/Books")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<StoryBookOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<BookOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetBookAsync(int storyId)
         {
-            var artistOutput = await _storiesService.GetBooksAsync(storyId);
+            var bookOutput = await _storiesService.GetBooksAsync(storyId);
 
-            if (artistOutput == null)
+            if (bookOutput == null)
             {
                 return NotFound();
             }
 
-            return Ok(artistOutput);
+            return Ok(bookOutput);
         }
     }
 }

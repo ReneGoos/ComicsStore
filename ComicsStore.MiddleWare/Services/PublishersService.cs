@@ -8,18 +8,22 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using System;
 
 namespace ComicsStore.MiddleWare.Services
 {
     public class PublishersService : IPublishersService
     {
         private readonly IComicsStoreRepository<Publisher, BasicSearchModel> _publishersRepository;
+        private readonly IComicsStoreCrossRepository<BookPublisher> _bookPublishersRepository;
         private readonly IMapper _mapper;
 
         public PublishersService(IComicsStoreRepository<Publisher, BasicSearchModel> publishersRepository,
+            IComicsStoreCrossRepository<BookPublisher> bookPublishersRepository,
             IMapper mapper)
         {
             _publishersRepository = publishersRepository;
+            _bookPublishersRepository = bookPublishersRepository;
             _mapper = mapper;
         }
 
@@ -80,6 +84,20 @@ namespace ComicsStore.MiddleWare.Services
             var publisher = await _publishersRepository.PatchAsync(id, modifiedData);
 
             return _mapper.Map<PublisherOutputModel>(publisher);
+        }
+
+        public async Task<List<BasicBookOutputModel>> GetBooksAsync(int publisherId)
+        {
+            var bookPublishers = await _bookPublishersRepository.GetAsync(null, publisherId);
+
+            try
+            {
+                return _mapper.Map<List<BasicBookOutputModel>>(bookPublishers);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

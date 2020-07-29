@@ -82,13 +82,27 @@ namespace ComicsStore.MiddleWare.Services
             return _mapper.Map<StoryOutputModel>(story);
         }
 
-        public async Task<List<StoryBookOutputModel>> GetBooksAsync(int storyId)
+        public async Task<List<StoryArtistOutputModel>> GetArtistsAsync(int storyId)
+        {
+            var storyArtists = await _storyArtistsRepository.GetAsync(storyId, null);
+
+            try
+            {
+                return _mapper.Map<List<StoryArtistOutputModel>>(storyArtists);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<BasicBookOutputModel>> GetBooksAsync(int storyId)
         {
             var storyBooks = await _storyBooksRepository.GetAsync(storyId, null);
 
             try
             {
-                return _mapper.Map<List<StoryBookOutputModel>>(storyBooks);
+                return _mapper.Map<List<BasicBookOutputModel>>(storyBooks);
             }
             catch (Exception)
             {

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using System;
 
 namespace ComicsStore.MiddleWare.Services
 {
@@ -15,7 +16,7 @@ namespace ComicsStore.MiddleWare.Services
     {
         private readonly IComicsStoreRepository<Artist, BasicSearchModel> _artistsRepository;
         private readonly IComicsStoreCrossRepository<StoryArtist> _storyArtistsRepository;
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
 
         public ArtistsService(IComicsStoreRepository<Artist, BasicSearchModel> artistsRepository,
             IComicsStoreCrossRepository<StoryArtist> storyArtistsRepository,
@@ -23,16 +24,16 @@ namespace ComicsStore.MiddleWare.Services
         {
             _artistsRepository = artistsRepository;
             _storyArtistsRepository = storyArtistsRepository;
-            this.mapper = mapper;
+            _mapper = mapper;
         }
 
         public async Task<ArtistOutputModel> AddAsync(ArtistInputModel artistInput)
         {
-            var artist = mapper.Map<Artist>(artistInput);
+            var artist = _mapper.Map<Artist>(artistInput);
 
             var artistResult = await _artistsRepository.AddAsync(artist);
 
-            return mapper.Map<ArtistOutputModel>(artistResult);
+            return _mapper.Map<ArtistOutputModel>(artistResult);
         }
 
         public async Task DeleteAsync(int id)
@@ -56,33 +57,47 @@ namespace ComicsStore.MiddleWare.Services
         {
             var artists =  await _artistsRepository.GetAsync(searchModel);
 
-            return mapper.Map<List<ArtistOutputModel>>(artists);
+            return _mapper.Map<List<ArtistOutputModel>>(artists);
         }
 
         public async Task<ArtistOutputModel> GetAsync(int id)
         {
             var artist = await _artistsRepository.GetAsync(id);
 
-            return mapper.Map<ArtistOutputModel>(artist);
+            return _mapper.Map<ArtistOutputModel>(artist);
         }
 
         public async Task<ArtistOutputModel> UpdateAsync(int id, ArtistInputModel artistInput)
         {
-            var artist = mapper.Map<Artist>(artistInput);
+            var artist = _mapper.Map<Artist>(artistInput);
             artist.Id = id;
 
             artist = await _artistsRepository.UpdateAsync(artist);
 
-            return mapper.Map<ArtistOutputModel>(artist);
+            return _mapper.Map<ArtistOutputModel>(artist);
         }
 
         public async Task<ArtistOutputModel> PatchAsync(int id, ArtistInputModel artistInput)
         {
-            var modifiedData = JsonHelper.ModifiedData<ArtistInputModel, Artist>(artistInput, mapper);
+            var modifiedData = JsonHelper.ModifiedData<ArtistInputModel, Artist>(artistInput, _mapper);
 
             var artist = await _artistsRepository.PatchAsync(id, modifiedData);
 
-            return mapper.Map<ArtistOutputModel>(artist);
+            return _mapper.Map<ArtistOutputModel>(artist);
+        }
+
+        public async Task<List<ArtistStoryOutputModel>> GetStoriesAsync(int artistId)
+        {
+            var storyArtists = await _storyArtistsRepository.GetAsync(null, artistId);
+
+            try
+            {
+                return _mapper.Map<List<ArtistStoryOutputModel>>(storyArtists);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

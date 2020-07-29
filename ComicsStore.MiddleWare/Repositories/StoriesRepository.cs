@@ -31,7 +31,11 @@ namespace ComicsStore.MiddleWare.Repositories
                 .Include(s => s.StoryArtist)
                 .Include(s => s.StoryCharacter)
                 .Include(s => s.StoryBook)
-                .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
+                .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower()))
+                .Where(s => model.ExtraInfo == null || s.ExtraInfo.ToLower().Contains(model.ExtraInfo.ToLower()))
+                .Where(s => !model.CodeId.HasValue || s.CodeId == model.CodeId)
+                .Where(s => !model.StoryType.HasValue || s.StoryType == model.StoryType)
+                .ToListAsync();
 
             return stories;
         }

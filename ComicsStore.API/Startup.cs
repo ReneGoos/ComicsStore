@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
 
 namespace ComicsStore
 {
@@ -55,15 +56,12 @@ namespace ComicsStore
             services.AddScoped<IStoriesService, StoriesService>();
             services.AddScoped<IExportBooksService, ExportBooksService>();
 
-            services.AddScoped<IStoryArtistsService, StoryArtistsService>();
-            services.AddScoped<IBookSeriesService, BookSeriesService>();
-
             services.AddScoped<IComicsStoreRepository<Artist, BasicSearchModel>, ArtistsRepository>();
             services.AddScoped<IComicsStoreRepository<Book, BasicSearchModel>, BooksRepository>();
             services.AddScoped<IComicsStoreRepository<Character, BasicSearchModel>, CharactersRepository>();
             services.AddScoped<IComicsStoreRepository<Code, BasicSearchModel>, CodesRepository>();
             services.AddScoped<IComicsStoreRepository<Publisher, BasicSearchModel>, PublishersRepository>();
-            services.AddScoped<IComicsStoreRepository<Series, BasicSearchModel>, SeriesRepository>();
+            services.AddScoped<IComicsStoreRepository<Series, SeriesSearchModel>, SeriesRepository>();
             services.AddScoped<IStoriesRepository, StoriesRepository>();
             services.AddScoped<IExportBooksRepository, StorySeriesRepository>();
 
@@ -146,7 +144,9 @@ namespace ComicsStore
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    //spa.UseAngularCliServer(npmScript: "start");
+                    //spa.Options.StartupTimeout = TimeSpan.FromSeconds(200);
                 }
             });
         }

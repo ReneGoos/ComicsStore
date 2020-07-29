@@ -8,7 +8,7 @@ using ComicsStore.MiddleWare.Repositories.Interfaces;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class SeriesRepository : ComicsStoreMainRepository<Series>, IComicsStoreRepository<Series, BasicSearchModel>
+    public class SeriesRepository : ComicsStoreMainRepository<Series>, IComicsStoreRepository<Series, SeriesSearchModel>
     {
         public SeriesRepository(ComicsStoreDbContext context)
             : base(context)
@@ -25,10 +25,12 @@ namespace ComicsStore.MiddleWare.Repositories
             return RemoveItemAsync(_context.Series, series);
         }
 
-        public Task<List<Series>> GetAsync(BasicSearchModel model)
+        public Task<List<Series>> GetAsync(SeriesSearchModel model)
         {
             var series = _context.Series
-                .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
+                .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower()))
+                .Where(s => !model.CodeId.HasValue || s.CodeId == model.CodeId)
+                .ToListAsync();
 
             return series;
         }

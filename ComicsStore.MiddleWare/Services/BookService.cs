@@ -102,5 +102,19 @@ namespace ComicsStore.MiddleWare.Services
                 return null;
             }
         }
+
+        public async Task<List<BookSeriesOutputModel>> GetSeriesAsync(int bookId)
+        {
+            var bookSeries = await _bookSeriesRepository.GetAsync(bookId, null);
+
+            try
+            {
+                return _mapper.Map<List<BookSeriesOutputModel>>(bookSeries);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }
 }

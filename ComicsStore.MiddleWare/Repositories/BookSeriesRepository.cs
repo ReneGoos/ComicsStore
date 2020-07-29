@@ -41,6 +41,7 @@ namespace ComicsStore.MiddleWare.Repositories
 
             return _context.BookSeries
                 .Include(sa => sa.Series)
+                .Include(sa => sa.Book)
                 .Where(s => id != null ? s.BookId == id : s.SeriesId == crossId)
                 .ToListAsync();
         }

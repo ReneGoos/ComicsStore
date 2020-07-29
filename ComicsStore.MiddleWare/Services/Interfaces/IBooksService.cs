@@ -9,5 +9,6 @@ namespace ComicsStore.MiddleWare.Services.Interfaces
     public interface IBooksService : IComicsStoreService<BookInputModel, BookInputPatchModel, BookOutputModel, BasicSearchModel>
     {
         Task<List<BookPublisherOutputModel>> GetPublishersAsync(int bookId);
+        Task<List<BookSeriesOutputModel>> GetSeriesAsync(int bookId);
     }
 }

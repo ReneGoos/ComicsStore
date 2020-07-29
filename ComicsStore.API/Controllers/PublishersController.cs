@@ -94,5 +94,20 @@ namespace ComicsStore.API.Controllers
 
             return NoContent();
         }
+
+        [Route("{publisherId}/Books")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<BookOutputModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetBooksAsync(int publisherId)
+        {
+            var bookOutput = await _publishersService.GetBooksAsync(publisherId);
+
+            if (bookOutput == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(bookOutput);
+        }
     }
 }

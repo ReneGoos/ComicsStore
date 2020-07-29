@@ -8,18 +8,25 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using System;
 
 namespace ComicsStore.MiddleWare.Services
 {
     public class CodesService : ICodesService
     {
         private readonly IComicsStoreRepository<Code, BasicSearchModel> _codesRepository;
+        private readonly IStoriesRepository _storiesRepository;
+        private readonly IComicsStoreRepository<Series, SeriesSearchModel> _seriesRepository;
         private readonly IMapper _mapper;
 
         public CodesService(IComicsStoreRepository<Code, BasicSearchModel> codesRepository,
+            IStoriesRepository storiesRepository,
+            IComicsStoreRepository<Series, SeriesSearchModel> seriesRepository,
             IMapper mapper)
         {
             _codesRepository = codesRepository;
+            _storiesRepository = storiesRepository;
+            _seriesRepository = seriesRepository;
             _mapper = mapper;
         }
 
@@ -80,6 +87,34 @@ namespace ComicsStore.MiddleWare.Services
             var code = await _codesRepository.PatchAsync(id, modifiedData);
 
             return _mapper.Map<CodeOutputModel>(code);
+        }
+
+        public async Task<List<StoryOnlyOutputModel>> GetStoriesAsync(int codeId)
+        {
+            var storyCodes = await _storiesRepository.GetAsync(new StorySearchModel { CodeId = codeId });
+
+            try
+            {
+                return _mapper.Map<List<StoryOnlyOutputModel>>(storyCodes);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<SeriesOutputModel>> GetSeriesAsync(int codeId)
+        {
+            var seriesCodes = await _seriesRepository.GetAsync(new SeriesSearchModel { CodeId = codeId });
+
+            try
+            {
+                return _mapper.Map<List<SeriesOutputModel>>(seriesCodes);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }
