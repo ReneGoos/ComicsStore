@@ -1,6 +1,7 @@
 using AutoMapper;
 using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare;
+using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
@@ -8,14 +9,14 @@ using ComicsStore.MiddleWare.Services;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
 
 namespace ComicsStore
 {
@@ -32,8 +33,11 @@ namespace ComicsStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews()
-                .AddNewtonsoftJson(options =>
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                        .AddNewtonsoftJson(options =>
+                        {
+                            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                            options.SerializerSettings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
+                        }
                     );
 
             // In production, the Angular files will be served from this directory
@@ -44,32 +48,8 @@ namespace ComicsStore
 
             //from here copied
             //var connSqlServer = @"Server=(localdb)\MSSQLLocalDB;Database=ComicsStoreAPI;Trusted_Connection=True;MultipleActiveResultSets=true;AttachDBFileName=D:\SQLLite\ComicsStoreAPI.mdf";
-            var conn = Configuration.GetConnectionString("ComicsStore");
-            services.AddDbContext<ComicsStoreDbContext>(options => options.UseSqlite(conn));
 
-            services.AddScoped<IArtistsService, ArtistsService>();
-            services.AddScoped<IBooksService, BooksService>();
-            services.AddScoped<ICharactersService, CharactersService>();
-            services.AddScoped<ICodesService, CodesService>();
-            services.AddScoped<IPublishersService, PublishersService>();
-            services.AddScoped<ISeriesService, SeriesService>();
-            services.AddScoped<IStoriesService, StoriesService>();
-            services.AddScoped<IExportBooksService, ExportBooksService>();
-
-            services.AddScoped<IComicsStoreRepository<Artist, BasicSearchModel>, ArtistsRepository>();
-            services.AddScoped<IComicsStoreRepository<Book, BasicSearchModel>, BooksRepository>();
-            services.AddScoped<IComicsStoreRepository<Character, BasicSearchModel>, CharactersRepository>();
-            services.AddScoped<IComicsStoreRepository<Code, BasicSearchModel>, CodesRepository>();
-            services.AddScoped<IComicsStoreRepository<Publisher, BasicSearchModel>, PublishersRepository>();
-            services.AddScoped<IComicsStoreRepository<Series, SeriesSearchModel>, SeriesRepository>();
-            services.AddScoped<IStoriesRepository, StoriesRepository>();
-            services.AddScoped<IExportBooksRepository, StorySeriesRepository>();
-
-            services.AddScoped<IComicsStoreCrossRepository<BookPublisher>, BookPublishersRepository>();
-            services.AddScoped<IComicsStoreCrossRepository<BookSeries>, BookSeriesRepository>();
-            services.AddScoped<IComicsStoreCrossRepository<StoryArtist>, StoryArtistsRepository>();
-            services.AddScoped<IComicsStoreCrossRepository<StoryBook>, StoryBooksRepository>();
-            services.AddScoped<IComicsStoreCrossRepository<StoryCharacter>, StoryCharactersRepository>();
+            ResolveDependencies.AddServices(services, Configuration);
 
             var mappingConfig = new MapperConfiguration(cfg =>
             {
@@ -88,14 +68,17 @@ namespace ComicsStore
                                  Version = "v1"
                              });
             });
+    
+            services.AddSwaggerGenNewtonsoftSupport();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ComicsStoreDbContext context)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                //context.Database.EnsureCreated();
             }
             else
             {
@@ -115,7 +98,7 @@ namespace ComicsStore
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "ComicsStoreAPI V1");
 
-                c.DocumentTitle = "Title Documentation";
+                c.DocumentTitle = "ComicsStore API";
                 c.DocExpansion(DocExpansion.None);
             });
 

@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ComicsStore.Data.Model;
-using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
+using ComicsStore.MiddleWare.Models.Search;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
@@ -28,6 +28,8 @@ namespace ComicsStore.MiddleWare.Repositories
         public Task<List<Story>> GetAsync(StorySearchModel model)
         {
             var stories = _context.Stories
+                .Include(s => s.Code)
+                .Include(s => s.OriginStory)
                 .Include(s => s.StoryArtist)
                 .Include(s => s.StoryCharacter)
                 .Include(s => s.StoryBook)
@@ -44,6 +46,7 @@ namespace ComicsStore.MiddleWare.Repositories
         {
             return _context.Stories
                 .Include(s => s.Code)
+                .Include(s => s.OriginStory)
                 .Include(s => s.StoryArtist)
                 .ThenInclude(sa => sa.Artist)
                 .Include(s => s.StoryCharacter)

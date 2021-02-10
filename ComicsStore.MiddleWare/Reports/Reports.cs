@@ -11,7 +11,7 @@ namespace ComicsStore.MiddleWare.Reports
 {
     public static class Reports
     {
-        public async static Task<string> DataExport(IExportBooksRepository repository, StorySeriesSearchModel searchModel)
+        public async static Task<string> DataExportAsync(IExportBooksRepository repository, StorySeriesSearchModel searchModel)
         {
             string columnNames = @"""Title"",""Story number"",""Type"",""BookType"",""Character"",""Artist"",""Issue"",""Issue title"",""Language"",""Series"",""Publisher"",""Year"",""Purchase Date"",""Notes"",""Deleted""";
 
@@ -45,69 +45,61 @@ namespace ComicsStore.MiddleWare.Reports
             //SqlDataReader rsStories = BooksDataset(pdbAll, pboolBooks, pboolPeriodicals, pboolDeleted, false);
             foreach (var stories in await repository.GetAsync(searchModel))
             {
-                try
+                if (storyId == stories.StoryId && bookId == stories.BookId && seriesId == stories.SeriesId)
                 {
-                    if (storyId == stories.StoryId && bookId == stories.BookId && seriesId == stories.SeriesId)
-                    {
-                        characters.Add(stories.Character);
-                        artists[stories.Artist] = (ArtistType)stories.ArtistType;
-                        bookIssue = stories.Issue;
-                        bookIssueTitle = stories.IssueTitle;
-                        language = stories.Language;
-                        series.Add(stories.Series);
-                        publishers.Add(stories.Publisher);
-                    }
-                    else
-                    {
-                        if (title != null)
-                        {
-                            AddToOutput(deleted,
-                                title,
-                                storyNumber,
-                                storyType,
-                                bookType,
-                                bookIssue,
-                                bookIssueTitle,
-                                language,
-                                notes,
-                                bookYear,
-                                purchaseDate,
-                                characters,
-                                artists,
-                                series,
-                                publishers,
-                                exportText);
-                        }
-
-                        characters = new SortedSet<string>();
-                        artists = new SortedList<string, ArtistType>();
-                        series = new SortedSet<string>();
-                        publishers = new SortedSet<string>();
-
-                        storyId = stories.StoryId;
-                        bookId = stories.BookId;
-                        seriesId = stories.SeriesId;
-                        title = stories.Title;
-                        storyNumber = !stories.StoryNumber.HasValue ? stories.ExtraInfo : stories.StoryNumber.Value.ToString();
-                        storyType = (StoryType)stories.StoryType;
-                        bookType = (BookType)stories.BookType;
-                        characters.Add(stories.Character);
-                        artists[stories.Artist] = (ArtistType)stories.ArtistType;
-                        bookIssue = stories.Issue;
-                        bookIssueTitle = stories.IssueTitle;
-                        language = stories.Language.Length == 0 ? "nl" : stories.Language;
-                        series.Add(stories.Series);
-                        publishers.Add(stories.Publisher);
-                        bookYear = !stories.Year.HasValue ? -1 : stories.Year.Value;
-                        purchaseDate = stories.PurchaseDate;
-                        deleted = stories.Deleted;
-                        notes = stories.Notes;
-                    }
+                    characters.Add(stories.Character);
+                    artists[stories.Artist] = (ArtistType)stories.ArtistType;
+                    bookIssue = stories.Issue;
+                    bookIssueTitle = stories.IssueTitle;
+                    language = stories.Language;
+                    series.Add(stories.Series);
+                    publishers.Add(stories.Publisher);
                 }
-                catch (Exception e)
+                else
                 {
+                    if (title != null)
+                    {
+                        AddToOutput(deleted,
+                            title,
+                            storyNumber,
+                            storyType,
+                            bookType,
+                            bookIssue,
+                            bookIssueTitle,
+                            language,
+                            notes,
+                            bookYear,
+                            purchaseDate,
+                            characters,
+                            artists,
+                            series,
+                            publishers,
+                            exportText);
+                    }
 
-                    throw e;
+                    characters = new SortedSet<string>();
+                    artists = new SortedList<string, ArtistType>();
+                    series = new SortedSet<string>();
+                    publishers = new SortedSet<string>();
+
+                    storyId = stories.StoryId;
+                    bookId = stories.BookId;
+                    seriesId = stories.SeriesId;
+                    title = stories.Title;
+                    storyNumber = !stories.StoryNumber.HasValue ? stories.ExtraInfo : stories.StoryNumber.Value.ToString();
+                    storyType = (StoryType)stories.StoryType;
+                    bookType = (BookType)stories.BookType;
+                    characters.Add(stories.Character);
+                    artists[stories.Artist] = (ArtistType)stories.ArtistType;
+                    bookIssue = stories.Issue;
+                    bookIssueTitle = stories.IssueTitle;
+                    language = stories.Language.Length == 0 ? "nl" : stories.Language;
+                    series.Add(stories.Series);
+                    publishers.Add(stories.Publisher);
+                    bookYear = !stories.Year.HasValue ? -1 : stories.Year.Value;
+                    purchaseDate = stories.PurchaseDate;
+                    deleted = stories.Deleted;
+                    notes = stories.Notes;
                 }
             }
 
@@ -132,129 +124,7 @@ namespace ComicsStore.MiddleWare.Reports
             //    mdiMain.stbStatus.Panels(1).Text = "Klaar"
             return exportText.ToString();
         }
-        public async static Task<string> DataExportQuery(IExportBooksRepository repository, StorySeriesSearchModel searchModel)
-        {
-            string columnNames = @"""Title"",""Story number"",""Type"",""BookType"",""Character"",""Artist"",""Issue"",""Issue title"",""Language"",""Series"",""Publisher"",""Year"",""Purchase Date"",""Notes"",""Deleted""";
-
-            Active deleted = default;
-            string title = null;
-            string storyNumber = null;
-            StoryType storyType = default;
-            BookType bookType = default;
-            string bookIssue = null;
-            string bookIssueTitle = null;
-            string language = null;
-            string notes = null;
-
-            int storyId = -1;
-            int bookId = -1;
-            int seriesId = -1;
-            int bookYear = -1;
-
-            DateTime purchaseDate = default;
-
-            var characters = new SortedSet<string>();
-            var artists = new SortedList<string, ArtistType>();
-            var series = new SortedSet<string>();
-            var publishers = new SortedSet<string>();
-
-            StringBuilder exportText = new StringBuilder();
-
-            exportText.AppendLine(columnNames);
-
-            //rsCodes = CodesDataset()
-            //SqlDataReader rsStories = BooksDataset(pdbAll, pboolBooks, pboolPeriodicals, pboolDeleted, false);
-            foreach (var stories in await repository.GetAsync(searchModel))
-            {
-                try
-                {
-                    if (storyId == stories.StoryId && bookId == stories.BookId && seriesId == stories.SeriesId)
-                    {
-                        characters.Add(stories.Character);
-                        artists[stories.Artist] = (ArtistType)stories.ArtistType;
-                        bookIssue = stories.Issue;
-                        bookIssueTitle = stories.IssueTitle;
-                        language = stories.Language;
-                        series.Add(stories.Series);
-                        publishers.Add(stories.Publisher);
-                    }
-                    else
-                    {
-                        if (title != null)
-                        {
-                            AddToOutput(deleted,
-                                title,
-                                storyNumber,
-                                storyType,
-                                bookType,
-                                bookIssue,
-                                bookIssueTitle,
-                                language,
-                                notes,
-                                bookYear,
-                                purchaseDate,
-                                characters,
-                                artists,
-                                series,
-                                publishers,
-                                exportText);
-                        }
-
-                        characters = new SortedSet<string>();
-                        artists = new SortedList<string, ArtistType>();
-                        series = new SortedSet<string>();
-                        publishers = new SortedSet<string>();
-
-                        storyId = stories.StoryId;
-                        bookId = stories.BookId;
-                        seriesId = stories.SeriesId;
-                        title = stories.Title;
-                        storyNumber = !stories.StoryNumber.HasValue ? stories.ExtraInfo : stories.StoryNumber.Value.ToString();
-                        storyType = (StoryType)stories.StoryType;
-                        bookType = (BookType)stories.BookType;
-                        characters.Add(stories.Character);
-                        artists[stories.Artist] = (ArtistType)stories.ArtistType;
-                        bookIssue = stories.Issue;
-                        bookIssueTitle = stories.IssueTitle;
-                        language = stories.Language.Length == 0 ? "nl" : stories.Language;
-                        series.Add(stories.Series);
-                        publishers.Add(stories.Publisher);
-                        bookYear = !stories.Year.HasValue ? -1 : stories.Year.Value;
-                        purchaseDate = stories.PurchaseDate;
-                        deleted = stories.Deleted;
-                        notes = stories.Notes;
-                    }
-                }
-                catch (Exception e)
-                {
-
-                    throw e;
-                }
-            }
-
-
-            AddToOutput(deleted,
-                    title,
-                    storyNumber,
-                    storyType,
-                    bookType,
-                    bookIssue,
-                    bookIssueTitle,
-                    language,
-                    notes,
-                    bookYear,
-                    purchaseDate,
-                    characters,
-                    artists,
-                    series,
-                    publishers,
-                    exportText);
-
-            //    .Visible = True
-            //    mdiMain.stbStatus.Panels(1).Text = "Klaar"
-            return exportText.ToString();
-        }
-
+        
         private static string Escape(string input)
         {
             if (input == null)

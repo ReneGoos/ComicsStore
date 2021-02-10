@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
+using ComicsStore.MiddleWare.Repositories;
 
 namespace ComicsStore.MiddleWare.Services
 {
@@ -17,16 +18,19 @@ namespace ComicsStore.MiddleWare.Services
         private readonly IComicsStoreRepository<Book, BasicSearchModel> _booksRepository;
         private readonly IComicsStoreCrossRepository<BookPublisher> _bookPublishersRepository;
         private readonly IComicsStoreCrossRepository<BookSeries> _bookSeriesRepository;
+        private readonly IComicsStoreCrossRepository<StoryBook> _storyBooksRepository;
         private readonly IMapper _mapper;
 
         public BooksService(IComicsStoreRepository<Book, BasicSearchModel> booksRepository,
             IComicsStoreCrossRepository<BookPublisher> bookPublishersRepository,
             IComicsStoreCrossRepository<BookSeries> bookSeriesRepository,
+            IComicsStoreCrossRepository<StoryBook> storyBooksRepository,
             IMapper mapper)
         {
             _booksRepository = booksRepository;
             _bookPublishersRepository = bookPublishersRepository;
             _bookSeriesRepository = bookSeriesRepository;
+            _storyBooksRepository = storyBooksRepository;
             _mapper = mapper;
         }
 
@@ -110,6 +114,20 @@ namespace ComicsStore.MiddleWare.Services
             try
             {
                 return _mapper.Map<List<BookSeriesOutputModel>>(bookSeries);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<StoryOnlyOutputModel>> GetStoriesAsync(int bookId)
+        {
+            var bookStories = await _storyBooksRepository.GetAsync(null, bookId);
+
+            try
+            {
+                return _mapper.Map<List<StoryOnlyOutputModel>>(bookStories);
             }
             catch (Exception)
             {

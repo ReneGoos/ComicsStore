@@ -8,8 +8,8 @@ namespace ComicsStore.MiddleWare.Services.Interfaces
     public interface IComicsStoreCrossService<TOutMain, TInSub, TOutSub>
     //where TInMain : BasicInputModel
     where TInSub : BasicCrossInputModel
-    where TOutMain : BasicCrossOutputModel
-    where TOutSub : BasicCrossOutputModel
+    where TOutMain : BasicOutputModel
+    where TOutSub : BasicOutputModel
     {
         //Task<bool> AddMainAsync(int crossId, List<TInMain> input);
 

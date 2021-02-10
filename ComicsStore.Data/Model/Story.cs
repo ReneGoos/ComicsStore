@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComicsStore.Data.Model
 {
@@ -22,6 +23,11 @@ namespace ComicsStore.Data.Model
         public int CodeId { get; set; }
 
         public Code Code { get; set; }
+        public int? OriginStoryId { get; set; }
+
+        [ForeignKey("OriginStoryId")]
+        public Story OriginStory { get; set; }
+        public string Language { get; set; }
         public ICollection<StoryBook> StoryBook { get; set; }
         public ICollection<StoryCharacter> StoryCharacter { get; set; }
         public ICollection<StoryArtist> StoryArtist { get; set; }

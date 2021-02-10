@@ -8,6 +8,6 @@ namespace ComicsStore.MiddleWare.Services.Interfaces
 {
     public interface ICharactersService : IComicsStoreService<CharacterInputModel, CharacterInputModel, CharacterOutputModel, BasicSearchModel>
     {
-        Task<List<BasicStoryOutputModel>> GetStoriesAsync(int characterId);
+        Task<List<StoryOnlyOutputModel>> GetStoriesAsync(int characterId);
     }
 }

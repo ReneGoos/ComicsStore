@@ -44,7 +44,7 @@ namespace ComicsStore.API.Controllers
 
         [Route("{characterId}/Stories")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<BasicStoryOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<StoryOnlyOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetStoriesAsync(int characterId)
         {
             var storyCharacters = await _charactersService.GetStoriesAsync(characterId);

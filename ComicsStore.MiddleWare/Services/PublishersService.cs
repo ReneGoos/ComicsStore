@@ -86,13 +86,13 @@ namespace ComicsStore.MiddleWare.Services
             return _mapper.Map<PublisherOutputModel>(publisher);
         }
 
-        public async Task<List<BasicBookOutputModel>> GetBooksAsync(int publisherId)
+        public async Task<List<BookOnlyOutputModel>> GetBooksAsync(int publisherId)
         {
             var bookPublishers = await _bookPublishersRepository.GetAsync(null, publisherId);
 
             try
             {
-                return _mapper.Map<List<BasicBookOutputModel>>(bookPublishers);
+                return _mapper.Map<List<BookOnlyOutputModel>>(bookPublishers);
             }
             catch (Exception)
             {

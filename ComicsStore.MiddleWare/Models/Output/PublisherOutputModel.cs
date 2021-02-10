@@ -2,8 +2,8 @@
 
 namespace ComicsStore.MiddleWare.Models.Output
 {
-    public class PublisherOutputModel : BasicOutputModel
+    public class PublisherOutputModel : PublisherOnlyOutputModel
     {
-        public ICollection<BasicBookOutputModel> BookPublisher { get; set; }
+        public ICollection<PublisherBookOutputModel> BookPublisher { get; set; }
     }
 }

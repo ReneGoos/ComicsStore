@@ -10,5 +10,6 @@ namespace ComicsStore.MiddleWare.Services.Interfaces
     {
         Task<List<BookPublisherOutputModel>> GetPublishersAsync(int bookId);
         Task<List<BookSeriesOutputModel>> GetSeriesAsync(int bookId);
+        Task<List<StoryOnlyOutputModel>> GetStoriesAsync(int bookId);
     }
 }

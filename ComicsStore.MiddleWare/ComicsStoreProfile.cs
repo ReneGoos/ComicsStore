@@ -59,17 +59,30 @@ namespace ComicsStore.MiddleWare
             CreateMap<ExportBook, ExportBooksOutputModel>();
             CreateMap<ExportStory, ExportBooksOutputModel>();
 
-            CreateMap<BookSeries, BookSeriesOutputModel>();
-            CreateMap<BookPublisher, BookPublisherOutputModel>();
-            CreateMap<BookSeries, SeriesBookOutputModel>();
-            CreateMap<BookPublisher, BasicBookOutputModel>();
+            CreateMap<BookSeries, BookSeriesOutputModel>().IncludeMembers(b => b.Series);
+            CreateMap<BookSeries, SeriesBookOutputModel>().IncludeMembers(b => b.Book);
+            CreateMap<Series, BookSeriesOutputModel>();
+            CreateMap<Book, SeriesBookOutputModel>();
 
-            CreateMap<StoryArtist, ArtistStoryOutputModel>();
-            CreateMap<StoryBook, BasicStoryOutputModel>();
-            CreateMap<StoryCharacter, BasicStoryOutputModel>();
-            CreateMap<StoryArtist, StoryArtistOutputModel>();
-            CreateMap<StoryBook, BasicBookOutputModel>();
-            CreateMap<StoryCharacter, StoryCharacterOutputModel>();
+            CreateMap<BookPublisher, BookPublisherOutputModel>().IncludeMembers(b => b.Publisher);
+            CreateMap<BookPublisher, PublisherBookOutputModel>().IncludeMembers(b => b.Book);
+            CreateMap<Publisher, BookPublisherOutputModel>();
+            CreateMap<Book, PublisherBookOutputModel>();
+
+            CreateMap<StoryArtist, ArtistStoryOutputModel>().IncludeMembers(s => s.Story);
+            CreateMap<StoryArtist, StoryArtistOutputModel>().IncludeMembers(s => s.Artist);
+            CreateMap<Story, ArtistStoryOutputModel>();
+            CreateMap<Artist, StoryArtistOutputModel>();
+
+            CreateMap<StoryBook, BookStoryOutputModel>().IncludeMembers(s => s.Story);
+            CreateMap<StoryBook, StoryBookOutputModel>().IncludeMembers(s => s.Book);
+            CreateMap<Story, BookStoryOutputModel>();
+            CreateMap<Book, StoryBookOutputModel>();
+
+            CreateMap<StoryCharacter, CharacterStoryOutputModel>().IncludeMembers(s => s.Story);
+            CreateMap<StoryCharacter, StoryCharacterOutputModel>().IncludeMembers(s => s.Character);
+            CreateMap<Character, StoryCharacterOutputModel>();
+            CreateMap<Story, CharacterStoryOutputModel>();
         }
     }
 }

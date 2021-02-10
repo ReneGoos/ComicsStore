@@ -40,8 +40,11 @@ namespace ComicsStore.MiddleWare.Repositories
                 return null;
 
             return _context.StoryCharacters
-                .Include(sa => sa.Character)
-                .Include(sa => sa.Story)
+                .Include(sc => sc.Character)
+                .Include(sc => sc.Story)
+                .ThenInclude(s => s.Code)
+                .Include(sc => sc.Story)
+                .ThenInclude(s => s.OriginStory)
                 .Where(s => id != null ? s.StoryId == id.Value : s.CharacterId == crossId)
                 .ToListAsync();
         }

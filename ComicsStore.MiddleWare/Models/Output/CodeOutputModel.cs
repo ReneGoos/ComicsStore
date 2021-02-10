@@ -2,9 +2,9 @@
 
 namespace ComicsStore.MiddleWare.Models.Output
 {
-    public class CodeOutputModel : BasicOutputModel
+    public class CodeOutputModel : CodeOnlyOutputModel
     {
-        public ICollection<StoryOutputModel> Story { get; set; }
-        public ICollection<SeriesOutputModel> Series { get; set; }
+        public ICollection<CodeStoryOutputModel> Story { get; set; }
+        public ICollection<CodeSeriesOutputModel> Series { get; set; }
     }
 }

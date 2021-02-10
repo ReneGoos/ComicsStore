@@ -19,5 +19,13 @@ namespace ComicsStore.Data.Model
         public int PublisherId { get; set; }
         public int MinSeriesOrder { get; set; }
         public int MaxSeriesOrder { get; set; }
+        public string StoryName { get; set; }
+        public int? StoryNumber { get; set; }
+        public string ExtraInfo { get; set; }
+        public StoryType StoryType { get; set; }
+        public string CharacterName { get; set; }
+        public string ArtistName { get; set; }
+        public ArtistType ArtistType { get; set; }
+        public string PublisherName { get; set; }
     }
 }
