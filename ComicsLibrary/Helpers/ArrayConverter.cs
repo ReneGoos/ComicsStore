@@ -1,10 +1,6 @@
-﻿using ComicsStore.Data.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace ComicsLibrary.Helpers
@@ -13,10 +9,12 @@ namespace ComicsLibrary.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var data = (List<string>) value;
+            var data = (ICollection<string>) value;
 
             if (data is null)
+            {
                 return null;
+            }
 
             var result = string.Join(',', data);
             return result;
@@ -24,7 +22,15 @@ namespace ComicsLibrary.Helpers
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            var data = (string)value;
+
+            if (data is null)
+            {
+                return null;
+            }
+
+            var result = new List<string>(data.Split(','));
+            return result;
         }
     }
 }

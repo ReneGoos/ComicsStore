@@ -11,24 +11,24 @@ namespace ComicsStore.MiddleWare.Services.Interfaces
     where TOutMain : BasicOutputModel
     where TOutSub : BasicOutputModel
     {
-        //Task<bool> AddMainAsync(int crossId, List<TInMain> input);
+        //Task<bool> AddMainAsync(int crossId, ICollection<TInMain> input);
 
         //Task DeleteMainAsync(int crossId);
 
         //Task<bool> ExistsMainAsync(int crossId);
 
-        Task<List<TOutMain>> GetMainAsync(int crossId);
+        Task<ICollection<TOutMain>> GetMainAsync(int crossId);
 
-        //Task<bool> UpdateMainAsync(int crossId, List<TInMain> input);
+        //Task<bool> UpdateMainAsync(int crossId, ICollection<TInMain> input);
 
-        Task<bool> AddSubAsync(int mainId, List<TInSub> input);
+        Task<bool> AddSubAsync(int mainId, ICollection<TInSub> input);
 
         //Task DeleteSubAsync(int mainId);
 
         //Task<bool> ExistsSubAsync(int mainId);
 
-        Task<List<TOutSub>> GetSubAsync(int mainId);
+        Task<ICollection<TOutSub>> GetSubAsync(int mainId);
 
-        //Task<bool> UpdateSubAsync(int mainId, List<TInSub> input);
+        //Task<bool> UpdateSubAsync(int mainId, ICollection<TInSub> input);
     }
 }

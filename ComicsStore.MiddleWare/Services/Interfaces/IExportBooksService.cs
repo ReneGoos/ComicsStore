@@ -7,7 +7,7 @@ namespace ComicsStore.MiddleWare.Services.Interfaces
 {
     public interface IExportBooksService
     {
-        Task<List<ExportBooksOutputModel>> GetAsync(StorySeriesSearchModel searchModel);
+        Task<ICollection<ExportBooksOutputModel>> GetAsync(StorySeriesSearchModel searchModel);
         Task<string> GetExportAsync(StorySeriesSearchModel searchModel);
     }
 }

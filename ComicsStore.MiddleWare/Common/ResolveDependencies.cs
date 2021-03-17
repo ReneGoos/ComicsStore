@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ComicsStore.Data.Model;
+﻿using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories;
 using ComicsStore.MiddleWare.Repositories.Interfaces;

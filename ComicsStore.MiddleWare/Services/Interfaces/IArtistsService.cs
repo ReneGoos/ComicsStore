@@ -8,6 +8,6 @@ namespace ComicsStore.MiddleWare.Services.Interfaces
 {
     public interface IArtistsService : IComicsStoreService<ArtistInputModel, ArtistInputModel, ArtistOutputModel, BasicSearchModel>
     {
-        Task<List<ArtistStoryOutputModel>> GetStoriesAsync(int artistId);
+        Task<ICollection<ArtistStoryOutputModel>> GetStoriesAsync(int artistId);
     }
 }

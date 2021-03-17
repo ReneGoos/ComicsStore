@@ -21,7 +21,7 @@ namespace ComicsStore.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<StoryOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<StoryOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAsync([FromQuery] StorySearchModel storySearchModel)
         {
             var result = await _storiesService.GetAsync(storySearchModel);
@@ -118,7 +118,7 @@ namespace ComicsStore.API.Controllers
 
         [Route("api/Stories/{storyId}/Artists")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<StoryArtistOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<StoryArtistOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetArtistsAsync(int storyId)
         {
             var artistOutput = await _storiesService.GetArtistsAsync(storyId);
@@ -133,7 +133,7 @@ namespace ComicsStore.API.Controllers
 
         [Route("{storyId}/Characters")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<StoryCharacterOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<StoryCharacterOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCharacterAsync(int storyId)
         {
             var artistOutput = await _storiesService.GetCharactersAsync(storyId);
@@ -148,7 +148,7 @@ namespace ComicsStore.API.Controllers
 
         [Route("{storyId}/Books")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<BookOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<BookOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetBookAsync(int storyId)
         {
             var bookOutput = await _storiesService.GetBooksAsync(storyId);

@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
-using System.Runtime.CompilerServices;
 using System;
 
 namespace ComicsStore.MiddleWare.Services
@@ -54,11 +53,11 @@ namespace ComicsStore.MiddleWare.Services
             return await _charactersRepository.GetAsync(id) != null;
         }
 
-        public async Task<List<CharacterOutputModel>> GetAsync(BasicSearchModel searchModel)
+        public async Task<ICollection<CharacterOutputModel>> GetAsync(BasicSearchModel searchModel)
         {
             var characters =  await _charactersRepository.GetAsync(searchModel);
 
-            return _mapper.Map<List<CharacterOutputModel>>(characters);
+            return _mapper.Map<ICollection<CharacterOutputModel>>(characters);
         }
 
         public async Task<CharacterOutputModel> GetAsync(int id)
@@ -87,13 +86,13 @@ namespace ComicsStore.MiddleWare.Services
             return _mapper.Map<CharacterOutputModel>(character);
         }
 
-        public async Task<List<StoryOnlyOutputModel>> GetStoriesAsync(int characterId)
+        public async Task<ICollection<CharacterStoryOutputModel>> GetStoriesAsync(int characterId)
         {
             var storyCharacters = await _storyCharactersRepository.GetAsync(null, characterId);
 
             try
             {
-                return _mapper.Map<List<StoryOnlyOutputModel>>(storyCharacters);
+                return _mapper.Map<ICollection<CharacterStoryOutputModel>>(storyCharacters);
             }
             catch (Exception)
             {

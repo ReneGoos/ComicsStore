@@ -21,7 +21,7 @@ namespace ComicsStore.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<SeriesOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<SeriesOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAsync([FromQuery] SeriesSearchModel seriesSearchModel)
         {
             return Ok(await _seriesService.GetAsync(seriesSearchModel));
@@ -97,7 +97,7 @@ namespace ComicsStore.API.Controllers
 
         [Route("{seriesId}/Books")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<SeriesBookOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<SeriesBookOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetBooksAsync(int seriesId)
         {
             var bookOutput = await _seriesService.GetBooksAsync(seriesId);

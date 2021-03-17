@@ -18,35 +18,39 @@ namespace ComicsStore.MiddleWare.Common
             return (flagAttribute != null);
         }
 
-        public static IList<T> GetValues()
+        public static ICollection<T> GetValues()
         {
             return Enum.GetValues(typeof(T))
                             .Cast<T>()
                             .ToList();
         }
 
-        public static IList<string> GetNames()
+        public static ICollection<string> GetNames()
         {
             return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Select(fi => fi.Name).ToList();
         }
 
-        public static IList<string> GetDisplayValues()
+        public static ICollection<string> GetDisplayValues()
         {
             return GetNames().Select(obj => GetDisplayValueOneValue(Parse(obj))).ToList();
         }
 
-        public static IList<T> GetValues(T value)
+        public static ICollection<T> GetValues(T value)
         {
             if (IsFlag(value))
+            {
                 return GetValues().Where(val => value.IsSet(val)).ToList();
+            }
 
             return new List<T> { value };
         }
 
-        public static IList<string> GetNames(T value)
+        public static ICollection<string> GetNames(T value)
         {
             if (IsFlag(value))
+            {
                 return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => value.IsSet((T)fi.GetValue(null))).Select(fi => fi.Name).ToList();
+            }
 
             return new List<string> { value.ToString() };
         }
@@ -62,7 +66,7 @@ namespace ComicsStore.MiddleWare.Common
             return value.ToString();
         }
 
-        public static IList<string> GetDisplayValues(T value)
+        public static ICollection<string> GetDisplayValues(T value)
         {
             return GetNames(value).Select(obj => GetDisplayValueOneValue(Parse(obj))).ToList();
         }
@@ -72,7 +76,7 @@ namespace ComicsStore.MiddleWare.Common
             return (T)Enum.Parse(typeof(T), value, true);
         }
 
-        public static T ParseFlags(IList<string> value)
+        public static T ParseFlags(ICollection<string> value)
         {
             var result = default(T);
 
@@ -102,14 +106,20 @@ namespace ComicsStore.MiddleWare.Common
         {
             var fieldInfo = value.GetType().GetField(value.ToString());
             if (fieldInfo == null)
+            {
                 return value.ToString();
+            }
 
             var descriptionAttributes = fieldInfo.GetCustomAttribute<DisplayAttribute>();
             if (descriptionAttributes == null)
+            {
                 return value.ToString();
+            }
 
             if (descriptionAttributes.ResourceType != null)
+            {
                 return lookupResource(descriptionAttributes.ResourceType, descriptionAttributes.Name);
+            }
 
             return descriptionAttributes.Name;
         }

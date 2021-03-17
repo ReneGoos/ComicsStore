@@ -128,11 +128,14 @@ namespace ComicsStore.MiddleWare.Reports
         private static string Escape(string input)
         {
             if (input == null)
+            {
                 return "";
+            }
+
             return input.Replace('"', '\'');
         }
 
-        private static List<string> ArtistAndShortType(SortedList<string, ArtistType> artists)
+        private static ICollection<string> ArtistAndShortType(SortedList<string, ArtistType> artists)
         {
             var results = new List<string>();
 
@@ -153,7 +156,7 @@ namespace ComicsStore.MiddleWare.Reports
             return results;
         }
 
-        private static List<string> EscapeList(SortedSet<string> input)
+        private static ICollection<string> EscapeList(SortedSet<string> input)
         {
             var results = new List<string>();
 

@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ComicsLibrary.ViewModels
+namespace ComicsLibrary.EditModels
 {
-    public abstract class InputViewModel : INotifyPropertyChanged
+    public abstract class BasicEditModel : INotifyPropertyChanged
     {
-        protected readonly IMapper mapper;
-
-        public InputViewModel(IMapper mapper)
+        public BasicEditModel()
         {
-            this.mapper = mapper;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -18,5 +16,8 @@ namespace ComicsLibrary.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
+
+        public DateTime CreationDate { get; protected set; }
+        public DateTime DateUpdate { get; protected set; }
     }
 }

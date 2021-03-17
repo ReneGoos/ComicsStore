@@ -8,7 +8,7 @@ namespace ComicsStore.MiddleWare.Services.Interfaces
 {
     public interface ICodesService : IComicsStoreService<CodeInputModel, CodeInputModel, CodeOutputModel, BasicSearchModel>
     {
-        Task<List<StoryOnlyOutputModel>> GetStoriesAsync(int codeId);
-        Task<List<SeriesOutputModel>> GetSeriesAsync(int codeId);
+        Task<ICollection<CodeStoryOutputModel>> GetStoriesAsync(int codeId);
+        Task<ICollection<CodeSeriesOutputModel>> GetSeriesAsync(int codeId);
     }
 }

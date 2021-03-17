@@ -37,7 +37,9 @@ namespace ComicsStore.MiddleWare.Repositories
         public Task<List<StoryBook>> GetAsync(int? id, int? crossId)
         {
             if (id == null && crossId == null)
+            {
                 return null;
+            }
 
             return _context.StoryBooks
                 .Include(sb => sb.Book)

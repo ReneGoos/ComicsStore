@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
-using ComicsStore.MiddleWare.Repositories;
 
 namespace ComicsStore.MiddleWare.Services
 {
@@ -60,11 +59,11 @@ namespace ComicsStore.MiddleWare.Services
             return await _booksRepository.GetAsync(id) != null;
         }
 
-        public async Task<List<BookOutputModel>> GetAsync(BasicSearchModel searchModel)
+        public async Task<ICollection<BookOutputModel>> GetAsync(BasicSearchModel searchModel)
         {
             var books =  await _booksRepository.GetAsync(searchModel);
 
-            return _mapper.Map<List<BookOutputModel>>(books);
+            return _mapper.Map<ICollection<BookOutputModel>>(books);
         }
 
         public async Task<BookOutputModel> GetAsync(int id)
@@ -93,13 +92,13 @@ namespace ComicsStore.MiddleWare.Services
             return _mapper.Map<BookOutputModel>(book);
         }
 
-        public async Task<List<BookPublisherOutputModel>> GetPublishersAsync(int bookId)
+        public async Task<ICollection<BookPublisherOutputModel>> GetPublishersAsync(int bookId)
         {
             var bookPublishers = await _bookPublishersRepository.GetAsync(bookId, null);
 
             try
             {
-                return _mapper.Map<List<BookPublisherOutputModel>>(bookPublishers);
+                return _mapper.Map<ICollection<BookPublisherOutputModel>>(bookPublishers);
             }
             catch (Exception)
             {
@@ -107,13 +106,13 @@ namespace ComicsStore.MiddleWare.Services
             }
         }
 
-        public async Task<List<BookSeriesOutputModel>> GetSeriesAsync(int bookId)
+        public async Task<ICollection<BookSeriesOutputModel>> GetSeriesAsync(int bookId)
         {
             var bookSeries = await _bookSeriesRepository.GetAsync(bookId, null);
 
             try
             {
-                return _mapper.Map<List<BookSeriesOutputModel>>(bookSeries);
+                return _mapper.Map<ICollection<BookSeriesOutputModel>>(bookSeries);
             }
             catch (Exception)
             {
@@ -121,13 +120,13 @@ namespace ComicsStore.MiddleWare.Services
             }
         }
 
-        public async Task<List<StoryOnlyOutputModel>> GetStoriesAsync(int bookId)
+        public async Task<ICollection<BookStoryOutputModel>> GetStoriesAsync(int bookId)
         {
             var bookStories = await _storyBooksRepository.GetAsync(null, bookId);
 
             try
             {
-                return _mapper.Map<List<StoryOnlyOutputModel>>(bookStories);
+                return _mapper.Map<ICollection<BookStoryOutputModel>>(bookStories);
             }
             catch (Exception)
             {

@@ -14,11 +14,11 @@ namespace ComicsStore.MiddleWare
             CreateMap<string, Active>().ConstructUsing(src => EnumHelper<Active>.Parse(src));
             CreateMap<string, BookType>().ConstructUsing(src => EnumHelper<BookType>.Parse(src));
             CreateMap<string, StoryType>().ConstructUsing(src => EnumHelper<StoryType>.Parse(src));
-            CreateMap<List<string>, ArtistType>().ConstructUsing(src => EnumHelper<ArtistType>.ParseFlags(src));
+            CreateMap<ICollection<string>, ArtistType>().ConstructUsing(src => EnumHelper<ArtistType>.ParseFlags(src));
             CreateMap<Active, string>().ConstructUsing(src => EnumHelper<Active>.GetDisplayValue(src));
             CreateMap<BookType, string>().ConstructUsing(src => EnumHelper<BookType>.GetDisplayValue(src));
             CreateMap<StoryType, string>().ConstructUsing(src => EnumHelper<StoryType>.GetDisplayValue(src));
-            CreateMap<ArtistType, List<string>>().ConstructUsing(src => (List<string>)EnumHelper<ArtistType>.GetDisplayValues(src));
+            CreateMap<ArtistType, ICollection<string>>().ConstructUsing(src => (ICollection<string>)EnumHelper<ArtistType>.GetDisplayValues(src));
 
             CreateMap<ArtistInputModel, Artist>();
             CreateMap<BookInputModel, Book>();

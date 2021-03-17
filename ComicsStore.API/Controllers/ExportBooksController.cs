@@ -20,7 +20,7 @@ namespace ComicsStore.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<ExportBooksOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<ExportBooksOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAsync([FromQuery] StorySeriesSearchModel storySearchModel)
         {
             var result = await _exportBooksService.GetAsync(storySearchModel);

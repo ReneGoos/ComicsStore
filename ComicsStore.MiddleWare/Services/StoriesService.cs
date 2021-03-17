@@ -59,13 +59,13 @@ namespace ComicsStore.MiddleWare.Services
             return await _storiesRepository.GetAsync(id) != null;
         }
 
-        public async Task<List<StoryOutputModel>> GetAsync(StorySearchModel searchModel)
+        public async Task<ICollection<StoryOutputModel>> GetAsync(StorySearchModel searchModel)
         {
             var stories = await _storiesRepository.GetAsync(searchModel);
 
             try
             {
-                var storiesOutput = _mapper.Map<List<StoryOutputModel>>(stories);
+                var storiesOutput = _mapper.Map<ICollection<StoryOutputModel>>(stories);
 
                 return storiesOutput;
             }
@@ -82,13 +82,13 @@ namespace ComicsStore.MiddleWare.Services
             return _mapper.Map<StoryOutputModel>(story);
         }
 
-        public async Task<List<StoryArtistOutputModel>> GetArtistsAsync(int storyId)
+        public async Task<ICollection<StoryArtistOutputModel>> GetArtistsAsync(int storyId)
         {
             var storyArtists = await _storyArtistsRepository.GetAsync(storyId, null);
 
             try
             {
-                return _mapper.Map<List<StoryArtistOutputModel>>(storyArtists);
+                return _mapper.Map<ICollection<StoryArtistOutputModel>>(storyArtists);
             }
             catch (Exception)
             {
@@ -96,13 +96,13 @@ namespace ComicsStore.MiddleWare.Services
             }
         }
 
-        public async Task<List<BookOnlyOutputModel>> GetBooksAsync(int storyId)
+        public async Task<ICollection<StoryBookOutputModel>> GetBooksAsync(int storyId)
         {
             var storyBooks = await _storyBooksRepository.GetAsync(storyId, null);
 
             try
             {
-                return _mapper.Map<List<BookOnlyOutputModel>>(storyBooks);
+                return _mapper.Map<ICollection<StoryBookOutputModel>>(storyBooks);
             }
             catch (Exception)
             {
@@ -110,13 +110,13 @@ namespace ComicsStore.MiddleWare.Services
             }
         }
 
-        public async Task<List<StoryCharacterOutputModel>> GetCharactersAsync(int storyId)
+        public async Task<ICollection<StoryCharacterOutputModel>> GetCharactersAsync(int storyId)
         {
             var storyCharacters = await _storyCharactersRepository.GetAsync(storyId, null);
 
             try
             {
-                return _mapper.Map<List<StoryCharacterOutputModel>>(storyCharacters);
+                return _mapper.Map<ICollection<StoryCharacterOutputModel>>(storyCharacters);
             }
             catch (Exception)
             {

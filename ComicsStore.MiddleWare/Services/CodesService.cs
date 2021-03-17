@@ -56,11 +56,11 @@ namespace ComicsStore.MiddleWare.Services
             return await _codesRepository.GetAsync(id) != null;
         }
 
-        public async Task<List<CodeOutputModel>> GetAsync(BasicSearchModel searchModel)
+        public async Task<ICollection<CodeOutputModel>> GetAsync(BasicSearchModel searchModel)
         {
             var codes =  await _codesRepository.GetAsync(searchModel);
 
-            return _mapper.Map<List<CodeOutputModel>>(codes);
+            return _mapper.Map<ICollection<CodeOutputModel>>(codes);
         }
 
         public async Task<CodeOutputModel> GetAsync(int id)
@@ -89,13 +89,13 @@ namespace ComicsStore.MiddleWare.Services
             return _mapper.Map<CodeOutputModel>(code);
         }
 
-        public async Task<List<StoryOnlyOutputModel>> GetStoriesAsync(int codeId)
+        public async Task<ICollection<CodeStoryOutputModel>> GetStoriesAsync(int codeId)
         {
             var storyCodes = await _storiesRepository.GetAsync(new StorySearchModel { CodeId = codeId });
 
             try
             {
-                return _mapper.Map<List<StoryOnlyOutputModel>>(storyCodes);
+                return _mapper.Map<ICollection<CodeStoryOutputModel>>(storyCodes);
             }
             catch (Exception)
             {
@@ -103,13 +103,13 @@ namespace ComicsStore.MiddleWare.Services
             }
         }
 
-        public async Task<List<SeriesOutputModel>> GetSeriesAsync(int codeId)
+        public async Task<ICollection<CodeSeriesOutputModel>> GetSeriesAsync(int codeId)
         {
             var seriesCodes = await _seriesRepository.GetAsync(new SeriesSearchModel { CodeId = codeId });
 
             try
             {
-                return _mapper.Map<List<SeriesOutputModel>>(seriesCodes);
+                return _mapper.Map<ICollection<CodeSeriesOutputModel>>(seriesCodes);
             }
             catch (Exception)
             {

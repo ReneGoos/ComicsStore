@@ -53,11 +53,11 @@ namespace ComicsStore.MiddleWare.Services
             return await _artistsRepository.GetAsync(id) != null;
         }
 
-        public async Task<List<ArtistOutputModel>> GetAsync(BasicSearchModel searchModel)
+        public async Task<ICollection<ArtistOutputModel>> GetAsync(BasicSearchModel searchModel)
         {
             var artists =  await _artistsRepository.GetAsync(searchModel);
 
-            return _mapper.Map<List<ArtistOutputModel>>(artists);
+            return _mapper.Map<ICollection<ArtistOutputModel>>(artists);
         }
 
         public async Task<ArtistOutputModel> GetAsync(int id)
@@ -86,13 +86,13 @@ namespace ComicsStore.MiddleWare.Services
             return _mapper.Map<ArtistOutputModel>(artist);
         }
 
-        public async Task<List<ArtistStoryOutputModel>> GetStoriesAsync(int artistId)
+        public async Task<ICollection<ArtistStoryOutputModel>> GetStoriesAsync(int artistId)
         {
             var storyArtists = await _storyArtistsRepository.GetAsync(null, artistId);
 
             try
             {
-                return _mapper.Map<List<ArtistStoryOutputModel>>(storyArtists);
+                return _mapper.Map<ICollection<ArtistStoryOutputModel>>(storyArtists);
             }
             catch (Exception)
             {

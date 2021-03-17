@@ -28,7 +28,6 @@
                 Save
             </Button>
         </StackPanel>
-
         <StackPanel Grid.IsSharedSizeScope="True">
             <Grid DataContext="{Binding Artist}">
                 <Grid.ColumnDefinitions>
@@ -58,7 +57,7 @@
 
                 <Label Grid.Column="1" Grid.Row="5">Remark</Label>
                 <TextBox Grid.Column="3"  Grid.Row="5" Text="{Binding Remark, Mode=TwoWay}"/>
-                <ListView  Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="3" ItemsSource="{Binding Path=Stories}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListView  Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="3" ItemsSource="{Binding Path=StoryArtist}" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Id" Width="120" DisplayMemberBinding="{Binding Id}" />

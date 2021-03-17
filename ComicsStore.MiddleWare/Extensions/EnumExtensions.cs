@@ -10,8 +10,11 @@ namespace ComicsStore.MiddleWare.Extensions
             Type type = typeof(T);
 
             // only works with enums
-            if (!type.IsEnum) throw new ArgumentException(
+            if (!type.IsEnum)
+            {
+                throw new ArgumentException(
                 "The type parameter T must be an enum type.");
+            }
 
             // handle each underlying type
             Type numberType = Enum.GetUnderlyingType(type);
@@ -66,8 +69,11 @@ namespace ComicsStore.MiddleWare.Extensions
             Type type = typeof(T);
 
             // only works with enums
-            if (!type.IsEnum) throw new ArgumentException(
+            if (!type.IsEnum)
+            {
+                throw new ArgumentException(
                 "The type parameter T must be an enum type.");
+            }
 
             // handle each underlying type
             Type numberType = Enum.GetUnderlyingType(type);

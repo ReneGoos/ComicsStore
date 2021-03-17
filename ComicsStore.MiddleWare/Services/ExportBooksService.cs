@@ -21,13 +21,13 @@ namespace ComicsStore.MiddleWare.Services
             _mapper = mapper;
         }
 
-        public async Task<List<ExportBooksOutputModel>> GetAsync(StorySeriesSearchModel searchModel)
+        public async Task<ICollection<ExportBooksOutputModel>> GetAsync(StorySeriesSearchModel searchModel)
         {
             var exportBooks = await _exportBooksRepository.GetAsync(searchModel);
 
             try
             {
-                var exportBooksOutput = _mapper.Map<List<ExportBooksOutputModel>>(exportBooks);
+                var exportBooksOutput = _mapper.Map<ICollection<ExportBooksOutputModel>>(exportBooks);
 
                 return exportBooksOutput;
             }

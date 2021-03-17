@@ -6,7 +6,6 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
 using Microsoft.AspNetCore.Mvc;
 using ComicsStore.MiddleWare.Services.Interfaces;
-using System;
 
 namespace ComicsStore.API.Controllers
 {
@@ -22,7 +21,7 @@ namespace ComicsStore.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<CharacterOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<CharacterOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAsync([FromQuery] BasicSearchModel characterSearchModel)
         {
             return Ok(await _charactersService.GetAsync(characterSearchModel));
@@ -44,7 +43,7 @@ namespace ComicsStore.API.Controllers
 
         [Route("{characterId}/Stories")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<StoryOnlyOutputModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<CharacterStoryOutputModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetStoriesAsync(int characterId)
         {
             var storyCharacters = await _charactersService.GetStoriesAsync(characterId);

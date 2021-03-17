@@ -8,11 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace ComicsLibrary
@@ -65,17 +60,23 @@ namespace ComicsLibrary
             {
                 var navigationService = new NavigationService(serviceProvider);
                 navigationService.Configure(Navigation.Windows.ArtistWindow, typeof(ArtistWindow));
+                navigationService.Configure(Navigation.Windows.ArtistsList, typeof(ArtistsList));
                 navigationService.Configure(Navigation.Windows.DetailWindow, typeof(Window1));
+                navigationService.Configure(Navigation.Windows.StoryWindow, typeof(StoryWindow));
 
                 return navigationService;
             });
 
             // Register all ViewModels.
+            services.AddSingleton<ComicsViewModel>();
             services.AddSingleton<ArtistViewModel>();
+            services.AddSingleton<StoryViewModel>();
 
             // Register all the Windows of the applications.
             services.AddTransient<ArtistWindow>();
+            services.AddTransient<ArtistsList>();
             services.AddTransient<Window1>();
+            services.AddTransient<StoryWindow>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -84,7 +85,8 @@ namespace ComicsLibrary
 
             var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
             //await navigationService.ShowAsync(Navigation.Windows.DetailWindow);
-            await navigationService.ShowAsync(Navigation.Windows.ArtistWindow);
+            await navigationService.ShowAsync(Navigation.Windows.StoryWindow);
+            //await navigationService.ShowAsync(Navigation.Windows.ArtistsList);
 
             base.OnStartup(e);
         }
