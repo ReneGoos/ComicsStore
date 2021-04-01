@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using ComicsStore.MiddleWare.Services.Interfaces;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Windows.Data;
-using ComicsStore.MiddleWare.Models.Output;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 
 namespace ComicsLibrary.EditModels
 {
@@ -18,14 +11,6 @@ namespace ComicsLibrary.EditModels
         {
         }
 
-        public ICollection<StoryCodeEditModel> StoryCodes
-        {
-            get => _storyCodes;
-            set
-            {
-                _storyCodes = value;
-                RaisePropertyChanged();
-            }
-        }
+        public ICollection<StoryCodeEditModel> StoryCode { get => _storyCodes; set { Set(ref _storyCodes, value); } }
     }
 }

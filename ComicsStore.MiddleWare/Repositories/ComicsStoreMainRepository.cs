@@ -12,7 +12,7 @@ namespace ComicsStore.MiddleWare.Repositories
         {
         }
 
-        public async Task<T> UpdateItemAsync(DbSet<T> collection, T item)
+        public async Task<T> UpdateItemAsync(DbSet<T> collection, T item, Func<T, T, bool> updateLinkedItems = null)
         {
             var entity = await collection.FindAsync(item.Id);
             if (entity == null)
@@ -22,6 +22,11 @@ namespace ComicsStore.MiddleWare.Repositories
 
             item.CreationDate = entity.CreationDate;
             _context.Entry(entity).CurrentValues.SetValues(item);
+
+            if (updateLinkedItems is not null && !updateLinkedItems(entity, item))
+            {
+                return null;
+            }
 
             await SaveChangesAsync();
 

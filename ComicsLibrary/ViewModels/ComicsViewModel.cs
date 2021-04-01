@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
+using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -18,6 +17,19 @@ namespace ComicsLibrary.ViewModels
         private readonly ISeriesService _seriesService;
         private readonly IStoriesService _storiesService;
         private readonly IMapper _mapper;
+
+        private List<string> FillStoryTypes()
+        {
+            var storyTypes = new List<string>();
+
+            foreach (var value in Enum.GetValues(typeof(StoryType))
+                                    .Cast<StoryType>()
+                                    .Select(v => v.ToString()))
+            {   storyTypes.Add(value);
+            }
+
+            return storyTypes;
+        }
 
         public ComicsViewModel(IArtistsService artistsService,
             IBooksService booksService,
@@ -44,6 +56,9 @@ namespace ComicsLibrary.ViewModels
             PublisherView = new PublisherViewModel(publishersService, mapper);
             SeriesView = new SeriesViewModel(seriesService, mapper);
             StoryView = new StoryViewModel(storiesService, mapper);
+
+            Languages = LanguageType.FillLanguages();
+            StoryTypes = FillStoryTypes();
         }
 
         public ArtistViewModel ArtistView { get; private set; }
@@ -54,11 +69,14 @@ namespace ComicsLibrary.ViewModels
         public SeriesViewModel SeriesView { get; private set; }
         public StoryViewModel StoryView { get; private set; }
 
+        public List<string> StoryTypes { get; set; }
+        public List<LanguageType> Languages { get; set; }
+
         public override bool IsDirty
-        { 
-            get => base.IsDirty; 
-            set 
-            { 
+        {
+            get => base.IsDirty;
+            set
+            {
                 base.IsDirty = value;
                 ArtistView.IsDirty = value;
                 BookView.IsDirty = value;
@@ -69,5 +87,4 @@ namespace ComicsLibrary.ViewModels
                 StoryView.IsDirty = value;
             }
         }
-    }
-}
+    }}

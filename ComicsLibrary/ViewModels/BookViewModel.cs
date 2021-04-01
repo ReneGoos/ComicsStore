@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
+using ComicsLibrary.EditModels;
+using ComicsStore.MiddleWare.Models.Input;
+using ComicsStore.MiddleWare.Models.Output;
+using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
 
 namespace ComicsLibrary.ViewModels
 {
-    public class BookViewModel : BasicViewModel
+    public class BookViewModel : BasicTableViewModel<IBooksService, BookInputModel, BookInputPatchModel, BookOutputModel, BasicSearchModel, BookEditModel>
     {
-        private readonly IBooksService _booksService;
-
         public BookViewModel(IBooksService booksService,
-            IMapper mapper) : base(mapper)
+            IMapper mapper) : base(booksService, mapper)
         {
-            _booksService = booksService;
         }
     }
 }

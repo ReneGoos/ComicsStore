@@ -6,67 +6,78 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:ComicsLibrary.Views"
         xmlns:data="clr-namespace:ComicsLibrary.ViewModels"
+        xmlns:control="clr-namespace:ComicsLibrary.UserControls"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers"
-        DataContext="{Binding Source={StaticResource Locator}, Path=ArtistViewModel}"
         mc:Ignorable="d"
-        Title="ArtistWindow"
+        Title="Artist"
         Height="600"
-        Width="800">
+        Width="800"
+        DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
+        >
     <Window.Resources>
         <helpers:ArrayConverter x:Key="ArtistTypeConverter"/>
     </Window.Resources>
-    <StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="4"
-                    Background="LightGray" Name="toolbar">
-            <Button Margin="6" Padding="6" Name="GetButton" Click="GetButton_Click">
-                Get
-            </Button>
-            <Button Margin="6" Padding="6" Name="NewButton">
-                New
-            </Button>
-            <Button Margin="6" Padding="6" Name="SaveButton">
-                Save
-            </Button>
-        </StackPanel>
-        <StackPanel Grid.IsSharedSizeScope="True">
-            <Grid DataContext="{Binding Artist}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="5"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                </Grid.RowDefinitions>
+    <DockPanel DataContext="{Binding ArtistView}">
 
-                <Label Grid.Column="1" Grid.Row="1">Id</Label>
-                <TextBox Grid.Column="3"  Grid.Row="1" Text="{Binding Id, Mode=OneWay}"/>
-
-                <Label Grid.Column="1" Grid.Row="3">Name</Label>
-                <TextBox Grid.Column="3"  Grid.Row="3" Text="{Binding Name, Mode=TwoWay}"/>
-
-                <Label Grid.Column="1" Grid.Row="5">Remark</Label>
-                <TextBox Grid.Column="3"  Grid.Row="5" Text="{Binding Remark, Mode=TwoWay}"/>
-                <ListView  Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="3" ItemsSource="{Binding Path=StoryArtist}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <DockPanel DockPanel.Dock="Top" 
+                   Background="LightGray" 
+                   Grid.IsSharedSizeScope="True">
+            <control:SimpleToolbar Items="{Binding Items}"
+                                   Id = "{Binding Item.Id, Mode=TwoWay}" 
+                                   IsClean ="{Binding IsClean}"
+                                   IsDirty ="{Binding IsDirty}"
+                                   Filter = "{Binding ItemFilter, Mode=TwoWay}"
+                                   NewCommand="{Binding NewCommand}"
+                                   SaveCommand="{Binding SaveCommand}"
+                                   CancelSaveCommand="{Binding CancelSaveCommand}"
+                                   />
+        </DockPanel>
+        <Grid DockPanel.Dock="Bottom" 
+              DataContext="{Binding Item}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel DockPanel.Dock="Left">
+                <control:SimpleEntry Id="{Binding Id, Mode=TwoWay}"
+                                     ItemName="{Binding Name, Mode=TwoWay}"
+                                     ItemRemark="{Binding Remark, Mode=TwoWay}"/>
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Right"
+                       Grid.Column="1">
+                <ListView DockPanel.Dock="Bottom"
+                      Margin="5" 
+                      VerticalAlignment="Top" 
+                      ItemsSource="{Binding Path=StoryArtist}"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Id" Width="120" DisplayMemberBinding="{Binding Id}" />
-                            <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}" />
-                            <GridViewColumn Header="Remark" Width="500" DisplayMemberBinding="{Binding ArtistType, Converter={StaticResource ArtistTypeConverter}}"/>
+                            <GridViewColumn Header="Id" Width="80" DisplayMemberBinding="{Binding StoryId}" />
+                            <GridViewColumn Header="Story" Width="250">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="238"
+                                                  SelectedValue="{Binding StoryId, Mode=TwoWay}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="ArtistType" Width="500" DisplayMemberBinding="{Binding ArtistType, Converter={StaticResource ArtistTypeConverter}}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
-            </Grid>
-        </StackPanel>
-    </StackPanel>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
 </Window>

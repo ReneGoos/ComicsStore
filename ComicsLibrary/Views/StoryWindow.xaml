@@ -5,242 +5,309 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers"
         xmlns:local="clr-namespace:ComicsLibrary.Views"
+        xmlns:control="clr-namespace:ComicsLibrary.UserControls"
+        xmlns:vm="clr-namespace:ComicsLibrary.EditModels"
         mc:Ignorable="d"
-        Title="StoryWindow" Height="450" Width="800"
+        Title="Story"
+        Height="450"
+        Width="800"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}">
     <Window.Resources>
-        <helpers:ArrayConverter x:Key="ArtistTypeConverter"/>
+        <helpers:ArrayConverter x:Key="ArrayConverter"/>
+        <helpers:RoleTypesConverter x:Key="RoleTypesConverter"/>
     </Window.Resources>
     <DockPanel DataContext="{Binding StoryView}">
-        <StackPanel DockPanel.Dock="Top" 
-                    Orientation="Horizontal" 
-                    Margin="4"
-                    Background="LightGray" 
-                    Name="toolbar">
-            <ComboBox Margin="6" 
-                      Padding="6" 
-                      Width="200" 
-                      Name="GetStoryComboBox" 
-                      IsEditable="True" 
-                      ItemsSource="{Binding Path=Stories}" 
-                      SelectedValue = "{Binding Story.Id, Mode=TwoWay}" 
-                      SelectedValuePath = "Id" 
-                      DisplayMemberPath="Name" 
-                      IsEnabled="{Binding IsClean}">
-                <ComboBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel />
-                    </ItemsPanelTemplate>
-                </ComboBox.ItemsPanel>
-            </ComboBox>
-            <Button Margin="6" 
-                    Padding="6" 
-                    Name="NewButton" 
-                    Command="{Binding NewCommand}"
-                    IsEnabled="{Binding IsClean}">
-                New
-            </Button>
-            <Button Margin="6" 
-                    Padding="6" 
-                    Name="SaveButton"
-                    Command="{Binding SaveCommand}"
-                    IsEnabled="{Binding IsDirty}">
-                Save
-            </Button>
-            <Button Margin="6" 
-                    Padding="6" 
-                    Name="CancelButton"
-                    Command="{Binding CancelSaveCommand}"
-                    IsEnabled="{Binding IsDirty}">
-                Cancel
-            </Button>
-        </StackPanel>
-        <DockPanel DockPanel.Dock="Right" 
-                   Grid.IsSharedSizeScope="True" 
-                   DataContext="{Binding Story}">
-            <Grid DockPanel.Dock="Top">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition Width="5"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5"/>
-                </Grid.RowDefinitions>
-
-                <Label Grid.Column="1" 
-                       Grid.Row="1">
-                    Name
-                </Label>
-                <TextBox Grid.Column="3" 
-                         Grid.Row="1"
-                         Grid.ColumnSpan="3"
-                         Text="{Binding Name, Mode=TwoWay}"/>
-                <ComboBox Grid.Column="7"  
-                          Grid.Row="1" 
-                          SelectedValue = "{Binding CodeId}" 
-                          SelectedValuePath = "Id" 
-                          DisplayMemberPath = "Name" 
-                          IsEditable="True" 
-                          ItemsSource="{Binding Path=DataContext.CodeView.Codes, RelativeSource={RelativeSource AncestorType=Window}}"
-                          >
-                    <ComboBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </ComboBox.ItemsPanel>
-                </ComboBox>
-
-                <!--Label Grid.Column="7"
-                       Grid.Row="1" 
-                       Content="{Binding Id, Mode=OneWay}"/-->
-                
-                <Label Grid.Column="1"
-                       Grid.Row="5">
-                    Type, Number, Pages
-                </Label>
-                <TextBox Grid.Column="3"  
-                         Grid.Row="5" 
-                         Text="{Binding StoryType, Mode=TwoWay}"/>
-                <TextBox Grid.Column="5"  
-                         Grid.Row="5" 
-                         Text="{Binding StoryNumber, Mode=TwoWay}"/>
-                <TextBox Grid.Column="7"  
-                         Grid.Row="5" 
-                         Text="{Binding Pages, Mode=TwoWay}"/>
-
-                <Label Grid.Column="1"
-                       Grid.Row="7">
-                    ExtraInfo, Language
-                </Label>
-                <TextBox Grid.Column="3"  
-                         Grid.Row="7" 
-                         Grid.ColumnSpan="3"
-                         Text="{Binding ExtraInfo, Mode=TwoWay}"/>
-                <TextBox Grid.Column="7"  
-                         Grid.Row="7" 
-                         Text="{Binding Language, Mode=TwoWay}"/>             
-
-                <Label Grid.Column="1" 
-                       Grid.Row="9">
-                    Origin Story
-                </Label>
-                <ComboBox Grid.Column="3"
-                          Grid.Row="9" 
-                          Grid.ColumnSpan="3"
-                          SelectedValue = "{Binding OriginStoryId}" 
-                          SelectedValuePath = "Id" 
-                          DisplayMemberPath = "Name" 
-                          IsEditable="True" 
-                          ItemsSource="{Binding Path=DataContext.StoryView.OriginStories, RelativeSource={RelativeSource AncestorType=Window}}">
-                    <ComboBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </ComboBox.ItemsPanel>
-                </ComboBox>
-
-                <Label Grid.Column="1"
-                       Grid.Row="11">
-                    Remark
-                </Label>
-                <TextBox Grid.Column="3"  
-                         Grid.Row="11" 
-                         Grid.ColumnSpan="5"
-                         Text="{Binding Remark, Mode=TwoWay}"/>
-            </Grid>
-            <ListView DockPanel.Dock="Bottom"
-                      Margin="5" 
-                      VerticalAlignment="Top" 
-                      ItemsSource="{Binding Path=StoryArtist}"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Id"
-                                        Width="50" 
-                                        DisplayMemberBinding="{Binding ArtistId}" />
-
-                        <GridViewColumn Header="Artist"
-                                        Width="250">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ComboBox Width="238"
-                                              SelectedValue="{Binding ArtistId, Mode=TwoWay}"
-                                              SelectedValuePath = "Id" 
-                                              DisplayMemberPath = "Name" 
-                                              IsEditable="True" 
-                                              ItemsSource="{Binding Path=DataContext.ArtistView.Artists, RelativeSource={RelativeSource AncestorType=Window}}"
-                                              IsSynchronizedWithCurrentItem ="False"
-                                              >
-                                        <ComboBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <VirtualizingStackPanel />
-                                            </ItemsPanelTemplate>
-                                        </ComboBox.ItemsPanel>
-                                    </ComboBox>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <!--GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}" /-->
-                        <!--GridViewColumn Header="Name" Width="200">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Control x:Name="host">
-                                        <Control.Template>
-                                            <ControlTemplate>
-                                                <TextBlock Text="{Binding Name}" />
-                                            </ControlTemplate>
-                                        </Control.Template>
-                                    </Control>
-                                    <DataTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True">
-                                            <Setter TargetName="host" Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate>
-                                                        <ComboBox Margin="6" Padding="6" Width="200" Name="NewButton" IsEditable="True" ItemsSource="{Binding Path=ArtistsView}" DisplayMemberPath="Name"/>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </DataTrigger>
-                                    </DataTemplate.Triggers>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </-->
-                        <GridViewColumn Header="Role" 
-                                        Width="150">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding ArtistType, Converter={StaticResource ArtistTypeConverter}, Mode=TwoWay}" 
-                                             Width="138"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <!-- DisplayMemberBinding="{Binding ArtistType, Converter={StaticResource ArtistTypeConverter}}"/ -->
-                        <!--GridViewColumn Header="Remark" Width="500" DisplayMemberBinding="{Binding Remark}"/-->
-                    </GridView>
-                </ListView.View>
-            </ListView>
+        <DockPanel DockPanel.Dock="Top" 
+                   Background="LightGray" 
+                   Grid.IsSharedSizeScope="True">
+            <control:SimpleToolbar Items="{Binding Items}"
+                                   Id = "{Binding Item.Id, Mode=TwoWay}" 
+                                   IsClean ="{Binding IsClean}"
+                                   IsDirty ="{Binding IsDirty}"
+                                   Filter = "{Binding ItemFilter, Mode=TwoWay}"
+                                   NewCommand="{Binding NewCommand}"
+                                   SaveCommand="{Binding SaveCommand}"
+                                   CancelSaveCommand="{Binding CancelSaveCommand}"
+                                   />
         </DockPanel>
+        <Grid DockPanel.Dock="Bottom" 
+              DataContext="{Binding Item}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <DockPanel DockPanel.Dock="Left" 
+                           Grid.IsSharedSizeScope="True" >
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="5"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5"/>
+                    </Grid.RowDefinitions>
 
+                    <Label Grid.Column="1" 
+                           Grid.Row="1">
+                        Name
+                    </Label>
+                    <TextBox Grid.Column="3" 
+                             Grid.Row="1"
+                             Grid.ColumnSpan="3"
+                             Text="{Binding Name, Mode=TwoWay}"/>
+                    <Label Grid.Column="1" 
+                           Grid.Row="3">
+                        Code
+                    </Label>
+                    <ComboBox Grid.Column="3"  
+                              Grid.Row="3" 
+                              Grid.ColumnSpan="3"
+                              SelectedValue = "{Binding CodeId}" 
+                              SelectedValuePath = "Id" 
+                              DisplayMemberPath = "Name" 
+                              IsEditable="True" 
+                              ItemsSource="{Binding Path=DataContext.CodeView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                              >
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+
+                    <!--Label Grid.Column="7"
+                           Grid.Row="1" 
+                           Content="{Binding Id, Mode=OneWay}"/-->
+
+                    <Label Grid.Column="1"
+                           Grid.Row="7">
+                        Type, Number
+                    </Label>
+                    <ComboBox Grid.Column="3"
+                              Grid.Row="7"
+                              SelectedValue = "{Binding StoryType, Mode=TwoWay}"
+                              IsEditable="True" 
+                              ItemsSource="{Binding Path=DataContext.StoryTypes, RelativeSource={RelativeSource AncestorType=Window}}">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+                    <TextBox Grid.Column="5"  
+                             Grid.Row="7" 
+                             Text="{Binding StoryNumber, Mode=TwoWay}"/>
+
+                    <Label Grid.Column="1"
+                           Grid.Row="9">
+                        ExtraInfo
+                    </Label>
+                    <TextBox Grid.Column="3"  
+                             Grid.Row="9" 
+                             Grid.ColumnSpan="3"
+                             Text="{Binding ExtraInfo, Mode=TwoWay}"/>
+
+                    <Label Grid.Column="1"
+                           Grid.Row="11">
+                        Pages, Language
+                    </Label>
+                    <TextBox Grid.Column="3"  
+                             Grid.Row="11" 
+                             Text="{Binding Pages, Mode=TwoWay}"/>
+                    <ComboBox Grid.Column="5"
+                              Grid.Row="11"
+                              SelectedValue = "{Binding Language, Mode=TwoWay}"
+                              SelectedValuePath="Id"
+                              DisplayMemberPath = "Name" 
+                              IsEditable="True" 
+                              ItemsSource="{Binding Path=DataContext.Languages, RelativeSource={RelativeSource AncestorType=Window}}">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+
+                    <Label Grid.Column="1"
+                           Grid.Row="13">
+                        Remark
+                    </Label>
+                    <TextBox Grid.Column="3"  
+                             Grid.Row="13" 
+                             Grid.ColumnSpan="3"
+                             Text="{Binding Remark, Mode=TwoWay}"/>
+
+                    <Label Grid.Column="1" 
+                           Grid.Row="15">
+                        Origin Story
+                    </Label>
+                    <ComboBox Grid.Column="3"
+                              Grid.Row="15" 
+                              Grid.ColumnSpan="3"
+                              SelectedValue = "{Binding OriginStoryId, Mode=TwoWay}" 
+                              SelectedValuePath = "Id" 
+                              DisplayMemberPath = "Name" 
+                              IsEditable="True" 
+                              ItemsSource="{Binding Path=DataContext.StoryView.OriginStories, RelativeSource={RelativeSource AncestorType=Window}}">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+                </Grid>
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Right"
+                       Grid.Column="1">
+                <ListView DockPanel.Dock="Top"
+                          Margin="5" 
+                          VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=StoryCharacter}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id"
+                                            Width="50" 
+                                            DisplayMemberBinding="{Binding CharacterId}" />
+
+                            <GridViewColumn Header="Character"
+                                            Width="250">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="238"
+                                                  SelectedValue="{Binding CharacterId, Mode=TwoWay}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.CharacterView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <ListView DockPanel.Dock="Top"
+                          Margin="5" 
+                          VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=StoryArtist}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id"
+                                            Width="50" 
+                                            DisplayMemberBinding="{Binding ArtistId}" />
+
+                            <GridViewColumn Header="Artist"
+                                            Width="250">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="238"
+                                                  SelectedValue="{Binding ArtistId, Mode=TwoWay}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.ArtistView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Role" 
+                                            Width="150">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox IsEditable="True"
+                                                  IsReadOnly="True"
+                                                  Width="138"
+                                                  ItemsSource="{Binding Path=Roles}"
+                                                  Text="{Binding ArtistType, Converter={StaticResource ArrayConverter}}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate DataType="{x:Type vm:RoleType}">
+                                                    <CheckBox Content="{Binding Name}"
+                                                              IsChecked="{Binding Checked}"
+                                                              />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <ListView DockPanel.Dock="Top"
+                          Margin="5" 
+                          VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=StoryBook}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id"
+                                            Width="50" 
+                                            DisplayMemberBinding="{Binding BookId}" />
+
+                            <GridViewColumn Header="Book"
+                                            Width="250">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="238"
+                                                  SelectedValue="{Binding BookId, Mode=TwoWay}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.BookView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+        </Grid>
     </DockPanel>
 </Window>

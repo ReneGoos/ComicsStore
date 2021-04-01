@@ -13,10 +13,12 @@
         <helpers:ArrayConverter x:Key="ArtistTypeConverter"/>
     </Window.Resources>
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="4"
-                    Background="LightGray" Name="toolbar">
+        <StackPanel DockPanel.Dock="Top"
+                    Orientation="Horizontal" 
+                    Margin="4"
+                    Background="LightGray">
             <!--TextBox Margin="6" Padding="6" Width="200" Name="NewButton" Text="{Binding ArtistFilter, Mode=TwoWay}"/-->
-            <ComboBox Margin="6" Padding="6" Width="200" Name="NewButton" IsEditable="True" ItemsSource="{Binding Path=ArtistsView}" DisplayMemberPath="Name" SelectionChanged="ComboBox_SelectionChanged"/>
+            <ComboBox Margin="6" Padding="6" Width="200" Name="NewButton" IsEditable="True" ItemsSource="{Binding Path=ArtistsView}" DisplayMemberPath="Name"/>
         </StackPanel>
         <!--ListView Margin="5" DockPanel.Dock="Left" VerticalAlignment="Top" ItemsSource="{Binding Path=ArtistsView}" SelectionChanged="ListView_SelectionChanged">
             <ListView.View>

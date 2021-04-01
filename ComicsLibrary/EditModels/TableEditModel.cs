@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ComicsLibrary.EditModels
+﻿namespace ComicsLibrary.EditModels
 {
     public class TableEditModel : BasicEditModel
     {
@@ -12,25 +6,8 @@ namespace ComicsLibrary.EditModels
         private string _remark;
         private int? _id;
 
-        public int? Id { get => _id; set { _id = value; RaisePropertyChanged(); } }
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string Remark
-        {
-            get => _remark;
-            set
-            {
-                _remark = value;
-                RaisePropertyChanged();
-            }
-        }
+        public int? Id { get => _id; set { Set(ref _id, value); } }
+        public string Name { get => _name; set { Set(ref _name, value); } }
+        public string Remark { get => _remark; set { Set(ref _remark, value); } }
     }
 }

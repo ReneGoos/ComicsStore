@@ -7,9 +7,9 @@
         private string _issue;
         private decimal? _seriesOrder;
 
-        public int BookId { get => _bookId; set { _bookId = value; RaisePropertyChanged(); } }
-        public int SeriesId { get => _seriesId; set { _seriesId = value; RaisePropertyChanged(); } }
-        public string Issue { get => _issue; set { _issue = value; RaisePropertyChanged(); } }
-        public decimal? SeriesOrder { get => _seriesOrder; set { _seriesOrder = value; RaisePropertyChanged(); } }
+        public int BookId { get => _bookId; set { Set(ref _bookId, value); } }
+        public int SeriesId { get => _seriesId; set { Set(ref _seriesId, value); } }
+        public string Issue { get => _issue; set { Set(ref _issue, value); } }
+        public decimal? SeriesOrder { get => _seriesOrder; set { Set(ref _seriesOrder, value); } }
     }
 }

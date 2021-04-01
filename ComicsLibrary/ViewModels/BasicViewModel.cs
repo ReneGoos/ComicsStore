@@ -1,18 +1,11 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using ComicsLibrary.Core;
 using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels
 {
-    public class BasicViewModel : INotifyPropertyChanged
+    public class BasicViewModel : ObservableObject 
     {
-        private bool _isDirty;
         private ICommand _getCommand;
         private ICommand _newCommand;
         private ICommand _saveCommand;
@@ -29,14 +22,5 @@ namespace ComicsLibrary.ViewModels
         {
             Mapper = mapper;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaisePropertyChanged([CallerMemberName] string info = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
-        }
-
-        public virtual bool IsDirty { get => _isDirty; set { _isDirty = value; RaisePropertyChanged(); RaisePropertyChanged("IsClean"); } }
-        public bool IsClean { get => !IsDirty; }
     }
 }

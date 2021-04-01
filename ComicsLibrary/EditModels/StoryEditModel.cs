@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Services.Interfaces;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Windows.Data;
+﻿using System.Collections.Generic;
 
 namespace ComicsLibrary.EditModels
 {
@@ -22,42 +15,16 @@ namespace ComicsLibrary.EditModels
         private ICollection<StoryBookEditModel> _storyBook;
         private ICollection<StoryCharacterEditModel> _storyCharacter;
 
-        public string StoryType { get => _storyType; set { _storyType = value; RaisePropertyChanged(); }}
-        public int? StoryNumber { get => _storyNumber; set { _storyNumber = value; RaisePropertyChanged(); }}
-        public double? Pages { get => _pages; set { _pages = value; RaisePropertyChanged(); }}
-        public string ExtraInfo { get => _extraInfo; set { _extraInfo = value; RaisePropertyChanged(); }}
-        public string Language { get => _language; set { _language = value; RaisePropertyChanged(); }}
-        public int CodeId { get => _codeId; set { _codeId = value; RaisePropertyChanged(); }}
-        public int? OriginStoryId { get => _originStoryId; set { _originStoryId = value; RaisePropertyChanged(); }}
+        public string StoryType { get => _storyType; set { Set(ref _storyType, value); } }
+        public int? StoryNumber { get => _storyNumber; set { Set(ref _storyNumber, value); } }
+        public double? Pages { get => _pages; set { Set(ref _pages, value); } }
+        public string ExtraInfo { get => _extraInfo; set { Set(ref _extraInfo, value); } }
+        public string Language { get => _language; set { Set(ref _language, value); } }
+        public int CodeId { get => _codeId; set { Set(ref _codeId, value); } }
+        public int? OriginStoryId { get => _originStoryId; set { Set(ref _originStoryId, value); } }
 
-        public ICollection<StoryArtistEditModel> StoryArtist
-        {
-            get => _storyArtist;
-            set
-            {
-                _storyArtist = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public ICollection<StoryBookEditModel> StoryBook
-        {
-            get => _storyBook;
-            set
-            {
-                _storyBook = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public ICollection<StoryCharacterEditModel> StoryCharacter
-        {
-            get => _storyCharacter;
-            set
-            {
-                _storyCharacter = value;
-                RaisePropertyChanged();
-            }
-        }
+        public ICollection<StoryArtistEditModel> StoryArtist { get => _storyArtist; set { Set(ref _storyArtist, value); } }
+        public ICollection<StoryBookEditModel> StoryBook { get => _storyBook; set { Set(ref _storyBook, value); } }
+        public ICollection<StoryCharacterEditModel> StoryCharacter { get => _storyCharacter; set { Set(ref _storyCharacter, value); } }
     }
 }

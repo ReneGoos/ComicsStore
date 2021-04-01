@@ -1,0 +1,39 @@
+﻿<Window x:Class="ComicsLibrary.Views.CodeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ComicsLibrary.Views"
+        xmlns:control="clr-namespace:ComicsLibrary.UserControls"
+        mc:Ignorable="d"
+        Title="Code" Height="450" Width="800"
+        DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
+        >
+    <DockPanel DataContext="{Binding CodeView}">
+        <DockPanel DockPanel.Dock="Top" 
+                   Background="LightGray" 
+                   Grid.IsSharedSizeScope="True">
+            <control:SimpleToolbar Items="{Binding Items}"
+                                   Id = "{Binding Item.Id, Mode=TwoWay}" 
+                                   IsClean ="{Binding IsClean}"
+                                   IsDirty ="{Binding IsDirty}"
+                                   Filter = "{Binding ItemFilter, Mode=TwoWay}"
+                                   NewCommand="{Binding NewCommand}"
+                                   SaveCommand="{Binding SaveCommand}"
+                                   CancelSaveCommand="{Binding CancelSaveCommand}"
+                                   />
+        </DockPanel>
+        <Grid DockPanel.Dock="Bottom"
+               DataContext="{Binding Item}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel DockPanel.Dock="Left">
+                <control:SimpleEntry Id="{Binding Id, Mode=TwoWay}"
+                                     ItemName="{Binding Name, Mode=TwoWay}"
+                                     ItemRemark="{Binding Remark, Mode=TwoWay}"/>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</Window>

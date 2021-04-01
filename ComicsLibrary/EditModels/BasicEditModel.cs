@@ -1,20 +1,12 @@
-﻿using AutoMapper;
+﻿using ComicsLibrary.Core;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace ComicsLibrary.EditModels
 {
-    public abstract class BasicEditModel : INotifyPropertyChanged
+    public abstract class BasicEditModel : ObservableObject
     {
         public BasicEditModel()
         {
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaisePropertyChanged([CallerMemberName] string info = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
 
         public DateTime CreationDate { get; protected set; }

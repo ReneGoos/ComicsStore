@@ -3,11 +3,11 @@
 namespace ComicsLibrary.Views
 {
     /// <summary>
-    /// Interaction logic for ArtistWindow.xaml
+    /// Interaction logic for BookWindow.xaml
     /// </summary>
-    public partial class ArtistWindow : Window
+    public partial class BookWindow : Window
     {
-        public ArtistWindow()
+        public BookWindow()
         {
             InitializeComponent();
         }

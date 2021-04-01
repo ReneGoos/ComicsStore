@@ -1,8 +1,6 @@
 ﻿using ComicsLibrary.ViewModels;
-using ComicsStore.MiddleWare.Models.Output;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace ComicsLibrary.Views
 {
@@ -19,7 +17,7 @@ namespace ComicsLibrary.Views
         protected override void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);
-            (DataContext as ComicsViewModel).StoryView.NewCommand.Execute(null);
+            (DataContext as ComicsViewModel).StoryView.IsDirty = false;
         }
     }
 }

@@ -83,6 +83,11 @@ namespace ComicsStore.MiddleWare
             CreateMap<StoryCharacter, StoryCharacterOutputModel>().IncludeMembers(s => s.Character);
             CreateMap<Character, StoryCharacterOutputModel>();
             CreateMap<Story, CharacterStoryOutputModel>();
+
+            CreateMap<Series, CodeSeriesOutputModel>()
+                .ForMember(cs => cs.SeriesId, opt => opt.MapFrom(s => s.Id));
+            CreateMap<Story, CodeStoryOutputModel>()
+                .ForMember(cs => cs.StoryId, opt => opt.MapFrom(s => s.Id));
         }
     }
 }

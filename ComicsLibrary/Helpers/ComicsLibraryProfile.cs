@@ -1,7 +1,9 @@
 ﻿using ComicsLibrary.EditModels;
+using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
+using System.Collections.Generic;
 
 namespace ComicsLibrary.Helpers
 {
@@ -9,6 +11,9 @@ namespace ComicsLibrary.Helpers
     {
         public ComicsLibraryProfile() : base()
         {
+            CreateMap<ICollection<RoleType>, ICollection<string>>().ConstructUsing(src => (ICollection<string>)CheckedArrayMapper<ArtistType>.GetStringList(src));
+            CreateMap<ICollection<string>, ICollection<RoleType>>().ConstructUsing(src => (ICollection<RoleType>)CheckedArrayMapper<ArtistType>.GetCheckedList(src));
+
             CreateMap<ArtistEditModel, ArtistInputModel>();
             CreateMap<BookEditModel, BookInputModel>();
             CreateMap<CharacterEditModel, CharacterInputModel>();

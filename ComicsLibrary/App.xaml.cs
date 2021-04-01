@@ -60,8 +60,11 @@ namespace ComicsLibrary
             {
                 var navigationService = new NavigationService(serviceProvider);
                 navigationService.Configure(Navigation.Windows.ArtistWindow, typeof(ArtistWindow));
-                navigationService.Configure(Navigation.Windows.ArtistsList, typeof(ArtistsList));
-                navigationService.Configure(Navigation.Windows.DetailWindow, typeof(Window1));
+                navigationService.Configure(Navigation.Windows.BookWindow, typeof(BookWindow));
+                navigationService.Configure(Navigation.Windows.CharacterWindow, typeof(CharacterWindow));
+                navigationService.Configure(Navigation.Windows.CodeWindow, typeof(CodeWindow));
+                navigationService.Configure(Navigation.Windows.PublisherWindow, typeof(PublisherWindow));
+                navigationService.Configure(Navigation.Windows.SeriesWindow, typeof(SeriesWindow));
                 navigationService.Configure(Navigation.Windows.StoryWindow, typeof(StoryWindow));
 
                 return navigationService;
@@ -69,13 +72,16 @@ namespace ComicsLibrary
 
             // Register all ViewModels.
             services.AddSingleton<ComicsViewModel>();
-            services.AddSingleton<ArtistViewModel>();
-            services.AddSingleton<StoryViewModel>();
+            //services.AddSingleton<ArtistViewModel>();
+            //services.AddSingleton<StoryViewModel>();
 
             // Register all the Windows of the applications.
             services.AddTransient<ArtistWindow>();
-            services.AddTransient<ArtistsList>();
-            services.AddTransient<Window1>();
+            services.AddTransient<BookWindow>();
+            services.AddTransient<CharacterWindow>();
+            services.AddTransient<CodeWindow>();
+            services.AddTransient<PublisherWindow>();
+            services.AddTransient<SeriesWindow>();
             services.AddTransient<StoryWindow>();
         }
 
@@ -85,8 +91,13 @@ namespace ComicsLibrary
 
             var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
             //await navigationService.ShowAsync(Navigation.Windows.DetailWindow);
-            await navigationService.ShowAsync(Navigation.Windows.StoryWindow);
-            //await navigationService.ShowAsync(Navigation.Windows.ArtistsList);
+            await navigationService.ShowAsync(Navigation.Windows.ArtistWindow);
+            await navigationService.ShowAsync(Navigation.Windows.BookWindow);
+            await navigationService.ShowAsync(Navigation.Windows.CharacterWindow);
+            await navigationService.ShowAsync(Navigation.Windows.CodeWindow);
+            await navigationService.ShowAsync(Navigation.Windows.PublisherWindow);
+            await navigationService.ShowAsync(Navigation.Windows.SeriesWindow);
+            //await navigationService.ShowAsync(Navigation.Windows.ArtistWindow);
 
             base.OnStartup(e);
         }
