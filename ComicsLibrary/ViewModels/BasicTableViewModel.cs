@@ -12,8 +12,7 @@ using System.Windows.Data;
 
 namespace ComicsLibrary.ViewModels
 {
-    public class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, TEdit> : BasicViewModel
-        where TService : IComicsStoreService<TIn, TPatch, TOut, TSearch>
+    public class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, TEdit> : BasicViewModel, IBasicTableViewModel<TEdit> where TService : IComicsStoreService<TIn, TPatch, TOut, TSearch>
         where TIn : BasicInputModel
         where TPatch : BasicInputModel
         where TOut : BasicOutputModel
@@ -80,6 +79,9 @@ namespace ComicsLibrary.ViewModels
         {
             var itemInput = Mapper.Map<TIn>(Item);
             var itemOut = (Item.Id is null) ? await _itemService.AddAsync(itemInput) : await _itemService.UpdateAsync(Item.Id.Value, itemInput);
+
+            Items = null;
+
             Item = Mapper.Map<TEdit>(itemOut);
             Item.PropertyChanged += Item_PropertyChanged;
             IsDirty = false;
@@ -132,7 +134,7 @@ namespace ComicsLibrary.ViewModels
             }
             set
             {
-                _itemFilter = value;
+                Set(ref _itemFilter, value);
                 _itemsViewSource.View.Refresh();
             }
         }
@@ -148,6 +150,16 @@ namespace ComicsLibrary.ViewModels
 
                 return _itemsViewSource.View;
             }
+            private set
+            {
+                if (value is null)
+                {
+                    GetItemsAsync();
+                    ItemFilter = "";
+                }
+
+                RaisePropertyChanged("Items");
+            }
         }
 
         public TEdit Item
@@ -155,7 +167,7 @@ namespace ComicsLibrary.ViewModels
             get => _item;
             private set
             {
-                Set ( ref _item, value);
+                Set(ref _item, value);
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using ComicsLibrary.ViewModels;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ComicsLibrary.Views
 {
@@ -10,6 +12,21 @@ namespace ComicsLibrary.Views
         public ArtistWindow()
         {
             InitializeComponent();
+        }
+
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            var artistView = (sender as Button).DataContext as ArtistViewModel;
+
+            if (artistView.IsDirty)
+                artistView.SaveCommand.Execute(null);
+
+            this.DialogResult = true;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
         }
     }
 }

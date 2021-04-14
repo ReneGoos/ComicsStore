@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using ComicsLibrary.ViewModels;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ComicsLibrary.Views
 {
@@ -10,6 +12,21 @@ namespace ComicsLibrary.Views
         public CharacterWindow()
         {
             InitializeComponent();
+        }
+
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            var characterView = (sender as Button).DataContext as CharacterViewModel;
+
+            if (characterView.IsDirty)
+                characterView.SaveCommand.Execute(null);
+
+            this.DialogResult = true;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
         }
     }
 }

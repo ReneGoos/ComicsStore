@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ComicsLibrary.Views"
         xmlns:control="clr-namespace:ComicsLibrary.UserControls"
+        xmlns:vm="clr-namespace:ComicsLibrary.EditModels"
         mc:Ignorable="d"
         Title="Book" Height="450" Width="800"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
@@ -23,17 +24,301 @@
                                    CancelSaveCommand="{Binding CancelSaveCommand}"
                                    />
         </DockPanel>
-        <Grid DockPanel.Dock="Bottom"
-               DataContext="{Binding Item}">
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1"
+                    Margin="6" 
+                    Name="OkButton" Click="OkButton_Click">
+                Ok
+            </Button>
+            <Button Grid.Column="3"
+                    Margin="6"
+                    Name="CancelButton" Click="CancelButton_Click">
+                Cancel
+            </Button>
+        </Grid>
+        <Grid DockPanel.Dock="Bottom" 
+              DataContext="{Binding Item}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
-            <DockPanel DockPanel.Dock="Left">
-                <control:SimpleEntry Id="{Binding Id, Mode=TwoWay}"
-                                     ItemName="{Binding Name, Mode=TwoWay}"
-                                     ItemRemark="{Binding Remark, Mode=TwoWay}"/>
-            </DockPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="5"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Column="1"
+                       Grid.Row="1" 
+                       Content="{Binding Id, Mode=OneWay}"/>
+
+                <Label Grid.Column="1" 
+                       Grid.Row="3">
+                    Name
+                </Label>
+                <TextBox Grid.Column="3" 
+                         Grid.Row="3"
+                         Grid.ColumnSpan="3"
+                         Text="{Binding Name, Mode=TwoWay}"/>
+                
+                <Label Grid.Column="1" 
+                       Grid.Row="5">
+                    First Year of print
+                </Label>
+                <TextBox Grid.Column="3" 
+                         Grid.Row="5"
+                         Text="{Binding FirstYear, Mode=TwoWay}"/>
+                
+                <ComboBox Grid.Column="5"
+                          Grid.Row="5"
+                          SelectedValue = "{Binding FirstPrint, Mode=TwoWay}"
+                          IsEditable="True" 
+                          ItemsSource="{Binding Path=DataContext.FirstPrints, RelativeSource={RelativeSource AncestorType=Window}}">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+
+                <Label Grid.Column="1"
+                       Grid.Row="7">
+                    Year, Active
+                </Label>
+                <TextBox Grid.Column="3" 
+                         Grid.Row="7"
+                         Text="{Binding ThisYear, Mode=TwoWay}"/>
+                <ComboBox Grid.Column="5" 
+                          Grid.Row="7"
+                          SelectedValue="{Binding Active, Mode=TwoWay}"
+                          IsEditable="True" 
+                          ItemsSource="{Binding Path=DataContext.Actives, RelativeSource={RelativeSource AncestorType=Window}}">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+
+                <Label Grid.Column="1"
+                       Grid.Row="9">
+                    Type
+                </Label>
+                <ComboBox Grid.Column="3"
+                          Grid.Row="9"
+                          SelectedValue = "{Binding BookType, Mode=TwoWay}"
+                          IsEditable="True" 
+                          ItemsSource="{Binding Path=DataContext.BookTypes, RelativeSource={RelativeSource AncestorType=Window}}">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+
+                <Label Grid.Column="1"
+                       Grid.Row="13">
+                    Remark
+                </Label>
+                <TextBox Grid.Column="3"  
+                             Grid.Row="13" 
+                             Grid.ColumnSpan="3"
+                             Text="{Binding Remark, Mode=TwoWay}"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row ="1"
+                            Grid.Column="1"
+                            Height="25"
+                            Command="{Binding DataContext.AddSeriesToBookCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                            >
+                    Add
+                </Button>
+                <ListView DockPanel.Dock="Top"
+                              Grid.Row ="1"
+                              Grid.Column="3"
+                              Margin="5"      
+                              VerticalAlignment="Top" 
+                              ItemsSource="{Binding Path=BookSeries}"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id"
+                                            Width="50" 
+                                            DisplayMemberBinding="{Binding SeriesId}" />
+
+                            <GridViewColumn Header="Series"
+                                            Width="250">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="238"
+                                                  SelectedValue="{Binding SeriesId, Mode=TwoWay}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.SeriesView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Issue" 
+                                            Width="150">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox  Width="138"
+                                                  Text="{Binding Issue}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button Grid.Row ="3"
+                            Grid.Column="1"
+                            Height="25"
+                            Command="{Binding DataContext.AddPublisherToBookCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                            >
+                    Add
+                </Button>
+                <ListView DockPanel.Dock="Top"
+                              Grid.Row ="3"                              
+                              Grid.Column="3"
+                              Margin="5"
+                              VerticalAlignment="Top" 
+                              ItemsSource="{Binding Path=BookPublisher}"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id"
+                                            Width="50" 
+                                            DisplayMemberBinding="{Binding PublisherId}" />
+
+                            <GridViewColumn Header="Publisher"
+                                            Width="250">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="238"
+                                                  SelectedValue="{Binding PublisherId, Mode=TwoWay}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.PublisherView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <!-- Button Grid.Row ="5"
+                            Grid.Column="1"
+                            Height="25"
+                            Command="{Binding DataContext.AddStoryToBookCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                            >
+                    Add
+                </Button -->
+                <!-- ListView DockPanel.Dock="Top"
+                              Grid.Row ="5"
+                              Grid.Column="3"                        
+                              Margin="5" 
+                              VerticalAlignment="Top" 
+                              ItemsSource="{Binding Path=StoryBook}"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id"
+                                            Width="50" 
+                                            DisplayMemberBinding="{Binding StoryId}" />
+
+                            <GridViewColumn Header="Book"
+                                            Width="250">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="238"
+                                                  SelectedValue="{Binding StoryId, Mode=TwoWay}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </>
+                </ListView -->
+            </Grid>
         </Grid>
     </DockPanel>
 </Window>

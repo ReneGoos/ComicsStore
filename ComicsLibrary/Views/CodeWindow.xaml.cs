@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using ComicsLibrary.ViewModels;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ComicsLibrary.Views
 {
@@ -10,6 +12,21 @@ namespace ComicsLibrary.Views
         public CodeWindow()
         {
             InitializeComponent();
+        }
+
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            var codeView = (sender as Button).DataContext as CodeViewModel;
+
+            if (codeView.IsDirty)
+                codeView.SaveCommand.Execute(null);
+
+            this.DialogResult = true;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
         }
     }
 }

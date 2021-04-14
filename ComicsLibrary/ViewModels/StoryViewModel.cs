@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
+using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using System;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.Windows.Input;
+using ComicsLibrary.Navigation;
+using System.Collections.Generic;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -59,7 +64,6 @@ namespace ComicsLibrary.ViewModels
             }
         }
 
-
         protected override void GetItemsAsync()
         {
             base.GetItemsAsync();
@@ -72,8 +76,40 @@ namespace ComicsLibrary.ViewModels
             _originStoriesViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
         }
 
+        protected override void SaveAsync()
+        {
+            base.SaveAsync();
+
+            _originStoriesViewSource = new CollectionViewSource
+            {
+                Source = _items
+            };
+            _originStoriesViewSource.Filter += OriginStoryFilterResults;
+            _originStoriesViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+        }
+
+        public void AddStoryArtist(ICollection<StoryArtistEditModel> storyArtists, int? artistId)
+        {
+            Item.AddStoryArtist(storyArtists, artistId);
+        }
+
+        public void AddStoryBook(ICollection<StoryBookEditModel> storyBooks, int? bookId)
+        {
+            Item.AddStoryBook(storyBooks, bookId);
+        }
+
+        public void AddStoryCharacter(ICollection<StoryCharacterEditModel> storyCharacters, int? characterId)
+        {
+            Item.AddStoryCharacter(storyCharacters, characterId);
+        }
+
+        public void AddStoryCode(int? codeId)
+        {
+            Item.AddStoryCode(codeId);
+        }
+
         public StoryViewModel(IStoriesService storiesService,
-            IMapper mapper) : base(storiesService, mapper)
+                              IMapper mapper) : base(storiesService, mapper)
         {
         }
     }

@@ -8,8 +8,8 @@ namespace ComicsLibrary.EditModels
 {
     public class StoryArtistEditModel : CrossEditModel
     {
-        private int _artistId;
-        private int _storyId;
+        private int? _artistId;
+        private int? _storyId;
         private ICollection<string> _artistType;
         private ObservableCollection<RoleType> _roles;
 
@@ -18,18 +18,22 @@ namespace ComicsLibrary.EditModels
             switch (e.PropertyName)
             {
                 case "ArtistType":
-                    var artistType = _artistType.ToList();
-                    foreach (var role in Roles)
+                    if ((_artistType?.Count ?? 0) > 0)
                     {
-                        var checkStatus = false;
-                        foreach (var type in artistType)
+                        var artistType = _artistType.ToList();
+
+                        foreach (var role in Roles)
                         {
-                            if (type.Equals(role.Name))
-                                checkStatus = true;
-                        }
-                        if (role.Checked != checkStatus)
-                        {
-                            role.Checked = checkStatus;
+                            var checkStatus = false;
+                            foreach (var type in artistType)
+                            {
+                                if (type.Equals(role.Name))
+                                    checkStatus = true;
+                            }
+                            if (role.Checked != checkStatus)
+                            {
+                                role.Checked = checkStatus;
+                            }
                         }
                     }
                     break;
@@ -83,8 +87,8 @@ namespace ComicsLibrary.EditModels
             PropertyChanged += StoryArtistEditModel_PropertyChanged;
         }
 
-        public int ArtistId { get => _artistId; set { Set(ref _artistId, value); }}
-        public int StoryId { get => _storyId; set  { Set(ref _storyId, value); }}
+        public int? ArtistId { get => _artistId; set { Set(ref _artistId, value); }}
+        public int? StoryId { get => _storyId; set  { Set(ref _storyId, value); }}
         public ICollection<string> ArtistType { get => _artistType; set  { Set(ref _artistType, value); }}
 
         public ObservableCollection<RoleType> Roles { get { if (_roles is null) { _roles = FillRoles(); } return _roles; } set { Set(ref _roles, value); } }

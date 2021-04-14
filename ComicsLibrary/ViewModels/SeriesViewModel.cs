@@ -4,6 +4,7 @@ using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using System;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -14,5 +15,9 @@ namespace ComicsLibrary.ViewModels
         {
         }
 
+        internal void AddSeriesCode(int? codeId)
+        {
+            Item.AddSeriesCode(codeId);
+        }
     }
 }

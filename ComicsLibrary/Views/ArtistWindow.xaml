@@ -32,6 +32,25 @@
                                    CancelSaveCommand="{Binding CancelSaveCommand}"
                                    />
         </DockPanel>
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1"
+                    Margin="6" 
+                    Name="OkButton" Click="OkButton_Click">
+                Ok
+            </Button>
+            <Button Grid.Column="3"
+                    Margin="6"
+                    Name="CancelButton" Click="CancelButton_Click">
+                Cancel
+            </Button>
+        </Grid>
         <Grid DockPanel.Dock="Bottom" 
               DataContext="{Binding Item}">
             <Grid.ColumnDefinitions>

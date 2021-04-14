@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ComicsLibrary.EditModels
 {
@@ -15,6 +17,13 @@ namespace ComicsLibrary.EditModels
         private ICollection<StoryBookEditModel> _storyBook;
         private ICollection<StoryCharacterEditModel> _storyCharacter;
 
+        public StoryEditModel() : base()
+        {
+            StoryArtist = new List<StoryArtistEditModel>();
+            StoryBook = new List<StoryBookEditModel>();
+            StoryCharacter = new List<StoryCharacterEditModel>();
+        }
+
         public string StoryType { get => _storyType; set { Set(ref _storyType, value); } }
         public int? StoryNumber { get => _storyNumber; set { Set(ref _storyNumber, value); } }
         public double? Pages { get => _pages; set { Set(ref _pages, value); } }
@@ -26,5 +35,77 @@ namespace ComicsLibrary.EditModels
         public ICollection<StoryArtistEditModel> StoryArtist { get => _storyArtist; set { Set(ref _storyArtist, value); } }
         public ICollection<StoryBookEditModel> StoryBook { get => _storyBook; set { Set(ref _storyBook, value); } }
         public ICollection<StoryCharacterEditModel> StoryCharacter { get => _storyCharacter; set { Set(ref _storyCharacter, value); } }
+
+        public void AddStoryArtist(ICollection<StoryArtistEditModel> storyArtists, int? artistId)
+        {
+            if (artistId.HasValue)
+            {
+                if (!StoryArtist.Any(s => s.ArtistId == artistId.Value))
+                {
+                    if (!storyArtists.Any(s => s.ArtistId == artistId.Value))
+                    {
+                        storyArtists.Add(new StoryArtistEditModel
+                                            {
+                                                ArtistId = artistId,
+                                                StoryId = Id
+                                            }
+                                        );
+                    }
+
+                    StoryArtist = storyArtists;
+                }
+            }
+        }
+
+        public void AddStoryBook(ICollection<StoryBookEditModel> storyBooks, int? bookId)
+        {
+            if (bookId.HasValue)
+            {
+                if (!StoryBook.Any(s => s.BookId == bookId.Value))
+                {
+                    if (!storyBooks.Any(s => s.BookId == bookId.Value))
+                    {
+                        storyBooks.Add(new StoryBookEditModel
+                                        {
+                                            BookId = bookId,
+                                            StoryId = Id
+                                        });
+                    }
+
+                    StoryBook = storyBooks;
+                }
+            }
+        }
+
+        public void AddStoryCode(int? codeId)
+        {
+            if (codeId.HasValue)
+            {
+                if (CodeId != codeId.Value)
+                {
+                    CodeId = codeId.Value;
+                }
+            }
+        }
+
+        public void AddStoryCharacter(ICollection<StoryCharacterEditModel> storyCharacters, int? characterId)
+        {
+            if (characterId.HasValue)
+            {
+                if (!StoryCharacter.Any(s => s.CharacterId == characterId.Value))
+                {
+                    if (!storyCharacters.Any(s => s.CharacterId == characterId.Value))
+                    {
+                        storyCharacters.Add(new StoryCharacterEditModel
+                        {
+                            CharacterId = characterId,
+                            StoryId = Id
+                        });
+                    }
+
+                    StoryCharacter = storyCharacters;
+                }
+            }
+        }
     }
 }

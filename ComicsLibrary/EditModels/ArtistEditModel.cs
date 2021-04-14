@@ -6,6 +6,11 @@ namespace ComicsLibrary.EditModels
     {
         private ICollection<StoryArtistEditModel> _storyArtists;
 
+        public ArtistEditModel() : base()
+        {
+            StoryArtist = new List<StoryArtistEditModel>();
+        }
+
         public ICollection<StoryArtistEditModel> StoryArtist
         {
             get => _storyArtists;

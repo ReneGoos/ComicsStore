@@ -193,7 +193,7 @@ namespace ComicsStore.MiddleWare.Reports
             exportText.Append('"' + String.Join(",", EscapeList(characters)) + '"' + ',');
             exportText.Append('"' + String.Join(",", ArtistAndShortType(artists)) + '"' + ',');
 
-            exportText.Append('"' + bookIssue.ToString() + '"' + ',');
+            exportText.Append('"' + bookIssue?.ToString() + '"' + ',');
             exportText.Append('"' + Escape(bookIssueTitle) + '"' + ',');
             exportText.Append('"' + language + '"' + ',');
 

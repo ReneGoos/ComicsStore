@@ -1,6 +1,7 @@
 ﻿using ComicsLibrary.ViewModels;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ComicsLibrary.Views
 {
@@ -14,10 +15,19 @@ namespace ComicsLibrary.Views
             InitializeComponent();
         }
 
-        protected override void OnContentRendered(EventArgs e)
+        private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            base.OnContentRendered(e);
-            (DataContext as ComicsViewModel).StoryView.IsDirty = false;
+            var storyView = (sender as Button).DataContext as StoryViewModel;
+
+            if (storyView.IsDirty)
+                storyView.SaveCommand.Execute(null);
+
+            this.DialogResult = true;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
         }
     }
 }

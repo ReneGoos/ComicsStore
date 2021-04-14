@@ -91,13 +91,13 @@ namespace ComicsLibrary
 
             var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
             //await navigationService.ShowAsync(Navigation.Windows.DetailWindow);
-            await navigationService.ShowAsync(Navigation.Windows.ArtistWindow);
-            await navigationService.ShowAsync(Navigation.Windows.BookWindow);
-            await navigationService.ShowAsync(Navigation.Windows.CharacterWindow);
-            await navigationService.ShowAsync(Navigation.Windows.CodeWindow);
-            await navigationService.ShowAsync(Navigation.Windows.PublisherWindow);
-            await navigationService.ShowAsync(Navigation.Windows.SeriesWindow);
             //await navigationService.ShowAsync(Navigation.Windows.ArtistWindow);
+            //await navigationService.ShowDialogAsync(Navigation.Windows.BookWindow);
+            //await navigationService.ShowAsync(Navigation.Windows.CharacterWindow);
+            //await navigationService.ShowAsync(Navigation.Windows.CodeWindow);
+            //await navigationService.ShowAsync(Navigation.Windows.PublisherWindow);
+            //await navigationService.ShowDialogAsync(Navigation.Windows.SeriesWindow);
+            await navigationService.ShowDialogAsync(Navigation.Windows.StoryWindow);
 
             base.OnStartup(e);
         }
