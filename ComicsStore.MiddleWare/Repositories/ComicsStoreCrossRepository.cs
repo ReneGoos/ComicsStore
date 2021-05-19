@@ -1,10 +1,13 @@
 ﻿using System.Threading.Tasks;
 using ComicsStore.Data.Model;
 using Microsoft.EntityFrameworkCore;
+using ComicsStore.MiddleWare.Repositories.Interfaces;
+using System.Collections.Generic;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public abstract class ComicsStoreCrossRepository<T> : ComicsStoreRepository<T> where T : CrossTable
+    public abstract class ComicsStoreCrossRepository<T, IObject> : ComicsStoreRepository<T>, IComicsStoreCrossRepository<T, IObject>
+        where T : CrossTable
     {
         public ComicsStoreCrossRepository(ComicsStoreDbContext context) : base(context)
         {
@@ -25,5 +28,11 @@ namespace ComicsStore.MiddleWare.Repositories
 
             return entity;
         }
+
+        public abstract Task<List<T>> AddAsync(IEnumerable<T> value);
+        public abstract Task DeleteAsync(IEnumerable<T> value);
+        public abstract Task<List<T>> GetAsync(int? id, int? crossId);
+        public abstract Task<List<T>> UpdateAsync(IEnumerable<T> value);
+        public abstract void UpdateLinkedItems(IObject itemCurrent, IObject itemNew);
     }
 }

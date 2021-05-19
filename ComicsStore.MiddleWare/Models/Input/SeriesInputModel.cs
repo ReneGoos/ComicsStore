@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ComicsStore.MiddleWare.Models.Input
 {
@@ -11,5 +12,7 @@ namespace ComicsStore.MiddleWare.Models.Input
 
         public int CodeId { get; set; }
         public CodeInputModel Code { get; set; }
+
+        public ICollection<BookSeriesInputModel> BookSeries { get; set; }
     }
 }

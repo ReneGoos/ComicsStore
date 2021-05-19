@@ -8,24 +8,32 @@ using ComicsStore.MiddleWare.Repositories.Interfaces;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class CodesRepository : ComicsStoreMainRepository<Code>, IComicsStoreRepository<Code, BasicSearchModel>
+    public class CodesRepository : ComicsStoreMainRepository<Code, BasicSearchModel>, IComicsStoreMainRepository<Code, BasicSearchModel>
     {
         public CodesRepository(ComicsStoreDbContext context)
             : base(context)
         {
         }
 
-        public Task<Code> AddAsync(Code code)
+        public override Task<Code> AddAsync(Code code)
         {
             return AddItemAsync(_context.Codes, code);
         }
 
-        public Task DeleteAsync(Code code)
+        public override Task DeleteAsync(Code code)
         {
             return RemoveItemAsync(_context.Codes, code);
         }
 
-        public Task<List<Code>> GetAsync(BasicSearchModel model)
+        public override Task<List<Code>> GetAsync()
+        {
+            var codes = _context.Codes
+                .ToListAsync();
+
+            return codes;
+        }
+
+        public override Task<List<Code>> GetAsync(BasicSearchModel model)
         {
             var codes = _context.Codes
                 .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
@@ -33,18 +41,26 @@ namespace ComicsStore.MiddleWare.Repositories
             return codes;
         }
 
-        public Task<Code> GetAsync(int codeId)
+        public override Task<Code> GetAsync(int codeId, bool extended = false)
         {
-            return _context.Codes
-                .SingleOrDefaultAsync(c => c.Id == codeId);
+            //if (extended)
+            {
+                return _context.Codes
+                    .Include(sc => sc.Series)
+                    .Include(sc => sc.Story)
+                    .SingleOrDefaultAsync(c => c.Id == codeId);
+            }
+
+            //return _context.Codes
+            //    .SingleOrDefaultAsync(c => c.Id == codeId);
         }
 
-        public Task<Code> UpdateAsync(Code code)
+        public override Task<Code> UpdateAsync(Code code)
         {
             return UpdateItemAsync(_context.Codes, code);
         }
 
-        public Task<Code> PatchAsync(int id, IDictionary<string, object> data = null)
+        public override Task<Code> PatchAsync(int id, IDictionary<string, object> data = null)
         {
             return PatchItemAsync(_context.Codes, id, data);
         }

@@ -20,7 +20,8 @@ namespace ComicsStore.MiddleWare.Repositories
         public Task<List<ExportBook>> GetAsync(StorySeriesSearchModel model)
         {
             var exports = _context.ExportBooks
-                .Where(s => !model.Active.HasValue || s.Deleted == model.Active.Value)
+                .Where(s => (!model.Active.HasValue || s.Deleted == model.Active.Value)
+                            && (model.Filter == null || model.Filter.Length == 0 || s.Title.ToLower().Contains(model.Filter.ToLower())))
                 .OrderBy(e => e.Title)
                 .ThenBy(e => e.StoryNumber)
                 .ThenBy(e => e.StoryType)

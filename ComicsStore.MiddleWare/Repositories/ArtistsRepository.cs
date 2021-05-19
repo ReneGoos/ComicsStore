@@ -5,27 +5,40 @@ using Microsoft.EntityFrameworkCore;
 using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class ArtistsRepository : ComicsStoreMainRepository<Artist>,  IComicsStoreRepository<Artist, BasicSearchModel>
+    public class ArtistsRepository : ComicsStoreMainRepository<Artist, BasicSearchModel>,  IComicsStoreMainRepository<Artist, BasicSearchModel>
     {
-        public ArtistsRepository(ComicsStoreDbContext context)
+        private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
+
+        public ArtistsRepository(ComicsStoreDbContext context,
+            IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository)
             : base(context)
         {
+            _storyArtistsRepository = storyArtistsRepository;
         }
 
-        public Task<Artist> AddAsync(Artist artist)
+        public override Task<Artist> AddAsync(Artist artist)
         {
             return AddItemAsync(_context.Artists, artist);
         }
 
-        public Task DeleteAsync(Artist artist)
+        public override Task DeleteAsync(Artist artist)
         {
             return RemoveItemAsync(_context.Artists, artist);
         }
 
-        public Task<List<Artist>> GetAsync(BasicSearchModel model)
+        public override Task<List<Artist>> GetAsync()
+        {
+            var artists = _context.Artists
+                .ToListAsync();
+
+            return artists;
+        }
+
+        public override Task<List<Artist>> GetAsync(BasicSearchModel model)
         {
             var artists = _context.Artists
                 .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
@@ -33,19 +46,34 @@ namespace ComicsStore.MiddleWare.Repositories
             return artists;
         }
 
-        public Task<Artist> GetAsync(int artistId)
+        public override Task<Artist> GetAsync(int artistId, bool extended = false)
         {
+            if (extended)
+            {
+                return _context.Artists
+                    .Include(a => a.StoryArtist)
+                    .ThenInclude(sa => sa.Story)
+                    .SingleOrDefaultAsync(a => a.Id == artistId);
+            }
+
             return _context.Artists
                 .Include(a => a.StoryArtist)
                 .SingleOrDefaultAsync(a => a.Id == artistId);
         }
 
-        public Task<Artist> UpdateAsync(Artist artist)
+        public override Task<Artist> UpdateAsync(Artist artist)
         {
-            return UpdateItemAsync(_context.Artists, artist);
+            return UpdateItemAsync(_context.Artists, artist, UpdateLinkedItems);
         }
 
-        public Task<Artist> PatchAsync(int id, IDictionary<string, object> data = null)
+        private bool UpdateLinkedItems(Artist artistCurrent, Artist artistNew)
+        {
+            _storyArtistsRepository.UpdateLinkedItems(artistCurrent, artistNew);
+
+            return true;
+        }
+
+        public override Task<Artist> PatchAsync(int id, IDictionary<string, object> data = null)
         {
             return PatchItemAsync(_context.Artists, id, data);
         }

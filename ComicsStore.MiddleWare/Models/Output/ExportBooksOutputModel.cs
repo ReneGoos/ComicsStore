@@ -5,11 +5,14 @@ namespace ComicsStore.MiddleWare.Models.Output
     public class ExportBooksOutputModel
     {
         public string Title { get; set; }
+        public string OriginalTitle { get; set; }
         public int? StoryNumber { get; set; }
         public string ExtraInfo { get; set; }
         public string StoryType { get; set; }
         public string BookType { get; set; }
         public string Character { get; set; }
+        public string StoryCode { get; set; }
+        public string SeriesCode { get; set; }
         public string Artist { get; set; }
         public string ArtistType { get; set; }
         public string Issue { get; set; }

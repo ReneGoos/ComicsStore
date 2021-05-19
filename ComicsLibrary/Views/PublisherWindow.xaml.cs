@@ -18,7 +18,7 @@ namespace ComicsLibrary.Views
         {
             var publisherView = (sender as Button).DataContext as PublisherViewModel;
 
-            if (publisherView.IsDirty)
+            //if (publisherView.IsDirty)
                 publisherView.SaveCommand.Execute(null);
 
             this.DialogResult = true;

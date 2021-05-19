@@ -18,7 +18,7 @@ namespace ComicsLibrary.Views
         {
             var artistView = (sender as Button).DataContext as ArtistViewModel;
 
-            if (artistView.IsDirty)
+            //if (artistView.IsDirty)
                 artistView.SaveCommand.Execute(null);
 
             this.DialogResult = true;

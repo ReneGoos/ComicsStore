@@ -9,5 +9,7 @@
         public const string PublisherWindow = nameof(PublisherWindow);
         public const string SeriesWindow = nameof(SeriesWindow);
         public const string StoryWindow = nameof(StoryWindow);
+        public const string StartWindow = nameof(StartWindow);
+        public const string ReportWindow = nameof(ReportWindow);
     }
 }

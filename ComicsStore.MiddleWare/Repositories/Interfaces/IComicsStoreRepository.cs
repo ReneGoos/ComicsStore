@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Models.Search;
 
 namespace ComicsStore.MiddleWare.Repositories.Interfaces
 {
-    public interface IComicsStoreRepository<T, TSearch>
-        where TSearch : BasicSearchModel
+    public interface IComicsStoreRepository<T>
+        where T : BasicsTable
     {
         Task<T> AddAsync(T value);
         Task DeleteAsync(T value);
-        Task<List<T>> GetAsync(TSearch model);
-        Task<T> GetAsync(int id);
+        Task<List<T>> GetAsync();
         Task<T> UpdateAsync(T value);
-        Task<T> PatchAsync(int id, IDictionary<string,object> data);
     }
 }

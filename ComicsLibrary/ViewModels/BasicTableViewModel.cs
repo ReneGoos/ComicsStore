@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
+using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
@@ -8,11 +9,13 @@ using ComicsStore.MiddleWare.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Data;
 
 namespace ComicsLibrary.ViewModels
 {
-    public class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, TEdit> : BasicViewModel, IBasicTableViewModel<TEdit> where TService : IComicsStoreService<TIn, TPatch, TOut, TSearch>
+    public class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, TEdit> : BasicViewModel, IBasicTableViewModel<TEdit, TOut>
+        where TService : IComicsStoreService<TIn, TPatch, TOut, TSearch>
         where TIn : BasicInputModel
         where TPatch : BasicInputModel
         where TOut : BasicOutputModel
@@ -24,6 +27,7 @@ namespace ComicsLibrary.ViewModels
         private TEdit _item;
 
         private CollectionViewSource _itemsViewSource;
+        private CollectionViewSource _itemsFilteredViewSource;
         private string _itemFilter;
 
         public BasicTableViewModel(TService service, IMapper mapper) : base(mapper)
@@ -33,7 +37,8 @@ namespace ComicsLibrary.ViewModels
             GetCommand = new RelayCommand<int>(new Action<int>(GetItemAsync));
             NewCommand = new RelayCommand(new Action(NewItem));
             SaveCommand = new RelayCommand(new Action(SaveAsync));
-            CancelSaveCommand = new RelayCommand(new Action(CancelSaveAsync));
+            UndoCommand = new RelayCommand(new Action(CancelSaveAsync));
+            DeleteCommand = new RelayCommand<int>(new Action<int>(DeleteAsync));
 
             NewItem();
         }
@@ -54,13 +59,19 @@ namespace ComicsLibrary.ViewModels
 
         protected virtual async void GetItemsAsync()
         {
-            _items = await _itemService.GetAsync(new TSearch { });
+            _items = await _itemService.GetAsync();
             _itemsViewSource = new CollectionViewSource
             {
                 Source = _items
             };
-            _itemsViewSource.Filter += FilterResults;
             _itemsViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+
+            _itemsFilteredViewSource = new CollectionViewSource
+            {
+                Source = _items
+            };
+            _itemsFilteredViewSource.Filter += FilterResults;
+            _itemsFilteredViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
         }
 
         protected virtual void CancelSaveAsync()
@@ -85,6 +96,30 @@ namespace ComicsLibrary.ViewModels
             Item = Mapper.Map<TEdit>(itemOut);
             Item.PropertyChanged += Item_PropertyChanged;
             IsDirty = false;
+        }
+
+        private static bool ContinueDelete()
+        {
+            string sMessageBoxText = "Are you sure you want to delete?";
+            string sCaption = "Delete Item";
+
+            MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+            MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+            MessageBoxResult rsltMessageBox = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+
+            return (rsltMessageBox ==MessageBoxResult.Yes);           
+        }
+
+        protected virtual async void DeleteAsync(int id)
+        {
+            if (ContinueDelete())
+            {
+                await _itemService.DeleteAsync(id);
+                Items = null;
+            }
+
+            NewItem();
         }
 
         protected virtual void NewItem()
@@ -135,7 +170,20 @@ namespace ComicsLibrary.ViewModels
             set
             {
                 Set(ref _itemFilter, value);
-                _itemsViewSource.View.Refresh();
+                _itemsFilteredViewSource.View.Refresh();
+            }
+        }
+
+        public ICollectionView FilteredItems
+        {
+            get
+            {
+                if (_itemsFilteredViewSource is null)
+                {
+                    GetItemsAsync();
+                }
+
+                return _itemsFilteredViewSource.View;
             }
         }
 
@@ -143,7 +191,7 @@ namespace ComicsLibrary.ViewModels
         {
             get
             {
-                if (_itemsViewSource is null)
+                if (_items is null)
                 {
                     GetItemsAsync();
                 }

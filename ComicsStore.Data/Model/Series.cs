@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using ComicsStore.Data.Model.Interfaces;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ComicsStore.Data.Model
 {
-    public class Series : MainTable
+    public class Series : MainTable, IBookSeries
     {
         public Series()
             : base()

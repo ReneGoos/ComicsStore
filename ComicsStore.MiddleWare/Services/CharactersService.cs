@@ -9,81 +9,19 @@ using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public class CharactersService : ICharactersService
+    public class CharactersService : ComicsStoreService<Character, CharacterInputModel, CharacterInputModel, CharacterOutputModel, BasicSearchModel>, ICharactersService
     {
-        private readonly IComicsStoreRepository<Character, BasicSearchModel> _charactersRepository;
-        private readonly IComicsStoreCrossRepository<StoryCharacter> _storyCharactersRepository;
-        private readonly IMapper _mapper;
+        private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository;
 
-        public CharactersService(IComicsStoreRepository<Character, BasicSearchModel> charactersRepository,
-            IComicsStoreCrossRepository<StoryCharacter> storyCharactersRepository,
-            IMapper mapper)
+        public CharactersService(IComicsStoreMainRepository<Character, BasicSearchModel> charactersRepository,
+            IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository,
+            IMapper mapper) : base(charactersRepository, mapper)
         {
-            _charactersRepository = charactersRepository;
             _storyCharactersRepository = storyCharactersRepository;
-            _mapper = mapper;
-        }
-
-        public async Task<CharacterOutputModel> AddAsync(CharacterInputModel characterInput)
-        {
-            var character = _mapper.Map<Character>(characterInput);
-
-            var characterResult = await _charactersRepository.AddAsync(character);
-
-            return _mapper.Map<CharacterOutputModel>(characterResult);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var character = await _charactersRepository.GetAsync(id);
-
-            if (character == null)
-            {
-                return;
-            }
-
-            await _charactersRepository.DeleteAsync(character);
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _charactersRepository.GetAsync(id) != null;
-        }
-
-        public async Task<ICollection<CharacterOutputModel>> GetAsync(BasicSearchModel searchModel)
-        {
-            var characters =  await _charactersRepository.GetAsync(searchModel);
-
-            return _mapper.Map<ICollection<CharacterOutputModel>>(characters);
-        }
-
-        public async Task<CharacterOutputModel> GetAsync(int id)
-        {
-            var character = await _charactersRepository.GetAsync(id);
-
-            return _mapper.Map<CharacterOutputModel>(character);
-        }
-
-        public async Task<CharacterOutputModel> UpdateAsync(int id, CharacterInputModel characterInput)
-        {
-            var character = _mapper.Map<Character>(characterInput);
-            character.Id = id;
-
-            character = await _charactersRepository.UpdateAsync(character);
-
-            return _mapper.Map<CharacterOutputModel>(character);
-        }
-
-        public async Task<CharacterOutputModel> PatchAsync(int id, CharacterInputModel characterInput)
-        {
-            var modifiedData = JsonHelper.ModifiedData<CharacterInputModel, Character>(characterInput, _mapper);
-
-            var character = await _charactersRepository.PatchAsync(id, modifiedData);
-
-            return _mapper.Map<CharacterOutputModel>(character);
         }
 
         public async Task<ICollection<CharacterStoryOutputModel>> GetStoriesAsync(int characterId)
@@ -92,7 +30,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return _mapper.Map<ICollection<CharacterStoryOutputModel>>(storyCharacters);
+                return Mapper.Map<ICollection<CharacterStoryOutputModel>>(storyCharacters);
             }
             catch (Exception)
             {

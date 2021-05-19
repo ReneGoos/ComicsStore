@@ -4,6 +4,8 @@ using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -12,6 +14,16 @@ namespace ComicsLibrary.ViewModels
         public CharacterViewModel(ICharactersService charactersService,
             IMapper mapper) : base(charactersService, mapper)
         {
+        }
+
+        public void AddStoryCharacter(List<StoryCharacterEditModel> storyCharacters, int? storyId)
+        {
+            Item.AddStoryCharacter(storyCharacters, storyId);
+        }
+
+        public List<StoryCharacterEditModel> GetStoryCharacters ()
+        {
+            return Item.GetStoryCharacters();
         }
     }
 }

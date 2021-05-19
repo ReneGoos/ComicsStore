@@ -66,14 +66,14 @@ namespace ComicsLibrary
                 navigationService.Configure(Navigation.Windows.PublisherWindow, typeof(PublisherWindow));
                 navigationService.Configure(Navigation.Windows.SeriesWindow, typeof(SeriesWindow));
                 navigationService.Configure(Navigation.Windows.StoryWindow, typeof(StoryWindow));
+                navigationService.Configure(Navigation.Windows.StartWindow, typeof(StartWindow));
+                navigationService.Configure(Navigation.Windows.ReportWindow, typeof(ReportWindow));
 
                 return navigationService;
             });
 
             // Register all ViewModels.
             services.AddSingleton<ComicsViewModel>();
-            //services.AddSingleton<ArtistViewModel>();
-            //services.AddSingleton<StoryViewModel>();
 
             // Register all the Windows of the applications.
             services.AddTransient<ArtistWindow>();
@@ -83,6 +83,8 @@ namespace ComicsLibrary
             services.AddTransient<PublisherWindow>();
             services.AddTransient<SeriesWindow>();
             services.AddTransient<StoryWindow>();
+            services.AddTransient<StartWindow>();
+            services.AddTransient<ReportWindow>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -90,14 +92,7 @@ namespace ComicsLibrary
             await host.StartAsync();
 
             var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
-            //await navigationService.ShowAsync(Navigation.Windows.DetailWindow);
-            //await navigationService.ShowAsync(Navigation.Windows.ArtistWindow);
-            //await navigationService.ShowDialogAsync(Navigation.Windows.BookWindow);
-            //await navigationService.ShowAsync(Navigation.Windows.CharacterWindow);
-            //await navigationService.ShowAsync(Navigation.Windows.CodeWindow);
-            //await navigationService.ShowAsync(Navigation.Windows.PublisherWindow);
-            //await navigationService.ShowDialogAsync(Navigation.Windows.SeriesWindow);
-            await navigationService.ShowDialogAsync(Navigation.Windows.StoryWindow);
+            await navigationService.ShowDialogAsync(Navigation.Windows.StartWindow);
 
             base.OnStartup(e);
         }

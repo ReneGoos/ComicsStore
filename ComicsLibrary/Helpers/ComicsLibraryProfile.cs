@@ -21,6 +21,7 @@ namespace ComicsLibrary.Helpers
             CreateMap<PublisherEditModel, PublisherInputModel>();
             CreateMap<SeriesEditModel, SeriesInputModel>();
             CreateMap<StoryEditModel, StoryInputModel>();
+            CreateMap<ExportBooksOutputModel, ReportEditModel>();
 
             CreateMap<ArtistOutputModel, ArtistEditModel>();
             CreateMap<BookOutputModel, BookEditModel>();
@@ -33,7 +34,11 @@ namespace ComicsLibrary.Helpers
             //CreateMap<StoryArtistEditModel, ArtistStoryInputModel>();
             CreateMap<BookPublisherEditModel, BookPublisherInputModel>();
             CreateMap<BookSeriesEditModel, BookSeriesInputModel>();
-            CreateMap<StoryBookEditModel, BookStoryInputModel>();
+
+            CreateMap<CodeStoryOutputModel, StoryCodeEditModel>();
+            CreateMap<CodeSeriesOutputModel, SeriesCodeEditModel>();
+
+            //CreateMap<StoryBookEditModel, BookStoryInputModel>();
             //CreateMap<StoryCharacterEditModel, CharacterStoryInputModel>();
             //CreateMap<BookPublisherEditModel, PublisherBookInputModel>();
             //CreateMap<BookSeriesEditModel, SeriesBookInputModel>();

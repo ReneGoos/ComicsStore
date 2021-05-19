@@ -9,81 +9,19 @@ using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public class PublishersService : IPublishersService
+    public class PublishersService : ComicsStoreService<Publisher, PublisherInputModel, PublisherInputModel, PublisherOutputModel, BasicSearchModel>, IPublishersService
     {
-        private readonly IComicsStoreRepository<Publisher, BasicSearchModel> _publishersRepository;
-        private readonly IComicsStoreCrossRepository<BookPublisher> _bookPublishersRepository;
-        private readonly IMapper _mapper;
+        private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository;
 
-        public PublishersService(IComicsStoreRepository<Publisher, BasicSearchModel> publishersRepository,
-            IComicsStoreCrossRepository<BookPublisher> bookPublishersRepository,
-            IMapper mapper)
+        public PublishersService(IComicsStoreMainRepository<Publisher, BasicSearchModel> publishersRepository,
+            IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
+            IMapper mapper) : base(publishersRepository, mapper)
         {
-            _publishersRepository = publishersRepository;
             _bookPublishersRepository = bookPublishersRepository;
-            _mapper = mapper;
-        }
-
-        public async Task<PublisherOutputModel> AddAsync(PublisherInputModel publisherInput)
-        {
-            var publisher = _mapper.Map<Publisher>(publisherInput);
-
-            var publisherResult = await _publishersRepository.AddAsync(publisher);
-
-            return _mapper.Map<PublisherOutputModel>(publisherResult);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var publisher = await _publishersRepository.GetAsync(id);
-
-            if (publisher == null)
-            {
-                return;
-            }
-
-            await _publishersRepository.DeleteAsync(publisher);
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _publishersRepository.GetAsync(id) != null;
-        }
-
-        public async Task<ICollection<PublisherOutputModel>> GetAsync(BasicSearchModel searchModel)
-        {
-            var publishers =  await _publishersRepository.GetAsync(searchModel);
-
-            return _mapper.Map<ICollection<PublisherOutputModel>>(publishers);
-        }
-
-        public async Task<PublisherOutputModel> GetAsync(int id)
-        {
-            var publisher = await _publishersRepository.GetAsync(id);
-
-            return _mapper.Map<PublisherOutputModel>(publisher);
-        }
-
-        public async Task<PublisherOutputModel> UpdateAsync(int id, PublisherInputModel publisherInput)
-        {
-            var publisher = _mapper.Map<Publisher>(publisherInput);
-            publisher.Id = id;
-
-            publisher = await _publishersRepository.UpdateAsync(publisher);
-
-            return _mapper.Map<PublisherOutputModel>(publisher);
-        }
-
-        public async Task<PublisherOutputModel> PatchAsync(int id, PublisherInputModel publisherInput)
-        {
-            var modifiedData = JsonHelper.ModifiedData<PublisherInputModel, Publisher>(publisherInput, _mapper);
-
-            var publisher = await _publishersRepository.PatchAsync(id, modifiedData);
-
-            return _mapper.Map<PublisherOutputModel>(publisher);
         }
 
         public async Task<ICollection<PublisherBookOutputModel>> GetBooksAsync(int publisherId)
@@ -92,7 +30,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return _mapper.Map<ICollection<PublisherBookOutputModel>>(bookPublishers);
+                return Mapper.Map<ICollection<PublisherBookOutputModel>>(bookPublishers);
             }
             catch (Exception)
             {

@@ -5,22 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ComicsLibrary.Views"
         xmlns:control="clr-namespace:ComicsLibrary.UserControls"
+        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers"
         mc:Ignorable="d"
-        Title="Series" Height="450" Width="800"
+        Title="Series" 
+        Height="450" 
+        Width="900"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
         >
+    <Window.Resources>
+        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <helpers:NotConverter x:Key="NotConverter"/>
+    </Window.Resources>
     <DockPanel DataContext="{Binding SeriesView}">
         <DockPanel DockPanel.Dock="Top" 
                    Background="LightGray" 
                    Grid.IsSharedSizeScope="True">
-            <control:SimpleToolbar Items="{Binding Items}"
+            <control:SimpleToolbar FilteredItems="{Binding FilteredItems}"
                                    Id = "{Binding Item.Id, Mode=TwoWay}" 
                                    IsClean ="{Binding IsClean}"
                                    IsDirty ="{Binding IsDirty}"
                                    Filter = "{Binding ItemFilter, Mode=TwoWay}"
                                    NewCommand="{Binding NewCommand}"
                                    SaveCommand="{Binding SaveCommand}"
-                                   CancelSaveCommand="{Binding CancelSaveCommand}"
+                                   UndoCommand="{Binding UndoCommand}"
+                                   DeleteCommand="{Binding DeleteCommand}"
                                    />
         </DockPanel>
         <Grid DockPanel.Dock="Bottom">
@@ -55,7 +63,9 @@
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -70,71 +80,82 @@
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
 
                 <Label Grid.Column="1"
-                           Grid.Row="1" 
-                           Content="{Binding Id, Mode=OneWay}"/>
+                       Grid.Row="1" 
+                       Content="{Binding Id, Mode=OneWay}"/>
 
                 <Label Grid.Column="1" 
-                           Grid.Row="3">
+                       Grid.Row="3">
                     Name
                 </Label>
                 <TextBox Grid.Column="3" 
-                             Grid.Row="3"
-                             Grid.ColumnSpan="3"
-                             Text="{Binding Name, Mode=TwoWay}"/>
+                         Grid.Row="3"
+                         Grid.ColumnSpan="5"
+                         Text="{Binding Name, Mode=TwoWay}"/>
                 <Label Grid.Column="1" 
-                           Grid.Row="5">
+                       Grid.Row="5">
                     Code
                 </Label>
                 <ComboBox Grid.Column="3"  
-                              Grid.Row="5"
-                              SelectedValue = "{Binding CodeId}" 
-                              SelectedValuePath = "Id" 
-                              DisplayMemberPath = "Name" 
-                              IsEditable="True" 
-                              ItemsSource="{Binding Path=DataContext.CodeView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
-                              IsSynchronizedWithCurrentItem ="False"
-                              >
+                          Grid.Row="5"
+                          SelectedValue = "{Binding CodeId}" 
+                          SelectedValuePath = "Id" 
+                          DisplayMemberPath = "Name" 
+                          IsEditable="True" 
+                          ItemsSource="{Binding Path=DataContext.CodeView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                          IsSynchronizedWithCurrentItem ="False"
+                         >
                     <ComboBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel />
                         </ItemsPanelTemplate>
                     </ComboBox.ItemsPanel>
                 </ComboBox>
+
+
                 <Button Grid.Row ="5"
-                            Grid.Column="5"
-                            Command="{Binding DataContext.AddCodeToSeriesCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                            >
-                    Add
+                        Grid.Column="5"
+                        Background="Transparent"
+                        Command="{Binding DataContext.ShowCodeFromSeriesWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        CommandParameter="{Binding CodeId}"
+                        Content="{Binding CodeId}"
+                        IsEnabled="{Binding DataContext.OpenCode, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                        />
+
+                <Button Grid.Row ="5"
+                        Grid.Column="7"
+                        Background="Transparent"
+                        Command="{Binding DataContext.ShowCodeFromSeriesWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Visibility="{Binding DataContext.OpenCode, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                        >
+                    +
                 </Button>
 
                 <Label Grid.Column="1"
-                           Grid.Row="7">
-                    Number, Language
+                       Grid.Row="7">
+                    Number
+                </Label>
+                <TextBox Grid.Column="3"  
+                         Grid.Row="7" 
+                         Grid.ColumnSpan="5"
+                         Text="{Binding SeriesNumber, Mode=TwoWay}"/>
+
+                <Label Grid.Column="1"
+                       Grid.Row="9">
+                    Language
                 </Label>
                 <ComboBox Grid.Column="3"
-                              Grid.Row="7"
-                              SelectedValue = "{Binding StoryType, Mode=TwoWay}"
-                              IsEditable="True" 
-                              ItemsSource="{Binding Path=DataContext.StoryTypes, RelativeSource={RelativeSource AncestorType=Window}}">
-                    <ComboBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </ComboBox.ItemsPanel>
-                </ComboBox>
-                <TextBox Grid.Column="3"  
-                             Grid.Row="7" 
-                             Text="{Binding SeriesNumber, Mode=TwoWay}"/>
-                <ComboBox Grid.Column="5"
-                              Grid.Row="7"
-                              SelectedValue = "{Binding SeriesLanguage, Mode=TwoWay}"
-                              SelectedValuePath="Id"
-                              DisplayMemberPath = "Name" 
-                              IsEditable="True" 
-                              ItemsSource="{Binding Path=DataContext.Languages, RelativeSource={RelativeSource AncestorType=Window}}">
+                          Grid.Row="9"
+                          Grid.ColumnSpan="5"
+                          SelectedValue = "{Binding SeriesLanguage, Mode=TwoWay}"
+                          SelectedValuePath="Id"
+                          DisplayMemberPath = "Name" 
+                          IsEditable="True" 
+                          ItemsSource="{Binding Path=DataContext.Languages, RelativeSource={RelativeSource AncestorType=Window}}">
                     <ComboBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel />
@@ -143,13 +164,104 @@
                 </ComboBox>
 
                 <Label Grid.Column="1"
-                       Grid.Row="9">
+                       Grid.Row="11">
                     Remark
                 </Label>
                 <TextBox Grid.Column="3"  
-                             Grid.Row="9" 
-                             Grid.ColumnSpan="3"
-                             Text="{Binding Remark, Mode=TwoWay}"/>
+                         Grid.Row="11" 
+                         Grid.ColumnSpan="5"
+                         Text="{Binding Remark, Mode=TwoWay}"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="5"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row ="1"
+                        Grid.Column="3"
+                        Background="Transparent"
+                        Height="25"
+                        VerticalAlignment="Top"
+                        Visibility="{Binding DataContext.OpenBook, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowBookFromSeriesWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        >
+                    +
+                </Button>
+                <ListView Grid.Row ="1"
+                          Grid.Column="1"
+                          VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=BookSeries}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id" 
+                                            Width="50"
+                                            >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.ShowBookFromSeriesWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding BookId}"
+                                                Background="Transparent"
+                                                BorderThickness="0"       
+                                                Content="{Binding BookId}"
+                                                IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Book" Width="240">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="228"
+                                                  SelectedValue="{Binding BookId}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.BookView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Issue" 
+                                            Width="80">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox  Width="68"
+                                                  IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  Text="{Binding Issue}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Order" 
+                                            Width="80">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox  Width="68"
+                                                  IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  Text="{Binding SeriesOrder}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </Grid>
         </Grid>
     </DockPanel>

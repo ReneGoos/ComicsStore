@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using ComicsStore.Data.Model.Interfaces;
+using System.Collections.Generic;
 
 namespace ComicsStore.Data.Model
 {
-    public class Character : MainTable
+    public class Character : MainTable, IStoryCharacter
     {
         public Character()
             : base()

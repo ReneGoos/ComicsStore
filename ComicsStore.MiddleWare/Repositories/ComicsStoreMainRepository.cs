@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComicsStore.Data.Model;
+using ComicsStore.MiddleWare.Models.Search;
 using Microsoft.EntityFrameworkCore;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public abstract class ComicsStoreMainRepository<T> : ComicsStoreRepository<T> where T : MainTable
+    public abstract class ComicsStoreMainRepository<T, TSearch> : ComicsStoreRepository<T> 
+        where T : MainTable
+        where TSearch : BasicSearchModel
     {
         public ComicsStoreMainRepository(ComicsStoreDbContext context) : base(context)
         {
         }
+
+        public abstract Task<T> GetAsync(int id, bool extended = false);
+        public abstract Task<List<T>> GetAsync(TSearch model);
+        public abstract Task<T> PatchAsync(int id, IDictionary<string, object> data);
 
         public async Task<T> UpdateItemAsync(DbSet<T> collection, T item, Func<T, T, bool> updateLinkedItems = null)
         {

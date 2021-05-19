@@ -3,5 +3,6 @@
     public class StoryCharacterOutputModel : CharacterOnlyOutputModel
     {
         public int CharacterId { get; set; }
+        public int StoryId { get; set; }
     }
 }

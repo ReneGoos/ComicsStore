@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using ComicsStore.Data.Model.Interfaces;
+using System.Collections.Generic;
 
 namespace ComicsStore.Data.Model
 {
-    public class Publisher : MainTable
+    public class Publisher : MainTable, IBookPublisher
     {
         public Publisher()
             : base()

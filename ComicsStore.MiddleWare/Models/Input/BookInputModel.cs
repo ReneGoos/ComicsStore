@@ -12,6 +12,6 @@ namespace ComicsStore.MiddleWare.Models.Input
 
         public ICollection<BookSeriesInputModel> BookSeries { get; set; }
         public ICollection<BookPublisherInputModel> BookPublisher { get; set; }
-        public ICollection<BookStoryInputModel> StoryBook { get; set; }
+        public ICollection<StoryBookInputModel> StoryBook { get; set; }
     }
 }

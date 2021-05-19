@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using ComicsStore.Data.Model.Interfaces;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComicsStore.Data.Model
 {
-    public class Story : MainTable
+    public class Story : MainTable, IStoryArtist, IStoryCharacter, IStoryBook
     {
         public Story()
             : base()

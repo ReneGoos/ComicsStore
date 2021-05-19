@@ -20,7 +20,11 @@ namespace ComicsStore.MiddleWare.Repositories
         public Task<List<ExportBook>> GetAsync(StorySeriesSearchModel model)
         {
             var exports = from storySeries in _context.StorySeries
-                          where !model.Active.HasValue || storySeries.Deleted == model.Active.Value
+                          where (!model.Active.HasValue || storySeries.Deleted == model.Active.Value)
+                          && (model.Filter == null ||
+                                model.Filter.Length == 0 ||
+                                storySeries.StoryName.ToLower().Contains(model.Filter.ToLower())
+                                )
                           orderby storySeries.StoryName,
                           storySeries.StoryNumber,
                           storySeries.StoryType,
@@ -35,18 +39,20 @@ namespace ComicsStore.MiddleWare.Repositories
                               BookId = storySeries.BookId,
                               SeriesId = storySeries.SeriesId,
                               /*
-                               CodeId = storySeries.CodeId,
+                              CodeId = storySeries.CodeId,
                               MinSeriesOrder = storySeries.MinSeriesOrder,
                               MaxSeriesOrder = storySeries.MaxSeriesOrder,
                               */
                               Title = storySeries.StoryName,
+                              OriginalTitle = storySeries.OriginalStoryName,
                               StoryNumber = storySeries.StoryNumber,
                               ExtraInfo = storySeries.ExtraInfo,
                               StoryType = storySeries.StoryType,
                               BookType = storySeries.BookType,
                               Character = storySeries.CharacterName,
+                              StoryCode = storySeries.StoryCode,
                               Artist = storySeries.ArtistName,
-                              ArtistType = storySeries.ArtistType,
+                              /*ArtistType = storySeries.ArtistType is null ? ArtistType.translator : storySeries.ArtistType,*/
                               Issue = storySeries.Issue,
                               IssueTitle = storySeries.IssueTitle,
                               Language = storySeries.Language,

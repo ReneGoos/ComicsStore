@@ -107,5 +107,33 @@ namespace ComicsLibrary.EditModels
                 }
             }
         }
+
+        public List<StoryArtistEditModel> GetStoryArtists()
+        {
+            return new List<StoryArtistEditModel>(StoryArtist.ToList().ConvertAll(s => new StoryArtistEditModel
+            {
+                ArtistId = s.ArtistId,
+                StoryId = s.StoryId,
+                ArtistType = s.ArtistType
+            }));
+        }
+
+        public List<StoryCharacterEditModel> GetStoryCharacters()
+        {
+            return new List<StoryCharacterEditModel>(StoryCharacter.ToList().ConvertAll(s => new StoryCharacterEditModel
+            {
+                CharacterId = s.CharacterId,
+                StoryId = s.StoryId
+            }));
+        }
+
+        public List<StoryBookEditModel> GetStoryBooks()
+        {
+            return new List<StoryBookEditModel>(StoryBook.ToList().ConvertAll(s => new StoryBookEditModel
+            {
+                BookId = s.BookId,
+                StoryId = s.StoryId
+            }));
+        }
     }
 }

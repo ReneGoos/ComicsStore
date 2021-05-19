@@ -18,7 +18,7 @@ namespace ComicsLibrary.Views
         {
             var characterView = (sender as Button).DataContext as CharacterViewModel;
 
-            if (characterView.IsDirty)
+            //if (characterView.IsDirty)
                 characterView.SaveCommand.Execute(null);
 
             this.DialogResult = true;

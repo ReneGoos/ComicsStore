@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using ComicsStore.Data.Model;
+using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.MiddleWare.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public abstract class ComicsStoreRepository<T> where T : BasicsTable
+    public abstract class ComicsStoreRepository<T> : IComicsStoreRepository<T>
+        where T : BasicsTable
     {
         protected readonly ComicsStoreDbContext _context;
 
@@ -58,5 +62,10 @@ namespace ComicsStore.MiddleWare.Repositories
 
             await SaveChangesAsync();
         }
+
+        public abstract Task<T> AddAsync(T value);
+        public abstract Task DeleteAsync(T value);
+        public abstract Task<List<T>> GetAsync();
+        public abstract Task<T> UpdateAsync(T value);
     }
 }

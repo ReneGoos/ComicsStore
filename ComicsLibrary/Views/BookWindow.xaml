@@ -6,22 +6,28 @@
         xmlns:local="clr-namespace:ComicsLibrary.Views"
         xmlns:control="clr-namespace:ComicsLibrary.UserControls"
         xmlns:vm="clr-namespace:ComicsLibrary.EditModels"
+        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers"
         mc:Ignorable="d"
-        Title="Book" Height="450" Width="800"
+        Title="Book" Height="450" Width="900"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
         >
+    <Window.Resources>
+        <helpers:NotConverter x:Key="NotConverter"/>
+        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
     <DockPanel DataContext="{Binding BookView}">
         <DockPanel DockPanel.Dock="Top" 
                    Background="LightGray" 
                    Grid.IsSharedSizeScope="True">
-            <control:SimpleToolbar Items="{Binding Items}"
+            <control:SimpleToolbar FilteredItems="{Binding FilteredItems}"
                                    Id = "{Binding Item.Id, Mode=TwoWay}" 
                                    IsClean ="{Binding IsClean}"
                                    IsDirty ="{Binding IsDirty}"
                                    Filter = "{Binding ItemFilter, Mode=TwoWay}"
                                    NewCommand="{Binding NewCommand}"
                                    SaveCommand="{Binding SaveCommand}"
-                                   CancelSaveCommand="{Binding CancelSaveCommand}"
+                                   UndoCommand="{Binding UndoCommand}"
+                                   DeleteCommand="{Binding DeleteCommand}"
                                    />
         </DockPanel>
         <Grid DockPanel.Dock="Bottom">
@@ -34,12 +40,14 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="1"
                     Margin="6" 
-                    Name="OkButton" Click="OkButton_Click">
+                    Name="OkButton"
+                    Click="OkButton_Click">
                 Ok
             </Button>
             <Button Grid.Column="3"
                     Margin="6"
-                    Name="CancelButton" Click="CancelButton_Click">
+                    Name="CancelButton"
+                    Click="CancelButton_Click">
                 Cancel
             </Button>
         </Grid>
@@ -116,13 +124,20 @@
 
                 <Label Grid.Column="1"
                        Grid.Row="7">
-                    Year, Active
+                    Year
                 </Label>
                 <TextBox Grid.Column="3" 
                          Grid.Row="7"
+                         Grid.ColumnSpan="3"
                          Text="{Binding ThisYear, Mode=TwoWay}"/>
-                <ComboBox Grid.Column="5" 
-                          Grid.Row="7"
+
+                <Label Grid.Column="1"
+                       Grid.Row="9">
+                    Active
+                </Label>
+                <ComboBox Grid.Column="3" 
+                          Grid.Row="9"
+                          Grid.ColumnSpan="3"
                           SelectedValue="{Binding Active, Mode=TwoWay}"
                           IsEditable="True" 
                           ItemsSource="{Binding Path=DataContext.Actives, RelativeSource={RelativeSource AncestorType=Window}}">
@@ -134,11 +149,12 @@
                 </ComboBox>
 
                 <Label Grid.Column="1"
-                       Grid.Row="9">
+                       Grid.Row="11">
                     Type
                 </Label>
                 <ComboBox Grid.Column="3"
-                          Grid.Row="9"
+                          Grid.Row="11"
+                          Grid.ColumnSpan="3"
                           SelectedValue = "{Binding BookType, Mode=TwoWay}"
                           IsEditable="True" 
                           ItemsSource="{Binding Path=DataContext.BookTypes, RelativeSource={RelativeSource AncestorType=Window}}">
@@ -154,21 +170,19 @@
                     Remark
                 </Label>
                 <TextBox Grid.Column="3"  
-                             Grid.Row="13" 
-                             Grid.ColumnSpan="3"
-                             Text="{Binding Remark, Mode=TwoWay}"/>
+                         Grid.Row="13" 
+                         Grid.ColumnSpan="3"
+                         Text="{Binding Remark, Mode=TwoWay}"/>
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition Width="5"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="40"/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
@@ -178,30 +192,44 @@
                     <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
                 <Button Grid.Row ="1"
-                            Grid.Column="1"
-                            Height="25"
-                            Command="{Binding DataContext.AddSeriesToBookCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                            >
-                    Add
+                        Grid.Column="3"
+                        Background="Transparent"
+                        Height="25"
+                        VerticalAlignment="Top"
+                        Command="{Binding DataContext.ShowSeriesFromBookWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Visibility="{Binding DataContext.OpenSeries, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                        >
+                    +
                 </Button>
                 <ListView DockPanel.Dock="Top"
-                              Grid.Row ="1"
-                              Grid.Column="3"
-                              Margin="5"      
-                              VerticalAlignment="Top" 
-                              ItemsSource="{Binding Path=BookSeries}"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                          Grid.Row ="1"
+                          Grid.Column="1"
+                          VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=BookSeries}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Id"
                                             Width="50" 
-                                            DisplayMemberBinding="{Binding SeriesId}" />
-
-                            <GridViewColumn Header="Series"
-                                            Width="250">
+                                            >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="238"
+                                        <Button Command="{Binding DataContext.ShowSeriesFromBookWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding SeriesId}"
+                                                Background="Transparent"
+                                                BorderThickness="0"       
+                                                Content="{Binding SeriesId}"
+                                                IsEnabled="{Binding DataContext.OpenSeries, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Series"
+                                            Width="195">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="183"
                                                   SelectedValue="{Binding SeriesId, Mode=TwoWay}"
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name" 
@@ -219,11 +247,20 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Header="Issue" 
-                                            Width="150">
+                                            Width="80">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox  Width="138"
+                                        <TextBox  Width="68"
                                                   Text="{Binding Issue}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Order" 
+                                            Width="80">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox  Width="68"
+                                                  Text="{Binding SeriesOrder}"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -231,30 +268,44 @@
                     </ListView.View>
                 </ListView>
                 <Button Grid.Row ="3"
-                            Grid.Column="1"
-                            Height="25"
-                            Command="{Binding DataContext.AddPublisherToBookCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                            >
-                    Add
+                        Grid.Column="3"
+                        Background="Transparent"
+                        Height="25"
+                        VerticalAlignment="Top"
+                        Command="{Binding DataContext.ShowPublisherFromBookWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Visibility="{Binding DataContext.OpenPublisher, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                        >
+                    +
                 </Button>
                 <ListView DockPanel.Dock="Top"
-                              Grid.Row ="3"                              
-                              Grid.Column="3"
-                              Margin="5"
-                              VerticalAlignment="Top" 
-                              ItemsSource="{Binding Path=BookPublisher}"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                          Grid.Row ="3"                              
+                          Grid.Column="1"
+                          VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=BookPublisher}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Id"
                                             Width="50" 
-                                            DisplayMemberBinding="{Binding PublisherId}" />
-
-                            <GridViewColumn Header="Publisher"
-                                            Width="250">
+                                            >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="238"
+                                        <Button Command="{Binding DataContext.ShowPublisherFromBookWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding PublisherId}"
+                                                Background="Transparent"
+                                                BorderThickness="0"       
+                                                Content="{Binding PublisherId}"
+                                                IsEnabled="{Binding DataContext.OpenPublisher, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Publisher"
+                                            Width="350">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="338"
                                                   SelectedValue="{Binding PublisherId, Mode=TwoWay}"
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name" 
@@ -274,35 +325,49 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <!-- Button Grid.Row ="5"
-                            Grid.Column="1"
-                            Height="25"
-                            Command="{Binding DataContext.AddStoryToBookCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                            >
-                    Add
-                </Button -->
-                <!-- ListView DockPanel.Dock="Top"
-                              Grid.Row ="5"
-                              Grid.Column="3"                        
-                              Margin="5" 
-                              VerticalAlignment="Top" 
-                              ItemsSource="{Binding Path=StoryBook}"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <Button Grid.Row ="5"
+                        Grid.Column="3"
+                        Background="Transparent"
+                        Height="25"
+                        VerticalAlignment="Top"
+                        Command="{Binding DataContext.ShowStoryFromBookWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Visibility="{Binding DataContext.OpenStory, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                        >
+                    +
+                </Button>
+                <ListView DockPanel.Dock="Top"
+                          Grid.Row ="5"
+                          Grid.Column="1"
+                          VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=StoryBook}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Id"
-                                            Width="50" 
-                                            DisplayMemberBinding="{Binding StoryId}" />
-
-                            <GridViewColumn Header="Book"
-                                            Width="250">
+                                            Width="50" >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="238"
+                                        <Button Command="{Binding DataContext.ShowStoryFromBookWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding StoryId}"
+                                            Background="Transparent"
+                                            BorderThickness="0"       
+                                            Content="{Binding StoryId}"
+                                            IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Story"
+                                            Width="350">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="338"
                                                   SelectedValue="{Binding StoryId, Mode=TwoWay}"
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name" 
-                                                  IsEditable="True" 
+                                                  IsEditable="True"
+                                                  IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                                                   ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
                                                   IsSynchronizedWithCurrentItem ="False"
                                                   >
@@ -316,8 +381,8 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                         </GridView>
-                    </>
-                </ListView -->
+                    </ListView.View>
+                </ListView>
             </Grid>
         </Grid>
     </DockPanel>

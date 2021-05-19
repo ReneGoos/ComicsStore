@@ -5,5 +5,6 @@ namespace ComicsStore.MiddleWare.Models.Search
     public class StorySeriesSearchModel
     {
         public Active? Active { get; set; }
+        public string Filter { get; set; }
     }
 }

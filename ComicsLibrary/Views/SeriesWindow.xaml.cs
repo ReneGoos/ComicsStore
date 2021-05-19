@@ -19,7 +19,7 @@ namespace ComicsLibrary.Views
         {
             var seriesView = (sender as Button).DataContext as SeriesViewModel;
 
-            if (seriesView.IsDirty)
+            //if (seriesView.IsDirty)
                 seriesView.SaveCommand.Execute(null);
 
             this.DialogResult = true;

@@ -5,27 +5,47 @@ using Microsoft.EntityFrameworkCore;
 using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class PublishersRepository : ComicsStoreMainRepository<Publisher>, IComicsStoreRepository<Publisher, BasicSearchModel>
+    public class PublishersRepository : ComicsStoreMainRepository<Publisher, BasicSearchModel>, IComicsStoreMainRepository<Publisher, BasicSearchModel>
     {
-        public PublishersRepository(ComicsStoreDbContext context)
-            : base(context)
+        private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository;
+
+        private bool UpdateLinkedItems(Publisher publisherCurrent, Publisher publisherNew)
         {
+            _bookPublishersRepository.UpdateLinkedItems(publisherCurrent, publisherNew);
+
+            return true;
         }
 
-        public Task<Publisher> AddAsync(Publisher publisher)
+        public PublishersRepository(ComicsStoreDbContext context,
+                               IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository)
+            : base(context)
+        {
+            _bookPublishersRepository = bookPublishersRepository;
+        }
+
+        public override Task<Publisher> AddAsync(Publisher publisher)
         {
             return AddItemAsync(_context.Publishers, publisher);
         }
 
-        public Task DeleteAsync(Publisher publisher)
+        public override Task DeleteAsync(Publisher publisher)
         {
             return RemoveItemAsync(_context.Publishers, publisher);
         }
 
-        public Task<List<Publisher>> GetAsync(BasicSearchModel model)
+        public override Task<List<Publisher>> GetAsync()
+        {
+            var publishers = _context.Publishers
+                .ToListAsync();
+
+            return publishers;
+        }
+
+        public override Task<List<Publisher>> GetAsync(BasicSearchModel model)
         {
             var publishers = _context.Publishers
                 .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
@@ -33,19 +53,28 @@ namespace ComicsStore.MiddleWare.Repositories
             return publishers;
         }
 
-        public Task<Publisher> GetAsync(int publisherId)
+        public override Task<Publisher> GetAsync(int publisherId, bool extended = false)
         {
+            if (extended)
+            {
+                return _context.Publishers
+                        .Include(p => p.BookPublisher)
+                        .ThenInclude(pb => pb.Book)
+                        .SingleOrDefaultAsync(p => p.Id == publisherId);
+            }
+            
             return _context.Publishers
-                .Include(p => p.BookPublisher)
-                .SingleOrDefaultAsync(p => p.Id == publisherId);
+                    .Include(p => p.BookPublisher)
+                    .SingleOrDefaultAsync(p => p.Id == publisherId);
         }
 
-        public Task<Publisher> UpdateAsync(Publisher publisher)
+        public override Task<Publisher> UpdateAsync(Publisher publisher)
         {
-            return UpdateItemAsync(_context.Publishers, publisher);
+            return UpdateItemAsync(_context.Publishers, publisher, UpdateLinkedItems);
         }
 
-        public Task<Publisher> PatchAsync(int id, IDictionary<string, object> data = null)
+
+        public override Task<Publisher> PatchAsync(int id, IDictionary<string, object> data = null)
         {
             return PatchItemAsync(_context.Publishers, id, data);
         }

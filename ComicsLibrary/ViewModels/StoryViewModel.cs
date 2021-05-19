@@ -62,30 +62,31 @@ namespace ComicsLibrary.ViewModels
 
                 return _originStoriesViewSource.View;
             }
+            private set
+            {
+                if (value is null)
+                {
+                    _originStoriesViewSource = new CollectionViewSource
+                    {
+                        Source = _items
+                    };
+                    _originStoriesViewSource.Filter += OriginStoryFilterResults;
+                    _originStoriesViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+                    RaisePropertyChanged();
+                }
+            }
         }
 
         protected override void GetItemsAsync()
         {
             base.GetItemsAsync();
-
-            _originStoriesViewSource = new CollectionViewSource
-            {
-                Source = _items
-            };
-            _originStoriesViewSource.Filter += OriginStoryFilterResults;
-            _originStoriesViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+            OriginStories = null;
         }
 
         protected override void SaveAsync()
         {
             base.SaveAsync();
-
-            _originStoriesViewSource = new CollectionViewSource
-            {
-                Source = _items
-            };
-            _originStoriesViewSource.Filter += OriginStoryFilterResults;
-            _originStoriesViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+            OriginStories = null;
         }
 
         public void AddStoryArtist(ICollection<StoryArtistEditModel> storyArtists, int? artistId)
@@ -111,6 +112,21 @@ namespace ComicsLibrary.ViewModels
         public StoryViewModel(IStoriesService storiesService,
                               IMapper mapper) : base(storiesService, mapper)
         {
+        }
+
+        public List<StoryArtistEditModel> GetStoryArtists()
+        {
+            return Item.GetStoryArtists();
+        }
+
+        public List<StoryCharacterEditModel> GetStoryCharacters()
+        {
+            return Item.GetStoryCharacters();
+        }
+
+        public List<StoryBookEditModel> GetStoryBooks()
+        {
+            return Item.GetStoryBooks();
         }
     }
 }

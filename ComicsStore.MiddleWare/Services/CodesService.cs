@@ -12,81 +12,18 @@ using System;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public class CodesService : ICodesService
+    public class CodesService : ComicsStoreService<Code, CodeInputModel, CodeInputModel, CodeOutputModel, BasicSearchModel>, ICodesService
     {
-        private readonly IComicsStoreRepository<Code, BasicSearchModel> _codesRepository;
-        private readonly IStoriesRepository _storiesRepository;
-        private readonly IComicsStoreRepository<Series, SeriesSearchModel> _seriesRepository;
-        private readonly IMapper _mapper;
+        private readonly IComicsStoreMainRepository<Story, StorySearchModel> _storiesRepository;
+        private readonly IComicsStoreMainRepository<Series, SeriesSearchModel> _seriesRepository;
 
-        public CodesService(IComicsStoreRepository<Code, BasicSearchModel> codesRepository,
-            IStoriesRepository storiesRepository,
-            IComicsStoreRepository<Series, SeriesSearchModel> seriesRepository,
-            IMapper mapper)
+        public CodesService(IComicsStoreMainRepository<Code, BasicSearchModel> codesRepository,
+            IComicsStoreMainRepository<Story, StorySearchModel> storiesRepository,
+            IComicsStoreMainRepository<Series, SeriesSearchModel> seriesRepository,
+            IMapper mapper) : base(codesRepository, mapper)
         {
-            _codesRepository = codesRepository;
             _storiesRepository = storiesRepository;
             _seriesRepository = seriesRepository;
-            _mapper = mapper;
-        }
-
-        public async Task<CodeOutputModel> AddAsync(CodeInputModel codeInput)
-        {
-            var code = _mapper.Map<Code>(codeInput);
-
-            var codeResult = await _codesRepository.AddAsync(code);
-
-            return _mapper.Map<CodeOutputModel>(codeResult);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var code = await _codesRepository.GetAsync(id);
-
-            if (code == null)
-            {
-                return;
-            }
-
-            await _codesRepository.DeleteAsync(code);
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _codesRepository.GetAsync(id) != null;
-        }
-
-        public async Task<ICollection<CodeOutputModel>> GetAsync(BasicSearchModel searchModel)
-        {
-            var codes =  await _codesRepository.GetAsync(searchModel);
-
-            return _mapper.Map<ICollection<CodeOutputModel>>(codes);
-        }
-
-        public async Task<CodeOutputModel> GetAsync(int id)
-        {
-            var code = await _codesRepository.GetAsync(id);
-
-            return _mapper.Map<CodeOutputModel>(code);
-        }
-
-        public async Task<CodeOutputModel> UpdateAsync(int id, CodeInputModel codeInput)
-        {
-            var code = _mapper.Map<Code>(codeInput);
-            code.Id = id;
-
-            code = await _codesRepository.UpdateAsync(code);
-
-            return _mapper.Map<CodeOutputModel>(code);
-        }
-
-        public async Task<CodeOutputModel> PatchAsync(int id, CodeInputModel codeInput)
-        {
-            var modifiedData = JsonHelper.ModifiedData<CodeInputModel, Code>(codeInput, _mapper);
-
-            var code = await _codesRepository.PatchAsync(id, modifiedData);
-
-            return _mapper.Map<CodeOutputModel>(code);
         }
 
         public async Task<ICollection<CodeStoryOutputModel>> GetStoriesAsync(int codeId)
@@ -95,7 +32,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return _mapper.Map<ICollection<CodeStoryOutputModel>>(storyCodes);
+                return Mapper.Map<ICollection<CodeStoryOutputModel>>(storyCodes);
             }
             catch (Exception)
             {
@@ -109,7 +46,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return _mapper.Map<ICollection<CodeSeriesOutputModel>>(seriesCodes);
+                return Mapper.Map<ICollection<CodeSeriesOutputModel>>(seriesCodes);
             }
             catch (Exception)
             {

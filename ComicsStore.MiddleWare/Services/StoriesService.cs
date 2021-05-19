@@ -9,77 +9,25 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public class StoriesService : IStoriesService
+    public class StoriesService : ComicsStoreService<Story, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearchModel>, IStoriesService
     {
-        private readonly IStoriesRepository _storiesRepository;
-        private readonly IComicsStoreCrossRepository<StoryArtist> _storyArtistsRepository;
-        private readonly IComicsStoreCrossRepository<StoryBook> _storyBooksRepository;
-        private readonly IComicsStoreCrossRepository<StoryCharacter> _storyCharactersRepository;
-        private readonly IMapper _mapper;
+        private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
+        private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository;
+        private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository;
 
-        public StoriesService(IStoriesRepository storiesRepository,
-            IComicsStoreCrossRepository<StoryArtist> storyArtistsRepository,
-            IComicsStoreCrossRepository<StoryBook> storyBooksRepository,
-            IComicsStoreCrossRepository<StoryCharacter> storyCharactersRepository,
-            IMapper mapper)
+        public StoriesService(IComicsStoreMainRepository<Story, StorySearchModel> storiesRepository,
+            IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository,
+            IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
+            IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository,
+            IMapper mapper) : base(storiesRepository, mapper)
         {
-            _storiesRepository = storiesRepository;
             _storyArtistsRepository = storyArtistsRepository;
             _storyBooksRepository = storyBooksRepository;
             _storyCharactersRepository = storyCharactersRepository;
-            _mapper = mapper;
-        }
-
-        public async Task<StoryOutputModel> AddAsync(StoryInputModel storyInput)
-        {
-            var story = _mapper.Map<Story>(storyInput);
-
-            var storyResult = await _storiesRepository.AddAsync(story);
-
-            return _mapper.Map<StoryOutputModel>(storyResult);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var story = await _storiesRepository.GetAsync(id);
-
-            if (story == null)
-            {
-                return;
-            }
-
-            await _storiesRepository.DeleteAsync(story);
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _storiesRepository.GetAsync(id) != null;
-        }
-
-        public async Task<ICollection<StoryOutputModel>> GetAsync(StorySearchModel searchModel)
-        {
-            var stories = await _storiesRepository.GetAsync(searchModel);
-
-            try
-            {
-                var storiesOutput = _mapper.Map<ICollection<StoryOutputModel>>(stories);
-
-                return storiesOutput;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public async Task<StoryOutputModel> GetAsync(int id)
-        {
-            var story = await _storiesRepository.GetAsync(id);
-
-            return _mapper.Map<StoryOutputModel>(story);
         }
 
         public async Task<ICollection<StoryArtistOutputModel>> GetArtistsAsync(int storyId)
@@ -88,7 +36,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return _mapper.Map<ICollection<StoryArtistOutputModel>>(storyArtists);
+                return Mapper.Map<ICollection<StoryArtistOutputModel>>(storyArtists);
             }
             catch (Exception)
             {
@@ -102,7 +50,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return _mapper.Map<ICollection<StoryBookOutputModel>>(storyBooks);
+                return Mapper.Map<ICollection<StoryBookOutputModel>>(storyBooks);
             }
             catch (Exception)
             {
@@ -116,31 +64,12 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return _mapper.Map<ICollection<StoryCharacterOutputModel>>(storyCharacters);
+                return Mapper.Map<ICollection<StoryCharacterOutputModel>>(storyCharacters);
             }
             catch (Exception)
             {
                 return null;
             }
-        }
-
-        public async Task<StoryOutputModel> UpdateAsync(int id, StoryInputModel storyInput)
-        {
-            var story = _mapper.Map<Story>(storyInput);
-            story.Id = id;
-
-            story = await _storiesRepository.UpdateAsync(story);
-
-            return _mapper.Map<StoryOutputModel>(story);
-        }
-
-        public async Task<StoryOutputModel> PatchAsync(int id, StoryInputPatchModel storyInput)
-        {
-            var modifiedData = JsonHelper.ModifiedData<StoryInputPatchModel, Story>(storyInput, _mapper);
-
-            var story = await _storiesRepository.PatchAsync(id, modifiedData);
-
-            return _mapper.Map<StoryOutputModel>(story);
         }
     }
 }

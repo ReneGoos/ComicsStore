@@ -9,81 +9,19 @@ using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public class SeriesService : ISeriesService
+    public class SeriesService : ComicsStoreService<Series, SeriesInputModel, SeriesInputModel, SeriesOutputModel, SeriesSearchModel>, ISeriesService
     {
-        private readonly IComicsStoreRepository<Series, SeriesSearchModel> _seriesRepository;
-        private readonly IComicsStoreCrossRepository<BookSeries> _bookSeriesRepository;
-        private readonly IMapper _mapper;
+        private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository;
 
-        public SeriesService(IComicsStoreRepository<Series, SeriesSearchModel> seriesRepository,
-            IComicsStoreCrossRepository<BookSeries> bookSeriesRepository,
-            IMapper mapper)
+        public SeriesService(IComicsStoreMainRepository<Series, SeriesSearchModel> seriesRepository,
+            IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,
+            IMapper mapper) : base (seriesRepository, mapper)
         {
-            _seriesRepository = seriesRepository;
             _bookSeriesRepository = bookSeriesRepository;
-            _mapper = mapper;
-        }
-
-        public async Task<SeriesOutputModel> AddAsync(SeriesInputModel seriesInput)
-        {
-            var series = _mapper.Map<Series>(seriesInput);
-
-            var seriesResult = await _seriesRepository.AddAsync(series);
-
-            return _mapper.Map<SeriesOutputModel>(seriesResult);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var series = await _seriesRepository.GetAsync(id);
-
-            if (series == null)
-            {
-                return;
-            }
-
-            await _seriesRepository.DeleteAsync(series);
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _seriesRepository.GetAsync(id) != null;
-        }
-
-        public async Task<ICollection<SeriesOutputModel>> GetAsync(SeriesSearchModel searchModel)
-        {
-            var series =  await _seriesRepository.GetAsync(searchModel);
-
-            return _mapper.Map<ICollection<SeriesOutputModel>>(series);
-        }
-
-        public async Task<SeriesOutputModel> GetAsync(int id)
-        {
-            var series = await _seriesRepository.GetAsync(id);
-
-            return _mapper.Map<SeriesOutputModel>(series);
-        }
-
-        public async Task<SeriesOutputModel> UpdateAsync(int id, SeriesInputModel seriesInput)
-        {
-            var series = _mapper.Map<Series>(seriesInput);
-            series.Id = id;
-
-            series = await _seriesRepository.UpdateAsync(series);
-
-            return _mapper.Map<SeriesOutputModel>(series);
-        }
-
-        public async Task<SeriesOutputModel> PatchAsync(int id, SeriesInputModel seriesInput)
-        {
-            var modifiedData = JsonHelper.ModifiedData<SeriesInputModel, Series>(seriesInput, _mapper);
-
-            var series = await _seriesRepository.PatchAsync(id, modifiedData);
-
-            return _mapper.Map<SeriesOutputModel>(series);
         }
 
         public async Task<ICollection<SeriesBookOutputModel>> GetBooksAsync(int seriesId)
@@ -92,7 +30,7 @@ namespace ComicsStore.MiddleWare.Services
 
             try
             {
-                return _mapper.Map<ICollection<SeriesBookOutputModel>>(bookSeries);
+                return Mapper.Map<ICollection<SeriesBookOutputModel>>(bookSeries);
             }
             catch (Exception)
             {

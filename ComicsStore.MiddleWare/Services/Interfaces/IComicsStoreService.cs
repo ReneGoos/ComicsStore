@@ -18,6 +18,8 @@ namespace ComicsStore.MiddleWare.Services.Interfaces
 
         Task<bool> ExistsAsync(int id);
 
+        Task<ICollection<TOut>> GetAsync();
+
         Task<ICollection<TOut>> GetAsync(TSearch searchModel);
 
         Task<TOut> GetAsync(int id);

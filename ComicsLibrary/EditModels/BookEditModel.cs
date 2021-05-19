@@ -31,7 +31,7 @@ namespace ComicsLibrary.EditModels
         public ICollection<BookSeriesEditModel> BookSeries { get => _bookSeries; set { Set(ref _bookSeries, value); } }
         public ICollection<StoryBookEditModel> StoryBook { get => _storyBooks; set { Set(ref _storyBooks, value); } }
 
-        public void AddBookPublisher(ICollection<BookPublisherEditModel> bookPublishers, int? publisherId)
+        public void AddBookPublisher(List<BookPublisherEditModel> bookPublishers, int? publisherId)
         {
             if (publisherId.HasValue)
             {
@@ -51,27 +51,27 @@ namespace ComicsLibrary.EditModels
             }
         }
 
-        public void AddBookStory(ICollection<StoryBookEditModel> bookStories, int? storyId)
+        public void AddStoryBook(List<StoryBookEditModel> storyBooks, int? storyId)
         {
             if (storyId.HasValue)
             {
                 if (!StoryBook.Any(s => s.StoryId == storyId.Value))
                 {
-                    if (!bookStories.Any(s => s.StoryId == storyId.Value))
+                    if (!storyBooks.Any(s => s.StoryId == storyId.Value))
                     {
-                        bookStories.Add(new StoryBookEditModel
+                        storyBooks.Add(new StoryBookEditModel
                         {
                             StoryId = storyId,
                             BookId = Id
                         });
                     }
 
-                    StoryBook = bookStories;
+                    StoryBook = storyBooks;
                 }
             }
         }
 
-        public void AddBookSeries(ICollection<BookSeriesEditModel> bookSeries, int? seriesId)
+        public void AddBookSeries(List<BookSeriesEditModel> bookSeries, int? seriesId)
         {
             if (seriesId.HasValue)
             {
@@ -89,6 +89,35 @@ namespace ComicsLibrary.EditModels
                     BookSeries = bookSeries;
                 }
             }
+        }
+
+        public List<StoryBookEditModel> GetStoryBooks()
+        {
+            return new List<StoryBookEditModel>(StoryBook.ToList().ConvertAll(s => new StoryBookEditModel
+            {
+                BookId = s.BookId,
+                StoryId = s.StoryId
+            }));
+        }
+
+        public List<BookPublisherEditModel> GetBookPublishers()
+        {
+            return new List<BookPublisherEditModel>(BookPublisher.ToList().ConvertAll(s => new BookPublisherEditModel
+            {
+                BookId = s.BookId,
+                PublisherId = s.PublisherId
+            }));
+        }
+
+        public List<BookSeriesEditModel> GetBookSeries()
+        {
+            return new List<BookSeriesEditModel>(BookSeries.ToList().ConvertAll(s => new BookSeriesEditModel
+            {
+                BookId = s.BookId,
+                SeriesId = s.SeriesId,
+                Issue = s.Issue,
+                SeriesOrder = s.SeriesOrder
+            }));
         }
     }
 }

@@ -4,7 +4,7 @@ using ComicsStore.Data.Model;
 
 namespace ComicsStore.MiddleWare.Repositories.Interfaces
 {
-    public interface IComicsStoreCrossRepository<T>
+    public interface IComicsStoreCrossRepository<T, IObject>
         where T : CrossTable
     {
         Task<T> AddAsync(T value);
@@ -15,5 +15,6 @@ namespace ComicsStore.MiddleWare.Repositories.Interfaces
         Task<List<T>> AddAsync(IEnumerable<T> value);
         Task DeleteAsync(IEnumerable<T> value);
         Task<List<T>> UpdateAsync(IEnumerable<T> value);
+        void UpdateLinkedItems(IObject itemCurrent, IObject itemNew);
     }
 }

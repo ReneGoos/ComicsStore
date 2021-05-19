@@ -8,15 +8,16 @@ namespace ComicsLibrary.Navigation
 {
     public class NavigationService
     {
-        private Dictionary<string, Type> windows { get; } = new Dictionary<string, Type>();
+        private Dictionary<string, Type> Windows { get; } = new Dictionary<string, Type>();
+        private List<string> ActiveDialogWindows { get; } = new List<string>();
 
-        private readonly IServiceProvider serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
 
-        public void Configure(string key, Type windowType) => windows.Add(key, windowType);
+        public void Configure(string key, Type windowType) => Windows.Add(key, windowType);
 
         public NavigationService(IServiceProvider serviceProvider)
         {
-            this.serviceProvider = serviceProvider;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task ShowAsync(string windowKey, object parameter = null)
@@ -28,12 +29,17 @@ namespace ComicsLibrary.Navigation
         public async Task<bool?> ShowDialogAsync(string windowKey, object parameter = null)
         {
             var window = await GetAndActivateWindowAsync(windowKey, parameter);
-            return window.ShowDialog();
+            
+            ActiveDialogWindows.Add(windowKey);
+            var result = window.ShowDialog();
+            ActiveDialogWindows.Remove(windowKey);
+
+            return result;
         }
 
         private async Task<Window> GetAndActivateWindowAsync(string windowKey, object parameter = null)
         {
-            var window = serviceProvider.GetRequiredService(windows[windowKey]) as Window;
+            var window = _serviceProvider.GetRequiredService(Windows[windowKey]) as Window;
 
             if (window.DataContext is IActivable activable)
             {
@@ -41,6 +47,11 @@ namespace ComicsLibrary.Navigation
             }
 
             return window;
+        }
+
+        public bool DialogActive(string windowKey)
+        {
+            return ActiveDialogWindows.Contains(windowKey);
         }
     }
 }

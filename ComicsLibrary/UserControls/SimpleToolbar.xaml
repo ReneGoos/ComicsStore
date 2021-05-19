@@ -14,19 +14,21 @@
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="5"/>
         </Grid.ColumnDefinitions>
         <ComboBox Grid.Column="1" 
                   Padding="6" 
                   Width="200"
                   IsEditable="True" 
-                  ItemsSource="{Binding Path=Items, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                  SelectedValue = "{Binding Id, Mode=TwoWay, RelativeSource={RelativeSource  AncestorType=UserControl}}" 
+                  ItemsSource="{Binding Path=FilteredItems, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                  SelectedValue = "{Binding Id, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                   SelectedValuePath = "Id" 
                   DisplayMemberPath ="Name" 
                   IsEnabled ="{Binding IsClean, RelativeSource={RelativeSource  AncestorType=UserControl}}"
@@ -63,28 +65,34 @@
             </TextBlock.Style>
         </TextBlock>
         <Button Grid.Column="5" 
-                        Margin="6" 
-                        Padding="6" 
-                        Name="NewButton" 
-                        Command="{Binding NewCommand, RelativeSource={RelativeSource  AncestorType=UserControl}}"
-                        IsEnabled="{Binding IsClean, RelativeSource={RelativeSource  AncestorType=UserControl}}">
+                Margin="6" 
+                Padding="6" 
+                Name="NewButton" 
+                Command="{Binding NewCommand, RelativeSource={RelativeSource  AncestorType=UserControl}}"
+                IsEnabled="{Binding IsClean, RelativeSource={RelativeSource  AncestorType=UserControl}}">
             New
         </Button>
         <Button Grid.Column="7" 
-                        Margin="6" 
-                        Padding="6" 
-                        Name="SaveButton"
-                        Command="{Binding SaveCommand, RelativeSource={RelativeSource  AncestorType=UserControl}}"
-                        IsEnabled="{Binding IsDirty, RelativeSource={RelativeSource  AncestorType=UserControl}}">
+                Margin="6" 
+                Padding="6" 
+                Name="SaveButton"
+                Command="{Binding SaveCommand, RelativeSource={RelativeSource  AncestorType=UserControl}}">
             Save
         </Button>
         <Button Grid.Column="9" 
-                        Margin="6" 
-                        Padding="6" 
-                        Name="CancelButton"
-                        Command="{Binding CancelSaveCommand, RelativeSource={RelativeSource  AncestorType=UserControl}}"
-                        IsEnabled="{Binding IsDirty, RelativeSource={RelativeSource  AncestorType=UserControl}}">
-            Cancel
+                Margin="6" 
+                Padding="6" 
+                Name="UndoButton"
+                Command="{Binding UndoCommand, RelativeSource={RelativeSource  AncestorType=UserControl}}">
+            Undo
+        </Button>
+        <Button Grid.Column="11" 
+                Margin="6" 
+                Padding="6" 
+                Name="DeleteButton"
+                Command="{Binding DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                CommandParameter = "{Binding Id, RelativeSource={RelativeSource AncestorType=UserControl}}" >
+            Delete
         </Button>
     </Grid>
 </UserControl>

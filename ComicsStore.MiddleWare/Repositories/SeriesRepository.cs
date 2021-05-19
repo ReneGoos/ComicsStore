@@ -5,27 +5,40 @@ using Microsoft.EntityFrameworkCore;
 using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Models.Search;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class SeriesRepository : ComicsStoreMainRepository<Series>, IComicsStoreRepository<Series, SeriesSearchModel>
+    public class SeriesRepository : ComicsStoreMainRepository<Series, SeriesSearchModel>, IComicsStoreMainRepository<Series, SeriesSearchModel>
     {
-        public SeriesRepository(ComicsStoreDbContext context)
+        private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository;
+
+        public SeriesRepository(ComicsStoreDbContext context,
+                               IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository)
             : base(context)
         {
+            _bookSeriesRepository = bookSeriesRepository;
         }
 
-        public Task<Series> AddAsync(Series series)
+        public override Task<Series> AddAsync(Series series)
         {
             return AddItemAsync(_context.Series, series);
         }
 
-        public Task DeleteAsync(Series series)
+        public override Task DeleteAsync(Series series)
         {
             return RemoveItemAsync(_context.Series, series);
         }
 
-        public Task<List<Series>> GetAsync(SeriesSearchModel model)
+        public override Task<List<Series>> GetAsync()
+        {
+            var series = _context.Series
+                .ToListAsync();
+
+            return series;
+        }
+
+        public override Task<List<Series>> GetAsync(SeriesSearchModel model)
         {
             var series = _context.Series
                 .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower()))
@@ -35,19 +48,35 @@ namespace ComicsStore.MiddleWare.Repositories
             return series;
         }
 
-        public Task<Series> GetAsync(int seriesId)
+        public override Task<Series> GetAsync(int seriesId, bool extended = false)
         {
+            if (extended)
+            {
+                return _context.Series
+                    .Include(s => s.BookSeries)
+                    .ThenInclude(sb => sb.Book)
+                    .Include(s => s.Code)
+                    .SingleOrDefaultAsync(s => s.Id == seriesId);
+            }
+            
             return _context.Series
                 .Include(s => s.BookSeries)
                 .SingleOrDefaultAsync(s => s.Id == seriesId);
         }
 
-        public Task<Series> UpdateAsync(Series series)
+        public override Task<Series> UpdateAsync(Series series)
         {
-            return UpdateItemAsync(_context.Series, series);
+            return UpdateItemAsync(_context.Series, series, UpdateLinkedItems);
         }
 
-        public Task<Series> PatchAsync(int id, IDictionary<string, object> data = null)
+        private bool UpdateLinkedItems(Series seriesCurrent, Series seriesNew)
+        {
+            _bookSeriesRepository.UpdateLinkedItems(seriesCurrent, seriesNew);
+
+            return true;
+        }
+
+        public override Task<Series> PatchAsync(int id, IDictionary<string, object> data = null)
         {
             return PatchItemAsync(_context.Series, id, data);
         }

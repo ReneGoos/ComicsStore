@@ -5,22 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ComicsLibrary.Views"
         xmlns:control="clr-namespace:ComicsLibrary.UserControls"
+        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers"
         mc:Ignorable="d"
         Title="Code" Height="450" Width="800"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
         >
+    <Window.Resources>
+        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <helpers:NotConverter x:Key="NotConverter"/>
+    </Window.Resources>
     <DockPanel DataContext="{Binding CodeView}">
         <DockPanel DockPanel.Dock="Top" 
                    Background="LightGray" 
                    Grid.IsSharedSizeScope="True">
-            <control:SimpleToolbar Items="{Binding Items}"
+            <control:SimpleToolbar FilteredItems="{Binding FilteredItems}"
                                    Id = "{Binding Item.Id, Mode=TwoWay}" 
                                    IsClean ="{Binding IsClean}"
                                    IsDirty ="{Binding IsDirty}"
                                    Filter = "{Binding ItemFilter, Mode=TwoWay}"
                                    NewCommand="{Binding NewCommand}"
                                    SaveCommand="{Binding SaveCommand}"
-                                   CancelSaveCommand="{Binding CancelSaveCommand}"
+                                   UndoCommand="{Binding UndoCommand}"
+                                   DeleteCommand="{Binding DeleteCommand}"
                                    />
         </DockPanel>
         <Grid DockPanel.Dock="Bottom">
@@ -54,6 +60,108 @@
                                      ItemName="{Binding Name, Mode=TwoWay}"
                                      ItemRemark="{Binding Remark, Mode=TwoWay}"/>
             </DockPanel>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ListView Grid.Row="0"
+                          Margin="5" 
+                          VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=Series}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id" 
+                                            Width="50"
+                                            >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.ShowSeriesFromCodeWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding SeriesId}"
+                                                Background="Transparent"
+                                                BorderThickness="0"       
+                                                Content="{Binding SeriesId}"
+                                                IsEnabled="{Binding DataContext.OpenSeries, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Series" Width="350">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="338"
+                                                  SelectedValue="{Binding SeriesId}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.SeriesView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsEnabled="False"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <ListView Grid.Row="1"
+                          Margin="5" 
+                          VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=Story}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id" 
+                                            Width="50"
+                                            >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.ShowStoryFromCodeWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding StoryId}"
+                                                Background="Transparent"
+                                                BorderThickness="0"       
+                                                Content="{Binding StoryId}"
+                                                IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Story" Width="350">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="338"
+                                                  SelectedValue="{Binding StoryId}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsEnabled="False"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
         </Grid>
     </DockPanel>
 </Window>

@@ -5,27 +5,55 @@ using Microsoft.EntityFrameworkCore;
 using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class StoriesRepository : ComicsStoreMainRepository<Story>, IStoriesRepository
+    public class StoriesRepository : ComicsStoreMainRepository<Story, StorySearchModel>, IComicsStoreMainRepository<Story, StorySearchModel>
     {
-        public StoriesRepository(ComicsStoreDbContext context)
-            : base(context)
+        private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
+        private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository;
+        private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository;
+
+        private bool UpdateLinkedItems(Story storyCurrent, Story storyNew)
         {
+            _storyArtistsRepository.UpdateLinkedItems(storyCurrent, storyNew);
+            _storyBooksRepository.UpdateLinkedItems(storyCurrent, storyNew);
+            _storyCharactersRepository.UpdateLinkedItems(storyCurrent, storyNew);
+
+            return true;
         }
 
-        public Task<Story> AddAsync(Story story)
+        public StoriesRepository(ComicsStoreDbContext context,
+            IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository,
+            IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
+            IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository)
+            : base(context)
+        {
+            _storyArtistsRepository = storyArtistsRepository;
+            _storyBooksRepository = storyBooksRepository;
+            _storyCharactersRepository = storyCharactersRepository;
+        }
+
+        public override Task<Story> AddAsync(Story story)
         {
             return AddItemAsync(_context.Stories, story);
         }
 
-        public Task DeleteAsync(Story story)
+        public override Task DeleteAsync(Story story)
         {
             return RemoveItemAsync(_context.Stories, story);
         }
 
-        public Task<List<Story>> GetAsync(StorySearchModel model)
+        public override Task<List<Story>> GetAsync()
+        {
+            var stories = _context.Stories
+                .ToListAsync();
+
+            return stories;
+        }
+
+        public override Task<List<Story>> GetAsync(StorySearchModel model)
         {
             var stories = _context.Stories
                 .Include(s => s.Code)
@@ -42,142 +70,35 @@ namespace ComicsStore.MiddleWare.Repositories
             return stories;
         }
 
-        public Task<Story> GetAsync(int storyId)
+        public override Task<Story> GetAsync(int storyId, bool extended = false)
         {
+            if (extended)
+            {
+                return _context.Stories
+                    .Include(s => s.Code)
+                    .Include(s => s.OriginStory)
+                    .Include(s => s.StoryArtist)
+                    .ThenInclude(sa => sa.Artist)
+                    .Include(s => s.StoryCharacter)
+                    .ThenInclude(sc => sc.Character)
+                    .Include(s => s.StoryBook)
+                    .ThenInclude(sb => sb.Book)
+                    .SingleOrDefaultAsync(s => s.Id == storyId);
+            }
+
             return _context.Stories
-                .Include(s => s.Code)
-                .Include(s => s.OriginStory)
                 .Include(s => s.StoryArtist)
-                .ThenInclude(sa => sa.Artist)
                 .Include(s => s.StoryCharacter)
-                .ThenInclude(sc => sc.Character)
                 .Include(s => s.StoryBook)
-                .ThenInclude(sb => sb.Book)
                 .SingleOrDefaultAsync(s => s.Id == storyId);
         }
 
-        public Task<Story> UpdateAsync(Story story)
+        public override Task<Story> UpdateAsync(Story story)
         {
             return UpdateItemAsync(_context.Stories, story, UpdateLinkedItems);
         }
 
-        private bool UpdateLinkedItems(Story storyCurrent, Story storyNew)
-        {
-            if (storyNew.StoryCharacter is not null)
-            {
-                // Delete children
-                foreach (var existingChild in storyCurrent.StoryCharacter)
-                {
-                    if (!storyNew.StoryCharacter.Any(c => c.CharacterId == existingChild.CharacterId))
-                    {
-                        _context.StoryCharacters.Remove(existingChild);
-                    }
-                }
-
-                // Update and Insert children
-                foreach (var childModel in storyNew.StoryCharacter)
-                {
-                    var existingChild = storyCurrent.StoryCharacter
-                        .Where(c => c.CharacterId == childModel.CharacterId && c.CharacterId != default)
-                        .SingleOrDefault();
-
-                    if (existingChild is null)
-                    {
-                        // Insert child
-                        var newChild = new StoryCharacter
-                        {
-                            CharacterId = childModel.CharacterId,
-                            StoryId = childModel.StoryId
-                        };
-                        storyCurrent.StoryCharacter.Add(newChild);
-                    }
-                }
-            }
-
-            if (storyNew.StoryArtist is not null)
-            {
-                // Delete children
-                foreach (var existingChild in storyCurrent.StoryArtist)
-                {
-                    if (!storyNew.StoryArtist.Any(c => c.ArtistId == existingChild.ArtistId))
-                    {
-                        _context.StoryArtists.Remove(existingChild);
-                    }
-                }
-
-                // Update and Insert children
-                foreach (var childModel in storyNew.StoryArtist)
-                {
-                    var existingChild = storyCurrent.StoryArtist
-                        .Where(c => c.ArtistId == childModel.ArtistId && c.ArtistId != default)
-                        .SingleOrDefault();
-
-                    if (existingChild != null)
-                    {
-                        if (!existingChild.ArtistType.Equals(childModel.ArtistType))
-                        {
-                            // Remove child
-                            _context.StoryArtists.Remove(existingChild);
-
-                            // Insert child
-                            var newChild = new StoryArtist
-                            {
-                                CreationDate = existingChild.CreationDate,
-                                ArtistId = childModel.ArtistId,
-                                StoryId = childModel.StoryId,
-                                ArtistType = childModel.ArtistType
-                            };
-                            storyCurrent.StoryArtist.Add(newChild);
-                        }
-                    }
-                    else
-                    {
-                        // Insert child
-                        var newChild = new StoryArtist
-                        {
-                            ArtistId = childModel.ArtistId,
-                            StoryId = childModel.StoryId
-                        };
-                        storyCurrent.StoryArtist.Add(newChild);
-                    }
-                }
-            }
-
-            if (storyNew.StoryBook is not null)
-            {
-                // Delete children
-                foreach (var existingChild in storyCurrent.StoryBook)
-                {
-                    if (!storyNew.StoryBook.Any(c => c.BookId == existingChild.BookId))
-                    {
-                        _context.StoryBooks.Remove(existingChild);
-                    }
-                }
-
-                // Update and Insert children
-                foreach (var childModel in storyNew.StoryBook)
-                {
-                    var existingChild = storyCurrent.StoryBook
-                        .Where(c => c.BookId == childModel.BookId && c.BookId != default)
-                        .SingleOrDefault();
-
-                    if (existingChild is null)
-                    {
-                        // Insert child
-                        var newChild = new StoryBook
-                        {
-                            BookId = childModel.BookId,
-                            StoryId = childModel.StoryId
-                        };
-                        storyCurrent.StoryBook.Add(newChild);
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        public Task<Story> PatchAsync(int id, IDictionary<string, object> data = null)
+        public override Task<Story> PatchAsync(int id, IDictionary<string, object> data = null)
         {
             return PatchItemAsync(_context.Stories, id, data);
         }

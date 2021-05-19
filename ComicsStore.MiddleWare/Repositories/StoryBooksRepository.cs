@@ -4,37 +4,44 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Repositories.Interfaces;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Repositories
 {
-    public class StoryBooksRepository : ComicsStoreCrossRepository<StoryBook>,  IComicsStoreCrossRepository<StoryBook>
+    public class StoryBooksRepository : ComicsStoreCrossRepository<StoryBook, IStoryBook>,  IComicsStoreCrossRepository<StoryBook, IStoryBook>
     {
         public StoryBooksRepository(ComicsStoreDbContext context)
             : base(context)
         {
         }
 
-        public Task<StoryBook> AddAsync(StoryBook storyBook)
+        public override Task<StoryBook> AddAsync(StoryBook storyBook)
         {
             return AddItemAsync(_context.StoryBooks, storyBook);
         }
 
-        public Task<List<StoryBook>> AddAsync(IEnumerable<StoryBook> value)
+        public override Task<List<StoryBook>> AddAsync(IEnumerable<StoryBook> value)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task DeleteAsync(StoryBook storyBook)
+        public override Task DeleteAsync(StoryBook storyBook)
         {
             return RemoveItemAsync(_context.StoryBooks, storyBook);
         }
 
-        public Task DeleteAsync(IEnumerable<StoryBook> value)
+        public override Task DeleteAsync(IEnumerable<StoryBook> value)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<List<StoryBook>> GetAsync(int? id, int? crossId)
+        public override Task<List<StoryBook>> GetAsync()
+        {
+            return _context.StoryBooks
+                .ToListAsync();
+        }
+
+        public override Task<List<StoryBook>> GetAsync(int? id, int? crossId)
         {
             if (id == null && crossId == null)
             {
@@ -51,14 +58,48 @@ namespace ComicsStore.MiddleWare.Repositories
                 .ToListAsync();
         }
 
-        public Task<StoryBook> UpdateAsync(StoryBook storyBook)
+        public override Task<StoryBook> UpdateAsync(StoryBook storyBook)
         {
             return UpdateItemAsync(_context.StoryBooks, storyBook, storyBook.StoryId, storyBook.BookId);
         }
 
-        public Task<List<StoryBook>> UpdateAsync(IEnumerable<StoryBook> value)
+        public override Task<List<StoryBook>> UpdateAsync(IEnumerable<StoryBook> value)
         {
             throw new System.NotImplementedException();
+        }
+
+        public override void UpdateLinkedItems(IStoryBook itemCurrent, IStoryBook itemNew)
+        {
+            if (itemNew.StoryBook is not null)
+            {
+                // Delete children
+                foreach (var existingChild in itemCurrent.StoryBook)
+                {
+                    if (!itemNew.StoryBook.Any(c => c.StoryId == existingChild.StoryId && c.BookId == existingChild.BookId))
+                    {
+                        itemCurrent.StoryBook.Remove(existingChild);
+                    }
+                }
+
+                // Update and Insert children
+                foreach (var childModel in itemNew.StoryBook)
+                {
+                    var existingChild = itemCurrent.StoryBook
+                        .Where(c => c.StoryId == childModel.StoryId && c.BookId == childModel.BookId && c.BookId != default && c.StoryId != default)
+                        .SingleOrDefault();
+
+                    if (existingChild is null && childModel.StoryId > 0)
+                    {
+                        // Insert child
+                        var newChild = new StoryBook
+                        {
+                            BookId = childModel.BookId,
+                            StoryId = childModel.StoryId
+                        };
+                        itemCurrent.StoryBook.Add(newChild);
+                    }
+                }
+            }
         }
     }
 }

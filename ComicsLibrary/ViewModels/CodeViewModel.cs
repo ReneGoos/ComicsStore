@@ -5,6 +5,7 @@ using ComicsLibrary.EditModels;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Search;
 using System;
+using System.Collections.Generic;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -13,6 +14,26 @@ namespace ComicsLibrary.ViewModels
         public CodeViewModel(ICodesService codesService,
             IMapper mapper) : base(codesService, mapper)
         {
+        }
+
+        public void AddSeriesCodes(List<SeriesCodeEditModel> seriesCodes, int? seriesId)
+        {
+            Item.AddSeriesCodes(seriesCodes, seriesId);
+        }
+
+        public void AddStoryCodes(List<StoryCodeEditModel> seriesCodes, int? storyId)
+        {
+            Item.AddStoryCodes(seriesCodes, storyId);
+        }
+
+        public List<SeriesCodeEditModel> GetSeriesCodes()
+        {
+            return Item.GetSeriesCodes();
+        }
+
+        public List<StoryCodeEditModel> GetStoryCodes()
+        {
+            return Item.GetStoryCodes();
         }
     }
 }
