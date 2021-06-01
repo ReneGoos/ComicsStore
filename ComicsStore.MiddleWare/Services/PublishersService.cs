@@ -1,23 +1,22 @@
 ﻿using AutoMapper;
 using ComicsStore.Data.Model;
-using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.Data.Model.Search;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ComicsStore.MiddleWare.Repositories.Interfaces;
+using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System;
 using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public class PublishersService : ComicsStoreService<Publisher, PublisherInputModel, PublisherInputModel, PublisherOutputModel, BasicSearchModel>, IPublishersService
+    public class PublishersService : ComicsStoreService<Publisher, PublisherInputModel, PublisherInputModel, PublisherOutputModel, BasicSearch>, IPublishersService
     {
         private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository;
 
-        public PublishersService(IComicsStoreMainRepository<Publisher, BasicSearchModel> publishersRepository,
+        public PublishersService(IComicsStoreMainRepository<Publisher, BasicSearch> publishersRepository,
             IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
             IMapper mapper) : base(publishersRepository, mapper)
         {

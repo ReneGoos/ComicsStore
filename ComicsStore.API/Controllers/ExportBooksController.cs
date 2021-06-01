@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.Data.Model.Search;
 using Microsoft.AspNetCore.Mvc;
 using ComicsStore.MiddleWare.Services.Interfaces;
 
@@ -21,18 +21,18 @@ namespace ComicsStore.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(ICollection<ExportBooksOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync([FromQuery] StorySeriesSearchModel storySearchModel)
+        public async Task<IActionResult> GetAsync([FromQuery] StorySeriesSearch storySearch)
         {
-            var result = await _exportBooksService.GetAsync(storySearchModel);
+            var result = await _exportBooksService.GetAsync(storySearch);
             return Ok(result);
         }
 
         [Route("report")]
         [HttpGet]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetReportAsync([FromQuery] StorySeriesSearchModel storySearchModel)
+        public async Task<IActionResult> GetReportAsync([FromQuery] StorySeriesSearch storySearch)
         {
-            var export = await _exportBooksService.GetExportAsync(storySearchModel);
+            var export = await _exportBooksService.GetExportAsync(storySearch);
 
             if (export == null)
             {

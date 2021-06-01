@@ -1,5 +1,5 @@
 using AutoMapper;
-using ComicsStore.Data.Model;
+using ComicsStore.Data.Common;
 using ComicsStore.MiddleWare;
 using ComicsStore.MiddleWare.Common;
 using Microsoft.AspNetCore.Builder;

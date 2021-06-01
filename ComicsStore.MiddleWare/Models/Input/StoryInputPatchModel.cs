@@ -1,6 +1,6 @@
 ﻿namespace ComicsStore.MiddleWare.Models.Input
 {
-    public class StoryInputPatchModel : BasicInputModel
+    public class StoryInputPatchModel : BasicInputModel, IStoryInputPatchModel
     {
         public string StoryType { get; set; }
         public int? StoryNumber { get; set; }

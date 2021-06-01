@@ -1,10 +1,5 @@
-﻿using ComicsLibrary.EditModels;
-using ComicsStore.Data.Model;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Windows;
 using System.Windows.Data;
 
 namespace ComicsLibrary.Helpers

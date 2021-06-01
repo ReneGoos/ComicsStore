@@ -1,16 +1,12 @@
 ﻿using AutoMapper;
 using ComicsStore.Data.Model;
+using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Models.Search;
-using ComicsStore.MiddleWare.Repositories;
-using ComicsStore.MiddleWare.Repositories.Interfaces;
+using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ComicsStore.MiddleWare.Services
@@ -20,7 +16,7 @@ namespace ComicsStore.MiddleWare.Services
         where TIn : BasicInputModel
         where TPatch : BasicInputModel
         where TOut : BasicOutputModel
-        where TSearch : BasicSearchModel
+        where TSearch : BasicSearch
     {
 
         private readonly IComicsStoreMainRepository<T, TSearch> _tableRepository;

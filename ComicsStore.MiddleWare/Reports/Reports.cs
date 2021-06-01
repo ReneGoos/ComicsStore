@@ -1,17 +1,17 @@
-﻿using ComicsStore.Data.Model;
+﻿using ComicsStore.Data.Common;
+using ComicsStore.Data.Model.Search;
+using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Common;
-using ComicsStore.MiddleWare.Models.Search;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using ComicsStore.MiddleWare.Repositories.Interfaces;
 
 namespace ComicsStore.MiddleWare.Reports
 {
     public static class Reports
     {
-        public async static Task<string> DataExportAsync(IExportBooksRepository repository, StorySeriesSearchModel searchModel)
+        public async static Task<string> DataExportAsync(IExportBooksRepository repository, StorySeriesSearch searchModel)
         {
             string columnNames = @"""Title"",""Story number"",""Type"",""BookType"",""Character"",""Artist"",""Issue"",""Issue title"",""Language"",""Series"",""Publisher"",""Year"",""Purchase Date"",""Notes"",""Deleted""";
 

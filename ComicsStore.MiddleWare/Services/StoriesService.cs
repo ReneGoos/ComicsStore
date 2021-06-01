@@ -1,25 +1,24 @@
 ﻿using AutoMapper;
 using ComicsStore.Data.Model;
-using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.Data.Model.Search;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ComicsStore.MiddleWare.Repositories.Interfaces;
+using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsStore.MiddleWare.Services
 {
-    public class StoriesService : ComicsStoreService<Story, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearchModel>, IStoriesService
+    public class StoriesService : ComicsStoreService<Story, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearch>, IStoriesService
     {
         private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
         private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository;
         private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository;
 
-        public StoriesService(IComicsStoreMainRepository<Story, StorySearchModel> storiesRepository,
+        public StoriesService(IComicsStoreMainRepository<Story, StorySearch> storiesRepository,
             IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository,
             IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
             IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository,

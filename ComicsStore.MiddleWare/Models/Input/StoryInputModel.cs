@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ComicsStore.MiddleWare.Models.Input
 {
-    public class StoryInputModel : BasicInputModel
+    public class StoryInputModel : BasicInputModel, IStoryInputModel
     {
         public string StoryType { get; set; }
         public int? StoryNumber { get; set; }

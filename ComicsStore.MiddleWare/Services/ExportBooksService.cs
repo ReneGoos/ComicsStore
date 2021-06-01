@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.Data.Model.Search;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ComicsStore.MiddleWare.Repositories.Interfaces;
+using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
 
 namespace ComicsStore.MiddleWare.Services
@@ -21,7 +21,7 @@ namespace ComicsStore.MiddleWare.Services
             _mapper = mapper;
         }
 
-        public async Task<ICollection<ExportBooksOutputModel>> GetAsync(StorySeriesSearchModel searchModel)
+        public async Task<ICollection<ExportBooksOutputModel>> GetAsync(StorySeriesSearch searchModel)
         {
             var exportBooks = await _exportBooksRepository.GetAsync(searchModel);
 
@@ -37,7 +37,7 @@ namespace ComicsStore.MiddleWare.Services
             }
         }
 
-        public Task<string> GetExportAsync(StorySeriesSearchModel searchModel)
+        public Task<string> GetExportAsync(StorySeriesSearch searchModel)
         {
             return Reports.Reports.DataExportAsync(_exportBooksRepository, searchModel);
         }

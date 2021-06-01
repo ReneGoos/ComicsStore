@@ -1,5 +1,5 @@
 ﻿using ComicsLibrary.EditModels;
-using ComicsStore.Data.Model;
+using ComicsStore.Data.Common;
 using ComicsStore.MiddleWare;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
@@ -31,17 +31,12 @@ namespace ComicsLibrary.Helpers
             CreateMap<SeriesOutputModel, SeriesEditModel>();
             CreateMap<StoryOutputModel, StoryEditModel>();
 
-            //CreateMap<StoryArtistEditModel, ArtistStoryInputModel>();
             CreateMap<BookPublisherEditModel, BookPublisherInputModel>();
             CreateMap<BookSeriesEditModel, BookSeriesInputModel>();
 
             CreateMap<CodeStoryOutputModel, StoryCodeEditModel>();
             CreateMap<CodeSeriesOutputModel, SeriesCodeEditModel>();
 
-            //CreateMap<StoryBookEditModel, BookStoryInputModel>();
-            //CreateMap<StoryCharacterEditModel, CharacterStoryInputModel>();
-            //CreateMap<BookPublisherEditModel, PublisherBookInputModel>();
-            //CreateMap<BookSeriesEditModel, SeriesBookInputModel>();
             CreateMap<StoryArtistEditModel, StoryArtistInputModel>();
             CreateMap<StoryBookEditModel, StoryBookInputModel>();
             CreateMap<StoryCharacterEditModel, StoryCharacterInputModel>();

@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.Data.Model.Search;
 using Microsoft.AspNetCore.Mvc;
 using ComicsStore.MiddleWare.Services.Interfaces;
 
@@ -22,9 +22,9 @@ namespace ComicsStore.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(ICollection<BookOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync([FromQuery] BasicSearchModel bookSearchModel)
+        public async Task<IActionResult> GetAsync([FromQuery] BasicSearch bookSearch)
         {
-            return Ok(await _booksService.GetAsync(bookSearchModel));
+            return Ok(await _booksService.GetAsync(bookSearch));
         }
 
         [HttpGet("{id}", Name = "BookGetAsync")]

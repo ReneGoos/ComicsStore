@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using ComicsStore.Data.Common;
 using ComicsStore.Data.Model;
+using ComicsStore.Data.Model.Output;
 using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;

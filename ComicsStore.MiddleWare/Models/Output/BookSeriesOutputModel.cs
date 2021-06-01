@@ -1,6 +1,6 @@
 ﻿namespace ComicsStore.MiddleWare.Models.Output
 {
-    public class BookSeriesOutputModel : SeriesOnlyOutputModel
+    public class BookSeriesOutputModel : SeriesOnlyOutputModel, IBookSeriesOutputModel
     {
         public int BookId { get; set; }
         public int SeriesId { get; set; }

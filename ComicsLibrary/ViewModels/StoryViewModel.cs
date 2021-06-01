@@ -1,20 +1,16 @@
 ﻿using AutoMapper;
-using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
-using System;
 using System.ComponentModel;
 using System.Windows.Data;
-using System.Windows.Input;
-using ComicsLibrary.Navigation;
 using System.Collections.Generic;
 
 namespace ComicsLibrary.ViewModels
 {
-    public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearchModel, StoryEditModel>
+    public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearch, StoryEditModel>
     {
         private CollectionViewSource _originStoriesViewSource;
         private string _originStoryFilter;

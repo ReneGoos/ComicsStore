@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ComicsStore.MiddleWare.Models.Input
 {
-    public class SeriesInputModel : BasicInputModel
+    public class SeriesInputModel : BasicInputModel, ISeriesInputModel
     {
         public int? SeriesNumber { get; set; }
         [Required(ErrorMessage = "Two character language id is required"), MaxLength(2)]

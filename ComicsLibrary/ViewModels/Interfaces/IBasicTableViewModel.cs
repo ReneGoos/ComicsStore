@@ -1,6 +1,5 @@
 ﻿using ComicsLibrary.EditModels;
 using ComicsStore.MiddleWare.Models.Output;
-using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace ComicsLibrary.ViewModels.Interfaces

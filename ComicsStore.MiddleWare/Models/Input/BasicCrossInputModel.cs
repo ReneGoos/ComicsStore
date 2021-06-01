@@ -1,6 +1,6 @@
 ﻿namespace ComicsStore.MiddleWare.Models.Input
 {
-    public class BasicCrossInputModel
+    public class BasicCrossInputModel : IBasicCrossInputModel
     {
     }
 }

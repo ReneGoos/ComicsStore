@@ -2,7 +2,7 @@
 
 namespace ComicsStore.MiddleWare.Models.Input
 {
-    public class PublisherInputModel : BasicInputModel
+    public class PublisherInputModel : BasicInputModel, IPublisherInputModel
     {
         public ICollection<BookPublisherInputModel> BookPublisher { get; set; }
     }

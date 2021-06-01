@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ComicsStore.Data.Model;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,8 +9,8 @@ using ComicsLibrary.Core;
 using ComicsStore.MiddleWare.Common;
 using ComicsLibrary.EditModels;
 using ComicsStore.MiddleWare.Models.Output;
-using System.Windows;
 using ComicsLibrary.ViewModels.Interfaces;
+using ComicsStore.Data.Common;
 
 namespace ComicsLibrary.ViewModels
 {

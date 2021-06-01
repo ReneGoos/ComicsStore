@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ComicsStore.Data.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace ComicsStore.Data.Model
 {

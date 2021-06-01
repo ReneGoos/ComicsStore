@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using ComicsStore.Data.Model;
+using ComicsStore.Data.Common;
 
 namespace ComicsLibrary.EditModels
 {

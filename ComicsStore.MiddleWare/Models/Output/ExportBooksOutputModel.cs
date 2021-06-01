@@ -2,7 +2,7 @@
 
 namespace ComicsStore.MiddleWare.Models.Output
 {
-    public class ExportBooksOutputModel
+    public class ExportBooksOutputModel : IExportBooksOutputModel
     {
         public string Title { get; set; }
         public string OriginalTitle { get; set; }

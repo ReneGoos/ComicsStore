@@ -4,7 +4,7 @@ using ComicsLibrary.EditModels;
 using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace ComicsLibrary.ViewModels
         where TIn : BasicInputModel
         where TPatch : BasicInputModel
         where TOut : BasicOutputModel
-        where TSearch : BasicSearchModel, new()
+        where TSearch : BasicSearch
         where TEdit : TableEditModel, new()
     {
         protected readonly TService _itemService;
@@ -76,20 +76,20 @@ namespace ComicsLibrary.ViewModels
 
         protected virtual void CancelSaveAsync()
         {
-            if (Item.Id is null)
+            if (Item.Id.HasValue)
             {
-                NewItem();
+                GetItemAsync(Item.Id.Value);
             }
             else
             {
-                GetItemAsync(Item.Id.Value);
+                NewItem();
             }
         }
 
         protected virtual async void SaveAsync()
         {
             var itemInput = Mapper.Map<TIn>(Item);
-            var itemOut = (Item.Id is null) ? await _itemService.AddAsync(itemInput) : await _itemService.UpdateAsync(Item.Id.Value, itemInput);
+            var itemOut = Item.Id.HasValue ? await _itemService.UpdateAsync(Item.Id.Value, itemInput) : await _itemService.AddAsync(itemInput);
 
             Items = null;
 

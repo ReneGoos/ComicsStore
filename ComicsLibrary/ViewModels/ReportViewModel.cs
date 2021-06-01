@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using ComicsLibrary.EditModels;
 using ComicsLibrary.Helpers;
-using ComicsStore.MiddleWare.Models.Search;
+using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -30,10 +26,10 @@ namespace ComicsLibrary.ViewModels
 
         private async void Refresh()
         {
-            var list = _mapper.Map<List<ReportEditModel>>(await _exportBooksService.GetAsync(new StorySeriesSearchModel
+            var list = _mapper.Map<List<ReportEditModel>>(await _exportBooksService.GetAsync(new StorySeriesSearch
             {
                 Filter = _itemFilter,
-                Active = _active.HasValue ? (_active.Value ? ComicsStore.Data.Model.Active.active : ComicsStore.Data.Model.Active.deleted) : null
+                Active = _active.HasValue ? (_active.Value ? ComicsStore.Data.Common.Active.active : ComicsStore.Data.Common.Active.deleted) : null
             })); ; ;
             PagingCollection = new PagingCollectionView<ReportEditModel>(list, 50);
         }

@@ -2,7 +2,7 @@
 
 namespace ComicsStore.MiddleWare.Models.Output
 {
-    public class StoryOutputModel : StoryOnlyOutputModel
+    public class StoryOutputModel : StoryOnlyOutputModel, IStoryOutputModel
     {
         public ICollection<StoryBookOutputModel> StoryBook { get; set; }
         public ICollection<StoryCharacterOutputModel> StoryCharacter { get; set; }
