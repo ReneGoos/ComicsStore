@@ -45,18 +45,12 @@ namespace ComicsLibrary.ViewModels
 
                 return _pagingCollection;
             }
-            private set
-            {
-                Set(ref _pagingCollection, value);
-            }
+            private set => Set(ref _pagingCollection, value);
         }
 
         public string ItemFilter
         {
-            get
-            {
-                return _itemFilter;
-            }
+            get => _itemFilter;
             set
             {
                 Set(ref _itemFilter, value);
@@ -66,19 +60,13 @@ namespace ComicsLibrary.ViewModels
 
         public string ItemSort
         {
-            get
-            {
-                return _itemSort;
-            }
-            set
-            {
-                Set(ref _itemSort, value);
-            }
+            get => _itemSort;
+            set => Set(ref _itemSort, value);
         }
 
         public bool? Active
         {
-            get => _active; 
+            get => _active;
             set
             {
                 Set(ref _active, value);

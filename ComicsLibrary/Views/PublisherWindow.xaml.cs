@@ -19,14 +19,14 @@ namespace ComicsLibrary.Views
             var publisherView = (sender as Button).DataContext as PublisherViewModel;
 
             //if (publisherView.IsDirty)
-                publisherView.SaveCommand.Execute(null);
+            publisherView.SaveCommand.Execute(null);
 
-            this.DialogResult = true;
+            DialogResult = true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
+            DialogResult = false;
         }
     }
 }

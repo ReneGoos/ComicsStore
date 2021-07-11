@@ -28,7 +28,9 @@ namespace ComicsLibrary.EditModels
                             foreach (var type in artistType)
                             {
                                 if (type.Equals(role.Name))
+                                {
                                     checkStatus = true;
+                                }
                             }
                             if (role.Checked != checkStatus)
                             {
@@ -87,10 +89,10 @@ namespace ComicsLibrary.EditModels
             PropertyChanged += StoryArtistEditModel_PropertyChanged;
         }
 
-        public int? ArtistId { get => _artistId; set { Set(ref _artistId, value); }}
-        public int? StoryId { get => _storyId; set  { Set(ref _storyId, value); }}
-        public ICollection<string> ArtistType { get => _artistType; set  { Set(ref _artistType, value); }}
+        public int? ArtistId { get => _artistId; set => Set(ref _artistId, value); }
+        public int? StoryId { get => _storyId; set => Set(ref _storyId, value); }
+        public ICollection<string> ArtistType { get => _artistType; set => Set(ref _artistType, value); }
 
-        public ObservableCollection<RoleType> Roles { get { if (_roles is null) { _roles = FillRoles(); } return _roles; } set { Set(ref _roles, value); } }
+        public ObservableCollection<RoleType> Roles { get { if (_roles is null) { _roles = FillRoles(); } return _roles; } set => Set(ref _roles, value); }
     }
 }

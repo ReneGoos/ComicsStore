@@ -33,7 +33,9 @@ namespace ComicsLibrary.Helpers
             foreach (var value in checks)
             {
                 if ((value.Checked) && values.Any(x => x.Name.Equals(value.Name)))
+                {
                     names.Add(value.Name);
+                }
             }
 
             return names;

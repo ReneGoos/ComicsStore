@@ -21,14 +21,14 @@ namespace ComicsStore.Data.Repositories
             _bookSeriesRepository = bookSeriesRepository;
         }
 
-        public override Task<Series> AddAsync(Series series)
+        public override Task<Series> AddAsync(Series value)
         {
-            return AddItemAsync(_context.Series, series);
+            return AddItemAsync(_context.Series, value);
         }
 
-        public override Task DeleteAsync(Series series)
+        public override Task DeleteAsync(Series value)
         {
-            return RemoveItemAsync(_context.Series, series);
+            return RemoveItemAsync(_context.Series, value);
         }
 
         public override Task<List<Series>> GetAsync()
@@ -59,15 +59,15 @@ namespace ComicsStore.Data.Repositories
                     .Include(s => s.Code)
                     .SingleOrDefaultAsync(s => s.Id == seriesId);
             }
-            
+
             return _context.Series
                 .Include(s => s.BookSeries)
                 .SingleOrDefaultAsync(s => s.Id == seriesId);
         }
 
-        public override Task<Series> UpdateAsync(Series series)
+        public override Task<Series> UpdateAsync(Series value)
         {
-            return UpdateItemAsync(_context.Series, series, UpdateLinkedItems);
+            return UpdateItemAsync(_context.Series, value, UpdateLinkedItems);
         }
 
         private bool UpdateLinkedItems(Series seriesCurrent, Series seriesNew)

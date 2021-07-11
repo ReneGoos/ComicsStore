@@ -7,11 +7,11 @@
         private int? _id;
 
         public TableEditModel()
-        { 
+        {
         }
 
-        public int? Id { get => _id; set { Set(ref _id, value); } }
-        public string Name { get => _name; set { Set(ref _name, value); } }
-        public string Remark { get => _remark; set { Set(ref _remark, value); } }
+        public int? Id { get => _id; set => Set(ref _id, value); }
+        public string Name { get => _name; set => Set(ref _name, value); }
+        public string Remark { get => _remark; set => Set(ref _remark, value); }
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ComicsStore.Data.Repositories
 {
-    public abstract class ComicsStoreMainRepository<T, TSearch> : ComicsStoreRepository<T> 
+    public abstract class ComicsStoreMainRepository<T, TSearch> : ComicsStoreRepository<T>
         where T : MainTable
         where TSearch : BasicSearch
     {
@@ -41,7 +41,7 @@ namespace ComicsStore.Data.Repositories
             return entity;
         }
 
-        public async Task<T> PatchItemAsync(DbSet<T> collection, int id, IDictionary<string,object> data)
+        public async Task<T> PatchItemAsync(DbSet<T> collection, int id, IDictionary<string, object> data)
         {
             var entity = await collection.FindAsync(id);
             if (entity == null)

@@ -16,7 +16,7 @@ namespace ComicsStore.Data.Repositories
 
         protected async Task<T> UpdateItemAsync(DbSet<T> collection, T item, int id, int crossId)
         {
-            var entity = await collection.FindAsync( id, crossId );
+            var entity = await collection.FindAsync(id, crossId);
             if (entity == null)
             {
                 return null;

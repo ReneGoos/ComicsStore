@@ -11,46 +11,46 @@ namespace ComicsLibrary.Helpers
     {
         public ComicsLibraryProfile() : base()
         {
-            CreateMap<ICollection<RoleType>, ICollection<string>>().ConstructUsing(src => (ICollection<string>)CheckedArrayMapper<ArtistType>.GetStringList(src));
-            CreateMap<ICollection<string>, ICollection<RoleType>>().ConstructUsing(src => (ICollection<RoleType>)CheckedArrayMapper<ArtistType>.GetCheckedList(src));
+            _ = CreateMap<ICollection<RoleType>, ICollection<string>>().ConstructUsing(src => CheckedArrayMapper<ArtistType>.GetStringList(src));
+            _ = CreateMap<ICollection<string>, ICollection<RoleType>>().ConstructUsing(src => CheckedArrayMapper<ArtistType>.GetCheckedList(src));
 
-            CreateMap<ArtistEditModel, ArtistInputModel>();
-            CreateMap<BookEditModel, BookInputModel>();
-            CreateMap<CharacterEditModel, CharacterInputModel>();
-            CreateMap<CodeEditModel, CodeInputModel>();
-            CreateMap<PublisherEditModel, PublisherInputModel>();
-            CreateMap<SeriesEditModel, SeriesInputModel>();
-            CreateMap<StoryEditModel, StoryInputModel>();
-            CreateMap<ExportBooksOutputModel, ReportEditModel>();
+            _ = CreateMap<ArtistEditModel, ArtistInputModel>();
+            _ = CreateMap<BookEditModel, BookInputModel>();
+            _ = CreateMap<CharacterEditModel, CharacterInputModel>();
+            _ = CreateMap<CodeEditModel, CodeInputModel>();
+            _ = CreateMap<PublisherEditModel, PublisherInputModel>();
+            _ = CreateMap<SeriesEditModel, SeriesInputModel>();
+            _ = CreateMap<StoryEditModel, StoryInputModel>();
+            _ = CreateMap<ExportBooksOutputModel, ReportEditModel>();
 
-            CreateMap<ArtistOutputModel, ArtistEditModel>();
-            CreateMap<BookOutputModel, BookEditModel>();
-            CreateMap<CharacterOutputModel, CharacterEditModel>();
-            CreateMap<CodeOutputModel, CodeEditModel>();
-            CreateMap<PublisherOutputModel, PublisherEditModel>();
-            CreateMap<SeriesOutputModel, SeriesEditModel>();
-            CreateMap<StoryOutputModel, StoryEditModel>();
+            _ = CreateMap<ArtistOutputModel, ArtistEditModel>();
+            _ = CreateMap<BookOutputModel, BookEditModel>();
+            _ = CreateMap<CharacterOutputModel, CharacterEditModel>();
+            _ = CreateMap<CodeOutputModel, CodeEditModel>();
+            _ = CreateMap<PublisherOutputModel, PublisherEditModel>();
+            _ = CreateMap<SeriesOutputModel, SeriesEditModel>();
+            _ = CreateMap<StoryOutputModel, StoryEditModel>();
 
-            CreateMap<BookPublisherEditModel, BookPublisherInputModel>();
-            CreateMap<BookSeriesEditModel, BookSeriesInputModel>();
+            _ = CreateMap<BookPublisherEditModel, BookPublisherInputModel>();
+            _ = CreateMap<BookSeriesEditModel, BookSeriesInputModel>();
 
-            CreateMap<CodeStoryOutputModel, StoryCodeEditModel>();
-            CreateMap<CodeSeriesOutputModel, SeriesCodeEditModel>();
+            _ = CreateMap<CodeStoryOutputModel, StoryCodeEditModel>();
+            _ = CreateMap<CodeSeriesOutputModel, SeriesCodeEditModel>();
 
-            CreateMap<StoryArtistEditModel, StoryArtistInputModel>();
-            CreateMap<StoryBookEditModel, StoryBookInputModel>();
-            CreateMap<StoryCharacterEditModel, StoryCharacterInputModel>();
+            _ = CreateMap<StoryArtistEditModel, StoryArtistInputModel>();
+            _ = CreateMap<StoryBookEditModel, StoryBookInputModel>();
+            _ = CreateMap<StoryCharacterEditModel, StoryCharacterInputModel>();
 
-            CreateMap<ArtistStoryOutputModel, StoryArtistEditModel>();
-            CreateMap<BookPublisherOutputModel, BookPublisherEditModel>();
-            CreateMap<BookSeriesOutputModel, BookSeriesEditModel>();
-            CreateMap<BookStoryOutputModel, StoryBookEditModel>();
-            CreateMap<CharacterStoryOutputModel, StoryCharacterEditModel>();
-            CreateMap<PublisherBookOutputModel, BookPublisherEditModel>();
-            CreateMap<SeriesBookOutputModel, BookSeriesEditModel>();
-            CreateMap<StoryArtistOutputModel, StoryArtistEditModel>();
-            CreateMap<StoryBookOutputModel, StoryBookEditModel>();
-            CreateMap<StoryCharacterOutputModel, StoryCharacterEditModel>();
+            _ = CreateMap<ArtistStoryOutputModel, StoryArtistEditModel>();
+            _ = CreateMap<BookPublisherOutputModel, BookPublisherEditModel>();
+            _ = CreateMap<BookSeriesOutputModel, BookSeriesEditModel>();
+            _ = CreateMap<BookStoryOutputModel, StoryBookEditModel>();
+            _ = CreateMap<CharacterStoryOutputModel, StoryCharacterEditModel>();
+            _ = CreateMap<PublisherBookOutputModel, BookPublisherEditModel>();
+            _ = CreateMap<SeriesBookOutputModel, BookSeriesEditModel>();
+            _ = CreateMap<StoryArtistOutputModel, StoryArtistEditModel>();
+            _ = CreateMap<StoryBookOutputModel, StoryBookEditModel>();
+            _ = CreateMap<StoryCharacterOutputModel, StoryCharacterEditModel>();
         }
     }
 }

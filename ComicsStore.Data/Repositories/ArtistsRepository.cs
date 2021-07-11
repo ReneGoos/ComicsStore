@@ -10,7 +10,7 @@ using ComicsStore.Data.Common;
 
 namespace ComicsStore.Data.Repositories
 {
-    public class ArtistsRepository : ComicsStoreMainRepository<Artist, BasicSearch>,  IComicsStoreMainRepository<Artist, BasicSearch>
+    public class ArtistsRepository : ComicsStoreMainRepository<Artist, BasicSearch>, IComicsStoreMainRepository<Artist, BasicSearch>
     {
         private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
 
@@ -21,14 +21,14 @@ namespace ComicsStore.Data.Repositories
             _storyArtistsRepository = storyArtistsRepository;
         }
 
-        public override Task<Artist> AddAsync(Artist artist)
+        public override Task<Artist> AddAsync(Artist value)
         {
-            return AddItemAsync(_context.Artists, artist);
+            return AddItemAsync(_context.Artists, value);
         }
 
-        public override Task DeleteAsync(Artist artist)
+        public override Task DeleteAsync(Artist value)
         {
-            return RemoveItemAsync(_context.Artists, artist);
+            return RemoveItemAsync(_context.Artists, value);
         }
 
         public override Task<List<Artist>> GetAsync()
@@ -62,9 +62,9 @@ namespace ComicsStore.Data.Repositories
                 .SingleOrDefaultAsync(a => a.Id == artistId);
         }
 
-        public override Task<Artist> UpdateAsync(Artist artist)
+        public override Task<Artist> UpdateAsync(Artist value)
         {
-            return UpdateItemAsync(_context.Artists, artist, UpdateLinkedItems);
+            return UpdateItemAsync(_context.Artists, value, UpdateLinkedItems);
         }
 
         private bool UpdateLinkedItems(Artist artistCurrent, Artist artistNew)

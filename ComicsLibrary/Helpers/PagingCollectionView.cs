@@ -35,7 +35,11 @@ namespace ComicsLibrary.Helpers
         {
             get
             {
-                if (_innerList.Count == 0) return 0;
+                if (_innerList.Count == 0)
+                {
+                    return 0;
+                }
+
                 if (_currentPage < PageCount) // page 1..n-1
                 {
                     return _itemsPerPage;
@@ -58,7 +62,7 @@ namespace ComicsLibrary.Helpers
 
         public int CurrentPage
         {
-            get { return _currentPage; }
+            get => _currentPage;
             set
             {
                 _currentPage = value;

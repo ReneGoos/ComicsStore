@@ -5,11 +5,12 @@ using System.Windows.Data;
 
 namespace ComicsLibrary.Helpers
 {
+    [ValueConversion(typeof(bool), typeof(Visibility))]
     public class BoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var data = (bool) value;
+            var data = (bool)value;
 
             if (data)
             {

@@ -17,7 +17,7 @@ namespace ComicsStore.MiddleWare.Services
         private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository;
         private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository;
         private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository;
-        
+
         public BooksService(IComicsStoreMainRepository<Book, BasicSearch> booksRepository,
             IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
             IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,

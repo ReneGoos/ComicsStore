@@ -9,16 +9,16 @@ using ComicsStore.Data.Common;
 
 namespace ComicsStore.Data.Repositories
 {
-    public class BookPublishersRepository : ComicsStoreCrossRepository<BookPublisher, IBookPublisher>,  IComicsStoreCrossRepository<BookPublisher, IBookPublisher>
+    public class BookPublishersRepository : ComicsStoreCrossRepository<BookPublisher, IBookPublisher>, IComicsStoreCrossRepository<BookPublisher, IBookPublisher>
     {
         public BookPublishersRepository(ComicsStoreDbContext context)
             : base(context)
         {
         }
 
-        public override Task<BookPublisher> AddAsync(BookPublisher bookPublisher)
+        public override Task<BookPublisher> AddAsync(BookPublisher value)
         {
-            return AddItemAsync(_context.BookPublishers, bookPublisher);
+            return AddItemAsync(_context.BookPublishers, value);
         }
 
         public override Task<List<BookPublisher>> AddAsync(IEnumerable<BookPublisher> value)
@@ -26,9 +26,9 @@ namespace ComicsStore.Data.Repositories
             throw new System.NotImplementedException();
         }
 
-        public override Task DeleteAsync(BookPublisher bookPublisher)
+        public override Task DeleteAsync(BookPublisher value)
         {
-            return RemoveItemAsync(_context.BookPublishers, bookPublisher);
+            return RemoveItemAsync(_context.BookPublishers, value);
         }
 
         public override Task DeleteAsync(IEnumerable<BookPublisher> value)
@@ -56,9 +56,9 @@ namespace ComicsStore.Data.Repositories
                 .ToListAsync();
         }
 
-        public override Task<BookPublisher> UpdateAsync(BookPublisher bookPublisher)
+        public override Task<BookPublisher> UpdateAsync(BookPublisher value)
         {
-            return UpdateItemAsync(_context.BookPublishers, bookPublisher, bookPublisher.BookId, bookPublisher.PublisherId);
+            return UpdateItemAsync(_context.BookPublishers, value, value.BookId, value.PublisherId);
         }
 
         public override Task<List<BookPublisher>> UpdateAsync(IEnumerable<BookPublisher> value)
@@ -71,23 +71,22 @@ namespace ComicsStore.Data.Repositories
             if (itemNew.BookPublisher is not null)
             {
                 // Delete children
-                foreach (var existingChild in itemCurrent.BookPublisher)
+                foreach (var existingChild in itemCurrent.BookPublisher.ToList())
                 {
                     if (!itemNew.BookPublisher.Any(c => c.PublisherId == existingChild.PublisherId && c.BookId == existingChild.BookId))
                     {
-                        _context.BookPublishers.Remove(existingChild);
+                        _ = _context.BookPublishers.Remove(existingChild);
                     }
                 }
 
                 // Update and Insert children
-                foreach (var childModel in itemNew.BookPublisher)
+                foreach (var childModel in itemNew.BookPublisher.ToList())
                 {
                     var existingChild = itemCurrent.BookPublisher
-                        .Where(c => c.PublisherId == childModel.PublisherId
+                        .SingleOrDefault(c => c.PublisherId == childModel.PublisherId
                              && c.BookId == childModel.BookId
                              && c.BookId != default
-                             && c.PublisherId != default)
-                        .SingleOrDefault();
+                             && c.PublisherId != default);
 
                     if (existingChild is null && childModel.PublisherId > 0 && childModel.BookId > 0)
                     {

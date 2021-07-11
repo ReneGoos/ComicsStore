@@ -15,79 +15,85 @@ namespace ComicsStore.Data.Common
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<StoryCharacter>()
+            _ = modelBuilder.Entity<Story>()
+                .HasOne(s => s.OriginStory)
+                .WithMany(s => s.StoryFromOrigin)
+                .HasForeignKey(s => s.OriginStoryId)
+                .IsRequired(false);
+
+            _ = modelBuilder.Entity<StoryCharacter>()
                 .HasKey(sc => new { sc.StoryId, sc.CharacterId });
 
-            modelBuilder.Entity<StoryCharacter>()
+            _ = modelBuilder.Entity<StoryCharacter>()
                 .HasOne(sc => sc.Story)
                 .WithMany(s => s.StoryCharacter);
 
-            modelBuilder.Entity<StoryCharacter>()
+            _ = modelBuilder.Entity<StoryCharacter>()
                 .HasOne(sc => sc.Character)
                 .WithMany(c => c.StoryCharacter);
 
-            modelBuilder.Entity<StoryArtist>()
+            _ = modelBuilder.Entity<StoryArtist>()
                 .HasKey(sa => new { sa.StoryId, sa.ArtistId });
 
-            modelBuilder.Entity<StoryArtist>()
+            _ = modelBuilder.Entity<StoryArtist>()
                 .HasOne(sa => sa.Story)
                 .WithMany(s => s.StoryArtist);
 
-            modelBuilder.Entity<StoryArtist>()
+            _ = modelBuilder.Entity<StoryArtist>()
                 .HasOne(sa => sa.Artist)
                 .WithMany(a => a.StoryArtist);
 
-            modelBuilder.Entity<StoryBook>()
+            _ = modelBuilder.Entity<StoryBook>()
                 .HasKey(sb => new { sb.StoryId, sb.BookId });
 
-            modelBuilder.Entity<StoryBook>()
+            _ = modelBuilder.Entity<StoryBook>()
                 .HasOne(sb => sb.Story)
                 .WithMany(s => s.StoryBook);
 
-            modelBuilder.Entity<StoryBook>()
+            _ = modelBuilder.Entity<StoryBook>()
                 .HasOne(sb => sb.Book)
                 .WithMany(b => b.StoryBook);
 
-            modelBuilder.Entity<BookSeries>()
+            _ = modelBuilder.Entity<BookSeries>()
                 .HasKey(bs => new { bs.BookId, bs.SeriesId });
 
-            modelBuilder.Entity<BookSeries>()
+            _ = modelBuilder.Entity<BookSeries>()
                 .HasOne(bs => bs.Book)
                 .WithMany(b => b.BookSeries);
 
-            modelBuilder.Entity<BookSeries>()
+            _ = modelBuilder.Entity<BookSeries>()
                 .HasOne(bs => bs.Series)
                 .WithMany(s => s.BookSeries);
 
-            modelBuilder.Entity<BookSeries>()
+            _ = modelBuilder.Entity<BookSeries>()
                 .Property(bs => bs.SeriesOrder)
                 .HasColumnType("numeric(18,2)");
 
-            modelBuilder.Entity<BookPublisher>()
+            _ = modelBuilder.Entity<BookPublisher>()
                 .HasKey(bp => new { bp.BookId, bp.PublisherId });
 
-            modelBuilder.Entity<BookPublisher>()
+            _ = modelBuilder.Entity<BookPublisher>()
                 .HasOne(bp => bp.Book)
                 .WithMany(b => b.BookPublisher);
 
-            modelBuilder.Entity<BookPublisher>()
+            _ = modelBuilder.Entity<BookPublisher>()
                 .HasOne(bp => bp.Publisher)
                 .WithMany(p => p.BookPublisher);
 
-            modelBuilder.Entity<Code>()
+            _ = modelBuilder.Entity<Code>()
                 .HasIndex(c => c.Name)
                 .IsUnique(true);
 
-            modelBuilder.Entity<ExportStory>()
+            _ = modelBuilder.Entity<ExportStory>()
                 .HasNoKey()
                 .ToView("ExportStories");
 
-            modelBuilder.Entity<ExportBook>()
+            _ = modelBuilder.Entity<ExportBook>()
                 .HasNoKey()
                 .ToView("ExportBooks")
                 .Property(v => v.StoryNumber).HasColumnName("Story Number");
 
-            modelBuilder.Entity<StorySeries>()
+            _ = modelBuilder.Entity<StorySeries>()
                 .HasNoKey()
                 .ToView("StorySeries");
         }

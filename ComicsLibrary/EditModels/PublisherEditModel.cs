@@ -12,7 +12,7 @@ namespace ComicsLibrary.EditModels
             BookPublisher = new List<BookPublisherEditModel>();
         }
 
-        public ICollection<BookPublisherEditModel> BookPublisher { get => _bookPublishers; set { Set(ref _bookPublishers, value); } }
+        public ICollection<BookPublisherEditModel> BookPublisher { get => _bookPublishers; set => Set(ref _bookPublishers, value); }
 
         public void AddBookPublisher(List<BookPublisherEditModel> bookPublishers, int? bookId)
         {

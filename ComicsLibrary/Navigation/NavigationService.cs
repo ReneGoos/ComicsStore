@@ -29,10 +29,10 @@ namespace ComicsLibrary.Navigation
         public async Task<bool?> ShowDialogAsync(string windowKey, object parameter = null)
         {
             var window = await GetAndActivateWindowAsync(windowKey, parameter);
-            
+
             ActiveDialogWindows.Add(windowKey);
             var result = window.ShowDialog();
-            ActiveDialogWindows.Remove(windowKey);
+            _ = ActiveDialogWindows.Remove(windowKey);
 
             return result;
         }

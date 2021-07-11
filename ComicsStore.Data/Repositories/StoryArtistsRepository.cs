@@ -9,16 +9,16 @@ using ComicsStore.Data.Common;
 
 namespace ComicsStore.Data.Repositories
 {
-    public class StoryArtistsRepository : ComicsStoreCrossRepository<StoryArtist, IStoryArtist>,  IComicsStoreCrossRepository<StoryArtist, IStoryArtist>
+    public class StoryArtistsRepository : ComicsStoreCrossRepository<StoryArtist, IStoryArtist>, IComicsStoreCrossRepository<StoryArtist, IStoryArtist>
     {
         public StoryArtistsRepository(ComicsStoreDbContext context)
             : base(context)
         {
         }
 
-        public override Task<StoryArtist> AddAsync(StoryArtist storyArtist)
+        public override Task<StoryArtist> AddAsync(StoryArtist value)
         {
-            return AddItemAsync(_context.StoryArtists, storyArtist);
+            return AddItemAsync(_context.StoryArtists, value);
         }
 
         public override Task<List<StoryArtist>> AddAsync(IEnumerable<StoryArtist> value)
@@ -26,9 +26,9 @@ namespace ComicsStore.Data.Repositories
             throw new System.NotImplementedException();
         }
 
-        public override Task DeleteAsync(StoryArtist storyArtist)
+        public override Task DeleteAsync(StoryArtist value)
         {
-            return RemoveItemAsync(_context.StoryArtists, storyArtist);
+            return RemoveItemAsync(_context.StoryArtists, value);
         }
 
         public override Task DeleteAsync(IEnumerable<StoryArtist> value)
@@ -58,10 +58,10 @@ namespace ComicsStore.Data.Repositories
                 .Where(s => id != null ? s.StoryId == id : s.ArtistId == crossId)
                 .ToListAsync();
         }
-        
-        public override Task<StoryArtist> UpdateAsync(StoryArtist storyArtist)
+
+        public override Task<StoryArtist> UpdateAsync(StoryArtist value)
         {
-            return UpdateItemAsync(_context.StoryArtists, storyArtist, storyArtist.StoryId, storyArtist.ArtistId);
+            return UpdateItemAsync(_context.StoryArtists, value, value.StoryId, value.ArtistId);
         }
 
         public override Task<List<StoryArtist>> UpdateAsync(IEnumerable<StoryArtist> value)
@@ -74,27 +74,26 @@ namespace ComicsStore.Data.Repositories
             if (itemNew.StoryArtist is not null)
             {
                 // Delete children
-                foreach (var existingChild in itemCurrent.StoryArtist)
+                foreach (var existingChild in itemCurrent.StoryArtist.ToList())
                 {
                     if (!itemNew.StoryArtist.Any(c => c.ArtistId == existingChild.ArtistId && c.StoryId == existingChild.StoryId))
                     {
-                        itemCurrent.StoryArtist.Remove(existingChild);
+                        _ = itemCurrent.StoryArtist.Remove(existingChild);
                     }
                 }
 
                 // Update and Insert children
-                foreach (var childModel in itemNew.StoryArtist)
+                foreach (var childModel in itemNew.StoryArtist.ToList())
                 {
                     var existingChild = itemCurrent.StoryArtist
-                        .Where(c => c.ArtistId == childModel.ArtistId && c.StoryId == childModel.StoryId && c.StoryId != default && c.ArtistId != default)
-                        .SingleOrDefault();
+                        .SingleOrDefault(c => c.ArtistId == childModel.ArtistId && c.StoryId == childModel.StoryId && c.StoryId != default && c.ArtistId != default);
 
                     if (existingChild != null)
                     {
                         if (!existingChild.ArtistType.Equals(childModel.ArtistType))
                         {
                             // Remove child
-                            itemCurrent.StoryArtist.Remove(existingChild);
+                            _ = itemCurrent.StoryArtist.Remove(existingChild);
 
                             // Insert child
                             var newChild = new StoryArtist
@@ -107,7 +106,7 @@ namespace ComicsStore.Data.Repositories
                             itemCurrent.StoryArtist.Add(newChild);
                         }
                     }
-                    else if (childModel.ArtistId > 0)
+                    else if (childModel.ArtistId > 0 && childModel.StoryId > 0)
                     {
                         // Insert child
                         var newChild = new StoryArtist

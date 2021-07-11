@@ -36,14 +36,14 @@ namespace ComicsStore.Data.Repositories
             _storyCharactersRepository = storyCharactersRepository;
         }
 
-        public override Task<Story> AddAsync(Story story)
+        public override Task<Story> AddAsync(Story value)
         {
-            return AddItemAsync(_context.Stories, story);
+            return AddItemAsync(_context.Stories, value);
         }
 
-        public override Task DeleteAsync(Story story)
+        public override Task DeleteAsync(Story value)
         {
-            return RemoveItemAsync(_context.Stories, story);
+            return RemoveItemAsync(_context.Stories, value);
         }
 
         public override Task<List<Story>> GetAsync()
@@ -62,6 +62,7 @@ namespace ComicsStore.Data.Repositories
                 .Include(s => s.StoryArtist)
                 .Include(s => s.StoryCharacter)
                 .Include(s => s.StoryBook)
+                .Include(s => s.StoryFromOrigin)
                 .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower()))
                 .Where(s => model.ExtraInfo == null || s.ExtraInfo.ToLower().Contains(model.ExtraInfo.ToLower()))
                 .Where(s => !model.CodeId.HasValue || s.CodeId == model.CodeId)
@@ -71,7 +72,7 @@ namespace ComicsStore.Data.Repositories
             return stories;
         }
 
-        public override Task<Story> GetAsync(int storyId, bool extended = false)
+        public override Task<Story> GetAsync(int id, bool extended = false)
         {
             if (extended)
             {
@@ -84,19 +85,21 @@ namespace ComicsStore.Data.Repositories
                     .ThenInclude(sc => sc.Character)
                     .Include(s => s.StoryBook)
                     .ThenInclude(sb => sb.Book)
-                    .SingleOrDefaultAsync(s => s.Id == storyId);
+                    .Include(s => s.StoryFromOrigin)
+                    .SingleOrDefaultAsync(s => s.Id == id);
             }
 
             return _context.Stories
                 .Include(s => s.StoryArtist)
                 .Include(s => s.StoryCharacter)
                 .Include(s => s.StoryBook)
-                .SingleOrDefaultAsync(s => s.Id == storyId);
+                .Include(s => s.StoryFromOrigin)
+                .SingleOrDefaultAsync(s => s.Id == id);
         }
 
-        public override Task<Story> UpdateAsync(Story story)
+        public override Task<Story> UpdateAsync(Story value)
         {
-            return UpdateItemAsync(_context.Stories, story, UpdateLinkedItems);
+            return UpdateItemAsync(_context.Stories, value, UpdateLinkedItems);
         }
 
         public override Task<Story> PatchAsync(int id, IDictionary<string, object> data = null)

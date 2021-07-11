@@ -9,16 +9,16 @@ using ComicsStore.Data.Common;
 
 namespace ComicsStore.Data.Repositories
 {
-    public class StoryBooksRepository : ComicsStoreCrossRepository<StoryBook, IStoryBook>,  IComicsStoreCrossRepository<StoryBook, IStoryBook>
+    public class StoryBooksRepository : ComicsStoreCrossRepository<StoryBook, IStoryBook>, IComicsStoreCrossRepository<StoryBook, IStoryBook>
     {
         public StoryBooksRepository(ComicsStoreDbContext context)
             : base(context)
         {
         }
 
-        public override Task<StoryBook> AddAsync(StoryBook storyBook)
+        public override Task<StoryBook> AddAsync(StoryBook value)
         {
-            return AddItemAsync(_context.StoryBooks, storyBook);
+            return AddItemAsync(_context.StoryBooks, value);
         }
 
         public override Task<List<StoryBook>> AddAsync(IEnumerable<StoryBook> value)
@@ -26,9 +26,9 @@ namespace ComicsStore.Data.Repositories
             throw new System.NotImplementedException();
         }
 
-        public override Task DeleteAsync(StoryBook storyBook)
+        public override Task DeleteAsync(StoryBook value)
         {
-            return RemoveItemAsync(_context.StoryBooks, storyBook);
+            return RemoveItemAsync(_context.StoryBooks, value);
         }
 
         public override Task DeleteAsync(IEnumerable<StoryBook> value)
@@ -59,9 +59,9 @@ namespace ComicsStore.Data.Repositories
                 .ToListAsync();
         }
 
-        public override Task<StoryBook> UpdateAsync(StoryBook storyBook)
+        public override Task<StoryBook> UpdateAsync(StoryBook value)
         {
-            return UpdateItemAsync(_context.StoryBooks, storyBook, storyBook.StoryId, storyBook.BookId);
+            return UpdateItemAsync(_context.StoryBooks, value, value.StoryId, value.BookId);
         }
 
         public override Task<List<StoryBook>> UpdateAsync(IEnumerable<StoryBook> value)
@@ -74,22 +74,21 @@ namespace ComicsStore.Data.Repositories
             if (itemNew.StoryBook is not null)
             {
                 // Delete children
-                foreach (var existingChild in itemCurrent.StoryBook)
+                foreach (var existingChild in itemCurrent.StoryBook.ToList())
                 {
                     if (!itemNew.StoryBook.Any(c => c.StoryId == existingChild.StoryId && c.BookId == existingChild.BookId))
                     {
-                        itemCurrent.StoryBook.Remove(existingChild);
+                        _ = itemCurrent.StoryBook.Remove(existingChild);
                     }
                 }
 
                 // Update and Insert children
-                foreach (var childModel in itemNew.StoryBook)
+                foreach (var childModel in itemNew.StoryBook.ToList())
                 {
                     var existingChild = itemCurrent.StoryBook
-                        .Where(c => c.StoryId == childModel.StoryId && c.BookId == childModel.BookId && c.BookId != default && c.StoryId != default)
-                        .SingleOrDefault();
+                            .SingleOrDefault(c => c.StoryId == childModel.StoryId && c.BookId == childModel.BookId && c.BookId != default && c.StoryId != default);
 
-                    if (existingChild is null && childModel.StoryId > 0)
+                    if (existingChild is null && childModel.BookId > 0 && childModel.StoryId > 0)
                     {
                         // Insert child
                         var newChild = new StoryBook

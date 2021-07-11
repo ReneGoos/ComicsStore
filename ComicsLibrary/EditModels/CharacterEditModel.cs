@@ -12,7 +12,7 @@ namespace ComicsLibrary.EditModels
             StoryCharacter = new List<StoryCharacterEditModel>();
         }
 
-        public ICollection<StoryCharacterEditModel> StoryCharacter { get => _storyCharacters; set { Set(ref _storyCharacters, value); } }
+        public ICollection<StoryCharacterEditModel> StoryCharacter { get => _storyCharacters; set => Set(ref _storyCharacters, value); }
 
         public void AddStoryCharacter(ICollection<StoryCharacterEditModel> storyCharacters, int? storyId)
         {

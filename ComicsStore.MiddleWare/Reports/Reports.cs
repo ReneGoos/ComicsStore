@@ -13,7 +13,7 @@ namespace ComicsStore.MiddleWare.Reports
     {
         public async static Task<string> DataExportAsync(IExportBooksRepository repository, StorySeriesSearch searchModel)
         {
-            string columnNames = @"""Title"",""Story number"",""Type"",""BookType"",""Character"",""Artist"",""Issue"",""Issue title"",""Language"",""Series"",""Publisher"",""Year"",""Purchase Date"",""Notes"",""Deleted""";
+            var columnNames = @"""Title"",""Story number"",""Type"",""BookType"",""Character"",""Artist"",""Issue"",""Issue title"",""Language"",""Series"",""Publisher"",""Year"",""Purchase Date"",""Notes"",""Deleted""";
 
             Active deleted = default;
             string title = null;
@@ -25,10 +25,10 @@ namespace ComicsStore.MiddleWare.Reports
             string language = null;
             string notes = null;
 
-            int storyId = -1;
-            int bookId = -1;
-            int seriesId = -1;
-            int bookYear = -1;
+            var storyId = -1;
+            var bookId = -1;
+            var seriesId = -1;
+            var bookYear = -1;
 
             DateTime purchaseDate = default;
 
@@ -37,9 +37,9 @@ namespace ComicsStore.MiddleWare.Reports
             var series = new SortedSet<string>();
             var publishers = new SortedSet<string>();
 
-            StringBuilder exportText = new StringBuilder();
+            var exportText = new StringBuilder();
 
-            exportText.AppendLine(columnNames);
+            _ = exportText.AppendLine(columnNames);
 
             //rsCodes = CodesDataset()
             //SqlDataReader rsStories = BooksDataset(pdbAll, pboolBooks, pboolPeriodicals, pboolDeleted, false);
@@ -47,13 +47,13 @@ namespace ComicsStore.MiddleWare.Reports
             {
                 if (storyId == stories.StoryId && bookId == stories.BookId && seriesId == stories.SeriesId)
                 {
-                    characters.Add(stories.Character);
-                    artists[stories.Artist] = (ArtistType)stories.ArtistType;
+                    _ = characters.Add(stories.Character);
+                    artists[stories.Artist] = stories.ArtistType;
                     bookIssue = stories.Issue;
                     bookIssueTitle = stories.IssueTitle;
                     language = stories.Language;
-                    series.Add(stories.Series);
-                    publishers.Add(stories.Publisher);
+                    _ = series.Add(stories.Series);
+                    _ = publishers.Add(stories.Publisher);
                 }
                 else
                 {
@@ -87,15 +87,15 @@ namespace ComicsStore.MiddleWare.Reports
                     seriesId = stories.SeriesId;
                     title = stories.Title;
                     storyNumber = !stories.StoryNumber.HasValue ? stories.ExtraInfo : stories.StoryNumber.Value.ToString();
-                    storyType = (StoryType)stories.StoryType;
-                    bookType = (BookType)stories.BookType;
-                    characters.Add(stories.Character);
-                    artists[stories.Artist] = (ArtistType)stories.ArtistType;
+                    storyType = stories.StoryType;
+                    bookType = stories.BookType;
+                    _ = characters.Add(stories.Character);
+                    artists[stories.Artist] = stories.ArtistType;
                     bookIssue = stories.Issue;
                     bookIssueTitle = stories.IssueTitle;
                     language = stories.Language.Length == 0 ? "nl" : stories.Language;
-                    series.Add(stories.Series);
-                    publishers.Add(stories.Publisher);
+                    _ = series.Add(stories.Series);
+                    _ = publishers.Add(stories.Publisher);
                     bookYear = !stories.Year.HasValue ? -1 : stories.Year.Value;
                     purchaseDate = stories.PurchaseDate;
                     deleted = stories.Deleted;
@@ -124,7 +124,7 @@ namespace ComicsStore.MiddleWare.Reports
             //    mdiMain.stbStatus.Panels(1).Text = "Klaar"
             return exportText.ToString();
         }
-        
+
         private static string Escape(string input)
         {
             if (input == null)
@@ -179,32 +179,32 @@ namespace ComicsStore.MiddleWare.Reports
             string notes,
             int bookYear,
             DateTime purchaseDate,
-            SortedSet<string> characters, 
-            SortedList<string,ArtistType> artists, 
-            SortedSet<string> series, 
-            SortedSet<string> publishers, 
+            SortedSet<string> characters,
+            SortedList<string, ArtistType> artists,
+            SortedSet<string> series,
+            SortedSet<string> publishers,
             StringBuilder exportText)
         {
-            exportText.Append('"' + Escape(title) + '"' + ',');
-            exportText.Append('"' + storyNumber + '"' + ',');
-            exportText.Append('"' + EnumHelper<StoryType>.GetName(storyType) + '"' + ',');
-            exportText.Append('"' + EnumHelper<BookType>.GetName(bookType) + '"' + ',');
+            _ = exportText.Append('"' + Escape(title) + '"' + ',');
+            _ = exportText.Append('"' + storyNumber + '"' + ',');
+            _ = exportText.Append('"' + EnumHelper<StoryType>.GetName(storyType) + '"' + ',');
+            _ = exportText.Append('"' + EnumHelper<BookType>.GetName(bookType) + '"' + ',');
 
-            exportText.Append('"' + String.Join(",", EscapeList(characters)) + '"' + ',');
-            exportText.Append('"' + String.Join(",", ArtistAndShortType(artists)) + '"' + ',');
+            _ = exportText.Append('"' + String.Join(",", EscapeList(characters)) + '"' + ',');
+            _ = exportText.Append('"' + String.Join(",", ArtistAndShortType(artists)) + '"' + ',');
 
-            exportText.Append('"' + bookIssue?.ToString() + '"' + ',');
-            exportText.Append('"' + Escape(bookIssueTitle) + '"' + ',');
-            exportText.Append('"' + language + '"' + ',');
+            _ = exportText.Append('"' + bookIssue?.ToString() + '"' + ',');
+            _ = exportText.Append('"' + Escape(bookIssueTitle) + '"' + ',');
+            _ = exportText.Append('"' + language + '"' + ',');
 
-            exportText.Append('"' + String.Join(",", EscapeList(series)) + '"' + ',');
-            exportText.Append('"' + String.Join(",", EscapeList(publishers)) + '"' + ',');
+            _ = exportText.Append('"' + String.Join(",", EscapeList(series)) + '"' + ',');
+            _ = exportText.Append('"' + String.Join(",", EscapeList(publishers)) + '"' + ',');
 
-            exportText.Append('"' + bookYear.ToString() + '"' + ',');
-            exportText.Append('"' + purchaseDate.ToString("MM/dd/yyyy") + '"' + ',');
-            exportText.Append('"' + Escape(notes??"") + '"' + ',');
-            exportText.Append('"' + (deleted == Active.active ? "" : "del") + '"' + ',');
-            exportText.AppendLine();
+            _ = exportText.Append('"' + bookYear.ToString() + '"' + ',');
+            _ = exportText.Append('"' + purchaseDate.ToString("MM/dd/yyyy") + '"' + ',');
+            _ = exportText.Append('"' + Escape(notes ?? "") + '"' + ',');
+            _ = exportText.Append('"' + (deleted == Active.active ? "" : "del") + '"' + ',');
+            _ = exportText.AppendLine();
         }
     }
 }

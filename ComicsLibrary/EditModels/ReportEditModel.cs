@@ -32,7 +32,10 @@ namespace ComicsLibrary.EditModels
         public bool ItemContains(string value)
         {
             if (value is null)
+            {
                 return true;
+            }
+
             return Title.Contains(value, StringComparison.InvariantCultureIgnoreCase);
         }
 

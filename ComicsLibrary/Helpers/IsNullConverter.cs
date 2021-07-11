@@ -4,21 +4,19 @@ using System.Windows.Data;
 
 namespace ComicsLibrary.Helpers
 {
-    [ValueConversion(typeof(bool), typeof(bool))]
-    public class NotConverter : IValueConverter
+    [ValueConversion(typeof(object), typeof(bool))]
+    public class IsNullConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var data = (bool)value;
+            var test = value == null;
 
-            return !data;
+            return test;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var data = (bool)value;
-
-            return !data;
+            throw new NotImplementedException();
         }
     }
 }

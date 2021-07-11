@@ -15,28 +15,20 @@ namespace ComicsLibrary.EditModels
         public ICollection<StoryArtistEditModel> StoryArtist
         {
             get => _storyArtists;
-            set
-            {
-                Set ( ref _storyArtists, value);
-            }
+            set => Set(ref _storyArtists, value);
         }
 
-        public void AddStoryArtist(List<StoryArtistEditModel> storyArtists, int? storyId)
+        public void AddStoryArtist(int? storyId)
         {
             if (storyId.HasValue)
             {
                 if (!StoryArtist.Any(s => s.StoryId == storyId.Value))
                 {
-                    if (!storyArtists.Any(s => s.StoryId == storyId.Value))
+                    StoryArtist.Add(new StoryArtistEditModel
                     {
-                        storyArtists.Add(new StoryArtistEditModel
-                        {
-                            ArtistId = Id,
-                            StoryId = storyId
-                        });
-                    }
-
-                    StoryArtist = storyArtists;
+                        ArtistId = Id,
+                        StoryId = storyId
+                    });
                 }
             }
         }

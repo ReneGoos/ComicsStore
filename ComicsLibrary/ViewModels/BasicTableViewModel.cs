@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
+using System.Linq;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -18,7 +19,7 @@ namespace ComicsLibrary.ViewModels
         where TService : IComicsStoreService<TIn, TPatch, TOut, TSearch>
         where TIn : BasicInputModel
         where TPatch : BasicInputModel
-        where TOut : BasicOutputModel
+        where TOut : BasicOutputModel, new()
         where TSearch : BasicSearch
         where TEdit : TableEditModel, new()
     {
@@ -29,6 +30,21 @@ namespace ComicsLibrary.ViewModels
         private CollectionViewSource _itemsViewSource;
         private CollectionViewSource _itemsFilteredViewSource;
         private string _itemFilter;
+
+        private void UpdateItemsList(TOut item, bool removeOnly = false)
+        {
+            var itemFind = _items.FirstOrDefault(i => i.Id == item.Id);
+            if (itemFind is not null)
+            {
+                _ = _items.Remove(itemFind);
+            }
+            if (!removeOnly)
+            {
+                _items.Add(item);
+            }
+            Items.Refresh();
+            //RaisePropertyChanged("Items");
+        }
 
         public BasicTableViewModel(TService service, IMapper mapper) : base(mapper)
         {
@@ -88,10 +104,13 @@ namespace ComicsLibrary.ViewModels
 
         protected virtual async void SaveAsync()
         {
+            if (Item == null)
+            {
+                return;
+            }
             var itemInput = Mapper.Map<TIn>(Item);
             var itemOut = Item.Id.HasValue ? await _itemService.UpdateAsync(Item.Id.Value, itemInput) : await _itemService.AddAsync(itemInput);
-
-            Items = null;
+            UpdateItemsList(itemOut);
 
             Item = Mapper.Map<TEdit>(itemOut);
             Item.PropertyChanged += Item_PropertyChanged;
@@ -100,15 +119,15 @@ namespace ComicsLibrary.ViewModels
 
         private static bool ContinueDelete()
         {
-            string sMessageBoxText = "Are you sure you want to delete?";
-            string sCaption = "Delete Item";
+            var messageBoxText = "Are you sure you want to delete?";
+            var caption = "Delete Item";
 
-            MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
-            MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+            var btnMessageBox = MessageBoxButton.YesNoCancel;
+            var icnMessageBox = MessageBoxImage.Warning;
 
-            MessageBoxResult rsltMessageBox = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+            var rsltMessageBox = MessageBox.Show(messageBoxText, caption, btnMessageBox, icnMessageBox);
 
-            return (rsltMessageBox ==MessageBoxResult.Yes);           
+            return rsltMessageBox == MessageBoxResult.Yes;
         }
 
         protected virtual async void DeleteAsync(int id)
@@ -116,7 +135,7 @@ namespace ComicsLibrary.ViewModels
             if (ContinueDelete())
             {
                 await _itemService.DeleteAsync(id);
-                Items = null;
+                UpdateItemsList(new TOut { Id = id }, true);
             }
 
             NewItem();
@@ -132,6 +151,11 @@ namespace ComicsLibrary.ViewModels
         protected virtual async void GetItemAsync(int id)
         {
             Item = Mapper.Map<TEdit>(await _itemService.GetAsync(id));
+
+            if (Item == null)
+            {
+                Item = new TEdit();
+            }
             Item.PropertyChanged += Item_PropertyChanged;
             IsDirty = false;
             //return Item is not null;
@@ -163,10 +187,7 @@ namespace ComicsLibrary.ViewModels
 
         public string ItemFilter
         {
-            get
-            {
-                return _itemFilter;
-            }
+            get => _itemFilter;
             set
             {
                 Set(ref _itemFilter, value);
@@ -198,25 +219,12 @@ namespace ComicsLibrary.ViewModels
 
                 return _itemsViewSource.View;
             }
-            private set
-            {
-                if (value is null)
-                {
-                    GetItemsAsync();
-                    ItemFilter = "";
-                }
-
-                RaisePropertyChanged("Items");
-            }
         }
 
         public TEdit Item
         {
             get => _item;
-            private set
-            {
-                Set(ref _item, value);
-            }
+            private set => Set(ref _item, value);
         }
     }
 }

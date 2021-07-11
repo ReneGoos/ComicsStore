@@ -12,7 +12,7 @@ namespace ComicsLibrary.EditModels
         {
         }
 
-        public DateTime CreationDate { get => _creationDate; protected set { Set(ref _creationDate, value); } }
-        public DateTime DateUpdate { get => _dateUpdate; protected set { Set(ref _dateUpdate, value); } }
+        public DateTime CreationDate { get => _creationDate; protected set => Set(ref _creationDate, value); }
+        public DateTime DateUpdate { get => _dateUpdate; protected set => Set(ref _dateUpdate, value); }
     }
 }

@@ -26,7 +26,7 @@ namespace ComicsStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews()
+            _ = services.AddControllersWithViews()
                         .AddNewtonsoftJson(options =>
                         {
                             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -50,20 +50,20 @@ namespace ComicsStore
                 cfg.AddProfile<ComicsStoreProfile>();
             });
 
-            IMapper mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            var mapper = mappingConfig.CreateMapper();
+            _ = services.AddSingleton(mapper);
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1",
-                             new OpenApiInfo
-                             {
-                                 Title = "ComicsStoreAPI",
-                                 Version = "v1"
-                             });
-            });
-    
-            services.AddSwaggerGenNewtonsoftSupport();
+            _ = services.AddSwaggerGen(c =>
+              {
+                  c.SwaggerDoc("v1",
+                               new OpenApiInfo
+                               {
+                                   Title = "ComicsStoreAPI",
+                                   Version = "v1"
+                               });
+              });
+
+            _ = services.AddSwaggerGenNewtonsoftSupport();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,46 +71,46 @@ namespace ComicsStore
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                _ = app.UseDeveloperExceptionPage();
                 //context.Database.EnsureCreated();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                _ = app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                _ = app.UseHsts();
             }
 
             //app.UseCors(MyAllowSpecificOrigins);
-            app.UseCors(builder =>
-            {
-                builder.WithOrigins("*");
-            });
+            _ = app.UseCors(builder =>
+              {
+                  _ = builder.WithOrigins("*");
+              });
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ComicsStoreAPI V1");
+            _ = app.UseSwagger();
+            _ = app.UseSwaggerUI(c =>
+              {
+                  c.SwaggerEndpoint("/swagger/v1/swagger.json", "ComicsStoreAPI V1");
 
-                c.DocumentTitle = "ComicsStore API";
-                c.DocExpansion(DocExpansion.None);
-            });
+                  c.DocumentTitle = "ComicsStore API";
+                  c.DocExpansion(DocExpansion.None);
+              });
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            _ = app.UseHttpsRedirection();
+            _ = app.UseStaticFiles();
             if (!env.IsDevelopment())
             {
                 app.UseSpaStaticFiles();
             }
 
-            app.UseRouting();
+            _ = app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-            });
+            _ = app.UseEndpoints(endpoints =>
+              {
+                  _ = endpoints.MapControllerRoute(
+                      name: "default",
+                      pattern: "{controller}/{action=Index}/{id?}");
+              });
 
             app.UseSpa(spa =>
             {

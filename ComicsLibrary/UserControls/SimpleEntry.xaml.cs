@@ -19,9 +19,9 @@ namespace ComicsLibrary.UserControls
         public static readonly DependencyProperty ItemCaseProperty = DependencyProperty.Register("ItemCase", typeof(CharacterCasing), typeof(SimpleEntry));
         public static readonly DependencyProperty ItemRemarkProperty = DependencyProperty.Register("ItemRemark", typeof(string), typeof(SimpleEntry));
 
-        public int Id { get { return (int)GetValue(ItemIdProperty); } set { SetValue(ItemIdProperty, value); } }
-        public string ItemName { get { return (string)GetValue(ItemNameProperty); } set { SetValue(ItemNameProperty, value); } }
-        public CharacterCasing ItemCase { get { return (CharacterCasing)GetValue(ItemCaseProperty); } set { SetValue(ItemCaseProperty, value); } }
-        public string ItemRemark { get { return (string)GetValue(ItemRemarkProperty); } set { SetValue(ItemRemarkProperty, value); } }
+        public int Id { get => (int)GetValue(ItemIdProperty); set => SetValue(ItemIdProperty, value); }
+        public string ItemName { get => (string)GetValue(ItemNameProperty); set => SetValue(ItemNameProperty, value); }
+        public CharacterCasing ItemCase { get => (CharacterCasing)GetValue(ItemCaseProperty); set => SetValue(ItemCaseProperty, value); }
+        public string ItemRemark { get => (string)GetValue(ItemRemarkProperty); set => SetValue(ItemRemarkProperty, value); }
     }
 }

@@ -14,8 +14,8 @@ namespace ComicsLibrary.EditModels
             Story = new List<StoryCodeEditModel>();
         }
 
-        public ICollection<SeriesCodeEditModel> Series { get => _seriesCodes; set { Set(ref _seriesCodes, value); } }
-        public ICollection<StoryCodeEditModel> Story { get => _storyCodes; set { Set(ref _storyCodes, value); } }
+        public ICollection<SeriesCodeEditModel> Series { get => _seriesCodes; set => Set(ref _seriesCodes, value); }
+        public ICollection<StoryCodeEditModel> Story { get => _storyCodes; set => Set(ref _storyCodes, value); }
 
         public void AddSeriesCodes(List<SeriesCodeEditModel> seriesCodes, int? seriesId)
         {

@@ -38,10 +38,7 @@ namespace ComicsLibrary.ViewModels
 
         public string OriginStoryFilter
         {
-            get
-            {
-                return _originStoryFilter;
-            }
+            get => _originStoryFilter;
             set
             {
                 Set(ref _originStoryFilter, value);
@@ -54,7 +51,9 @@ namespace ComicsLibrary.ViewModels
             get
             {
                 if (_originStoriesViewSource is null)
-                    GetItemsAsync();
+                {
+                    GetOriginStories();
+                }
 
                 return _originStoriesViewSource.View;
             }
@@ -62,28 +61,33 @@ namespace ComicsLibrary.ViewModels
             {
                 if (value is null)
                 {
-                    _originStoriesViewSource = new CollectionViewSource
-                    {
-                        Source = _items
-                    };
-                    _originStoriesViewSource.Filter += OriginStoryFilterResults;
-                    _originStoriesViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+                    GetOriginStories();
                     RaisePropertyChanged();
                 }
             }
         }
 
-        protected override void GetItemsAsync()
+        private void GetOriginStories()
         {
-            base.GetItemsAsync();
-            OriginStories = null;
+            _originStoriesViewSource = new CollectionViewSource
+            {
+                Source = _items
+            };
+            _originStoriesViewSource.Filter += OriginStoryFilterResults;
+            _originStoriesViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
         }
 
-        protected override void SaveAsync()
-        {
-            base.SaveAsync();
-            OriginStories = null;
-        }
+        //protected override void GetItemsAsync()
+        //{
+        //    base.GetItemsAsync();
+        //    OriginStories = null;
+        //}
+
+        //protected override void SaveAsync()
+        //{
+        //    base.SaveAsync();
+        //    OriginStories = null;
+        //}
 
         public void AddStoryArtist(ICollection<StoryArtistEditModel> storyArtists, int? artistId)
         {

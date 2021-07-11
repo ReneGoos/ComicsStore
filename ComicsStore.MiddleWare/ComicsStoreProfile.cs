@@ -13,79 +13,79 @@ namespace ComicsStore.MiddleWare
     {
         public ComicsStoreProfile()
         {
-            CreateMap<string, Active>().ConstructUsing(src => EnumHelper<Active>.Parse(src));
-            CreateMap<string, BookType>().ConstructUsing(src => EnumHelper<BookType>.Parse(src));
-            CreateMap<string, StoryType>().ConstructUsing(src => EnumHelper<StoryType>.Parse(src));
-            CreateMap<ICollection<string>, ArtistType>().ConstructUsing(src => EnumHelper<ArtistType>.ParseFlags(src));
-            CreateMap<Active, string>().ConstructUsing(src => EnumHelper<Active>.GetDisplayValue(src));
-            CreateMap<BookType, string>().ConstructUsing(src => EnumHelper<BookType>.GetDisplayValue(src));
-            CreateMap<StoryType, string>().ConstructUsing(src => EnumHelper<StoryType>.GetDisplayValue(src));
-            CreateMap<ArtistType, ICollection<string>>().ConstructUsing(src => (ICollection<string>)EnumHelper<ArtistType>.GetDisplayValues(src));
+            _ = CreateMap<string, Active>().ConstructUsing(src => EnumHelper<Active>.Parse(src));
+            _ = CreateMap<string, BookType>().ConstructUsing(src => EnumHelper<BookType>.Parse(src));
+            _ = CreateMap<string, StoryType>().ConstructUsing(src => EnumHelper<StoryType>.Parse(src));
+            _ = CreateMap<ICollection<string>, ArtistType>().ConstructUsing(src => EnumHelper<ArtistType>.ParseFlags(src));
+            _ = CreateMap<Active, string>().ConstructUsing(src => EnumHelper<Active>.GetDisplayValue(src));
+            _ = CreateMap<BookType, string>().ConstructUsing(src => EnumHelper<BookType>.GetDisplayValue(src));
+            _ = CreateMap<StoryType, string>().ConstructUsing(src => EnumHelper<StoryType>.GetDisplayValue(src));
+            _ = CreateMap<ArtistType, ICollection<string>>().ConstructUsing(src => EnumHelper<ArtistType>.GetDisplayValues(src));
 
-            CreateMap<ArtistInputModel, Artist>();
-            CreateMap<BookInputModel, Book>();
-            CreateMap<CharacterInputModel, Character>();
-            CreateMap<CodeInputModel, Code>();
-            CreateMap<PublisherInputModel, Publisher>();
-            CreateMap<SeriesInputModel, Series>();
-            CreateMap<StoryInputModel, Story>();
+            _ = CreateMap<ArtistInputModel, Artist>();
+            _ = CreateMap<BookInputModel, Book>();
+            _ = CreateMap<CharacterInputModel, Character>();
+            _ = CreateMap<CodeInputModel, Code>();
+            _ = CreateMap<PublisherInputModel, Publisher>();
+            _ = CreateMap<SeriesInputModel, Series>();
+            _ = CreateMap<StoryInputModel, Story>();
 
-            CreateMap<BookInputPatchModel, Book>();
-            CreateMap<StoryInputPatchModel, Story>();
+            _ = CreateMap<BookInputPatchModel, Book>();
+            _ = CreateMap<StoryInputPatchModel, Story>();
 
-            CreateMap<BookPublisherInputModel, BookPublisher>();
-            CreateMap<BookSeriesInputModel, BookSeries>();
-            CreateMap<StoryArtistInputModel, StoryArtist>();
-            CreateMap<StoryBookInputModel, StoryBook>();
-            CreateMap<StoryCharacterInputModel, StoryCharacter>();
+            _ = CreateMap<BookPublisherInputModel, BookPublisher>();
+            _ = CreateMap<BookSeriesInputModel, BookSeries>();
+            _ = CreateMap<StoryArtistInputModel, StoryArtist>();
+            _ = CreateMap<StoryBookInputModel, StoryBook>();
+            _ = CreateMap<StoryCharacterInputModel, StoryCharacter>();
 
-            CreateMap<Artist, ArtistOutputModel>();
-            CreateMap<Book, BookOutputModel>();
-            CreateMap<Character, CharacterOutputModel>();
-            CreateMap<Code, CodeOutputModel>();
-            CreateMap<Publisher, PublisherOutputModel>();
-            CreateMap<Series, SeriesOutputModel>();
-            CreateMap<Story, StoryOutputModel>();
+            _ = CreateMap<Artist, ArtistOutputModel>();
+            _ = CreateMap<Book, BookOutputModel>();
+            _ = CreateMap<Character, CharacterOutputModel>();
+            _ = CreateMap<Code, CodeOutputModel>();
+            _ = CreateMap<Publisher, PublisherOutputModel>();
+            _ = CreateMap<Series, SeriesOutputModel>();
+            _ = CreateMap<Story, StoryOutputModel>();
 
-            CreateMap<Artist, ArtistOnlyOutputModel>();
-            CreateMap<Book, BookOnlyOutputModel>();
-            CreateMap<Character, CharacterOnlyOutputModel>();
-            CreateMap<Code, CodeOnlyOutputModel>();
-            CreateMap<Publisher, PublisherOnlyOutputModel>();
-            CreateMap<Series, SeriesOnlyOutputModel>(); 
-            CreateMap<Story, StoryOnlyOutputModel>();
+            _ = CreateMap<Artist, ArtistOnlyOutputModel>();
+            _ = CreateMap<Book, BookOnlyOutputModel>();
+            _ = CreateMap<Character, CharacterOnlyOutputModel>();
+            _ = CreateMap<Code, CodeOnlyOutputModel>();
+            _ = CreateMap<Publisher, PublisherOnlyOutputModel>();
+            _ = CreateMap<Series, SeriesOnlyOutputModel>();
+            _ = CreateMap<Story, StoryOnlyOutputModel>();
 
-            CreateMap<ExportBook, ExportBooksOutputModel>();
-            CreateMap<ExportStory, ExportBooksOutputModel>();
+            _ = CreateMap<ExportBook, ExportBooksOutputModel>();
+            _ = CreateMap<ExportStory, ExportBooksOutputModel>();
 
-            CreateMap<BookSeries, BookSeriesOutputModel>().IncludeMembers(b => b.Series);
-            CreateMap<BookSeries, SeriesBookOutputModel>().IncludeMembers(b => b.Book);
-            CreateMap<Series, BookSeriesOutputModel>();
-            CreateMap<Book, SeriesBookOutputModel>();
+            _ = CreateMap<BookSeries, BookSeriesOutputModel>().IncludeMembers(b => b.Series);
+            _ = CreateMap<BookSeries, SeriesBookOutputModel>().IncludeMembers(b => b.Book);
+            _ = CreateMap<Series, BookSeriesOutputModel>();
+            _ = CreateMap<Book, SeriesBookOutputModel>();
 
-            CreateMap<BookPublisher, BookPublisherOutputModel>().IncludeMembers(b => b.Publisher);
-            CreateMap<BookPublisher, PublisherBookOutputModel>().IncludeMembers(b => b.Book);
-            CreateMap<Publisher, BookPublisherOutputModel>();
-            CreateMap<Book, PublisherBookOutputModel>();
+            _ = CreateMap<BookPublisher, BookPublisherOutputModel>().IncludeMembers(b => b.Publisher);
+            _ = CreateMap<BookPublisher, PublisherBookOutputModel>().IncludeMembers(b => b.Book);
+            _ = CreateMap<Publisher, BookPublisherOutputModel>();
+            _ = CreateMap<Book, PublisherBookOutputModel>();
 
-            CreateMap<StoryArtist, ArtistStoryOutputModel>().IncludeMembers(s => s.Story);
-            CreateMap<StoryArtist, StoryArtistOutputModel>().IncludeMembers(s => s.Artist);
-            CreateMap<Story, ArtistStoryOutputModel>();
-            CreateMap<Artist, StoryArtistOutputModel>();
+            _ = CreateMap<StoryArtist, ArtistStoryOutputModel>().IncludeMembers(s => s.Story);
+            _ = CreateMap<StoryArtist, StoryArtistOutputModel>().IncludeMembers(s => s.Artist);
+            _ = CreateMap<Story, ArtistStoryOutputModel>();
+            _ = CreateMap<Artist, StoryArtistOutputModel>();
 
-            CreateMap<StoryBook, BookStoryOutputModel>().IncludeMembers(s => s.Story);
-            CreateMap<StoryBook, StoryBookOutputModel>().IncludeMembers(s => s.Book);
-            CreateMap<Story, BookStoryOutputModel>();
-            CreateMap<Book, StoryBookOutputModel>();
+            _ = CreateMap<StoryBook, BookStoryOutputModel>().IncludeMembers(s => s.Story);
+            _ = CreateMap<StoryBook, StoryBookOutputModel>().IncludeMembers(s => s.Book);
+            _ = CreateMap<Story, BookStoryOutputModel>();
+            _ = CreateMap<Book, StoryBookOutputModel>();
 
-            CreateMap<StoryCharacter, CharacterStoryOutputModel>().IncludeMembers(s => s.Story);
-            CreateMap<StoryCharacter, StoryCharacterOutputModel>().IncludeMembers(s => s.Character);
-            CreateMap<Character, StoryCharacterOutputModel>();
-            CreateMap<Story, CharacterStoryOutputModel>();
+            _ = CreateMap<StoryCharacter, CharacterStoryOutputModel>().IncludeMembers(s => s.Story);
+            _ = CreateMap<StoryCharacter, StoryCharacterOutputModel>().IncludeMembers(s => s.Character);
+            _ = CreateMap<Character, StoryCharacterOutputModel>();
+            _ = CreateMap<Story, CharacterStoryOutputModel>();
 
-            CreateMap<Series, CodeSeriesOutputModel>()
+            _ = CreateMap<Series, CodeSeriesOutputModel>()
                 .ForMember(cs => cs.SeriesId, opt => opt.MapFrom(s => s.Id));
-            CreateMap<Story, CodeStoryOutputModel>()
+            _ = CreateMap<Story, CodeStoryOutputModel>()
                 .ForMember(cs => cs.StoryId, opt => opt.MapFrom(s => s.Id));
         }
     }

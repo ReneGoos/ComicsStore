@@ -18,7 +18,7 @@ namespace ComicsStore.MiddleWare.Services
 
         public SeriesService(IComicsStoreMainRepository<Series, SeriesSearch> seriesRepository,
             IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,
-            IMapper mapper) : base (seriesRepository, mapper)
+            IMapper mapper) : base(seriesRepository, mapper)
         {
             _bookSeriesRepository = bookSeriesRepository;
         }

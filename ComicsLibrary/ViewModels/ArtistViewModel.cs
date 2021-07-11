@@ -15,9 +15,9 @@ namespace ComicsLibrary.ViewModels
         {
         }
 
-        public void AddArtistStory(List<StoryArtistEditModel> storyArtists, int? storyId)
+        public void AddArtistStory(int? storyId)
         {
-            Item.AddStoryArtist(storyArtists, storyId);
+            Item.AddStoryArtist(storyId);
         }
 
         public List<StoryArtistEditModel> GetStoryArtists()

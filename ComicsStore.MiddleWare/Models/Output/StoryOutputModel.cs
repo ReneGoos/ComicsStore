@@ -7,5 +7,6 @@ namespace ComicsStore.MiddleWare.Models.Output
         public ICollection<StoryBookOutputModel> StoryBook { get; set; }
         public ICollection<StoryCharacterOutputModel> StoryCharacter { get; set; }
         public ICollection<StoryArtistOutputModel> StoryArtist { get; set; }
+        public ICollection<StoryOutputModel> StoryFromOrigin { get; set; }
     }
 }

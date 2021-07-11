@@ -11,6 +11,7 @@ namespace ComicsStore.Data.Model
         public Story()
             : base()
         {
+            StoryFromOrigin = new HashSet<Story>();
             StoryBook = new HashSet<StoryBook>();
             StoryCharacter = new HashSet<StoryCharacter>();
             StoryArtist = new HashSet<StoryArtist>();
@@ -30,6 +31,8 @@ namespace ComicsStore.Data.Model
         [ForeignKey("OriginStoryId")]
         public Story OriginStory { get; set; }
         public string Language { get; set; }
+
+        public ICollection<Story> StoryFromOrigin { get; set; }
         public ICollection<StoryBook> StoryBook { get; set; }
         public ICollection<StoryCharacter> StoryCharacter { get; set; }
         public ICollection<StoryArtist> StoryArtist { get; set; }

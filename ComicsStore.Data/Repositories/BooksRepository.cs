@@ -37,14 +37,14 @@ namespace ComicsStore.Data.Repositories
             _storyBooksRepository = storyBooksRepository;
         }
 
-        public override Task<Book> AddAsync(Book book)
+        public override Task<Book> AddAsync(Book value)
         {
-            return AddItemAsync(_context.Books, book);
+            return AddItemAsync(_context.Books, value);
         }
 
-        public override Task DeleteAsync(Book book)
+        public override Task DeleteAsync(Book value)
         {
-            return RemoveItemAsync(_context.Books, book);
+            return RemoveItemAsync(_context.Books, value);
         }
 
         public override Task<List<Book>> GetAsync()
@@ -88,9 +88,9 @@ namespace ComicsStore.Data.Repositories
                 .SingleOrDefaultAsync(b => b.Id == bookId);
         }
 
-        public override Task<Book> UpdateAsync(Book book)
+        public override Task<Book> UpdateAsync(Book value)
         {
-            return UpdateItemAsync(_context.Books, book, UpdateLinkedItems);
+            return UpdateItemAsync(_context.Books, value, UpdateLinkedItems);
         }
 
         public override Task<Book> PatchAsync(int id, IDictionary<string, object> data = null)

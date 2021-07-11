@@ -28,14 +28,14 @@ namespace ComicsStore.Data.Repositories
             _bookPublishersRepository = bookPublishersRepository;
         }
 
-        public override Task<Publisher> AddAsync(Publisher publisher)
+        public override Task<Publisher> AddAsync(Publisher value)
         {
-            return AddItemAsync(_context.Publishers, publisher);
+            return AddItemAsync(_context.Publishers, value);
         }
 
-        public override Task DeleteAsync(Publisher publisher)
+        public override Task DeleteAsync(Publisher value)
         {
-            return RemoveItemAsync(_context.Publishers, publisher);
+            return RemoveItemAsync(_context.Publishers, value);
         }
 
         public override Task<List<Publisher>> GetAsync()
@@ -63,15 +63,15 @@ namespace ComicsStore.Data.Repositories
                         .ThenInclude(pb => pb.Book)
                         .SingleOrDefaultAsync(p => p.Id == publisherId);
             }
-            
+
             return _context.Publishers
                     .Include(p => p.BookPublisher)
                     .SingleOrDefaultAsync(p => p.Id == publisherId);
         }
 
-        public override Task<Publisher> UpdateAsync(Publisher publisher)
+        public override Task<Publisher> UpdateAsync(Publisher value)
         {
-            return UpdateItemAsync(_context.Publishers, publisher, UpdateLinkedItems);
+            return UpdateItemAsync(_context.Publishers, value, UpdateLinkedItems);
         }
 
 

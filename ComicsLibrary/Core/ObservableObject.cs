@@ -19,7 +19,7 @@ namespace ComicsLibrary.Core
             RaisePropertyChanged(info);
         }
 
-        public virtual bool IsDirty { get => _isDirty; set {  Set(ref _isDirty, value); RaisePropertyChanged("IsClean"); } }
+        public virtual bool IsDirty { get => _isDirty; set { Set(ref _isDirty, value); RaisePropertyChanged("IsClean"); } }
         public bool IsClean { get => !IsDirty; }
     }
 }

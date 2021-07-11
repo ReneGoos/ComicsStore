@@ -26,15 +26,15 @@ namespace ComicsLibrary.UserControls
         public static readonly DependencyProperty UndoCommandProperty = DependencyProperty.Register("UndoCommand", typeof(ICommand), typeof(SimpleToolbar));
         public static readonly DependencyProperty DeleteCommandProperty = DependencyProperty.Register("DeleteCommand", typeof(ICommand), typeof(SimpleToolbar));
 
-        public ICollectionView FilteredItems { get { return (ICollectionView)GetValue(FilteredItemsProperty); } set { SetValue(FilteredItemsProperty, value); } }
-        public int? Id { get { return (int?)GetValue(IdProperty); } set { SetValue(IdProperty, value); } }
-        public bool IsClean { get { return (bool)GetValue(IsCleanProperty); } set { SetValue(IsCleanProperty, value); } }
-        public bool IsDirty { get { return (bool)GetValue(IsDirtyProperty); } set { SetValue(IsDirtyProperty, value); } }
-        public string Filter { get { return (string)GetValue(FilterProperty); } set { SetValue(FilterProperty, value); } }
-        public ICommand GetCommand { get { return (ICommand)GetValue(GetCommandProperty); } set { SetValue(GetCommandProperty, value); } }
-        public ICommand NewCommand { get { return (ICommand)GetValue(NewCommandProperty); } set { SetValue(NewCommandProperty, value); } }
-        public ICommand SaveCommand { get { return (ICommand)GetValue(SaveCommandProperty); } set { SetValue(SaveCommandProperty, value); } }
-        public ICommand UndoCommand { get { return (ICommand)GetValue(UndoCommandProperty); } set { SetValue(UndoCommandProperty, value); } }
-        public ICommand DeleteCommand { get { return (ICommand)GetValue(DeleteCommandProperty); } set { SetValue(DeleteCommandProperty, value); } }
+        public ICollectionView FilteredItems { get => (ICollectionView)GetValue(FilteredItemsProperty); set => SetValue(FilteredItemsProperty, value); }
+        public int? Id { get => (int?)GetValue(IdProperty); set => SetValue(IdProperty, value); }
+        public bool IsClean { get => (bool)GetValue(IsCleanProperty); set => SetValue(IsCleanProperty, value); }
+        public bool IsDirty { get => (bool)GetValue(IsDirtyProperty); set => SetValue(IsDirtyProperty, value); }
+        public string Filter { get => (string)GetValue(FilterProperty); set => SetValue(FilterProperty, value); }
+        public ICommand GetCommand { get => (ICommand)GetValue(GetCommandProperty); set => SetValue(GetCommandProperty, value); }
+        public ICommand NewCommand { get => (ICommand)GetValue(NewCommandProperty); set => SetValue(NewCommandProperty, value); }
+        public ICommand SaveCommand { get => (ICommand)GetValue(SaveCommandProperty); set => SetValue(SaveCommandProperty, value); }
+        public ICommand UndoCommand { get => (ICommand)GetValue(UndoCommandProperty); set => SetValue(UndoCommandProperty, value); }
+        public ICommand DeleteCommand { get => (ICommand)GetValue(DeleteCommandProperty); set => SetValue(DeleteCommandProperty, value); }
     }
 }

@@ -16,14 +16,14 @@ namespace ComicsStore.Data.Repositories
         {
         }
 
-        public override Task<Code> AddAsync(Code code)
+        public override Task<Code> AddAsync(Code value)
         {
-            return AddItemAsync(_context.Codes, code);
+            return AddItemAsync(_context.Codes, value);
         }
 
-        public override Task DeleteAsync(Code code)
+        public override Task DeleteAsync(Code value)
         {
-            return RemoveItemAsync(_context.Codes, code);
+            return RemoveItemAsync(_context.Codes, value);
         }
 
         public override Task<List<Code>> GetAsync()
@@ -56,9 +56,9 @@ namespace ComicsStore.Data.Repositories
             //    .SingleOrDefaultAsync(c => c.Id == codeId);
         }
 
-        public override Task<Code> UpdateAsync(Code code)
+        public override Task<Code> UpdateAsync(Code value)
         {
-            return UpdateItemAsync(_context.Codes, code);
+            return UpdateItemAsync(_context.Codes, value);
         }
 
         public override Task<Code> PatchAsync(int id, IDictionary<string, object> data = null)

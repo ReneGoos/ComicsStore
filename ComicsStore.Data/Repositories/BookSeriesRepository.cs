@@ -9,16 +9,16 @@ using ComicsStore.Data.Common;
 
 namespace ComicsStore.Data.Repositories
 {
-    public class BookSeriesRepository : ComicsStoreCrossRepository<BookSeries, IBookSeries>,  IComicsStoreCrossRepository<BookSeries, IBookSeries>
+    public class BookSeriesRepository : ComicsStoreCrossRepository<BookSeries, IBookSeries>, IComicsStoreCrossRepository<BookSeries, IBookSeries>
     {
         public BookSeriesRepository(ComicsStoreDbContext context)
             : base(context)
         {
         }
 
-        public override Task<BookSeries> AddAsync(BookSeries bookSeries)
+        public override Task<BookSeries> AddAsync(BookSeries value)
         {
-            return AddItemAsync(_context.BookSeries, bookSeries);
+            return AddItemAsync(_context.BookSeries, value);
         }
 
         public override Task<List<BookSeries>> AddAsync(IEnumerable<BookSeries> value)
@@ -26,9 +26,9 @@ namespace ComicsStore.Data.Repositories
             throw new System.NotImplementedException();
         }
 
-        public override Task DeleteAsync(BookSeries bookSeries)
+        public override Task DeleteAsync(BookSeries value)
         {
-            return RemoveItemAsync(_context.BookSeries, bookSeries);
+            return RemoveItemAsync(_context.BookSeries, value);
         }
 
         public override Task DeleteAsync(IEnumerable<BookSeries> value)
@@ -57,9 +57,9 @@ namespace ComicsStore.Data.Repositories
                 .ToListAsync();
         }
 
-        public override Task<BookSeries> UpdateAsync(BookSeries bookSeries)
+        public override Task<BookSeries> UpdateAsync(BookSeries value)
         {
-            return UpdateItemAsync(_context.BookSeries, bookSeries, bookSeries.BookId, bookSeries.SeriesId);
+            return UpdateItemAsync(_context.BookSeries, value, value.BookId, value.SeriesId);
         }
 
         public override Task<List<BookSeries>> UpdateAsync(IEnumerable<BookSeries> value)
@@ -72,20 +72,19 @@ namespace ComicsStore.Data.Repositories
             if (itemNew.BookSeries is not null)
             {
                 // Delete children
-                foreach (var existingChild in itemCurrent.BookSeries)
+                foreach (var existingChild in itemCurrent.BookSeries.ToList())
                 {
                     if (!itemNew.BookSeries.Any(c => c.SeriesId == existingChild.SeriesId && c.BookId == existingChild.BookId))
                     {
-                        itemCurrent.BookSeries.Remove(existingChild);
+                        _ = itemCurrent.BookSeries.Remove(existingChild);
                     }
                 }
 
                 // Update and Insert children
-                foreach (var childModel in itemNew.BookSeries)
+                foreach (var childModel in itemNew.BookSeries.ToList())
                 {
                     var existingChild = itemCurrent.BookSeries
-                        .Where(c => c.SeriesId == childModel.SeriesId && c.BookId == childModel.BookId && c.BookId != default && c.SeriesId != default)
-                        .SingleOrDefault();
+                        .SingleOrDefault(c => c.SeriesId == childModel.SeriesId && c.BookId == childModel.BookId && c.BookId != default && c.SeriesId != default);
 
                     if (existingChild != null)
                     {
@@ -94,7 +93,7 @@ namespace ComicsStore.Data.Repositories
                             || existingChild.SeriesOrder != childModel.SeriesOrder)
                         {
                             // Remove child
-                            itemCurrent.BookSeries.Remove(existingChild);
+                            _ = itemCurrent.BookSeries.Remove(existingChild);
 
                             // Insert child
                             var newChild = new BookSeries
@@ -108,7 +107,7 @@ namespace ComicsStore.Data.Repositories
                             itemCurrent.BookSeries.Add(newChild);
                         }
                     }
-                    else if (childModel.SeriesId > 0)
+                    else if (childModel.SeriesId > 0 && childModel.BookId > 0)
                     {
                         // Insert child
                         var newChild = new BookSeries

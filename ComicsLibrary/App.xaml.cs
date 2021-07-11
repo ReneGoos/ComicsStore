@@ -18,18 +18,18 @@ namespace ComicsLibrary
     public partial class App : Application
     {
 
-        private readonly IHost host;
+        private readonly IHost _host;
 
         public static IServiceProvider ServiceProvider { get; private set; }
 
         public App()
         {
-            host = Host.CreateDefaultBuilder()  // Use default settings
+            _host = Host.CreateDefaultBuilder()  // Use default settings
                                                 //new HostBuilder()          // Initialize an empty HostBuilder
                     .ConfigureAppConfiguration((context, builder) =>
                     {
                         // Add other configuration files...
-                        builder.AddJsonFile("appsettings.local.json", optional: true);
+                        _ = builder.AddJsonFile("appsettings.local.json", optional: true);
                     }).ConfigureServices((context, services) =>
                     {
                         ConfigureServices(context.Configuration, services);
@@ -40,10 +40,10 @@ namespace ComicsLibrary
                     })
                     .Build();
 
-            ServiceProvider = host.Services;
+            ServiceProvider = _host.Services;
         }
 
-        private void ConfigureServices(IConfiguration configuration, IServiceCollection services)
+        private static void ConfigureServices(IConfiguration configuration, IServiceCollection services)
         {
             ResolveDependencies.AddServices(services, configuration);
 
@@ -52,56 +52,56 @@ namespace ComicsLibrary
                 cfg.AddProfile<ComicsLibraryProfile>();
             });
 
-            IMapper mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            var mapper = mappingConfig.CreateMapper();
+            _ = services.AddSingleton(mapper);
 
-            // Add NavigationService for the application.
-            services.AddScoped<NavigationService>(serviceProvider =>
-            {
-                var navigationService = new NavigationService(serviceProvider);
-                navigationService.Configure(Navigation.Windows.ArtistWindow, typeof(ArtistWindow));
-                navigationService.Configure(Navigation.Windows.BookWindow, typeof(BookWindow));
-                navigationService.Configure(Navigation.Windows.CharacterWindow, typeof(CharacterWindow));
-                navigationService.Configure(Navigation.Windows.CodeWindow, typeof(CodeWindow));
-                navigationService.Configure(Navigation.Windows.PublisherWindow, typeof(PublisherWindow));
-                navigationService.Configure(Navigation.Windows.SeriesWindow, typeof(SeriesWindow));
-                navigationService.Configure(Navigation.Windows.StoryWindow, typeof(StoryWindow));
-                navigationService.Configure(Navigation.Windows.StartWindow, typeof(StartWindow));
-                navigationService.Configure(Navigation.Windows.ReportWindow, typeof(ReportWindow));
+            // Add INavigationService for the application.
+            _ = services.AddScoped(serviceProvider =>
+              {
+                  var navigationService = new NavigationService(serviceProvider);
+                  navigationService.Configure(Navigation.Windows.ArtistWindow, typeof(ArtistWindow));
+                  navigationService.Configure(Navigation.Windows.BookWindow, typeof(BookWindow));
+                  navigationService.Configure(Navigation.Windows.CharacterWindow, typeof(CharacterWindow));
+                  navigationService.Configure(Navigation.Windows.CodeWindow, typeof(CodeWindow));
+                  navigationService.Configure(Navigation.Windows.PublisherWindow, typeof(PublisherWindow));
+                  navigationService.Configure(Navigation.Windows.SeriesWindow, typeof(SeriesWindow));
+                  navigationService.Configure(Navigation.Windows.StoryWindow, typeof(StoryWindow));
+                  navigationService.Configure(Navigation.Windows.StartWindow, typeof(StartWindow));
+                  navigationService.Configure(Navigation.Windows.ReportWindow, typeof(ReportWindow));
 
-                return navigationService;
-            });
+                  return navigationService;
+              });
 
             // Register all ViewModels.
-            services.AddSingleton<ComicsViewModel>();
+            _ = services.AddSingleton<ComicsViewModel>();
 
             // Register all the Windows of the applications.
-            services.AddTransient<ArtistWindow>();
-            services.AddTransient<BookWindow>();
-            services.AddTransient<CharacterWindow>();
-            services.AddTransient<CodeWindow>();
-            services.AddTransient<PublisherWindow>();
-            services.AddTransient<SeriesWindow>();
-            services.AddTransient<StoryWindow>();
-            services.AddTransient<StartWindow>();
-            services.AddTransient<ReportWindow>();
+            _ = services.AddTransient<ArtistWindow>();
+            _ = services.AddTransient<BookWindow>();
+            _ = services.AddTransient<CharacterWindow>();
+            _ = services.AddTransient<CodeWindow>();
+            _ = services.AddTransient<PublisherWindow>();
+            _ = services.AddTransient<SeriesWindow>();
+            _ = services.AddTransient<StoryWindow>();
+            _ = services.AddTransient<StartWindow>();
+            _ = services.AddTransient<ReportWindow>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)
         {
-            await host.StartAsync();
+            await _host.StartAsync();
 
             var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
-            await navigationService.ShowDialogAsync(Navigation.Windows.StartWindow);
+            _ = await navigationService.ShowDialogAsync(Navigation.Windows.StartWindow);
 
             base.OnStartup(e);
         }
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            using (host)
+            using (_host)
             {
-                await host.StopAsync(TimeSpan.FromSeconds(5));
+                await _host.StopAsync(TimeSpan.FromSeconds(5));
             }
 
             base.OnExit(e);

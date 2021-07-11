@@ -15,10 +15,15 @@
     <Window.Resources>
         <helpers:ArrayConverter x:Key="ArrayConverter"/>
         <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <helpers:IsNullConverter x:Key="IsNullConverter"/>
         <helpers:NotConverter x:Key="NotConverter"/>
-        <helpers:RoleTypesConverter x:Key="RoleTypesConverter"/>
+        <helpers:ValueConverterGroup x:Key="NotNullConverter">
+            <helpers:IsNullConverter />
+            <helpers:NotConverter />
+        </helpers:ValueConverterGroup>
     </Window.Resources>
-    <DockPanel DataContext="{Binding StoryView}">
+    <DockPanel DataContext="{Binding StoryView}"
+               Name="View">
         <DockPanel DockPanel.Dock="Top" 
                    Background="LightGray" 
                    Grid.IsSharedSizeScope="True">
@@ -36,19 +41,26 @@
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="45"/>
+            </Grid.RowDefinitions>
             <Button Grid.Column="1"
+                    IsDefault="True"
                     Margin="6" 
-                    Name="OkButton" Click="OkButton_Click">
+                    Name="OkButton"
+                    Click="OkButton_Click">
                 Ok
             </Button>
             <Button Grid.Column="3"
+                    IsCancel="True"
                     Margin="6"
-                    Name="CancelButton" Click="CancelButton_Click">
+                    Name="CancelButton"
+                    Click="CancelButton_Click">
                 Cancel
             </Button>
         </Grid>
@@ -128,7 +140,9 @@
                         Command="{Binding DataContext.ShowCodeFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         CommandParameter="{Binding CodeId}"
                         Content="{Binding CodeId}"
-                        IsEnabled="{Binding DataContext.OpenCode, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                        IsEnabled="{Binding DataContext.OpenCode, 
+                                    Converter={StaticResource NotConverter}, 
+                                    RelativeSource={RelativeSource AncestorType=Window}}"
                         />
                 
                 <Button Grid.Row ="5"
@@ -213,7 +227,7 @@
                 </Label>
                 <ComboBox Grid.Column="3"
                           Grid.Row="17" 
-                          Grid.ColumnSpan="5"
+                          Grid.ColumnSpan="3"
                           SelectedValue = "{Binding OriginStoryId, Mode=TwoWay}" 
                           SelectedValuePath = "Id" 
                           DisplayMemberPath = "Name" 
@@ -227,6 +241,14 @@
                         </ItemsPanelTemplate>
                     </ComboBox.ItemsPanel>
                 </ComboBox>
+                <Button Grid.Row ="17"
+                        Grid.Column="7"
+                        Background="Transparent"
+                        Command="{Binding DataContext.GetCommand, RelativeSource={RelativeSource AncestorType=DockPanel}}"
+                        CommandParameter="{Binding OriginStoryId}"
+                        Content="{Binding OriginStoryId}"
+                        IsEnabled="{Binding OriginStoryId, Converter={StaticResource NotNullConverter}}"
+                        />
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -244,8 +266,58 @@
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Row ="1"
+                <ListView DockPanel.Dock="Top"
+                          Grid.Row ="1"
+                          Grid.Column="1"
+                          VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=StoryFromOrigin}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id"
+                                            Width="50">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding Path=DataContext.StoryView.GetCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding Id}"
+                                                Background="Transparent"
+                                                BorderThickness="0"       
+                                                Content="{Binding Id}"
+                                                />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Story from Origin"
+                                            Width="350">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="338"
+                                                  SelectedValue="{Binding Id}"
+                                                  SelectedValuePath = "Id" 
+                                                  DisplayMemberPath = "Name" 
+                                                  IsEditable="True" 
+                                                  ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  IsEnabled="False"
+                                                  IsSynchronizedWithCurrentItem ="False"
+                                                  >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button Grid.Row ="3"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
@@ -256,7 +328,7 @@
                     +
                 </Button>
                 <ListView DockPanel.Dock="Top"
-                          Grid.Row ="1"
+                          Grid.Row ="3"
                           Grid.Column="1"
                           VerticalAlignment="Top" 
                           ItemsSource="{Binding Path=StoryCharacter}"
@@ -304,7 +376,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Button Grid.Row ="3"
+                <Button Grid.Row ="5"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
@@ -315,7 +387,7 @@
                     +
                 </Button>
                 <ListView DockPanel.Dock="Top"
-                          Grid.Row ="3"
+                          Grid.Row ="5"
                           Grid.Column="1"                          
                           VerticalAlignment="Top" 
                           ItemsSource="{Binding Path=StoryArtist}"
@@ -345,7 +417,7 @@
                                         <ComboBox Width="238"
                                                   SelectedValue="{Binding ArtistId, Mode=TwoWay}"
                                                   SelectedValuePath = "Id" 
-                                                  DisplayMemberPath = "Name" 
+                                                  DisplayMemberPath = "Name"
                                                   IsEditable="True" 
                                                   ItemsSource="{Binding Path=DataContext.ArtistView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
                                                   IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -368,7 +440,9 @@
                                                   IsReadOnly="True"
                                                   Width="158"
                                                   ItemsSource="{Binding Path=Roles}"
-                                                  Text="{Binding ArtistType, Converter={StaticResource ArrayConverter}}"
+                                                  Text="{Binding ArtistType, 
+                                                            Converter={StaticResource ArrayConverter},
+                                                            ConverterParameter=RoleType}"
                                                   IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate DataType="{x:Type vm:RoleType}">
@@ -384,7 +458,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Button Grid.Row ="5"
+                <Button Grid.Row ="7"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
@@ -395,7 +469,7 @@
                     +
                 </Button>
                 <ListView DockPanel.Dock="Top"
-                          Grid.Row ="5"
+                          Grid.Row ="7"
                           Grid.Column="1"
                           VerticalAlignment="Top" 
                           ItemsSource="{Binding Path=StoryBook}"

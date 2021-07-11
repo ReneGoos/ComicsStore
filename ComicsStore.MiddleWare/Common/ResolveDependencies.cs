@@ -17,31 +17,31 @@ namespace ComicsStore.MiddleWare.Common
         public static void AddServices(IServiceCollection services, IConfiguration configuration)
         {
             var conn = configuration.GetConnectionString("ComicsStore");
-            services.AddDbContext<ComicsStoreDbContext>(options => options.UseSqlite(conn, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+            _ = services.AddDbContext<ComicsStoreDbContext>(options => options.UseSqlite(conn, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
-            services.AddScoped<IArtistsService, ArtistsService>();
-            services.AddScoped<IBooksService, BooksService>();
-            services.AddScoped<ICharactersService, CharactersService>();
-            services.AddScoped<ICodesService, CodesService>();
-            services.AddScoped<IPublishersService, PublishersService>();
-            services.AddScoped<ISeriesService, SeriesService>();
-            services.AddScoped<IStoriesService, StoriesService>();
-            services.AddScoped<IExportBooksService, ExportBooksService>();
+            _ = services.AddScoped<IArtistsService, ArtistsService>();
+            _ = services.AddScoped<IBooksService, BooksService>();
+            _ = services.AddScoped<ICharactersService, CharactersService>();
+            _ = services.AddScoped<ICodesService, CodesService>();
+            _ = services.AddScoped<IPublishersService, PublishersService>();
+            _ = services.AddScoped<ISeriesService, SeriesService>();
+            _ = services.AddScoped<IStoriesService, StoriesService>();
+            _ = services.AddScoped<IExportBooksService, ExportBooksService>();
 
-            services.AddScoped<IComicsStoreMainRepository<Artist, BasicSearch>, ArtistsRepository>();
-            services.AddScoped<IComicsStoreMainRepository<Book, BasicSearch>, BooksRepository>();
-            services.AddScoped<IComicsStoreMainRepository<Character, BasicSearch>, CharactersRepository>();
-            services.AddScoped<IComicsStoreMainRepository<Code, BasicSearch>, CodesRepository>();
-            services.AddScoped<IComicsStoreMainRepository<Publisher, BasicSearch>, PublishersRepository>();
-            services.AddScoped<IComicsStoreMainRepository<Series, SeriesSearch>, SeriesRepository>();
-            services.AddScoped<IComicsStoreMainRepository<Story, StorySearch>, StoriesRepository>();
-            services.AddScoped<IExportBooksRepository, StorySeriesRepository>();
+            _ = services.AddScoped<IComicsStoreMainRepository<Artist, BasicSearch>, ArtistsRepository>();
+            _ = services.AddScoped<IComicsStoreMainRepository<Book, BasicSearch>, BooksRepository>();
+            _ = services.AddScoped<IComicsStoreMainRepository<Character, BasicSearch>, CharactersRepository>();
+            _ = services.AddScoped<IComicsStoreMainRepository<Code, BasicSearch>, CodesRepository>();
+            _ = services.AddScoped<IComicsStoreMainRepository<Publisher, BasicSearch>, PublishersRepository>();
+            _ = services.AddScoped<IComicsStoreMainRepository<Series, SeriesSearch>, SeriesRepository>();
+            _ = services.AddScoped<IComicsStoreMainRepository<Story, StorySearch>, StoriesRepository>();
+            _ = services.AddScoped<IExportBooksRepository, StorySeriesRepository>();
 
-            services.AddScoped<IComicsStoreCrossRepository<BookPublisher, IBookPublisher>, BookPublishersRepository>();
-            services.AddScoped<IComicsStoreCrossRepository<BookSeries, IBookSeries>, BookSeriesRepository>();
-            services.AddScoped<IComicsStoreCrossRepository<StoryArtist, IStoryArtist>, StoryArtistsRepository>();
-            services.AddScoped<IComicsStoreCrossRepository<StoryBook, IStoryBook>, StoryBooksRepository>();
-            services.AddScoped<IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter>, StoryCharactersRepository>();
+            _ = services.AddScoped<IComicsStoreCrossRepository<BookPublisher, IBookPublisher>, BookPublishersRepository>();
+            _ = services.AddScoped<IComicsStoreCrossRepository<BookSeries, IBookSeries>, BookSeriesRepository>();
+            _ = services.AddScoped<IComicsStoreCrossRepository<StoryArtist, IStoryArtist>, StoryArtistsRepository>();
+            _ = services.AddScoped<IComicsStoreCrossRepository<StoryBook, IStoryBook>, StoryBooksRepository>();
+            _ = services.AddScoped<IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter>, StoryCharactersRepository>();
         }
     }
 }

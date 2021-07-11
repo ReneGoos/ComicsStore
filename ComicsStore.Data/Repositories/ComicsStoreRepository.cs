@@ -23,7 +23,7 @@ namespace ComicsStore.Data.Repositories
         {
             try
             {
-                await _context.SaveChangesAsync();
+                _ = await _context.SaveChangesAsync();
             }
             catch (DbUpdateException e)
             {
@@ -58,7 +58,7 @@ namespace ComicsStore.Data.Repositories
 
         protected async Task RemoveItemAsync(DbSet<T> collection, T item)
         {
-            collection.Remove(item);
+            _ = collection.Remove(item);
 
             await SaveChangesAsync();
         }
