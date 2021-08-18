@@ -1,20 +1,27 @@
-﻿<Window x:Class="ComicsLibrary.Views.CharacterWindow"
+﻿<Window x:Class="ComicsEntry.Views.ArtistWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ComicsLibrary.Views"
-        xmlns:control="clr-namespace:ComicsLibrary.UserControls"
-        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:ComicsEntry"
+        xmlns:data="clr-namespace:ComicsLibrary.ViewModels;assembly=ComicsLibrary"
+        xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
+        xmlns:vm="clr-namespace:ComicsLibrary.EditModels;assembly=ComicsLibrary"
+        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
         mc:Ignorable="d"
-        Title="Character" Height="450" Width="800"
+        Title="Artist"
+        Height="600"
+        Width="900"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
         >
     <Window.Resources>
-        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <helpers:ArrayConverter x:Key="ArrayConverter"/>
         <helpers:NotConverter x:Key="NotConverter"/>
+        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>
-    <DockPanel DataContext="{Binding CharacterView}">
+    <DockPanel DataContext="{Binding ArtistView}">
+
         <DockPanel DockPanel.Dock="Top" 
                    Background="LightGray" 
                    Grid.IsSharedSizeScope="True">
@@ -43,20 +50,20 @@
             <Button Grid.Column="1"
                     IsDefault="True"
                     Margin="6" 
-                    Name="OkButton" 
+                    Name="OkButton"
                     Click="OkButton_Click">
                 Ok
             </Button>
             <Button Grid.Column="3"
                     IsCancel="True"
                     Margin="6"
-                    Name="CancelButton" 
+                    Name="CancelButton"
                     Click="CancelButton_Click">
                 Cancel
             </Button>
         </Grid>
-        <Grid DockPanel.Dock="Bottom"
-               DataContext="{Binding Item}">
+        <Grid DockPanel.Dock="Bottom" 
+              DataContext="{Binding Item}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
@@ -85,23 +92,25 @@
                         Height="25"
                         VerticalAlignment="Top"
                         Visibility="{Binding DataContext.OpenStory, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                        Command="{Binding DataContext.ShowStoryFromCharacterWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowStoryFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         >
                     +
                 </Button>
                 <ListView Grid.Row ="1"
                           Grid.Column="1"
-                          VerticalAlignment="Top" 
-                          ItemsSource="{Binding Path=StoryCharacter}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                          DockPanel.Dock="Bottom"
+                          VerticalAlignment="Top"
+                          ItemsSource="{Binding Path=StoryArtist}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Id"
-                                            Width="50" 
+                            <GridViewColumn Header="Id" 
+                                            Width="50"
                                             >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowStoryFromCharacterWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowStoryFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding StoryId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"       
@@ -111,11 +120,11 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-
-                            <GridViewColumn Header="Story" Width="350">
+                            
+                            <GridViewColumn Header="Story" Width="250">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="338"
+                                        <ComboBox Width="238"
                                                   SelectedValue="{Binding StoryId}"
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name" 
@@ -129,6 +138,27 @@
                                                     <VirtualizingStackPanel />
                                                 </ItemsPanelTemplate>
                                             </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Role" 
+                                            Width="170">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox IsEditable="True"
+                                                  IsReadOnly="True"
+                                                  Width="158"
+                                                  ItemsSource="{Binding Path=Roles}"
+                                                  IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  Text="{Binding ArtistType, Converter={StaticResource ArrayConverter}}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate DataType="{x:Type vm:RoleType}">
+                                                    <CheckBox Content="{Binding Name}"
+                                                              IsChecked="{Binding Checked}"
+                                                              />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
                                         </ComboBox>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>

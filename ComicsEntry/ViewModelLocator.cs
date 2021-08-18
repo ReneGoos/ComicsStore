@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ComicsLibrary.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace ComicsLibrary.ViewModels
+namespace ComicsEntry
 {
     public class ViewModelLocator
     {

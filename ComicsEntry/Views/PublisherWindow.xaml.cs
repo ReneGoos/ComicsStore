@@ -2,24 +2,24 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ComicsLibrary.Views
+namespace ComicsEntry.Views
 {
     /// <summary>
-    /// Interaction logic for StoryWindow.xaml
+    /// Interaction logic for PublisherWindow.xaml
     /// </summary>
-    public partial class StoryWindow : Window
+    public partial class PublisherWindow : Window
     {
-        public StoryWindow()
+        public PublisherWindow()
         {
             InitializeComponent();
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            var storyView = (sender as Button).DataContext as StoryViewModel;
+            var publisherView = (sender as Button).DataContext as PublisherViewModel;
 
-            //if (storyView.IsDirty)
-            storyView.SaveCommand.Execute(null);
+            //if (publisherView.IsDirty)
+            publisherView.SaveCommand.Execute(null);
 
             DialogResult = true;
         }

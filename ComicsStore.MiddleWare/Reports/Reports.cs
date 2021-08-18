@@ -1,4 +1,5 @@
 ﻿using ComicsStore.Data.Common;
+using ComicsStore.Data.Model.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Common;
@@ -11,7 +12,7 @@ namespace ComicsStore.MiddleWare.Reports
 {
     public static class Reports
     {
-        public async static Task<string> DataExportAsync(IExportBooksRepository repository, StorySeriesSearch searchModel)
+        public static string DataExport(List<ExportBook> stories)
         {
             var columnNames = @"""Title"",""Story number"",""Type"",""BookType"",""Character"",""Artist"",""Issue"",""Issue title"",""Language"",""Series"",""Publisher"",""Year"",""Purchase Date"",""Notes"",""Deleted""";
 
@@ -43,17 +44,17 @@ namespace ComicsStore.MiddleWare.Reports
 
             //rsCodes = CodesDataset()
             //SqlDataReader rsStories = BooksDataset(pdbAll, pboolBooks, pboolPeriodicals, pboolDeleted, false);
-            foreach (var stories in await repository.GetAsync(searchModel))
+            foreach (var story in stories)
             {
-                if (storyId == stories.StoryId && bookId == stories.BookId && seriesId == stories.SeriesId)
+                if (storyId == story.StoryId && bookId == story.BookId && seriesId == story.SeriesId)
                 {
-                    _ = characters.Add(stories.Character);
-                    artists[stories.Artist] = stories.ArtistType;
-                    bookIssue = stories.Issue;
-                    bookIssueTitle = stories.IssueTitle;
-                    language = stories.Language;
-                    _ = series.Add(stories.Series);
-                    _ = publishers.Add(stories.Publisher);
+                    _ = characters.Add(story.Character);
+                    artists[story.Artist] = story.ArtistType;
+                    bookIssue = story.Issue;
+                    bookIssueTitle = story.IssueTitle;
+                    language = story.Language;
+                    _ = series.Add(story.Series);
+                    _ = publishers.Add(story.Publisher);
                 }
                 else
                 {
@@ -82,24 +83,24 @@ namespace ComicsStore.MiddleWare.Reports
                     series = new SortedSet<string>();
                     publishers = new SortedSet<string>();
 
-                    storyId = stories.StoryId;
-                    bookId = stories.BookId;
-                    seriesId = stories.SeriesId;
-                    title = stories.Title;
-                    storyNumber = !stories.StoryNumber.HasValue ? stories.ExtraInfo : stories.StoryNumber.Value.ToString();
-                    storyType = stories.StoryType;
-                    bookType = stories.BookType;
-                    _ = characters.Add(stories.Character);
-                    artists[stories.Artist] = stories.ArtistType;
-                    bookIssue = stories.Issue;
-                    bookIssueTitle = stories.IssueTitle;
-                    language = stories.Language.Length == 0 ? "nl" : stories.Language;
-                    _ = series.Add(stories.Series);
-                    _ = publishers.Add(stories.Publisher);
-                    bookYear = !stories.Year.HasValue ? -1 : stories.Year.Value;
-                    purchaseDate = stories.PurchaseDate;
-                    deleted = stories.Deleted;
-                    notes = stories.Notes;
+                    storyId = story.StoryId;
+                    bookId = story.BookId;
+                    seriesId = story.SeriesId;
+                    title = story.Title;
+                    storyNumber = !story.StoryNumber.HasValue ? story.ExtraInfo : story.StoryNumber.Value.ToString();
+                    storyType = story.StoryType;
+                    bookType = story.BookType;
+                    _ = characters.Add(story.Character);
+                    artists[story.Artist] = story.ArtistType;
+                    bookIssue = story.Issue;
+                    bookIssueTitle = story.IssueTitle;
+                    language = story.Language.Length == 0 ? "nl" : story.Language;
+                    _ = series.Add(story.Series);
+                    _ = publishers.Add(story.Publisher);
+                    bookYear = !story.Year.HasValue ? -1 : story.Year.Value;
+                    purchaseDate = story.PurchaseDate;
+                    deleted = story.Deleted;
+                    notes = story.Notes;
                 }
             }
 

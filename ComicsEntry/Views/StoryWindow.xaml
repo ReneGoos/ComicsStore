@@ -1,12 +1,12 @@
-﻿<Window x:Class="ComicsLibrary.Views.StoryWindow"
+﻿<Window x:Class="ComicsEntry.Views.StoryWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers"
-        xmlns:local="clr-namespace:ComicsLibrary.Views"
-        xmlns:control="clr-namespace:ComicsLibrary.UserControls"
-        xmlns:vm="clr-namespace:ComicsLibrary.EditModels"
+        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
+        xmlns:local="clr-namespace:ComicsEntry.Views"
+        xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
+        xmlns:vm="clr-namespace:ComicsLibrary.EditModels;assembly=ComicsLibrary"
         mc:Ignorable="d"
         Title="Story"
         Height="450"
@@ -282,7 +282,7 @@
                                             Width="50">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding Path=DataContext.StoryView.GetCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.StoryView.GetCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding Id}"
                                                 Background="Transparent"
                                                 BorderThickness="0"       

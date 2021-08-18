@@ -2,24 +2,24 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ComicsLibrary.Views
+namespace ComicsEntry.Views
 {
     /// <summary>
-    /// Interaction logic for BookWindow.xaml
+    /// Interaction logic for SeriesWindow.xaml
     /// </summary>
-    public partial class BookWindow : Window
+    public partial class SeriesWindow : Window
     {
-        public BookWindow()
+        public SeriesWindow()
         {
             InitializeComponent();
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            var bookView = (sender as Button).DataContext as BookViewModel;
+            var seriesView = (sender as Button).DataContext as SeriesViewModel;
 
-            //if (bookView.IsDirty)
-            bookView.SaveCommand.Execute(null);
+            //if (seriesView.IsDirty)
+            seriesView.SaveCommand.Execute(null);
 
             DialogResult = true;
         }

@@ -26,9 +26,11 @@ namespace ComicsLibrary.ViewModels
         protected readonly TService _itemService;
         protected ICollection<TOut> _items;
         private TEdit _item;
+        private string _queryText;
 
         private CollectionViewSource _itemsViewSource;
         private CollectionViewSource _itemsFilteredViewSource;
+        private CollectionViewSource _itemsQueryViewSource;
         private string _itemFilter;
 
         private void UpdateItemsList(TOut item, bool removeOnly = false)
@@ -73,6 +75,20 @@ namespace ComicsLibrary.ViewModels
             }
         }
 
+        protected virtual void QueryResults(object sender, FilterEventArgs e)
+        {
+            if (_queryText is null || _queryText.Length == 0)
+            {
+                e.Accepted = true;
+                return;
+            }
+
+            if (e.Item is BasicOutputModel item)
+            {
+                e.Accepted = item.Name.Contains(_queryText, System.StringComparison.InvariantCultureIgnoreCase);
+            }
+        }
+
         protected virtual async void GetItemsAsync()
         {
             _items = await _itemService.GetAsync();
@@ -88,6 +104,13 @@ namespace ComicsLibrary.ViewModels
             };
             _itemsFilteredViewSource.Filter += FilterResults;
             _itemsFilteredViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+
+            _itemsQueryViewSource = new CollectionViewSource
+            {
+                Source = _items
+            };
+            _itemsQueryViewSource.Filter += QueryResults;
+            _itemsQueryViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
         }
 
         protected virtual void CancelSaveAsync()
@@ -195,6 +218,16 @@ namespace ComicsLibrary.ViewModels
             }
         }
 
+        public string QueryText 
+        {
+            get => _queryText;
+            set
+            {
+                Set(ref _queryText, value);
+                _itemsQueryViewSource.View.Refresh();
+            }
+        }
+
         public ICollectionView FilteredItems
         {
             get
@@ -205,6 +238,19 @@ namespace ComicsLibrary.ViewModels
                 }
 
                 return _itemsFilteredViewSource.View;
+            }
+        }
+
+        public ICollectionView QueryItems
+        {
+            get
+            {
+                if (_itemsQueryViewSource is null)
+                {
+                    GetItemsAsync();
+                }
+
+                return _itemsQueryViewSource.View;
             }
         }
 

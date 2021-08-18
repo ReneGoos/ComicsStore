@@ -1,10 +1,10 @@
-﻿<Window x:Class="ComicsLibrary.Views.ReportWindow"
+﻿<Window x:Class="ComicsEntry.Views.ReportWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ComicsLibrary.Views"
-        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers"
+        xmlns:local="clr-namespace:ComicsEntry.Views"
+        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
         mc:Ignorable="d"
         Title="ReportWindow" 
         Height="1100" 
@@ -36,6 +36,8 @@
                 <ColumnDefinition Width="320"/>
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="5"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1"
@@ -104,6 +106,11 @@
                       IsChecked="{Binding Active, Mode=TwoWay}" IsThreeState="True">
                 Active
             </CheckBox>
+            <Button Grid.Column="15"
+                    Content="Save" 
+                    Margin="6"
+                    Command="{Binding StoreReportWindowCommand}"
+                    />
         </Grid>
         <DataGrid ItemsSource="{Binding PagingCollection}" Grid.Row="1">
             <DataGrid.Columns>

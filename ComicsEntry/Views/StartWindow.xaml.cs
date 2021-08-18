@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace ComicsLibrary.Views
+namespace ComicsEntry.Views
 {
     /// <summary>
     /// Interaction logic for StartWindow.xaml

@@ -2,24 +2,24 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ComicsLibrary.Views
+namespace ComicsEntry.Views
 {
     /// <summary>
-    /// Interaction logic for CodeWindow.xaml
+    /// Interaction logic for CharacterWindow.xaml
     /// </summary>
-    public partial class CodeWindow : Window
+    public partial class CharacterWindow : Window
     {
-        public CodeWindow()
+        public CharacterWindow()
         {
             InitializeComponent();
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            var codeView = (sender as Button).DataContext as CodeViewModel;
+            var characterView = (sender as Button).DataContext as CharacterViewModel;
 
-            //if (codeView.IsDirty)
-            codeView.SaveCommand.Execute(null);
+            //if (characterView.IsDirty)
+            characterView.SaveCommand.Execute(null);
 
             DialogResult = true;
         }

@@ -1,9 +1,16 @@
 ﻿using AutoMapper;
+using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
 using ComicsLibrary.Helpers;
 using ComicsStore.Data.Model.Search;
+using ComicsStore.MiddleWare.Models.Output;
+using ComicsStore.MiddleWare.Reports;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -17,11 +24,32 @@ namespace ComicsLibrary.ViewModels
         private string _itemFilter;
         private string _itemSort;
 
+        public ICommand StoreReportWindowCommand { get; protected set; }
+
         public ReportViewModel(IExportBooksService exportBooksService,
                                 IMapper mapper) : base()
         {
             _exportBooksService = exportBooksService;
             _mapper = mapper;
+
+            StoreReportWindowCommand = new RelayCommand(new Action(StoreReportWindow));
+        }
+
+        private async void StoreReportWindow()
+        {
+            var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text file (*.txt)|*.txt|CSV file (*.csv)|*.csv";
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var report = await _exportBooksService.GetExportAsync(new StorySeriesSearch
+                {
+                    Filter = _itemFilter,
+                    Active = _active.HasValue ? (_active.Value ? ComicsStore.Data.Common.Active.active : ComicsStore.Data.Common.Active.deleted) : null
+                });
+
+                await File.WriteAllTextAsync(saveFileDialog.FileName, report);
+            }
         }
 
         private async void Refresh()

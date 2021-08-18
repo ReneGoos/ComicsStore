@@ -37,9 +37,9 @@ namespace ComicsStore.MiddleWare.Services
             }
         }
 
-        public Task<string> GetExportAsync(StorySeriesSearch searchModel)
+        public async Task<string> GetExportAsync(StorySeriesSearch searchModel)
         {
-            return Reports.Reports.DataExportAsync(_exportBooksRepository, searchModel);
+            return Reports.Reports.DataExport(await _exportBooksRepository.GetAsync(searchModel));
         }
     }
 }
