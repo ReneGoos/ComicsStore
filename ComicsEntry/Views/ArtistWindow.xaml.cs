@@ -21,7 +21,10 @@ namespace ComicsEntry.Views
             //if (artistView.IsDirty)
             artistView.SaveCommand.Execute(null);
 
-            DialogResult = true;
+            if (!artistView.IsDirty)
+            {
+                DialogResult = true;
+            }
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

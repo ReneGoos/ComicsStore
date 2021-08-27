@@ -131,6 +131,12 @@ namespace ComicsLibrary.ViewModels
             {
                 return;
             }
+
+            if (!Item.Validate())
+            {
+                return;
+            }
+
             var itemInput = Mapper.Map<TIn>(Item);
             var itemOut = Item.Id.HasValue ? await _itemService.UpdateAsync(Item.Id.Value, itemInput) : await _itemService.AddAsync(itemInput);
             UpdateItemsList(itemOut);
@@ -138,6 +144,14 @@ namespace ComicsLibrary.ViewModels
             Item = Mapper.Map<TEdit>(itemOut);
             Item.PropertyChanged += Item_PropertyChanged;
             IsDirty = false;
+        }
+
+        private static void DisplayError(string message, string caption = "Error")
+        {
+            var btnMessageBox = MessageBoxButton.OK;
+            var icnMessageBox = MessageBoxImage.Error;
+
+            _= MessageBox.Show(message, caption, btnMessageBox, icnMessageBox);
         }
 
         private static bool ContinueDelete()

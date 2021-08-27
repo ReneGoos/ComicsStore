@@ -1,4 +1,6 @@
-﻿namespace ComicsLibrary.EditModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ComicsLibrary.EditModels
 {
     public class TableEditModel : BasicEditModel
     {
@@ -11,6 +13,7 @@
         }
 
         public int? Id { get => _id; set => Set(ref _id, value); }
+        [Required]
         public string Name { get => _name; set => Set(ref _name, value); }
         public string Remark { get => _remark; set => Set(ref _remark, value); }
     }

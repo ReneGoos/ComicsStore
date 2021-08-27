@@ -271,9 +271,9 @@ namespace ComicsStore.Controls
                 InternalClosePopup();
                 Dispatcher.Invoke(new Action(() =>
                 {
-                    Focus();
+                    _ = Focus();
                     if (moveFocus)
-                        MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                        _ = MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
                 }), System.Windows.Threading.DispatcherPriority.Background);
             }
 
@@ -300,7 +300,7 @@ namespace ComicsStore.Controls
             dummy.DataContext = obj;
 
             // Apply the binding to the dummy FrameworkElement.
-            BindingOperations.SetBinding(dummy, TextProperty, originalBinding);
+            _ = BindingOperations.SetBinding(dummy, TextProperty, originalBinding);
             suppressEvent = true;
 
             // Get the binding's resulting value.
@@ -373,14 +373,14 @@ namespace ComicsStore.Controls
             if (e.Key == Key.Escape)
             {
                 InternalClosePopup();
-                Focus();
+                _ = Focus();
             }
             else if (e.Key == Key.Down)
             {
                 if (listBox != null && o == this)
                 {
                     suppressEvent = true;
-                    listBox.Focus();
+                    _ = listBox.Focus();
                     suppressEvent = false;
                 }
             }

@@ -44,7 +44,7 @@ namespace ComicsStore.Controls
             var listBox = ListBox.ItemsControlFromItemContainer(lbi);
             FrameworkElement focusedElement = (FrameworkElement)FocusManager.GetFocusedElement(FocusManager.GetFocusScope(listBox));
             if (focusedElement != null && focusedElement.IsDescendantOf(listBox))
-                lbi.Focus();
+                _ = lbi.Focus();
         }
     }
 }
