@@ -16,15 +16,17 @@ namespace ComicsEntry.Views
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            var codeView = (sender as Button).DataContext as CodeViewModel;
+            var basicView = (sender as Button).DataContext as BasicViewModel;
 
-            //if (codeView.IsDirty)
-            codeView.SaveCommand.Execute(null);
+            basicView.SaveCommand.Execute(null);
 
-            DialogResult = true;
+            if (!basicView.IsDirty)
+            {
+                DialogResult = true;
+            }
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+            private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
         }

@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -28,7 +29,7 @@ namespace ComicsLibrary.ViewModels
         private TEdit _item;
         private string _queryText;
 
-        private CollectionViewSource _itemsViewSource;
+        //private CollectionViewSource _itemsViewSource;
         private CollectionViewSource _itemsFilteredViewSource;
         private CollectionViewSource _itemsQueryViewSource;
         private string _itemFilter;
@@ -44,8 +45,8 @@ namespace ComicsLibrary.ViewModels
             {
                 _items.Add(item);
             }
-            Items.Refresh();
-            //RaisePropertyChanged("Items");
+            //Items.Refresh();
+            RaisePropertyChanged("Items");
         }
 
         public BasicTableViewModel(TService service, IMapper mapper) : base(mapper)
@@ -89,14 +90,17 @@ namespace ComicsLibrary.ViewModels
             }
         }
 
-        protected virtual async void GetItemsAsync()
+        protected virtual void GetItems()
         {
-            _items = await _itemService.GetAsync();
+            var _itemsUnsorted = _itemService.GetAsync().Result;
+            _items = _itemsUnsorted.OrderBy(item => item.Name).ToList();
+            /*
             _itemsViewSource = new CollectionViewSource
             {
                 Source = _items
             };
             _itemsViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+            */
 
             _itemsFilteredViewSource = new CollectionViewSource
             {
@@ -214,7 +218,7 @@ namespace ComicsLibrary.ViewModels
 
                     break;
                 case "Name":
-                    GetItemsAsync();
+                    GetItems();
                     goto default;
                 default:
                     IsDirty = true;
@@ -248,7 +252,7 @@ namespace ComicsLibrary.ViewModels
             {
                 if (_itemsFilteredViewSource is null)
                 {
-                    GetItemsAsync();
+                    GetItems();
                 }
 
                 return _itemsFilteredViewSource.View;
@@ -261,23 +265,23 @@ namespace ComicsLibrary.ViewModels
             {
                 if (_itemsQueryViewSource is null)
                 {
-                    GetItemsAsync();
+                    GetItems();
                 }
 
                 return _itemsQueryViewSource.View;
             }
         }
 
-        public ICollectionView Items
+        public IEnumerable<TOut> Items
         {
             get
             {
                 if (_items is null)
                 {
-                    GetItemsAsync();
+                    GetItems();
                 }
 
-                return _itemsViewSource.View;
+                return _items; // ViewSource.View;
             }
         }
 

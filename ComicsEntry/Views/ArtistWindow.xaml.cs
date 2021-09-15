@@ -1,4 +1,5 @@
 ﻿using ComicsLibrary.ViewModels;
+using ComicsLibrary.ViewModels.Interfaces;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -16,12 +17,11 @@ namespace ComicsEntry.Views
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            var artistView = (sender as Button).DataContext as ArtistViewModel;
+            var basicView = (sender as Button).DataContext as BasicViewModel;
 
-            //if (artistView.IsDirty)
-            artistView.SaveCommand.Execute(null);
+            basicView.SaveCommand.Execute(null);
 
-            if (!artistView.IsDirty)
+            if (!basicView.IsDirty)
             {
                 DialogResult = true;
             }

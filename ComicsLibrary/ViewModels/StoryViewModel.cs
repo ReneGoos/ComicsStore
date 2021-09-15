@@ -7,55 +7,32 @@ using ComicsStore.MiddleWare.Services.Interfaces;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ComicsLibrary.ViewModels
 {
     public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearch, StoryEditModel>
     {
-        private CollectionViewSource _originStoriesViewSource;
-        private string _originStoryFilter;
+        private ICollection<StoryOutputModel> _originStories;
 
-        private void OriginStoryFilterResults(object sender, FilterEventArgs e)
+        private void StoryViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-
-            if (e.Item is StoryOutputModel story)
+            if (e.PropertyName == "Items" )
             {
-                if (story.OriginStoryId is not null)
-                {
-                    e.Accepted = false;
-                    return;
-                }
-
-                if (_originStoryFilter is null || _originStoryFilter.Length == 0)
-                {
-                    e.Accepted = true;
-                    return;
-                }
-
-                e.Accepted = story.Name.Contains(_originStoryFilter, System.StringComparison.InvariantCultureIgnoreCase);
+                GetOriginStories();
             }
         }
 
-        public string OriginStoryFilter
-        {
-            get => _originStoryFilter;
-            set
-            {
-                Set(ref _originStoryFilter, value);
-                _originStoriesViewSource.View.Refresh();
-            }
-        }
-
-        public ICollectionView OriginStories
+        public IEnumerable<StoryOutputModel> OriginStories
         {
             get
             {
-                if (_originStoriesViewSource is null)
+                if (_originStories is null)
                 {
                     GetOriginStories();
                 }
 
-                return _originStoriesViewSource.View;
+                return _originStories;
             }
             private set
             {
@@ -69,25 +46,9 @@ namespace ComicsLibrary.ViewModels
 
         private void GetOriginStories()
         {
-            _originStoriesViewSource = new CollectionViewSource
-            {
-                Source = _items
-            };
-            _originStoriesViewSource.Filter += OriginStoryFilterResults;
-            _originStoriesViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+            _originStories = _items.Where(item => item.OriginStoryId is null).OrderBy(item => item.Name).ToList();
+            RaisePropertyChanged("OriginStories");
         }
-
-        //protected override void GetItemsAsync()
-        //{
-        //    base.GetItemsAsync();
-        //    OriginStories = null;
-        //}
-
-        //protected override void SaveAsync()
-        //{
-        //    base.SaveAsync();
-        //    OriginStories = null;
-        //}
 
         public void AddStoryArtist(ICollection<StoryArtistEditModel> storyArtists, int? artistId)
         {
@@ -112,6 +73,7 @@ namespace ComicsLibrary.ViewModels
         public StoryViewModel(IStoriesService storiesService,
                               IMapper mapper) : base(storiesService, mapper)
         {
+            PropertyChanged += StoryViewModel_PropertyChanged;
         }
 
         public List<StoryArtistEditModel> GetStoryArtists()

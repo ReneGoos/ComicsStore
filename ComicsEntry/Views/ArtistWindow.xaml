@@ -122,11 +122,12 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             
-                            <GridViewColumn Header="Story" Width="250">
+                            <GridViewColumn Header="Story"
+                                            Width="250">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ComboBox Width="238"
-                                                  SelectedValue="{Binding StoryId}"
+                                                  SelectedValue="{Binding StoryId, Mode=TwoWay}"
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name" 
                                                   IsEditable="True" 
@@ -151,8 +152,10 @@
                                                   IsReadOnly="True"
                                                   Width="158"
                                                   ItemsSource="{Binding Path=Roles}"
-                                                  IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                  Text="{Binding ArtistType, Converter={StaticResource ArrayConverter}}">
+                                                  Text="{Binding ArtistType, 
+                                                                 Converter={StaticResource ArrayConverter},
+                                                                 ConverterParameter=RoleType}"
+                                                  IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate DataType="{x:Type vm:RoleType}">
                                                     <CheckBox Content="{Binding Name}"

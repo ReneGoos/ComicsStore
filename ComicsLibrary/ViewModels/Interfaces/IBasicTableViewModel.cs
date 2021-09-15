@@ -1,5 +1,6 @@
 ﻿using ComicsLibrary.EditModels;
 using ComicsStore.MiddleWare.Models.Output;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace ComicsLibrary.ViewModels.Interfaces
@@ -11,6 +12,6 @@ namespace ComicsLibrary.ViewModels.Interfaces
         TEdit Item { get; }
         string ItemFilter { get; set; }
         ICollectionView FilteredItems { get; }
-        ICollectionView Items { get; }
+        IEnumerable<TOut> Items { get; }
     }
 }
