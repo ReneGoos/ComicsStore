@@ -50,19 +50,19 @@ namespace ComicsLibrary.ViewModels
             RaisePropertyChanged("OriginStories");
         }
 
-        public void AddStoryArtist(ICollection<StoryArtistEditModel> storyArtists, int? artistId)
+        public void AddStoryArtist(int? artistId)
         {
-            Item.AddStoryArtist(storyArtists, artistId);
+            Item.AddStoryArtist(artistId);
         }
 
-        public void AddStoryBook(ICollection<StoryBookEditModel> storyBooks, int? bookId)
+        public void AddStoryBook(int? bookId)
         {
-            Item.AddStoryBook(storyBooks, bookId);
+            Item.AddStoryBook(bookId);
         }
 
-        public void AddStoryCharacter(ICollection<StoryCharacterEditModel> storyCharacters, int? characterId)
+        public void AddStoryCharacter(int? characterId)
         {
-            Item.AddStoryCharacter(storyCharacters, characterId);
+            Item.AddStoryCharacter(characterId);
         }
 
         public void AddStoryCode(int? codeId)

@@ -1,58 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using ComicsLibrary.Core;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ComicsLibrary.EditModels
 {
     public class CodeEditModel : TableEditModel
     {
-        private ICollection<SeriesCodeEditModel> _seriesCodes;
-        private ICollection<StoryCodeEditModel> _storyCodes;
+        private ObservableChangedCollection<SeriesCodeEditModel> _seriesCodes;
+        private ObservableChangedCollection<StoryCodeEditModel> _storyCodes;
 
         public CodeEditModel() : base()
         {
-            Series = new List<SeriesCodeEditModel>();
-            Story = new List<StoryCodeEditModel>();
+            Series = new ObservableChangedCollection<SeriesCodeEditModel>();
+            Story = new ObservableChangedCollection<StoryCodeEditModel>();
         }
 
-        public ICollection<SeriesCodeEditModel> Series { get => _seriesCodes; set => Set(ref _seriesCodes, value); }
-        public ICollection<StoryCodeEditModel> Story { get => _storyCodes; set => Set(ref _storyCodes, value); }
+        public ObservableChangedCollection<SeriesCodeEditModel> Series { get => _seriesCodes; set => Set(ref _seriesCodes, value); }
+        public ObservableChangedCollection<StoryCodeEditModel> Story { get => _storyCodes; set => Set(ref _storyCodes, value); }
 
-        public void AddSeriesCodes(List<SeriesCodeEditModel> seriesCodes, int? seriesId)
+        public void AddSeriesCodes(int? seriesId)
         {
             if (seriesId.HasValue)
             {
                 if (!Series.Any(s => s.SeriesId == seriesId.Value))
                 {
-                    if (!seriesCodes.Any(s => s.SeriesId == seriesId.Value))
+                    Series.Add(new SeriesCodeEditModel
                     {
-                        seriesCodes.Add(new SeriesCodeEditModel
-                        {
-                            SeriesId = seriesId,
-                            CodeId = Id
-                        });
-                    }
-
-                    Series = seriesCodes;
+                        SeriesId = seriesId,
+                        CodeId = Id
+                    });
                 }
             }
         }
 
-        public void AddStoryCodes(List<StoryCodeEditModel> storyCodes, int? storyId)
+        public void AddStoryCodes(int? storyId)
         {
             if (storyId.HasValue)
             {
                 if (!Story.Any(s => s.StoryId == storyId.Value))
                 {
-                    if (!storyCodes.Any(s => s.StoryId == storyId.Value))
+                    Story.Add(new StoryCodeEditModel
                     {
-                        storyCodes.Add(new StoryCodeEditModel
-                        {
-                            StoryId = storyId,
-                            CodeId = Id
-                        });
-                    }
-
-                    Story = storyCodes;
+                        StoryId = storyId,
+                        CodeId = Id
+                    });
                 }
             }
         }

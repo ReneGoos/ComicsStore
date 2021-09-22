@@ -20,9 +20,9 @@ namespace ComicsLibrary.ViewModels
             Item.AddSeriesCode(codeId);
         }
 
-        public void AddBookSeries(List<BookSeriesEditModel> bookSeries, int? bookId)
+        public void AddBookSeries(int? bookId)
         {
-            Item.AddBookSeries(bookSeries, bookId);
+            Item.AddBookSeries(bookId);
         }
 
         public List<BookSeriesEditModel> GetBookSeries()

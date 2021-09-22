@@ -1,35 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using ComicsLibrary.Core;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ComicsLibrary.EditModels
 {
     public class CharacterEditModel : TableEditModel
     {
-        private ICollection<StoryCharacterEditModel> _storyCharacters;
+        private ObservableChangedCollection<StoryCharacterEditModel> _storyCharacters;
 
         public CharacterEditModel() : base()
         {
-            StoryCharacter = new List<StoryCharacterEditModel>();
+            StoryCharacter = new ObservableChangedCollection<StoryCharacterEditModel>();
         }
 
-        public ICollection<StoryCharacterEditModel> StoryCharacter { get => _storyCharacters; set => Set(ref _storyCharacters, value); }
+        public ObservableChangedCollection<StoryCharacterEditModel> StoryCharacter { get => _storyCharacters; set => Set(ref _storyCharacters, value); }
 
-        public void AddStoryCharacter(ICollection<StoryCharacterEditModel> storyCharacters, int? storyId)
+        public void AddStoryCharacter(int? storyId)
         {
             if (storyId.HasValue)
             {
                 if (!StoryCharacter.Any(s => s.StoryId == storyId.Value))
                 {
-                    if (!storyCharacters.Any(s => s.StoryId == storyId.Value))
+                    StoryCharacter.Add(new StoryCharacterEditModel
                     {
-                        storyCharacters.Add(new StoryCharacterEditModel
-                        {
-                            CharacterId = Id,
-                            StoryId = storyId
-                        });
-                    }
-
-                    StoryCharacter = storyCharacters;
+                        CharacterId = Id,
+                        StoryId = storyId
+                    });
                 }
             }
         }

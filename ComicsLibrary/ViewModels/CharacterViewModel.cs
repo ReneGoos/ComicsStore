@@ -15,9 +15,9 @@ namespace ComicsLibrary.ViewModels
         {
         }
 
-        public void AddStoryCharacter(List<StoryCharacterEditModel> storyCharacters, int? storyId)
+        public void AddStoryCharacter(int? storyId)
         {
-            Item.AddStoryCharacter(storyCharacters, storyId);
+            Item.AddStoryCharacter(storyId);
         }
 
         public List<StoryCharacterEditModel> GetStoryCharacters()

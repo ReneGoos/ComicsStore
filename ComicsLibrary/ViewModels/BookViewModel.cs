@@ -15,19 +15,19 @@ namespace ComicsLibrary.ViewModels
         {
         }
 
-        public void AddBookPublisher(List<BookPublisherEditModel> bookPublishers, int? publisherId)
+        public void AddBookPublisher(int? publisherId)
         {
-            Item.AddBookPublisher(bookPublishers, publisherId);
+            Item.AddBookPublisher(publisherId);
         }
 
-        public void AddBookSeries(List<BookSeriesEditModel> bookSeries, int? seriesId)
+        public void AddBookSeries(int? seriesId)
         {
-            Item.AddBookSeries(bookSeries, seriesId);
+            Item.AddBookSeries(seriesId);
         }
 
-        public void AddStoryBook(List<StoryBookEditModel> storyBooks, int? storyId)
+        public void AddStoryBook(int? storyId)
         {
-            Item.AddStoryBook(storyBooks, storyId);
+            Item.AddStoryBook(storyId);
         }
 
         public List<BookPublisherEditModel> GetBookPublishers()

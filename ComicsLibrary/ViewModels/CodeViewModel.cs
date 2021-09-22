@@ -15,14 +15,14 @@ namespace ComicsLibrary.ViewModels
         {
         }
 
-        public void AddSeriesCodes(List<SeriesCodeEditModel> seriesCodes, int? seriesId)
+        public void AddSeriesCodes(int? seriesId)
         {
-            Item.AddSeriesCodes(seriesCodes, seriesId);
+            Item.AddSeriesCodes(seriesId);
         }
 
-        public void AddStoryCodes(List<StoryCodeEditModel> seriesCodes, int? storyId)
+        public void AddStoryCodes(int? storyId)
         {
-            Item.AddStoryCodes(seriesCodes, storyId);
+            Item.AddStoryCodes(storyId);
         }
 
         public List<SeriesCodeEditModel> GetSeriesCodes()

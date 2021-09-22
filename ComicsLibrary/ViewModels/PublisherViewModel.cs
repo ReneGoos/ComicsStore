@@ -15,9 +15,9 @@ namespace ComicsLibrary.ViewModels
         {
         }
 
-        public void AddBookPublisher(List<BookPublisherEditModel> bookPublishers, int? bookId)
+        public void AddBookPublisher(int? bookId)
         {
-            Item.AddBookPublisher(bookPublishers, bookId);
+            Item.AddBookPublisher(bookId);
         }
 
         public List<BookPublisherEditModel> GetBookPublishers()

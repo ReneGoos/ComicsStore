@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ComicsLibrary.Core;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -6,14 +7,14 @@ namespace ComicsLibrary.EditModels
 {
     public class SeriesEditModel : TableEditModel
     {
-        private ICollection<BookSeriesEditModel> _bookSeries;
+        private ObservableChangedCollection<BookSeriesEditModel> _bookSeries;
         private int? _seriesNumber;
         private string _seriesLanguage;
         private int _codeId;
 
         public SeriesEditModel() : base()
         {
-            BookSeries = new List<BookSeriesEditModel>();
+            BookSeries = new ObservableChangedCollection<BookSeriesEditModel>();
         }
 
         [Required]
@@ -31,24 +32,19 @@ namespace ComicsLibrary.EditModels
             }
         }
 
-        public ICollection<BookSeriesEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
+        public ObservableChangedCollection<BookSeriesEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
 
-        public void AddBookSeries(List<BookSeriesEditModel> bookSeries, int? bookId)
+        public void AddBookSeries(int? bookId)
         {
             if (bookId.HasValue)
             {
                 if (!BookSeries.Any(s => s.BookId == bookId.Value))
                 {
-                    if (!bookSeries.Any(s => s.BookId == bookId.Value))
+                    BookSeries.Add(new BookSeriesEditModel
                     {
-                        bookSeries.Add(new BookSeriesEditModel
-                        {
-                            SeriesId = Id,
-                            BookId = bookId
-                        });
-                    }
-
-                    BookSeries = bookSeries;
+                        SeriesId = Id,
+                        BookId = bookId
+                    });
                 }
             }
         }
