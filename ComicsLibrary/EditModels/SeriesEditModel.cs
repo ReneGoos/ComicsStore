@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace ComicsLibrary.EditModels
@@ -15,8 +16,11 @@ namespace ComicsLibrary.EditModels
             BookSeries = new List<BookSeriesEditModel>();
         }
 
+        [Required]
         public int? SeriesNumber { get => _seriesNumber; set => Set(ref _seriesNumber, value); }
+        [Required]
         public string SeriesLanguage { get => _seriesLanguage; set => Set(ref _seriesLanguage, value); }
+        [Required]
         public int CodeId { get => _codeId; set => Set(ref _codeId, value); }
 
         public void AddSeriesCode(int? codeId)

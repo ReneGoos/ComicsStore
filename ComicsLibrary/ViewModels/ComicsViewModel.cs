@@ -234,7 +234,6 @@ namespace ComicsLibrary.ViewModels
         private async void ShowStoryFromArtistWindow(int? itemId)
         {
             GetItem(StoryView, itemId);
-
             _ = await _navigationService.ShowDialogAsync(Windows.StoryWindow);
             ArtistView.AddArtistStory(StoryView.Item.Id ?? itemId);
         }

@@ -146,16 +146,8 @@ namespace ComicsLibrary.ViewModels
             UpdateItemsList(itemOut);
 
             Item = Mapper.Map<TEdit>(itemOut);
-            Item.PropertyChanged += Item_PropertyChanged;
+            Item.PropertyChanged += ItemPropertyChanged;
             IsDirty = false;
-        }
-
-        private static void DisplayError(string message, string caption = "Error")
-        {
-            var btnMessageBox = MessageBoxButton.OK;
-            var icnMessageBox = MessageBoxImage.Error;
-
-            _= MessageBox.Show(message, caption, btnMessageBox, icnMessageBox);
         }
 
         private static bool ContinueDelete()
@@ -185,7 +177,7 @@ namespace ComicsLibrary.ViewModels
         protected virtual void NewItem()
         {
             Item = new TEdit();
-            Item.PropertyChanged += Item_PropertyChanged;
+            Item.PropertyChanged += ItemPropertyChanged;
             IsDirty = false;
         }
 
@@ -197,12 +189,12 @@ namespace ComicsLibrary.ViewModels
             {
                 Item = new TEdit();
             }
-            Item.PropertyChanged += Item_PropertyChanged;
+            Item.PropertyChanged += ItemPropertyChanged;
             IsDirty = false;
             //return Item is not null;
         }
 
-        protected virtual void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected virtual void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -220,6 +212,8 @@ namespace ComicsLibrary.ViewModels
                 case "Name":
                     GetItems();
                     goto default;
+                case "Error":
+                    break;
                 default:
                     IsDirty = true;
                     break;

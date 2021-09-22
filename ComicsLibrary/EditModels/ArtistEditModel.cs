@@ -1,22 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using ComicsLibrary.Core;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ComicsLibrary.EditModels
 {
     public class ArtistEditModel : TableEditModel
     {
-        private ICollection<StoryArtistEditModel> _storyArtists;
-
         public ArtistEditModel() : base()
         {
-            StoryArtist = new List<StoryArtistEditModel>();
+            StoryArtist = new ObservableChangedCollection<StoryArtistEditModel>();
         }
 
-        public ICollection<StoryArtistEditModel> StoryArtist
-        {
-            get => _storyArtists;
-            set => Set(ref _storyArtists, value);
-        }
+        public ObservableChangedCollection<StoryArtistEditModel> StoryArtist { get; set; }
 
         public void AddStoryArtist(int? storyId)
         {

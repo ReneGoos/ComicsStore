@@ -102,6 +102,8 @@
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
 
                 <Label Grid.Column="1"
@@ -249,6 +251,11 @@
                         Content="{Binding OriginStoryId}"
                         IsEnabled="{Binding OriginStoryId, Converter={StaticResource NotNullConverter}}"
                         />
+
+                <Label Grid.Column="3"  
+                       Grid.Row="19"
+                       Foreground="Red"
+                       Content="{Binding Error}"/>
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>

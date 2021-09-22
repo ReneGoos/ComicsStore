@@ -65,7 +65,8 @@
                 <control:SimpleEntry Id="{Binding Id, Mode=TwoWay}"
                                      ItemCase="Upper"
                                      ItemName="{Binding Name, Mode=TwoWay}"
-                                     ItemRemark="{Binding Remark, Mode=TwoWay}"/>
+                                     ItemRemark="{Binding Remark, Mode=TwoWay}"
+                                     ItemError="{Binding Error, Mode=TwoWay}"/>
             </DockPanel>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>

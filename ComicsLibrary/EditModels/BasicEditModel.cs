@@ -49,6 +49,32 @@ namespace ComicsLibrary.EditModels
                 }
             }
 
+            var collections = GetType().GetProperties().Where(prop => prop.PropertyType.GetInterfaces().Contains(typeof(System.Collections.IEnumerable)) && prop.PropertyType != typeof(String));
+            foreach (var coll in collections)
+            {
+                Type type = coll.PropertyType;
+                if (type.IsGenericType)
+                {
+                    Type itemType = type.GetGenericArguments()[0];
+                    if (itemType.IsSubclassOf(typeof(CrossEditModel)))
+                    {
+                        Errors[coll.Name] = new List<string>();
+                        foreach (var element in (System.Collections.IEnumerable)coll.GetValue(this))
+                        {
+                            var crossEditModel = (CrossEditModel)element;
+                            if (!crossEditModel.Validate())
+                            {
+                                Errors[coll.Name].Add(crossEditModel.Error);
+                            }
+                        }
+                        if (Errors[coll.Name].Count == 0)
+                        {
+                            _ = Errors.Remove(coll.Name);
+                        }
+                    } 
+                }
+            }
+
             if (Errors.Count == 0)
             {
                 return true;

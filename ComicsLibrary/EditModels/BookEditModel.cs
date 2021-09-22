@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace ComicsLibrary.EditModels
@@ -21,10 +22,14 @@ namespace ComicsLibrary.EditModels
             StoryBook = new List<StoryBookEditModel>();
         }
 
+        [Required]
         public string BookType { get => _bookType; set => Set(ref _bookType, value); }
+        [Required]
         public string Active { get => _active; set => Set(ref _active, value); }
+        [Required]
         public int FirstYear { get => _firstYear; set => Set(ref _firstYear, value); }
         public int? ThisYear { get => _thisYear; set => Set(ref _thisYear, value); }
+        [Required]
         public string FirstPrint { get => _firstPrint; set => Set(ref _firstPrint, value); }
 
         public ICollection<BookPublisherEditModel> BookPublisher { get => _bookPublishers; set => Set(ref _bookPublishers, value); }

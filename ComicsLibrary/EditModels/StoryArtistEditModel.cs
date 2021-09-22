@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ComicsStore.Data.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace ComicsLibrary.EditModels
 {
@@ -91,6 +92,7 @@ namespace ComicsLibrary.EditModels
 
         public int? ArtistId { get => _artistId; set => Set(ref _artistId, value); }
         public int? StoryId { get => _storyId; set => Set(ref _storyId, value); }
+        [Required]
         public ICollection<string> ArtistType { get => _artistType; set => Set(ref _artistType, value); }
 
         public ObservableCollection<RoleType> Roles { get { if (_roles is null) { _roles = FillRoles(); } return _roles; } set => Set(ref _roles, value); }

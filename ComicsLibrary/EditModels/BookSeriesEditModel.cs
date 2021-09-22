@@ -1,4 +1,6 @@
-﻿namespace ComicsLibrary.EditModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ComicsLibrary.EditModels
 {
     public class BookSeriesEditModel : CrossEditModel
     {
@@ -9,7 +11,9 @@
 
         public int? BookId { get => _bookId; set => Set(ref _bookId, value); }
         public int? SeriesId { get => _seriesId; set => Set(ref _seriesId, value); }
+        [Required]
         public string Issue { get => _issue; set => Set(ref _issue, value); }
+        [Required]
         public decimal? SeriesOrder { get => _seriesOrder; set => Set(ref _seriesOrder, value); }
     }
 }

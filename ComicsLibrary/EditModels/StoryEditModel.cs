@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace ComicsLibrary.EditModels
@@ -25,11 +26,14 @@ namespace ComicsLibrary.EditModels
             StoryCharacter = new List<StoryCharacterEditModel>();
         }
 
+        [Required]
         public string StoryType { get => _storyType; set => Set(ref _storyType, value); }
         public int? StoryNumber { get => _storyNumber; set => Set(ref _storyNumber, value); }
         public double? Pages { get => _pages; set => Set(ref _pages, value); }
         public string ExtraInfo { get => _extraInfo; set => Set(ref _extraInfo, value); }
+        [Required]
         public string Language { get => _language; set => Set(ref _language, value); }
+        [Required]
         public int CodeId { get => _codeId; set => Set(ref _codeId, value); }
         public int? OriginStoryId { get => _originStoryId; set => Set(ref _originStoryId, value); }
 
