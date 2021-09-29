@@ -29,7 +29,6 @@ namespace ComicsLibrary.ViewModels
         private TEdit _item;
         private string _queryText;
 
-        //private CollectionViewSource _itemsViewSource;
         private CollectionViewSource _itemsFilteredViewSource;
         private CollectionViewSource _itemsQueryViewSource;
         private string _itemFilter;
@@ -45,8 +44,13 @@ namespace ComicsLibrary.ViewModels
             {
                 _items.Add(item);
             }
-            //Items.Refresh();
+
             RaisePropertyChanged("Items");
+
+            _itemsFilteredViewSource.View.Refresh();
+            _itemsQueryViewSource.View.Refresh();
+            RaisePropertyChanged("FilteredItems");
+            RaisePropertyChanged("QueryItems");
         }
 
         public BasicTableViewModel(TService service, IMapper mapper) : base(mapper)
@@ -94,13 +98,6 @@ namespace ComicsLibrary.ViewModels
         {
             var _itemsUnsorted = _itemService.GetAsync().Result;
             _items = _itemsUnsorted.OrderBy(item => item.Name).ToList();
-            /*
-            _itemsViewSource = new CollectionViewSource
-            {
-                Source = _items
-            };
-            _itemsViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
-            */
 
             _itemsFilteredViewSource = new CollectionViewSource
             {
@@ -230,7 +227,7 @@ namespace ComicsLibrary.ViewModels
             }
         }
 
-        public string QueryText 
+        public string QueryText
         {
             get => _queryText;
             set
