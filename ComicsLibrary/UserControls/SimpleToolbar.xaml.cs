@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,7 +20,7 @@ namespace ComicsLibrary.UserControls
         public static readonly DependencyProperty IdProperty = DependencyProperty.Register("Id", typeof(int?), typeof(SimpleToolbar));
         public static readonly DependencyProperty IsCleanProperty = DependencyProperty.Register("IsClean", typeof(bool), typeof(SimpleToolbar));
         public static readonly DependencyProperty IsDirtyProperty = DependencyProperty.Register("IsDirty", typeof(bool), typeof(SimpleToolbar));
-        public static readonly DependencyProperty FilterProperty = DependencyProperty.Register("Filter", typeof(string), typeof(SimpleToolbar));
+        public static readonly DependencyProperty FilterProperty = DependencyProperty.Register("Filter", typeof(Func<object,string,bool>), typeof(SimpleToolbar));
         public static readonly DependencyProperty GetCommandProperty = DependencyProperty.Register("GetCommand", typeof(ICommand), typeof(SimpleToolbar));
         public static readonly DependencyProperty NewCommandProperty = DependencyProperty.Register("NewCommand", typeof(ICommand), typeof(SimpleToolbar));
         public static readonly DependencyProperty SaveCommandProperty = DependencyProperty.Register("SaveCommand", typeof(ICommand), typeof(SimpleToolbar));
@@ -30,7 +31,7 @@ namespace ComicsLibrary.UserControls
         public int? Id { get => (int?)GetValue(IdProperty); set => SetValue(IdProperty, value); }
         public bool IsClean { get => (bool)GetValue(IsCleanProperty); set => SetValue(IsCleanProperty, value); }
         public bool IsDirty { get => (bool)GetValue(IsDirtyProperty); set => SetValue(IsDirtyProperty, value); }
-        public string Filter { get => (string)GetValue(FilterProperty); set => SetValue(FilterProperty, value); }
+        public Func<object, string, bool> Filter { get => (Func<object, string, bool>)GetValue(FilterProperty); set => SetValue(FilterProperty, value); }
         public ICommand GetCommand { get => (ICommand)GetValue(GetCommandProperty); set => SetValue(GetCommandProperty, value); }
         public ICommand NewCommand { get => (ICommand)GetValue(NewCommandProperty); set => SetValue(NewCommandProperty, value); }
         public ICommand SaveCommand { get => (ICommand)GetValue(SaveCommandProperty); set => SetValue(SaveCommandProperty, value); }

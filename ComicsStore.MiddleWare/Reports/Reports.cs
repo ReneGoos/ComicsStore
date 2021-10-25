@@ -1,12 +1,9 @@
 ﻿using ComicsStore.Data.Common;
 using ComicsStore.Data.Model.Output;
-using ComicsStore.Data.Model.Search;
-using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ComicsStore.MiddleWare.Reports
 {

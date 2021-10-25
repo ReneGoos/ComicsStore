@@ -5,7 +5,6 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System.ComponentModel;
-using System.Windows.Data;
 using System.Collections.Generic;
 using System.Linq;
 

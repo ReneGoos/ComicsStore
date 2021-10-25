@@ -65,49 +65,49 @@ namespace ComicsLibrary.ViewModels
 
         private async void ShowReportWindow()
         {
-            await _navigationService.ShowAsync(Windows.ReportWindow);
+            await _navigationService.ShowAsync(StoreWindows.ReportWindow);
         }
 
         private async void ShowArtistWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(Windows.ArtistWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.ArtistWindow);
         }
 
         private async void ShowBookWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(Windows.BookWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.BookWindow);
         }
 
         private async void ShowCharacterWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(Windows.CharacterWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.CharacterWindow);
         }
 
         private async void ShowCodeWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(Windows.CodeWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.CodeWindow);
         }
 
         private async void ShowPublisherWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(Windows.PublisherWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.PublisherWindow);
         }
 
         private async void ShowSeriesWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(Windows.SeriesWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.SeriesWindow);
         }
 
         private async void ShowStoriesWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(Windows.StoryWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
         }
 
         private async void ShowArtistFromStoryWindow(int? itemId)
         {
             GetItem(ArtistView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.ArtistWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.ArtistWindow);
             StoryView.AddStoryArtist(ArtistView.Item.Id ?? itemId);
         }
 
@@ -115,7 +115,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(BookView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.BookWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.BookWindow);
             PublisherView.AddBookPublisher(BookView.Item.Id ?? itemId);
         }
 
@@ -123,7 +123,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(BookView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.BookWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.BookWindow);
             SeriesView.AddBookSeries(BookView.Item.Id ?? itemId);
         }
 
@@ -131,7 +131,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(BookView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.BookWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.BookWindow);
             StoryView.AddStoryBook(BookView.Item.Id ?? itemId);
         }
 
@@ -139,7 +139,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(CharacterView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.CharacterWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.CharacterWindow);
             StoryView.AddStoryCharacter(CharacterView.Item.Id ?? itemId);
         }
 
@@ -147,7 +147,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(CodeView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.CodeWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.CodeWindow);
             SeriesView.AddSeriesCode(CodeView.Item.Id ?? itemId);
         }
 
@@ -155,7 +155,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(CodeView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.CodeWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.CodeWindow);
             StoryView.AddStoryCode(CodeView.Item.Id ?? itemId);
         }
 
@@ -163,7 +163,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(CharacterView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.PublisherWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.PublisherWindow);
             BookView.AddBookPublisher(PublisherView.Item.Id ?? itemId);
         }
 
@@ -171,7 +171,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(SeriesView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.SeriesWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.SeriesWindow);
             BookView.AddBookSeries(SeriesView.Item.Id ?? itemId);
         }
 
@@ -179,14 +179,14 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(SeriesView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.SeriesWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.SeriesWindow);
             GetItem(CodeView, CodeView.Item.Id ?? itemId);
         }
 
         private async void ShowStoryFromArtistWindow(int? itemId)
         {
             GetItem(StoryView, itemId);
-            _ = await _navigationService.ShowDialogAsync(Windows.StoryWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
             ArtistView.AddArtistStory(StoryView.Item.Id ?? itemId);
         }
 
@@ -194,7 +194,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(StoryView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.StoryWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
             BookView.AddStoryBook(StoryView.Item.Id ?? itemId);
         }
 
@@ -202,7 +202,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(StoryView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.StoryWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
             CharacterView.AddStoryCharacter(StoryView.Item.Id ?? itemId);
         }
 
@@ -210,7 +210,7 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(StoryView, itemId);
 
-            _ = await _navigationService.ShowDialogAsync(Windows.StoryWindow);
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
             GetItem(CodeView, CodeView.Item.Id ?? itemId);
         }
 
@@ -283,13 +283,13 @@ namespace ComicsLibrary.ViewModels
         public List<string> StoryTypes { get; set; }
         public List<LanguageType> Languages { get; set; }
 
-        public bool OpenArtist => _navigationService.DialogActive(Windows.ArtistWindow);
-        public bool OpenBook => _navigationService.DialogActive(Windows.BookWindow);
-        public bool OpenCharacter => _navigationService.DialogActive(Windows.CharacterWindow);
-        public bool OpenCode => _navigationService.DialogActive(Windows.CodeWindow);
-        public bool OpenPublisher => _navigationService.DialogActive(Windows.PublisherWindow);
-        public bool OpenSeries => _navigationService.DialogActive(Windows.SeriesWindow);
-        public bool OpenStory => _navigationService.DialogActive(Windows.StoryWindow);
+        public bool OpenArtist => _navigationService.DialogActive(StoreWindows.ArtistWindow);
+        public bool OpenBook => _navigationService.DialogActive(StoreWindows.BookWindow);
+        public bool OpenCharacter => _navigationService.DialogActive(StoreWindows.CharacterWindow);
+        public bool OpenCode => _navigationService.DialogActive(StoreWindows.CodeWindow);
+        public bool OpenPublisher => _navigationService.DialogActive(StoreWindows.PublisherWindow);
+        public bool OpenSeries => _navigationService.DialogActive(StoreWindows.SeriesWindow);
+        public bool OpenStory => _navigationService.DialogActive(StoreWindows.StoryWindow);
 
         public string DebugState => _configuration.GetConnectionString("ComicsStore");
 

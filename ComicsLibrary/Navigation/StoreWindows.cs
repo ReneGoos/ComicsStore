@@ -1,6 +1,6 @@
 ﻿namespace ComicsLibrary.Navigation
 {
-    public static class Windows
+    public static class StoreWindows
     {
         public const string ArtistWindow = nameof(ArtistWindow);
         public const string BookWindow = nameof(BookWindow);

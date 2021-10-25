@@ -58,15 +58,15 @@ namespace ComicsEntry
             _ = services.AddScoped(serviceProvider =>
             {
                 var navigationService = new NavigationService(serviceProvider);
-                navigationService.Configure(ComicsLibrary.Navigation.Windows.ArtistWindow, typeof(ArtistWindow));
-                navigationService.Configure(ComicsLibrary.Navigation.Windows.BookWindow, typeof(BookWindow));
-                navigationService.Configure(ComicsLibrary.Navigation.Windows.CharacterWindow, typeof(CharacterWindow));
-                navigationService.Configure(ComicsLibrary.Navigation.Windows.CodeWindow, typeof(CodeWindow));
-                navigationService.Configure(ComicsLibrary.Navigation.Windows.PublisherWindow, typeof(PublisherWindow));
-                navigationService.Configure(ComicsLibrary.Navigation.Windows.SeriesWindow, typeof(SeriesWindow));
-                navigationService.Configure(ComicsLibrary.Navigation.Windows.StoryWindow, typeof(StoryWindow));
-                navigationService.Configure(ComicsLibrary.Navigation.Windows.StartWindow, typeof(StartWindow));
-                navigationService.Configure(ComicsLibrary.Navigation.Windows.ReportWindow, typeof(ReportWindow));
+                navigationService.Configure(StoreWindows.ArtistWindow, typeof(ArtistWindow));
+                navigationService.Configure(StoreWindows.BookWindow, typeof(BookWindow));
+                navigationService.Configure(StoreWindows.CharacterWindow, typeof(CharacterWindow));
+                navigationService.Configure(StoreWindows.CodeWindow, typeof(CodeWindow));
+                navigationService.Configure(StoreWindows.PublisherWindow, typeof(PublisherWindow));
+                navigationService.Configure(StoreWindows.SeriesWindow, typeof(SeriesWindow));
+                navigationService.Configure(StoreWindows.StoryWindow, typeof(StoryWindow));
+                navigationService.Configure(StoreWindows.StartWindow, typeof(StartWindow));
+                navigationService.Configure(StoreWindows.ReportWindow, typeof(ReportWindow));
 
                 return navigationService;
             });
@@ -91,7 +91,7 @@ namespace ComicsEntry
             await _host.StartAsync();
 
             var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
-            _ = await navigationService.ShowDialogAsync(ComicsLibrary.Navigation.Windows.StartWindow);
+            _ = await navigationService.ShowDialogAsync(StoreWindows.StartWindow);
 
             base.OnStartup(e);
         }

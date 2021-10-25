@@ -4,15 +4,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ComicsLibrary.UserControls"
+             xmlns:controls="clr-namespace:FilteredListViewControl;assembly=FilteredListViewControl" 
+             xmlns:s="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" 
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <s:Boolean x:Key="True">True</s:Boolean>
+        <s:Boolean x:Key="False">False</s:Boolean>
+    </UserControl.Resources>
     <Grid Margin="6"
-          Height="45">
+          Height="160">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="5"/>
@@ -23,7 +30,15 @@
             <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="5"/>
         </Grid.ColumnDefinitions>
-        <ComboBox Grid.Column="1" 
+        <Border BorderBrush="Transparent" BorderThickness="1" Grid.Column="1" >
+            <controls:FilteredListView ItemsSource="{Binding Path=FilteredItems, RelativeSource={RelativeSource AncestorType=local:SimpleToolbar}}"
+                                       DisplayMemberPath="Name"
+                                       SelectedValue = "{Binding Id, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:SimpleToolbar}}" 
+                                       SelectedValuePath = "Id" 
+                                       FilterPredicate="{Binding Filter, RelativeSource={RelativeSource AncestorType=local:SimpleToolbar}}" Background="White"                                       
+                                       />
+        </Border>
+        <!--ComboBox Grid.Column="1" 
                   Padding="6" 
                   Width="200"
                   IsEditable="True" 
@@ -63,16 +78,32 @@
                     </Style.Triggers>
                 </Style>
             </TextBlock.Style>
-        </TextBlock>
-        <Button Grid.Column="5" 
+        </TextBlock-->
+        <Button Grid.Column="3" 
+                VerticalAlignment="Top"
+                Height="45"
                 Margin="6" 
                 Padding="6" 
                 Name="NewButton" 
                 Command="{Binding NewCommand, RelativeSource={RelativeSource  AncestorType=UserControl}}"
+                CommandParameter = "{StaticResource False}"
                 IsEnabled="{Binding IsClean, RelativeSource={RelativeSource  AncestorType=UserControl}}">
             New
         </Button>
+        <Button Grid.Column="5" 
+                VerticalAlignment="Top"
+                Height="45"
+                Margin="6" 
+                Padding="6" 
+                Name="NewKeepButton" 
+                Command="{Binding NewCommand, RelativeSource={RelativeSource  AncestorType=UserControl}}"
+                CommandParameter = "{StaticResource True}"
+                IsEnabled="{Binding IsClean, RelativeSource={RelativeSource  AncestorType=UserControl}}">
+            Equal New
+        </Button>
         <Button Grid.Column="7" 
+                VerticalAlignment="Top"
+                Height="45"
                 Margin="6" 
                 Padding="6" 
                 Name="SaveButton"
@@ -80,6 +111,8 @@
             Save
         </Button>
         <Button Grid.Column="9" 
+                VerticalAlignment="Top"
+                Height="45"
                 Margin="6" 
                 Padding="6" 
                 Name="UndoButton"
@@ -87,6 +120,8 @@
             Undo
         </Button>
         <Button Grid.Column="11" 
+                VerticalAlignment="Top"
+                Height="45"
                 Margin="6" 
                 Padding="6" 
                 Name="DeleteButton"

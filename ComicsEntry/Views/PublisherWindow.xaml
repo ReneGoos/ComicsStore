@@ -20,13 +20,13 @@
                    Grid.IsSharedSizeScope="True">
             <control:SimpleToolbar FilteredItems="{Binding FilteredItems}"
                                    Id = "{Binding Item.Id, Mode=TwoWay}" 
-                                   IsClean ="{Binding IsClean}"
-                                   IsDirty ="{Binding IsDirty}"
-                                   Filter = "{Binding ItemFilter, Mode=TwoWay}"
-                                   NewCommand="{Binding NewCommand}"
-                                   SaveCommand="{Binding SaveCommand}"
-                                   UndoCommand="{Binding UndoCommand}"
-                                   DeleteCommand="{Binding DeleteCommand}"
+                                   IsClean = "{Binding IsClean}"
+                                   IsDirty = "{Binding IsDirty}"
+                                   Filter = "{Binding NameFilter}"
+                                   NewCommand = "{Binding NewCommand}"
+                                   SaveCommand = "{Binding SaveCommand}"
+                                   UndoCommand = "{Binding UndoCommand}"
+                                   DeleteCommand = "{Binding DeleteCommand}"
                                    />
         </DockPanel>
         <Grid DockPanel.Dock="Bottom">

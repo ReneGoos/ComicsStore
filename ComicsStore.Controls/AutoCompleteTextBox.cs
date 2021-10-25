@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Collections;
 using System.Windows.Controls.Primitives;
-using System.ComponentModel;
 using System.Diagnostics;
 
 namespace ComicsStore.Controls
@@ -49,32 +41,32 @@ namespace ComicsStore.Controls
     /// </summary>
     public class AutoCompleteTextBox : TextBox
     {
-        Popup popup;
-        ListBox listBox;
-        Func<object, string, bool> filter;
-        string textCache = "";
-        bool suppressEvent = false;
+        Popup _popup;
+        ListBox _listBox;
+        Func<object, string, bool> _filter;
+        string _textCache = "";
+        bool _suppressEvent = false;
         // Binding hack - not really necessary.
         //DependencyObject dummy = new DependencyObject();
-        FrameworkElement dummy = new FrameworkElement();
+        FrameworkElement _dummy = new FrameworkElement();
 
         public Func<object, string, bool> Filter
         {
             get
             {
-                return filter;
+                return _filter;
             }
             set
             {
-                if (filter != value)
+                if (_filter != value)
                 {
-                    filter = value;
-                    if (listBox != null)
+                    _filter = value;
+                    if (_listBox != null)
                     {
-                        if (filter != null)
-                            listBox.Items.Filter = FilterFunc;
+                        if (_filter != null)
+                            _listBox.Items.Filter = FilterFunc;
                         else
-                            listBox.Items.Filter = null;
+                            _listBox.Items.Filter = null;
                     }
                 }
             }
@@ -103,29 +95,29 @@ namespace ComicsStore.Controls
 
         protected void OnItemsSourceChanged(IEnumerable itemsSource)
         {
-            if (listBox == null) return;
+            if (_listBox == null) return;
             Debug.Print("Data: " + itemsSource);
             if (itemsSource is ListCollectionView)
             {
-                listBox.ItemsSource = new LimitedListCollectionView((IList)((ListCollectionView)itemsSource).SourceCollection) { Limit = MaxCompletions };
+                _listBox.ItemsSource = new LimitedListCollectionView((IList)((ListCollectionView)itemsSource).SourceCollection) { Limit = MaxCompletions };
                 Debug.Print("Was ListCollectionView");
             }
             else if (itemsSource is CollectionView)
             {
-                listBox.ItemsSource = new LimitedListCollectionView(((CollectionView)itemsSource).SourceCollection) { Limit = MaxCompletions };
+                _listBox.ItemsSource = new LimitedListCollectionView(((CollectionView)itemsSource).SourceCollection) { Limit = MaxCompletions };
                 Debug.Print("Was CollectionView");
             }
             else if (itemsSource is IList)
             {
-                listBox.ItemsSource = new LimitedListCollectionView((IList)itemsSource) { Limit = MaxCompletions };
+                _listBox.ItemsSource = new LimitedListCollectionView((IList)itemsSource) { Limit = MaxCompletions };
                 Debug.Print("Was IList");
             }
             else
             {
-                listBox.ItemsSource = new LimitedCollectionView(itemsSource) { Limit = MaxCompletions };
+                _listBox.ItemsSource = new LimitedCollectionView(itemsSource) { Limit = MaxCompletions };
                 Debug.Print("Was IEnumerable");
             }
-            if (listBox.Items.Count == 0) InternalClosePopup();
+            if (_listBox.Items.Count == 0) InternalClosePopup();
         }
 
         #endregion
@@ -167,8 +159,8 @@ namespace ComicsStore.Controls
 
         private void OnItemTemplateChanged(DataTemplate p)
         {
-            if (listBox == null) return;
-            listBox.ItemTemplate = p;
+            if (_listBox == null) return;
+            _listBox.ItemTemplate = p;
         }
 
         #endregion
@@ -196,8 +188,8 @@ namespace ComicsStore.Controls
 
         private void OnItemContainerStyleChanged(Style p)
         {
-            if (listBox == null) return;
-            listBox.ItemContainerStyle = p;
+            if (_listBox == null) return;
+            _listBox.ItemContainerStyle = p;
         }
 
         #endregion
@@ -237,8 +229,8 @@ namespace ComicsStore.Controls
 
         private void OnItemTemplateSelectorChanged(DataTemplateSelector p)
         {
-            if (listBox == null) return;
-            listBox.ItemTemplateSelector = p;
+            if (_listBox == null) return;
+            _listBox.ItemTemplateSelector = p;
         }
 
         #endregion
@@ -250,23 +242,23 @@ namespace ComicsStore.Controls
 
         private void InternalClosePopup()
         {
-            if (popup != null)
-                popup.IsOpen = false;
+            if (_popup != null)
+                _popup.IsOpen = false;
         }
         private void InternalOpenPopup()
         {
-            popup.IsOpen = true;
-            if (listBox != null) listBox.SelectedIndex = -1;
+            _popup.IsOpen = true;
+            if (_listBox != null) _listBox.SelectedIndex = -1;
         }
         public void ShowPopup()
         {
-            if (listBox == null || popup == null) InternalClosePopup();
-            else if (listBox.Items.Count == 0) InternalClosePopup();
+            if (_listBox == null || _popup == null) InternalClosePopup();
+            else if (_listBox.Items.Count == 0) InternalClosePopup();
             else InternalOpenPopup();
         }
         private void SetTextValueBySelection(object obj, bool moveFocus)
         {
-            if (popup != null)
+            if (_popup != null)
             {
                 InternalClosePopup();
                 Dispatcher.Invoke(new Action(() =>
@@ -297,36 +289,36 @@ namespace ComicsStore.Controls
             //BindingOperations.SetBinding(dummy, TextProperty, newBinding);
 
             // Set the dummy's DataContext to our selected object.
-            dummy.DataContext = obj;
+            _dummy.DataContext = obj;
 
             // Apply the binding to the dummy FrameworkElement.
-            _ = BindingOperations.SetBinding(dummy, TextProperty, originalBinding);
-            suppressEvent = true;
+            _ = BindingOperations.SetBinding(_dummy, TextProperty, originalBinding);
+            _suppressEvent = true;
 
             // Get the binding's resulting value.
-            Text = dummy.GetValue(TextProperty).ToString();
-            suppressEvent = false;
-            listBox.SelectedIndex = -1;
+            Text = _dummy.GetValue(TextProperty).ToString();
+            _suppressEvent = false;
+            _listBox.SelectedIndex = -1;
             SelectAll();
         }
         protected override void OnTextChanged(TextChangedEventArgs e)
         {
             base.OnTextChanged(e);
-            if (suppressEvent) return;
-            textCache = Text ?? "";
-            Debug.Print("Text: " + textCache);
-            if (popup != null && textCache == "")
+            if (_suppressEvent) return;
+            _textCache = Text ?? "";
+            Debug.Print("Text: " + _textCache);
+            if (_popup != null && _textCache == "")
             {
                 InternalClosePopup();
             }
-            else if (listBox != null)
+            else if (_listBox != null)
             {
-                if (filter != null)
-                    listBox.Items.Filter = FilterFunc;
+                if (_filter != null)
+                    _listBox.Items.Filter = FilterFunc;
 
-                if (popup != null)
+                if (_popup != null)
                 {
-                    if (listBox.Items.Count == 0)
+                    if (_listBox.Items.Count == 0)
                         InternalClosePopup();
                     else
                         InternalOpenPopup();
@@ -336,31 +328,31 @@ namespace ComicsStore.Controls
 
         private bool FilterFunc(object obj)
         {
-            return filter(obj, textCache);
+            return _filter(obj, _textCache);
         }
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            popup = Template.FindName("PART_Popup", this) as Popup;
-            listBox = Template.FindName("PART_ListBox", this) as ListBox;
-            if (listBox != null)
+            _popup = Template.FindName("PART_Popup", this) as Popup;
+            _listBox = Template.FindName("PART_ListBox", this) as ListBox;
+            if (_listBox != null)
             {
-                listBox.PreviewMouseDown += new MouseButtonEventHandler(listBox_MouseUp);
-                listBox.KeyDown += new KeyEventHandler(listBox_KeyDown);
+                _listBox.PreviewMouseDown += new MouseButtonEventHandler(listBox_MouseUp);
+                _listBox.KeyDown += new KeyEventHandler(listBox_KeyDown);
                 OnItemsSourceChanged(ItemsSource);
                 OnItemTemplateChanged(ItemTemplate);
                 OnItemContainerStyleChanged(ItemContainerStyle);
                 OnItemTemplateSelectorChanged(ItemTemplateSelector);
-                if (filter != null)
-                    listBox.Items.Filter = FilterFunc;
+                if (_filter != null)
+                    _listBox.Items.Filter = FilterFunc;
             }
         }
         protected override void OnLostFocus(RoutedEventArgs e)
         {
             base.OnLostFocus(e);
-            if (suppressEvent) return;
-            if (popup != null)
+            if (_suppressEvent) return;
+            if (_popup != null)
             {
                 InternalClosePopup();
             }
@@ -377,11 +369,11 @@ namespace ComicsStore.Controls
             }
             else if (e.Key == Key.Down)
             {
-                if (listBox != null && o == this)
+                if (_listBox != null && o == this)
                 {
-                    suppressEvent = true;
-                    _ = listBox.Focus();
-                    suppressEvent = false;
+                    _suppressEvent = true;
+                    _ = _listBox.Focus();
+                    _suppressEvent = false;
                 }
             }
         }
@@ -394,16 +386,16 @@ namespace ComicsStore.Controls
                 dep = VisualTreeHelper.GetParent(dep);
             }
             if (dep == null) return;
-            var item = listBox.ItemContainerGenerator.ItemFromContainer(dep);
+            var item = _listBox.ItemContainerGenerator.ItemFromContainer(dep);
             if (item == null) return;
             SetTextValueBySelection(item, false);
         }
         void listBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter || e.Key == Key.Return)
-                SetTextValueBySelection(listBox.SelectedItem, false);
+                SetTextValueBySelection(_listBox.SelectedItem, false);
             else if (e.Key == Key.Tab)
-                SetTextValueBySelection(listBox.SelectedItem, true);
+                SetTextValueBySelection(_listBox.SelectedItem, true);
         }
     }
 }

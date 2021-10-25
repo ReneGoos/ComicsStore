@@ -12,7 +12,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
 using System.Linq;
-using System.Threading.Tasks;
+using ComicsLibrary.Helpers;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -31,7 +31,6 @@ namespace ComicsLibrary.ViewModels
 
         private CollectionViewSource _itemsFilteredViewSource;
         private CollectionViewSource _itemsQueryViewSource;
-        private string _itemFilter;
 
         private void UpdateItemsList(TOut item, bool removeOnly = false)
         {
@@ -58,26 +57,12 @@ namespace ComicsLibrary.ViewModels
             _itemService = service;
 
             GetCommand = new RelayCommand<int>(new Action<int>(GetItemAsync));
-            NewCommand = new RelayCommand(new Action(NewItem));
+            NewCommand = new RelayCommand<bool>(new Action<bool>(NewItem));
             SaveCommand = new RelayCommand(new Action(SaveAsync));
             UndoCommand = new RelayCommand(new Action(CancelSaveAsync));
             DeleteCommand = new RelayCommand<int>(new Action<int>(DeleteAsync));
 
             NewItem();
-        }
-
-        protected virtual void FilterResults(object sender, FilterEventArgs e)
-        {
-            if (_itemFilter is null || _itemFilter.Length == 0)
-            {
-                e.Accepted = true;
-                return;
-            }
-
-            if (e.Item is BasicOutputModel item)
-            {
-                e.Accepted = item.Name.Contains(_itemFilter, System.StringComparison.InvariantCultureIgnoreCase);
-            }
         }
 
         protected virtual void QueryResults(object sender, FilterEventArgs e)
@@ -103,7 +88,6 @@ namespace ComicsLibrary.ViewModels
             {
                 Source = _items
             };
-            _itemsFilteredViewSource.Filter += FilterResults;
             _itemsFilteredViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
 
             _itemsQueryViewSource = new CollectionViewSource
@@ -113,6 +97,13 @@ namespace ComicsLibrary.ViewModels
             _itemsQueryViewSource.Filter += QueryResults;
             _itemsQueryViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
         }
+
+        public bool FilterByString (object item, string text)
+        {
+            return item is BasicOutputModel basicOutput && basicOutput.Name.Contains(text, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public Func<object, string, bool> NameFilter => FilterByString;
 
         protected virtual void CancelSaveAsync()
         {
@@ -171,9 +162,18 @@ namespace ComicsLibrary.ViewModels
             NewItem();
         }
 
-        protected virtual void NewItem()
+        protected virtual void NewItem(bool bKeep = false)
         {
-            Item = new TEdit();
+            var item = new TEdit();
+
+            if (bKeep)
+            {
+                item = Item.CloneJson(item.Id.ToString(), null);
+                item.Id = null;
+                //clear item.Id from all children as well!
+            }
+
+            Item = item;
             Item.PropertyChanged += ItemPropertyChanged;
             IsDirty = false;
         }
@@ -214,16 +214,6 @@ namespace ComicsLibrary.ViewModels
                 default:
                     IsDirty = true;
                     break;
-            }
-        }
-
-        public string ItemFilter
-        {
-            get => _itemFilter;
-            set
-            {
-                Set(ref _itemFilter, value);
-                _itemsFilteredViewSource.View.Refresh();
             }
         }
 

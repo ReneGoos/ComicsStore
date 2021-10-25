@@ -25,12 +25,7 @@ namespace ComicsLibrary.Core
         /// <param name="canExecute">The execution status logic.</param>
         public RelayCommand(Action<T> execute, Predicate<T> canExecute)
         {
-            if (execute == null)
-            {
-                throw new ArgumentNullException("execute");
-            }
-
-            _execute = execute;
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
 
@@ -77,7 +72,7 @@ namespace ComicsLibrary.Core
         /// <remarks><seealso cref="CanExecute"/> will always return true.</remarks>
         public RelayCommand(Action execute)
         {
-            _execute = execute ?? throw new ArgumentNullException("execute");
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
         }
 
         ///<summary>

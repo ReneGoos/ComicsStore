@@ -1,5 +1,4 @@
 ﻿using ComicsLibrary.ViewModels;
-using ComicsLibrary.ViewModels.Interfaces;
 using System.Windows;
 using System.Windows.Controls;
 

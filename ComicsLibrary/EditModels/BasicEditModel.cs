@@ -12,7 +12,6 @@ namespace ComicsLibrary.EditModels
     {
         private DateTime _creationDate;
         private DateTime _dateUpdate;
-        private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
         private string _error;
 
         public BasicEditModel()
@@ -139,7 +138,7 @@ namespace ComicsLibrary.EditModels
             }
         }
 
-        internal Dictionary<string, List<string>> Errors => this._errors;
+        internal Dictionary<string, List<string>> Errors { get; } = new();
 
     }
 }

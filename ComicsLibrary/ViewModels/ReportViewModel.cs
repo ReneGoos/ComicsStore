@@ -3,8 +3,6 @@ using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
 using ComicsLibrary.Helpers;
 using ComicsStore.Data.Model.Search;
-using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.MiddleWare.Reports;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using Microsoft.Win32;
 using System;

@@ -8,7 +8,9 @@
         xmlns:vm="clr-namespace:ComicsLibrary.EditModels;assembly=ComicsLibrary"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
         mc:Ignorable="d"
-        Title="Book" Height="450" Width="900"
+        Title="Book"
+        Height="650"
+        Width="900"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
         >
     <Window.Resources>
@@ -21,13 +23,13 @@
                    Grid.IsSharedSizeScope="True">
             <control:SimpleToolbar FilteredItems="{Binding FilteredItems}"
                                    Id = "{Binding Item.Id, Mode=TwoWay}" 
-                                   IsClean ="{Binding IsClean}"
-                                   IsDirty ="{Binding IsDirty}"
-                                   Filter = "{Binding ItemFilter, Mode=TwoWay}"
-                                   NewCommand="{Binding NewCommand}"
-                                   SaveCommand="{Binding SaveCommand}"
-                                   UndoCommand="{Binding UndoCommand}"
-                                   DeleteCommand="{Binding DeleteCommand}"
+                                   IsClean = "{Binding IsClean}"
+                                   IsDirty = "{Binding IsDirty}"
+                                   Filter = "{Binding NameFilter}"
+                                   NewCommand = "{Binding NewCommand}"
+                                   SaveCommand = "{Binding SaveCommand}"
+                                   UndoCommand = "{Binding UndoCommand}"
+                                   DeleteCommand = "{Binding DeleteCommand}"
                                    />
         </DockPanel>
         <Grid DockPanel.Dock="Bottom">
