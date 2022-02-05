@@ -154,10 +154,10 @@
                                                   ItemsSource="{Binding Path=Roles}"
                                                   Text="{Binding ArtistType, 
                                                                  Converter={StaticResource ArrayConverter},
-                                                                 ConverterParameter=RoleType}"
+                                                                 ConverterParameter=EnumCheckedType}"
                                                   IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}">
                                             <ComboBox.ItemTemplate>
-                                                <DataTemplate DataType="{x:Type vm:RoleType}">
+                                                <DataTemplate DataType="{x:Type helpers:EnumCheckedType}">
                                                     <CheckBox Content="{Binding Name}"
                                                               IsChecked="{Binding Checked}"
                                                               />

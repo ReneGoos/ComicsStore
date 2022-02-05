@@ -7,6 +7,7 @@ using ComicsStore.MiddleWare.Services.Interfaces;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
+using ComicsLibrary.Core;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -49,19 +50,19 @@ namespace ComicsLibrary.ViewModels
             RaisePropertyChanged("OriginStories");
         }
 
-        public void AddStoryArtist(int? artistId)
+        public void AddStoryArtist(ObservableChangedCollection<StoryArtistEditModel> storyArtists, int? artistId)
         {
-            Item.AddStoryArtist(artistId);
+            Item.AddStoryArtist(storyArtists, artistId);
         }
 
-        public void AddStoryBook(int? bookId)
+        public void AddStoryBook(ObservableChangedCollection<StoryBookEditModel> storyBooks, int? bookId)
         {
-            Item.AddStoryBook(bookId);
+            Item.AddStoryBook(storyBooks, bookId);
         }
 
-        public void AddStoryCharacter(int? characterId)
+        public void AddStoryCharacter(ObservableChangedCollection<StoryCharacterEditModel> storyCharacters, int? characterId)
         {
-            Item.AddStoryCharacter(characterId);
+            Item.AddStoryCharacter(storyCharacters, characterId);
         }
 
         public void AddStoryCode(int? codeId)
@@ -75,17 +76,17 @@ namespace ComicsLibrary.ViewModels
             PropertyChanged += StoryViewModel_PropertyChanged;
         }
 
-        public List<StoryArtistEditModel> GetStoryArtists()
+        public ObservableChangedCollection<StoryArtistEditModel> GetStoryArtists()
         {
             return Item.GetStoryArtists();
         }
 
-        public List<StoryCharacterEditModel> GetStoryCharacters()
+        public ObservableChangedCollection<StoryCharacterEditModel> GetStoryCharacters()
         {
             return Item.GetStoryCharacters();
         }
 
-        public List<StoryBookEditModel> GetStoryBooks()
+        public ObservableChangedCollection<StoryBookEditModel> GetStoryBooks()
         {
             return Item.GetStoryBooks();
         }

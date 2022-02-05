@@ -1,8 +1,8 @@
 ﻿using ComicsLibrary.Core;
 
-namespace ComicsLibrary.EditModels
+namespace ComicsLibrary.Helpers
 {
-    public class RoleType : ObservableObject
+    public class EnumCheckedType : ObservableObject
     {
         private string _name;
         private bool _checked;

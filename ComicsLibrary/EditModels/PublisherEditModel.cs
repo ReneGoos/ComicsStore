@@ -15,28 +15,43 @@ namespace ComicsLibrary.EditModels
 
         public ObservableChangedCollection<BookPublisherEditModel> BookPublisher { get => _bookPublishers; set => Set(ref _bookPublishers, value); }
 
-        public void AddBookPublisher(int? bookId)
+        public void AddBookPublisher(ObservableChangedCollection<BookPublisherEditModel> bookPublishers, int? bookId)
         {
             if (bookId.HasValue)
             {
                 if (!BookPublisher.Any(s => s.BookId == bookId.Value))
                 {
-                    BookPublisher.Add(new BookPublisherEditModel
+                    if (!bookPublishers.Any(s => s.BookId == bookId.Value))
                     {
-                        PublisherId = Id,
-                        BookId = bookId
-                    });
+                        bookPublishers.Add(new BookPublisherEditModel
+                        {
+                            PublisherId = Id,
+                            BookId = bookId
+                        });
+                    }
+
+                    BookPublisher = bookPublishers;
                 }
             }
         }
 
-        public List<BookPublisherEditModel> GetBookPublishers()
+        public ObservableChangedCollection<BookPublisherEditModel> GetBookPublishers()
         {
-            return new List<BookPublisherEditModel>(BookPublisher.ToList().ConvertAll(s => new BookPublisherEditModel
+            return new ObservableChangedCollection<BookPublisherEditModel>(BookPublisher.ToList().ConvertAll(s => new BookPublisherEditModel
             {
                 BookId = s.BookId,
                 PublisherId = s.PublisherId
             }));
+        }
+
+        public override void ResetId()
+        {
+            Id = null;
+
+            foreach (var book in BookPublisher)
+            {
+                book.PublisherId = null;
+            }
         }
     }
 }

@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FilteredListViewControl\FilteredListViewControl.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="fonts\fontawesome-webfont.eot" />
     <Resource Include="fonts\fontawesome-webfont.svg" />
     <Resource Include="fonts\fontawesome-webfont.ttf" />

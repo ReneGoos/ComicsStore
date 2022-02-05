@@ -43,34 +43,44 @@ namespace ComicsLibrary.EditModels
         public ObservableChangedCollection<StoryBookEditModel> StoryBook { get => _storyBook; set => Set(ref _storyBook, value); }
         public ObservableChangedCollection<StoryCharacterEditModel> StoryCharacter { get => _storyCharacter; set => Set(ref _storyCharacter, value); }
 
-        public void AddStoryArtist(int? artistId)
+        public void AddStoryArtist(ObservableChangedCollection<StoryArtistEditModel> storyArtists, int? artistId)
         {
             if (artistId.HasValue)
             {
                 if (!StoryArtist.Any(s => s.ArtistId == artistId.Value))
                 {
-                    StoryArtist.Add(new StoryArtistEditModel
+                    if (!storyArtists.Any(s => s.ArtistId == artistId.Value))
                     {
-                        ArtistId = artistId,
-                        StoryId = Id
-                    });
+                        storyArtists.Add(new StoryArtistEditModel
+                        {
+                            ArtistId = artistId,
+                            StoryId = Id
+                        });
+                    }
+
+                    StoryArtist = storyArtists;
                 }
             }
         }
 
-        public void AddStoryBook(int? bookId)
+        public void AddStoryBook(ObservableChangedCollection<StoryBookEditModel> storyBooks, int? bookId)
         {
             if (bookId.HasValue)
             {
                 if (!StoryBook.Any(s => s.BookId == bookId.Value))
                 {
-                    StoryBook.Add(new StoryBookEditModel
+                    if (!storyBooks.Any(s => s.BookId == bookId.Value))
                     {
-                        BookId = bookId,
-                        StoryId = Id
-                    });
+                        storyBooks.Add(new StoryBookEditModel
+                        {
+                            BookId = bookId,
+                            StoryId = Id
+                        });
+                    }
+
+                    StoryBook = storyBooks;
                 }
-            }
+        }
         }
 
         public void AddStoryCode(int? codeId)
@@ -84,24 +94,29 @@ namespace ComicsLibrary.EditModels
             }
         }
 
-        public void AddStoryCharacter(int? characterId)
+        public void AddStoryCharacter(ObservableChangedCollection<StoryCharacterEditModel> storyCharacters, int? characterId)
         {
             if (characterId.HasValue)
             {
                 if (!StoryCharacter.Any(s => s.CharacterId == characterId.Value))
                 {
-                    StoryCharacter.Add(new StoryCharacterEditModel
+                    if (!storyCharacters.Any(s => s.CharacterId == characterId.Value))
                     {
-                        CharacterId = characterId,
-                        StoryId = Id
-                    });
+                        storyCharacters.Add(new StoryCharacterEditModel
+                        {
+                            CharacterId = characterId,
+                            StoryId = Id
+                        });
+                    }
+
+                    StoryCharacter = storyCharacters;
                 }
             }
         }
 
-        public List<StoryArtistEditModel> GetStoryArtists()
+        public ObservableChangedCollection<StoryArtistEditModel> GetStoryArtists()
         {
-            return new List<StoryArtistEditModel>(StoryArtist.ToList().ConvertAll(s => new StoryArtistEditModel
+            return new ObservableChangedCollection<StoryArtistEditModel>(StoryArtist.ToList().ConvertAll(s => new StoryArtistEditModel
             {
                 ArtistId = s.ArtistId,
                 StoryId = s.StoryId,
@@ -109,22 +124,43 @@ namespace ComicsLibrary.EditModels
             }));
         }
 
-        public List<StoryCharacterEditModel> GetStoryCharacters()
+        public ObservableChangedCollection<StoryCharacterEditModel> GetStoryCharacters()
         {
-            return new List<StoryCharacterEditModel>(StoryCharacter.ToList().ConvertAll(s => new StoryCharacterEditModel
+            return new ObservableChangedCollection<StoryCharacterEditModel>(StoryCharacter.ToList().ConvertAll(s => new StoryCharacterEditModel
             {
                 CharacterId = s.CharacterId,
                 StoryId = s.StoryId
             }));
         }
 
-        public List<StoryBookEditModel> GetStoryBooks()
+        public ObservableChangedCollection<StoryBookEditModel> GetStoryBooks()
         {
-            return new List<StoryBookEditModel>(StoryBook.ToList().ConvertAll(s => new StoryBookEditModel
+            return new ObservableChangedCollection<StoryBookEditModel>(StoryBook.ToList().ConvertAll(s => new StoryBookEditModel
             {
                 BookId = s.BookId,
                 StoryId = s.StoryId
             }));
+        }
+
+        public override void ResetId()
+        {
+            Id = null;
+
+            foreach (var book in StoryBook)
+            {
+                book.StoryId = null;
+            }
+
+
+            foreach (var artist in StoryArtist)
+            {
+                artist.StoryId = null;
+            }
+
+            foreach (var character in StoryCharacter)
+            {
+                character.StoryId = null;
+            }
         }
     }
 }

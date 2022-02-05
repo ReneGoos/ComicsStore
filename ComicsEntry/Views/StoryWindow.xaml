@@ -6,7 +6,6 @@
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
         xmlns:local="clr-namespace:ComicsEntry.Views"
         xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
-        xmlns:vm="clr-namespace:ComicsLibrary.EditModels;assembly=ComicsLibrary"
         mc:Ignorable="d"
         Title="Story"
         Height="650"
@@ -449,10 +448,10 @@
                                                   ItemsSource="{Binding Path=Roles}"
                                                   Text="{Binding ArtistType, 
                                                             Converter={StaticResource ArrayConverter},
-                                                            ConverterParameter=RoleType}"
+                                                            ConverterParameter=EnumCheckedType}"
                                                   IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}">
                                             <ComboBox.ItemTemplate>
-                                                <DataTemplate DataType="{x:Type vm:RoleType}">
+                                                <DataTemplate DataType="{x:Type helpers:EnumCheckedType}">
                                                     <CheckBox Content="{Binding Name}"
                                                               IsChecked="{Binding Checked}"
                                                               />

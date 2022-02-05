@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ComicsStore.Data.Common;
 using System.ComponentModel.DataAnnotations;
+using ComicsLibrary.Helpers;
 
 namespace ComicsLibrary.EditModels
 {
@@ -12,7 +13,7 @@ namespace ComicsLibrary.EditModels
         private int? _artistId;
         private int? _storyId;
         private ICollection<string> _artistType;
-        private ObservableCollection<RoleType> _roles;
+        private ObservableCollection<EnumCheckedType> _roles;
 
         private void StoryArtistEditModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -45,15 +46,15 @@ namespace ComicsLibrary.EditModels
             }
         }
 
-        private ObservableCollection<RoleType> FillRoles()
+        private ObservableCollection<EnumCheckedType> FillRoles()
         {
-            var roles = new ObservableCollection<RoleType>();
+            var roles = new ObservableCollection<EnumCheckedType>();
 
             foreach (var value in Enum.GetValues(typeof(ArtistType))
                                     .Cast<ArtistType>()
                                     .Select(v => v.ToString()))
             {
-                var roleType = new RoleType
+                var roleType = new EnumCheckedType
                 {
                     Checked = false,
                     Name = value
@@ -95,6 +96,6 @@ namespace ComicsLibrary.EditModels
         [Required]
         public ICollection<string> ArtistType { get => _artistType; set => Set(ref _artistType, value); }
 
-        public ObservableCollection<RoleType> Roles { get { if (_roles is null) { _roles = FillRoles(); } return _roles; } set => Set(ref _roles, value); }
+        public ObservableCollection<EnumCheckedType> Roles { get { if (_roles is null) { _roles = FillRoles(); } return _roles; } set => Set(ref _roles, value); }
     }
 }

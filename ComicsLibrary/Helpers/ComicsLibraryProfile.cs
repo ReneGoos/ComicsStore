@@ -11,8 +11,8 @@ namespace ComicsLibrary.Helpers
     {
         public ComicsLibraryProfile() : base()
         {
-            _ = CreateMap<ICollection<RoleType>, ICollection<string>>().ConstructUsing(src => CheckedArrayMapper<ArtistType>.GetStringList(src));
-            _ = CreateMap<ICollection<string>, ICollection<RoleType>>().ConstructUsing(src => CheckedArrayMapper<ArtistType>.GetCheckedList(src));
+            _ = CreateMap<ICollection<EnumCheckedType>, ICollection<string>>().ConstructUsing(src => CheckedArrayMapper<ArtistType>.GetStringList(src));
+            _ = CreateMap<ICollection<string>, ICollection<EnumCheckedType>>().ConstructUsing(src => CheckedArrayMapper<ArtistType>.GetCheckedList(src));
 
             _ = CreateMap<ArtistEditModel, ArtistInputModel>();
             _ = CreateMap<BookEditModel, BookInputModel>();

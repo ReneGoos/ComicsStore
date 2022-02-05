@@ -5,6 +5,7 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System.Collections.Generic;
+using ComicsLibrary.Core;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -15,32 +16,32 @@ namespace ComicsLibrary.ViewModels
         {
         }
 
-        public void AddBookPublisher(int? publisherId)
+        public void AddBookPublisher(ObservableChangedCollection<BookPublisherEditModel> bookPublishers, int? publisherId)
         {
-            Item.AddBookPublisher(publisherId);
+            Item.AddBookPublisher(bookPublishers, publisherId);
         }
 
-        public void AddBookSeries(int? seriesId)
+        public void AddBookSeries(ObservableChangedCollection<BookSeriesEditModel> bookSeries, int? seriesId)
         {
-            Item.AddBookSeries(seriesId);
+            Item.AddBookSeries(bookSeries, seriesId);
         }
 
-        public void AddStoryBook(int? storyId)
+        public void AddStoryBook(ObservableChangedCollection<StoryBookEditModel> storyBooks, int? storyId)
         {
-            Item.AddStoryBook(storyId);
+            Item.AddStoryBook(storyBooks, storyId);
         }
 
-        public List<BookPublisherEditModel> GetBookPublishers()
+        public ObservableChangedCollection<BookPublisherEditModel> GetBookPublishers()
         {
             return Item.GetBookPublishers();
         }
 
-        public List<BookSeriesEditModel> GetBookSeries()
+        public ObservableChangedCollection<BookSeriesEditModel> GetBookSeries()
         {
             return Item.GetBookSeries();
         }
 
-        public List<StoryBookEditModel> GetStoryBooks()
+        public ObservableChangedCollection<StoryBookEditModel> GetStoryBooks()
         {
             return Item.GetStoryBooks();
         }

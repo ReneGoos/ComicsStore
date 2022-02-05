@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
@@ -9,6 +10,11 @@ namespace ComicsLibrary.Core
         // this collection also reacts to changes in its components' properties
 
         public ObservableChangedCollection() : base()
+        {
+            CollectionChanged += new NotifyCollectionChangedEventHandler(ObservableChangedCollection_CollectionChanged);
+        }
+
+        public ObservableChangedCollection(IEnumerable<T> collection) : base(collection)
         {
             CollectionChanged += new NotifyCollectionChangedEventHandler(ObservableChangedCollection_CollectionChanged);
         }

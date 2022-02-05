@@ -37,78 +37,114 @@ namespace ComicsLibrary.EditModels
         public ObservableChangedCollection<BookSeriesEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
         public ObservableChangedCollection<StoryBookEditModel> StoryBook { get => _storyBooks; set => Set(ref _storyBooks, value); }
 
-        public void AddBookPublisher(int? publisherId)
+        public void AddBookPublisher(ObservableChangedCollection<BookPublisherEditModel> bookPublishers, int? publisherId)
         {
             if (publisherId.HasValue)
             {
                 if (!BookPublisher.Any(s => s.PublisherId == publisherId.Value))
                 {
-                    BookPublisher.Add(new BookPublisherEditModel
+                    if (!bookPublishers.Any(s => s.PublisherId == publisherId.Value))
                     {
-                        PublisherId = publisherId,
-                        BookId = Id
-                    });
-                };
+                        bookPublishers.Add(new BookPublisherEditModel
+                        {
+                            PublisherId = publisherId,
+                            BookId = Id
+                        });
+                    };
+
+                    BookPublisher = bookPublishers;
+                }
             }
         }
 
-        public void AddStoryBook(int? storyId)
+        public void AddStoryBook(ObservableChangedCollection<StoryBookEditModel> storyBooks, int? storyId)
         {
             if (storyId.HasValue)
             {
                 if (!StoryBook.Any(s => s.StoryId == storyId.Value))
                 {
-                    StoryBook.Add(new StoryBookEditModel
+                    if (!storyBooks.Any(s => s.StoryId == storyId.Value))
                     {
-                        StoryId = storyId,
-                        BookId = Id
-                    });
+                        storyBooks.Add(new StoryBookEditModel
+                        {
+                            StoryId = storyId,
+                            BookId = Id
+                        });
+                    }
+
+                    StoryBook = storyBooks;
                 }
             }
         }
 
-        public void AddBookSeries(int? seriesId)
+        public void AddBookSeries(ObservableChangedCollection<BookSeriesEditModel> bookSeries, int? seriesId)
         {
             if (seriesId.HasValue)
             {
                 if (!BookSeries.Any(s => s.SeriesId == seriesId.Value))
                 {
-                    BookSeries.Add(new BookSeriesEditModel
+                    if (!bookSeries.Any(s => s.SeriesId == seriesId.Value))
                     {
-                        SeriesId = seriesId,
-                        BookId = Id
-                    });
+                        bookSeries.Add(new BookSeriesEditModel
+                        {
+                            SeriesId = seriesId,
+                            BookId = Id
+                        });
+                    }
+
+                    BookSeries = bookSeries;
                 }
             }
         }
 
-        public List<StoryBookEditModel> GetStoryBooks()
+        public ObservableChangedCollection<StoryBookEditModel> GetStoryBooks()
         {
-            return new List<StoryBookEditModel>(StoryBook.ToList().ConvertAll(s => new StoryBookEditModel
+            return new ObservableChangedCollection<StoryBookEditModel>(StoryBook.ToList().ConvertAll(s => new StoryBookEditModel
             {
                 BookId = s.BookId,
                 StoryId = s.StoryId
             }));
         }
 
-        public List<BookPublisherEditModel> GetBookPublishers()
+        public ObservableChangedCollection<BookPublisherEditModel> GetBookPublishers()
         {
-            return new List<BookPublisherEditModel>(BookPublisher.ToList().ConvertAll(s => new BookPublisherEditModel
+            return new ObservableChangedCollection<BookPublisherEditModel>(BookPublisher.ToList().ConvertAll(s => new BookPublisherEditModel
             {
                 BookId = s.BookId,
                 PublisherId = s.PublisherId
             }));
         }
 
-        public List<BookSeriesEditModel> GetBookSeries()
+        public ObservableChangedCollection<BookSeriesEditModel> GetBookSeries()
         {
-            return new List<BookSeriesEditModel>(BookSeries.ToList().ConvertAll(s => new BookSeriesEditModel
+            return new ObservableChangedCollection<BookSeriesEditModel>(BookSeries.ToList().ConvertAll(s => new BookSeriesEditModel
             {
                 BookId = s.BookId,
                 SeriesId = s.SeriesId,
                 Issue = s.Issue,
                 SeriesOrder = s.SeriesOrder
             }));
+        }
+
+        public override void ResetId()
+        {
+            Id = null;
+
+            foreach (var story in StoryBook)
+            {
+                story.BookId = null;
+            }
+
+
+            foreach (var publisher in BookPublisher)
+            {
+                publisher.BookId = null;
+            }
+
+            foreach (var series in BookSeries)
+            {
+                series.BookId = null;
+            }
         }
     }
 }

@@ -13,29 +13,44 @@ namespace ComicsLibrary.EditModels
 
         public ObservableChangedCollection<StoryArtistEditModel> StoryArtist { get; set; }
 
-        public void AddStoryArtist(int? storyId)
+        public void AddStoryArtist(ObservableChangedCollection<StoryArtistEditModel> storyArtists, int? storyId)
         {
             if (storyId.HasValue)
             {
                 if (!StoryArtist.Any(s => s.StoryId == storyId.Value))
                 {
-                    StoryArtist.Add(new StoryArtistEditModel
+                    if (!storyArtists.Any(s => s.StoryId == storyId.Value))
                     {
-                        ArtistId = Id,
-                        StoryId = storyId
-                    });
+                        StoryArtist.Add(new StoryArtistEditModel
+                        {
+                            ArtistId = Id,
+                            StoryId = storyId
+                        });
+                    }
+
+                    StoryArtist = storyArtists;
                 }
             }
         }
 
-        public List<StoryArtistEditModel> GetStoryArtists()
+        public ObservableChangedCollection<StoryArtistEditModel> GetStoryArtists()
         {
-            return new List<StoryArtistEditModel>(StoryArtist.ToList().ConvertAll(s => new StoryArtistEditModel
+            return new ObservableChangedCollection<StoryArtistEditModel>(StoryArtist.ToList().ConvertAll(s => new StoryArtistEditModel
             {
                 ArtistId = s.ArtistId,
                 StoryId = s.StoryId,
                 ArtistType = s.ArtistType
             }));
+        }
+
+        public override void ResetId()
+        {
+            Id = null;
+
+            foreach (var story in StoryArtist)
+            {
+                story.ArtistId = null;
+            }
         }
     }
 }

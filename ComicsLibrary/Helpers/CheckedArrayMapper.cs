@@ -9,13 +9,13 @@ namespace ComicsLibrary.Helpers
 {
     public static class CheckedArrayMapper<T> where T : Enum
     {
-        public static ICollection<RoleType> GetCheckedList(ICollection<string> names)
+        public static ICollection<EnumCheckedType> GetCheckedList(ICollection<string> names)
         {
-            var checks = new ObservableCollection<RoleType>();
+            var checks = new ObservableCollection<EnumCheckedType>();
 
             foreach (var value in typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public))
             {
-                checks.Add(new RoleType
+                checks.Add(new EnumCheckedType
                 {
                     Checked = names.Contains(value.Name),
                     Name = value.Name
@@ -25,7 +25,7 @@ namespace ComicsLibrary.Helpers
             return checks;
         }
 
-        public static ICollection<string> GetStringList(ICollection<RoleType> checks)
+        public static ICollection<string> GetStringList(ICollection<EnumCheckedType> checks)
         {
             var values = typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public);
             var names = new List<string>();

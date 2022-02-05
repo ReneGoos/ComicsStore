@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ComicsLibrary.EditModels
 {
-    public class TableEditModel : BasicEditModel
+    public abstract class TableEditModel : BasicEditModel
     {
         private string _name;
         private string _remark;
@@ -18,5 +19,7 @@ namespace ComicsLibrary.EditModels
         [Required]
         public string Name { get => _name; set => Set(ref _name, value); }
         public string Remark { get => _remark; set => Set(ref _remark, value); }
+
+        public abstract void ResetId();
     }
 }

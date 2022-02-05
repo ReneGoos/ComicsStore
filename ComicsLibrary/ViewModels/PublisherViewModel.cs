@@ -5,6 +5,7 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System.Collections.Generic;
+using ComicsLibrary.Core;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -15,12 +16,12 @@ namespace ComicsLibrary.ViewModels
         {
         }
 
-        public void AddBookPublisher(int? bookId)
+        public void AddBookPublisher(ObservableChangedCollection<BookPublisherEditModel> bookPublishers, int? bookId)
         {
-            Item.AddBookPublisher(bookId);
+            Item.AddBookPublisher(bookPublishers, bookId);
         }
 
-        public List<BookPublisherEditModel> GetBookPublishers()
+        public ObservableChangedCollection<BookPublisherEditModel> GetBookPublishers()
         {
             return Item.GetBookPublishers();
         }
