@@ -4,7 +4,6 @@ using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
-using System.Collections.Generic;
 using ComicsLibrary.Core;
 
 namespace ComicsLibrary.ViewModels

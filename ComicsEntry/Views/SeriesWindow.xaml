@@ -180,7 +180,7 @@
                          Grid.ColumnSpan="5"
                          Text="{Binding Remark, Mode=TwoWay}"/>
 
-                <Label Grid.Column="1"  
+                <Label Grid.Column="3"  
                        Grid.Row="13" 
                        Foreground="Red"
                        Content="{Binding Error}"/>
