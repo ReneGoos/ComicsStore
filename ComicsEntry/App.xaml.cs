@@ -62,6 +62,8 @@ namespace ComicsEntry
                 navigationService.Configure(StoreWindows.BookWindow, typeof(BookWindow));
                 navigationService.Configure(StoreWindows.CharacterWindow, typeof(CharacterWindow));
                 navigationService.Configure(StoreWindows.CodeWindow, typeof(CodeWindow));
+                navigationService.Configure(StoreWindows.OriginStoryWindow, typeof(OriginStoryWindow));
+                navigationService.Configure(StoreWindows.PseudonymArtistWindow, typeof(PseudonymArtistWindow));
                 navigationService.Configure(StoreWindows.PublisherWindow, typeof(PublisherWindow));
                 navigationService.Configure(StoreWindows.SeriesWindow, typeof(SeriesWindow));
                 navigationService.Configure(StoreWindows.StoryWindow, typeof(StoryWindow));
@@ -79,6 +81,8 @@ namespace ComicsEntry
             _ = services.AddTransient<BookWindow>();
             _ = services.AddTransient<CharacterWindow>();
             _ = services.AddTransient<CodeWindow>();
+            _ = services.AddTransient<OriginStoryWindow>();
+            _ = services.AddTransient<PseudonymArtistWindow>();
             _ = services.AddTransient<PublisherWindow>();
             _ = services.AddTransient<SeriesWindow>();
             _ = services.AddTransient<StoryWindow>();

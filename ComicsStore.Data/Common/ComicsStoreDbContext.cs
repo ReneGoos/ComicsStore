@@ -1,6 +1,8 @@
 ﻿using ComicsStore.Data.Model;
 using ComicsStore.Data.Model.Output;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace ComicsStore.Data.Common
 {
@@ -31,6 +33,21 @@ namespace ComicsStore.Data.Common
             _ = modelBuilder.Entity<StoryCharacter>()
                 .HasOne(sc => sc.Character)
                 .WithMany(c => c.StoryCharacter);
+
+            _ = modelBuilder.Entity<Artist>()
+                .Property(a => a.FullName)
+                .HasComputedColumnSql("[Name] || CASE WHEN [FirstName] IS NULL THEN '' ELSE ', ' || [FirstName] END");
+
+            _ = modelBuilder.Entity<Pseudonym>()
+                .HasKey(p => new { p.MainArtistId, p.PseudonymArtistId });
+
+            _ = modelBuilder.Entity<Pseudonym>()
+                .HasOne(p => p.MainArtist)
+                .WithMany(a => a.MainArtist);
+
+            _ = modelBuilder.Entity<Pseudonym>()
+                .HasOne(p => p.PseudonymArtist)
+                .WithMany(a => a.PseudonymArtist);
 
             _ = modelBuilder.Entity<StoryArtist>()
                 .HasKey(sa => new { sa.StoryId, sa.ArtistId });
@@ -98,6 +115,19 @@ namespace ComicsStore.Data.Common
                 .ToView("StorySeries");
         }
 
+        public void DetachAllEntities()
+        {
+            var changedEntriesCopy = this.ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added ||
+                            e.State == EntityState.Modified ||
+                            e.State == EntityState.Deleted)
+                .ToList();
+            foreach (var entry in changedEntriesCopy)
+            {
+                if (entry.State == EntityState.Detached) { }
+            }
+        }
+
         public virtual DbSet<Story> Stories { get; set; }
         public virtual DbSet<Code> Codes { get; set; }
         public virtual DbSet<Character> Characters { get; set; }
@@ -111,6 +141,7 @@ namespace ComicsStore.Data.Common
         public virtual DbSet<StoryBook> StoryBooks { get; set; }
         public virtual DbSet<BookSeries> BookSeries { get; set; }
         public virtual DbSet<BookPublisher> BookPublishers { get; set; }
+        public virtual DbSet<Pseudonym> Pseudonyms { get; set; }
 
         public virtual DbSet<ExportBook> ExportBooks { get; set; }
         public virtual DbSet<ExportStory> ExportStory { get; set; }

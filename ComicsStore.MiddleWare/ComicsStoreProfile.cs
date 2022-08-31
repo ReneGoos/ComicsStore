@@ -22,7 +22,9 @@ namespace ComicsStore.MiddleWare
             _ = CreateMap<StoryType, string>().ConstructUsing(src => EnumHelper<StoryType>.GetDisplayValue(src));
             _ = CreateMap<ArtistType, ICollection<string>>().ConstructUsing(src => EnumHelper<ArtistType>.GetDisplayValues(src));
 
-            _ = CreateMap<ArtistInputModel, Artist>();
+            _ = CreateMap<ArtistInputModel, Artist>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.LastName))
+                .ForSourceMember(src => src.Name, opt => opt.DoNotValidate());
             _ = CreateMap<BookInputModel, Book>();
             _ = CreateMap<CharacterInputModel, Character>();
             _ = CreateMap<CodeInputModel, Code>();
@@ -35,11 +37,14 @@ namespace ComicsStore.MiddleWare
 
             _ = CreateMap<BookPublisherInputModel, BookPublisher>();
             _ = CreateMap<BookSeriesInputModel, BookSeries>();
+            _ = CreateMap<PseudonymInputModel, Pseudonym>();
             _ = CreateMap<StoryArtistInputModel, StoryArtist>();
             _ = CreateMap<StoryBookInputModel, StoryBook>();
             _ = CreateMap<StoryCharacterInputModel, StoryCharacter>();
 
-            _ = CreateMap<Artist, ArtistOutputModel>();
+            _ = CreateMap<Artist, ArtistOutputModel>()
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FullName));
             _ = CreateMap<Book, BookOutputModel>();
             _ = CreateMap<Character, CharacterOutputModel>();
             _ = CreateMap<Code, CodeOutputModel>();
@@ -47,7 +52,9 @@ namespace ComicsStore.MiddleWare
             _ = CreateMap<Series, SeriesOutputModel>();
             _ = CreateMap<Story, StoryOutputModel>();
 
-            _ = CreateMap<Artist, ArtistOnlyOutputModel>();
+            _ = CreateMap<Artist, ArtistOnlyOutputModel>()
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FullName));
             _ = CreateMap<Book, BookOnlyOutputModel>();
             _ = CreateMap<Character, CharacterOnlyOutputModel>();
             _ = CreateMap<Code, CodeOnlyOutputModel>();
@@ -71,7 +78,11 @@ namespace ComicsStore.MiddleWare
             _ = CreateMap<StoryArtist, ArtistStoryOutputModel>().IncludeMembers(s => s.Story);
             _ = CreateMap<StoryArtist, StoryArtistOutputModel>().IncludeMembers(s => s.Artist);
             _ = CreateMap<Story, ArtistStoryOutputModel>();
-            _ = CreateMap<Artist, StoryArtistOutputModel>();
+            _ = CreateMap<Artist, StoryArtistOutputModel>()
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FullName));
+
+            _ = CreateMap<Pseudonym, PseudonymOutputModel>();
 
             _ = CreateMap<StoryBook, BookStoryOutputModel>().IncludeMembers(s => s.Story);
             _ = CreateMap<StoryBook, StoryBookOutputModel>().IncludeMembers(s => s.Book);

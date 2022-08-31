@@ -31,4 +31,11 @@
     <ProjectReference Include="..\ComicsStore.MiddleWare\ComicsStore.MiddleWare.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="Views\PseudonymArtistWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

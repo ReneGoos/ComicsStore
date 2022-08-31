@@ -12,6 +12,7 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.Data.Common;
 using Microsoft.Extensions.Configuration;
+using ComicsStore.MiddleWare.Services;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -20,7 +21,40 @@ namespace ComicsLibrary.ViewModels
         private readonly NavigationService _navigationService;
         private readonly IConfiguration _configuration;
 
+        public ArtistViewModel ArtistView { get; private set; }
+        public BookViewModel BookView { get; private set; }
+        public CharacterViewModel CharacterView { get; private set; }
+        public CodeViewModel CodeView { get; private set; }
+        public PublisherViewModel PublisherView { get; private set; }
+        public SeriesViewModel SeriesView { get; private set; }
+        public StoryViewModel StoryView { get; private set; }
+        public ReportViewModel ReportView { get; private set; }
+
+        public ArtistViewModel PseudonymArtistView { get; private set; }
+        public StoryViewModel OriginStoryView { get; private set; }
+
+        public List<string> Actives { get; set; }
+        public List<string> FirstPrints { get; set; }
+        public List<string> BookTypes { get; set; }
+        public List<string> StoryTypes { get; set; }
+        public List<string> Pseudonyms { get; set; }
+        public List<LanguageType> Languages { get; set; }
+
+        public bool OpenArtist => _navigationService.DialogActive(StoreWindows.ArtistWindow);
+        public bool OpenBook => _navigationService.DialogActive(StoreWindows.BookWindow);
+        public bool OpenCharacter => _navigationService.DialogActive(StoreWindows.CharacterWindow);
+        public bool OpenCode => _navigationService.DialogActive(StoreWindows.CodeWindow);
+        public bool OpenOriginStory => _navigationService.DialogActive(StoreWindows.OriginStoryWindow);
+        public bool OpenPseudonymArtist => _navigationService.DialogActive(StoreWindows.PseudonymArtistWindow);
+        public bool OpenPublisher => _navigationService.DialogActive(StoreWindows.PublisherWindow);
+        public bool OpenSeries => _navigationService.DialogActive(StoreWindows.SeriesWindow);
+        public bool OpenStory => _navigationService.DialogActive(StoreWindows.StoryWindow);
+
+        public string DebugState => _configuration.GetConnectionString("ComicsStore");
+
         public ICommand ShowArtistFromStoryWindowCommand { get; protected set; }
+        public ICommand ShowMainArtistFromArtistWindowCommand { get; protected set; }
+        public ICommand ShowPseudonymArtistFromArtistWindowCommand { get; protected set; }
         public ICommand ShowBookFromPublisherWindowCommand { get; protected set; }
         public ICommand ShowBookFromSeriesWindowCommand { get; protected set; }
         public ICommand ShowBookFromStoryWindowCommand { get; protected set; }
@@ -30,6 +64,8 @@ namespace ComicsLibrary.ViewModels
         public ICommand ShowPublisherFromBookWindowCommand { get; protected set; }
         public ICommand ShowSeriesFromBookWindowCommand { get; protected set; }
         public ICommand ShowSeriesFromCodeWindowCommand { get; protected set; }
+        public ICommand ShowOriginStoryFromStoryWindowCommand { get; protected set; }
+        public ICommand ShowStoryOriginFromStoryWindowCommand { get; protected set; }
         public ICommand ShowStoryFromArtistWindowCommand { get; protected set; }
         public ICommand ShowStoryFromBookWindowCommand { get; protected set; }
         public ICommand ShowStoryFromCharacterWindowCommand { get; protected set; }
@@ -39,10 +75,92 @@ namespace ComicsLibrary.ViewModels
         public ICommand ShowBookWindowCommand { get; protected set; }
         public ICommand ShowCharacterWindowCommand { get; protected set; }
         public ICommand ShowCodeWindowCommand { get; protected set; }
+        public ICommand ShowOriginStoryWindowCommand { get; protected set; }
+        public ICommand ShowPseudonymArtistWindowCommand { get; protected set; }
         public ICommand ShowPublisherWindowCommand { get; protected set; }
         public ICommand ShowSeriesWindowCommand { get; protected set; }
         public ICommand ShowStoryWindowCommand { get; protected set; }
         public ICommand ShowReportWindowCommand { get; protected set; }
+
+        public ComicsViewModel(IArtistsService artistsService,
+            IBooksService booksService,
+            ICharactersService charactersService,
+            ICodesService codesService,
+            IPublishersService publishersService,
+            ISeriesService seriesService,
+            IStoriesService storiesService,
+            IExportBooksService exportBooksService,
+            IMapper mapper,
+            NavigationService navigationService,
+            IConfiguration configuration) : base(mapper)
+        {
+            _navigationService = navigationService;
+            _configuration = configuration;
+            ArtistView = new ArtistViewModel(artistsService, mapper);
+            BookView = new BookViewModel(booksService, mapper);
+            CharacterView = new CharacterViewModel(charactersService, mapper);
+            CodeView = new CodeViewModel(codesService, mapper);
+            PublisherView = new PublisherViewModel(publishersService, mapper);
+            SeriesView = new SeriesViewModel(seriesService, mapper);
+            StoryView = new StoryViewModel(storiesService, mapper);
+            ReportView = new ReportViewModel(exportBooksService, mapper);
+
+            PseudonymArtistView = new ArtistViewModel(artistsService, mapper);
+            OriginStoryView = new StoryViewModel(storiesService, mapper);
+
+            Languages = LanguageType.FillLanguages();
+            Actives = FillEnum<Active>();
+            FirstPrints = FillEnum<FirstPrint>();
+            Pseudonyms = FillEnum<PseudonymInd>();
+            BookTypes = FillEnum<BookType>();
+            StoryTypes = FillEnum<StoryType>();
+
+            ShowArtistFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowArtistFromStoryWindow));                         
+            ShowMainArtistFromArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowMainArtistFromArtistWindow));
+            ShowPseudonymArtistFromArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowPseudonymArtistFromArtistWindow));
+            ShowBookFromPublisherWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromPublisherWindow));
+            ShowBookFromSeriesWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromSeriesWindow));
+            ShowBookFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromStoryWindow));
+            ShowCharacterFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCharacterFromStoryWindow));
+            ShowCodeFromSeriesWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCodeFromSeriesWindow));
+            ShowCodeFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCodeFromStoryWindow));
+            ShowPublisherFromBookWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowPublisherFromBookWindow));
+            ShowSeriesFromBookWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowSeriesFromBookWindow));
+            ShowSeriesFromCodeWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowSeriesFromCodeWindow));
+            ShowOriginStoryFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowOriginStoryFromStoryWindow));
+            ShowStoryOriginFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryOriginFromStoryWindow));
+            ShowStoryFromArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromArtistWindow));
+            ShowStoryFromBookWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromBookWindow));
+            ShowStoryFromCharacterWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromCharacterWindow));
+            ShowStoryFromCodeWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromCodeWindow));
+
+            ShowArtistWindowCommand = new RelayCommand(new Action(ShowArtistWindow));
+            ShowBookWindowCommand = new RelayCommand(new Action(ShowBookWindow));
+            ShowCharacterWindowCommand = new RelayCommand(new Action(ShowCharacterWindow));
+            ShowCodeWindowCommand = new RelayCommand(new Action(ShowCodeWindow));
+            ShowOriginStoryWindowCommand = new RelayCommand(new Action(ShowOriginStoryWindow));
+            ShowPseudonymArtistWindowCommand = new RelayCommand(new Action(ShowPseudonymArtistWindow));
+            ShowPublisherWindowCommand = new RelayCommand(new Action(ShowPublisherWindow));
+            ShowSeriesWindowCommand = new RelayCommand(new Action(ShowSeriesWindow));
+            ShowStoryWindowCommand = new RelayCommand(new Action(ShowStoriesWindow));
+            ShowReportWindowCommand = new RelayCommand(new Action(ShowReportWindow));
+        }
+
+        public override bool IsDirty
+        {
+            get => base.IsDirty;
+            set
+            {
+                base.IsDirty = value;
+                ArtistView.IsDirty = value;
+                BookView.IsDirty = value;
+                CharacterView.IsDirty = value;
+                CodeView.IsDirty = value;
+                PublisherView.IsDirty = value;
+                SeriesView.IsDirty = value;
+                StoryView.IsDirty = value;
+            }
+        }
 
         private static List<string> FillEnum<T>() where T : Enum
         {
@@ -88,6 +206,42 @@ namespace ComicsLibrary.ViewModels
             _ = await _navigationService.ShowDialogAsync(StoreWindows.CodeWindow);
         }
 
+        private async void ShowOriginStoryWindow()
+        {
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.OriginStoryWindow);
+        }
+
+        private async void ShowPseudonymArtistWindow()
+        {
+            _ = await _navigationService.ShowDialogAsync(StoreWindows.PseudonymArtistWindow);
+        }
+
+        private async void ShowPseudonymArtistFromArtistWindow(int? itemId)
+        {
+            var pseudonymArtists = ArtistView.GetPseudonymArtists();
+
+            GetItem(PseudonymArtistView, itemId);
+
+            var result = await _navigationService.ShowDialogAsync(StoreWindows.PseudonymArtistWindow);
+            if (result ?? false)
+            {
+                ArtistView.AddPseudonymArtist(pseudonymArtists, PseudonymArtistView.Item.Id);
+            }
+        }
+
+        private async void ShowMainArtistFromArtistWindow(int? itemId)
+        {
+            var mainArtists = ArtistView.GetMainArtists();
+
+            GetItem(PseudonymArtistView, itemId);
+
+            var result = await _navigationService.ShowDialogAsync(StoreWindows.PseudonymArtistWindow);
+            if (result ?? false)
+            {
+                ArtistView.AddMainArtist(mainArtists, PseudonymArtistView.Item.Id);
+            }
+        }
+
         private async void ShowPublisherWindow()
         {
             _ = await _navigationService.ShowDialogAsync(StoreWindows.PublisherWindow);
@@ -115,7 +269,6 @@ namespace ComicsLibrary.ViewModels
                 StoryView.AddStoryArtist(storyArtists, ArtistView.Item.Id);
             }
         }
-
 
         private async void ShowBookFromPublisherWindow(int? itemId)
         {
@@ -226,6 +379,30 @@ namespace ComicsLibrary.ViewModels
             }
         }
 
+        private async void ShowOriginStoryFromStoryWindow(int? itemId)
+        {
+            GetItem(OriginStoryView, itemId);
+
+            var result = await _navigationService.ShowDialogAsync(StoreWindows.OriginStoryWindow);
+            if (result ?? false)
+            {
+                GetItem(StoryView, StoryView.Item.Id);
+            }
+        }
+
+        private async void ShowStoryOriginFromStoryWindow(int? itemId)
+        {
+            //var storyOrigins = StoryView.GetOriginStories();
+
+            //GetItem(OriginStoryView, itemId);
+
+            //var result = await _navigationService.ShowDialogAsync(StoreWindows.OriginStoryWindow);
+            //if (result ?? false)
+            //{
+            //    StoryView.AddStoryOrigins(storyOrigins, OriginStoryView.Item.Id ?? itemId);
+            //}
+        }
+
         private async void ShowStoryFromArtistWindow(int? itemId)
         {
             var storyArtists = ArtistView.GetStoryArtists();
@@ -273,101 +450,6 @@ namespace ComicsLibrary.ViewModels
             if (result ?? false)
             {
                 GetItem(CodeView, CodeView.Item.Id);
-            }
-        }
-
-        public ComicsViewModel(IArtistsService artistsService,
-            IBooksService booksService,
-            ICharactersService charactersService,
-            ICodesService codesService,
-            IPublishersService publishersService,
-            ISeriesService seriesService,
-            IStoriesService storiesService,
-            IExportBooksService exportBooksService,
-            IMapper mapper,
-            NavigationService navigationService,
-            IConfiguration configuration) : base(mapper)
-        {
-            _navigationService = navigationService;
-            _configuration = configuration;
-            ArtistView = new ArtistViewModel(artistsService, mapper);
-            BookView = new BookViewModel(booksService, mapper);
-            CharacterView = new CharacterViewModel(charactersService, mapper);
-            CodeView = new CodeViewModel(codesService, mapper);
-            PublisherView = new PublisherViewModel(publishersService, mapper);
-            SeriesView = new SeriesViewModel(seriesService, mapper);
-            StoryView = new StoryViewModel(storiesService, mapper);
-            ReportView = new ReportViewModel(exportBooksService, mapper);
-
-            Languages = LanguageType.FillLanguages();
-            Actives = FillEnum<Active>();
-            FirstPrints = FillEnum<FirstPrint>();
-            BookTypes = FillEnum<BookType>();
-            StoryTypes = FillEnum<StoryType>();
-
-            ShowArtistFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowArtistFromStoryWindow));
-            ShowBookFromPublisherWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromPublisherWindow));
-            ShowBookFromSeriesWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromSeriesWindow));
-            ShowBookFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromStoryWindow));
-            ShowCharacterFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCharacterFromStoryWindow));
-            ShowCodeFromSeriesWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCodeFromSeriesWindow));
-            ShowCodeFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCodeFromStoryWindow));
-            ShowPublisherFromBookWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowPublisherFromBookWindow));
-            ShowSeriesFromBookWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowSeriesFromBookWindow));
-            ShowSeriesFromCodeWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowSeriesFromCodeWindow));
-            ShowStoryFromArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromArtistWindow));
-            ShowStoryFromBookWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromBookWindow));
-            ShowStoryFromCharacterWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromCharacterWindow));
-            ShowStoryFromCodeWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromCodeWindow));
-
-            ShowArtistWindowCommand = new RelayCommand(new Action(ShowArtistWindow));
-            ShowBookWindowCommand = new RelayCommand(new Action(ShowBookWindow));
-            ShowCharacterWindowCommand = new RelayCommand(new Action(ShowCharacterWindow));
-            ShowCodeWindowCommand = new RelayCommand(new Action(ShowCodeWindow));
-            ShowPublisherWindowCommand = new RelayCommand(new Action(ShowPublisherWindow));
-            ShowSeriesWindowCommand = new RelayCommand(new Action(ShowSeriesWindow));
-            ShowStoryWindowCommand = new RelayCommand(new Action(ShowStoriesWindow));
-            ShowReportWindowCommand = new RelayCommand(new Action(ShowReportWindow));
-        }
-
-        public ArtistViewModel ArtistView { get; private set; }
-        public BookViewModel BookView { get; private set; }
-        public CharacterViewModel CharacterView { get; private set; }
-        public CodeViewModel CodeView { get; private set; }
-        public PublisherViewModel PublisherView { get; private set; }
-        public SeriesViewModel SeriesView { get; private set; }
-        public StoryViewModel StoryView { get; private set; }
-        public ReportViewModel ReportView { get; private set; }
-
-        public List<string> Actives { get; set; }
-        public List<string> FirstPrints { get; set; }
-        public List<string> BookTypes { get; set; }
-        public List<string> StoryTypes { get; set; }
-        public List<LanguageType> Languages { get; set; }
-
-        public bool OpenArtist => _navigationService.DialogActive(StoreWindows.ArtistWindow);
-        public bool OpenBook => _navigationService.DialogActive(StoreWindows.BookWindow);
-        public bool OpenCharacter => _navigationService.DialogActive(StoreWindows.CharacterWindow);
-        public bool OpenCode => _navigationService.DialogActive(StoreWindows.CodeWindow);
-        public bool OpenPublisher => _navigationService.DialogActive(StoreWindows.PublisherWindow);
-        public bool OpenSeries => _navigationService.DialogActive(StoreWindows.SeriesWindow);
-        public bool OpenStory => _navigationService.DialogActive(StoreWindows.StoryWindow);
-
-        public string DebugState => _configuration.GetConnectionString("ComicsStore");
-
-        public override bool IsDirty
-        {
-            get => base.IsDirty;
-            set
-            {
-                base.IsDirty = value;
-                ArtistView.IsDirty = value;
-                BookView.IsDirty = value;
-                CharacterView.IsDirty = value;
-                CodeView.IsDirty = value;
-                PublisherView.IsDirty = value;
-                SeriesView.IsDirty = value;
-                StoryView.IsDirty = value;
             }
         }
     }

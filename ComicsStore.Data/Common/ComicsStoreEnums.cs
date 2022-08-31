@@ -16,6 +16,12 @@ namespace ComicsStore.Data.Common
         periodical = 2
     }
 
+    public enum PseudonymInd
+    {
+        yes = 0,
+        no = 1
+    }
+
     public enum FirstPrint
     {
         yes = 0,

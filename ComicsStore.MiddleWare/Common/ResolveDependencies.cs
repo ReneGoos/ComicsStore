@@ -17,7 +17,10 @@ namespace ComicsStore.MiddleWare.Common
         public static void AddServices(IServiceCollection services, IConfiguration configuration)
         {
             var conn = configuration.GetConnectionString("ComicsStore");
-            _ = services.AddDbContext<ComicsStoreDbContext>(options => options.UseSqlite(conn, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+            _ = services.AddDbContext<ComicsStoreDbContext>(options => options
+                .UseSqlite(conn, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+                .EnableSensitiveDataLogging());
+//                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 
             _ = services.AddScoped<IArtistsService, ArtistsService>();
             _ = services.AddScoped<IBooksService, BooksService>();

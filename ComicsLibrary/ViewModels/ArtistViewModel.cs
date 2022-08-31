@@ -5,6 +5,8 @@ using ComicsLibrary.EditModels;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsLibrary.Core;
+using System;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -25,5 +27,24 @@ namespace ComicsLibrary.ViewModels
             return Item.GetStoryArtists();
         }
 
+        public void AddMainArtist(ObservableChangedCollection<PseudonymEditModel> mainArtists, int? id)
+        {
+            Item.AddMainArtist(mainArtists, id);
+        }
+
+        public void AddPseudonymArtist(ObservableChangedCollection<PseudonymEditModel> pseudonymArtists, int? id)
+        {
+            Item.AddPseudonymArtist(pseudonymArtists, id);
+        }
+
+        public ObservableChangedCollection<PseudonymEditModel> GetMainArtists()
+        {
+            return Item.GetMainArtists();
+        }
+
+        public ObservableChangedCollection<PseudonymEditModel> GetPseudonymArtists()
+        {
+            return Item.GetPseudonymArtists();
+        }
     }
 }
