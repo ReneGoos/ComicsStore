@@ -1,4 +1,6 @@
 ﻿using ComicsLibrary.Core;
+using ComicsStore.Data.Model;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -89,6 +91,17 @@ namespace ComicsLibrary.EditModels
                 if (CodeId != codeId.Value)
                 {
                     CodeId = codeId.Value;
+                }
+            }
+        }
+
+        public void AddStoryOrigin(int? originStoryId)
+        {
+            if (originStoryId.HasValue)
+            {
+                if (OriginStoryId != originStoryId.Value)
+                {
+                    OriginStoryId = originStoryId.Value;
                 }
             }
         }

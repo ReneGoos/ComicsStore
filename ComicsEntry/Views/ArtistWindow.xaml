@@ -300,10 +300,10 @@
                             </GridViewColumn>
 
                             <GridViewColumn Header="Main Artist"
-                                            Width="250">
+                                            Width="400">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="238"
+                                        <ComboBox Width="388"
                                                   SelectedValue="{Binding MainArtistId, Mode=TwoWay}"
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name"
@@ -359,10 +359,10 @@
                             </GridViewColumn>
 
                             <GridViewColumn Header="Pseudonym"
-                                            Width="250">
+                                            Width="400">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="238"
+                                        <ComboBox Width="388"
                                                   SelectedValue="{Binding PseudonymArtistId, Mode=TwoWay}"
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name"

@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ComicsLibrary.Core
 {
-    public class ResolveDependencies
+    public class ResolveDependenciesX
     {
         public static void AddServices(IServiceCollection services, IConfiguration configuration)
         {

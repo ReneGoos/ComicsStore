@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using ComicsLibrary.Core;
+using System;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -68,6 +69,11 @@ namespace ComicsLibrary.ViewModels
         public void AddStoryCode(int? codeId)
         {
             Item.AddStoryCode(codeId);
+        }
+
+        public void AddStoryOrigin(int? originStoryId)
+        {
+            Item.AddStoryOrigin(originStoryId);
         }
 
         public StoryViewModel(IStoriesService storiesService,

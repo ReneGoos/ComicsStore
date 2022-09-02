@@ -122,6 +122,7 @@
                 </Label>
                 <ComboBox Grid.Column="3"
                           Grid.Row="5"
+                          Grid.ColumnSpan="3"
                           SelectedValue = "{Binding CodeId}" 
                           SelectedValuePath = "Id" 
                           DisplayMemberPath = "Name" 
@@ -136,7 +137,7 @@
                     </ComboBox.ItemsPanel>
                 </ComboBox>
                 <Button Grid.Row ="5"
-                        Grid.Column="5"
+                        Grid.Column="7"
                         Background="Transparent"
                         Command="{Binding DataContext.ShowCodeFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         CommandParameter="{Binding CodeId}"
@@ -145,15 +146,6 @@
                                     Converter={StaticResource NotConverter}, 
                                     RelativeSource={RelativeSource AncestorType=Window}}"
                         />
-                
-                <Button Grid.Row ="5"
-                        Grid.Column="7"
-                        Background="Transparent"
-                        Command="{Binding DataContext.ShowCodeFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                        Visibility="{Binding DataContext.OpenCode, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                        >
-                    +
-                </Button>
 
                 <Label Grid.Column="1"
                        Grid.Row="7">
@@ -248,7 +240,9 @@
                         Command="{Binding DataContext.ShowOriginStoryFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         CommandParameter="{Binding OriginStoryId}"
                         Content="{Binding OriginStoryId}"
-                        IsEnabled="{Binding OriginStoryId, Converter={StaticResource NotNullConverter}}"
+                        IsEnabled="{Binding DataContext.OpenOriginStory, 
+                                    Converter={StaticResource NotConverter}, 
+                                    RelativeSource={RelativeSource AncestorType=Window}}"
                         />
 
                 <Label Grid.Column="3"  
@@ -298,7 +292,7 @@
                                             Width="50">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.OriginStoryView.GetCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowStoryOriginFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding Id}"
                                                 Background="Transparent"
                                                 BorderThickness="0"       

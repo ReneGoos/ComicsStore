@@ -18,6 +18,7 @@ namespace ComicsLibrary.ViewModels
 {
     public class ComicsViewModel : BasicViewModel
     {
+        private readonly ComicsStoreDbContext _comicsStoreDbContext;
         private readonly NavigationService _navigationService;
         private readonly IConfiguration _configuration;
 
@@ -82,7 +83,8 @@ namespace ComicsLibrary.ViewModels
         public ICommand ShowStoryWindowCommand { get; protected set; }
         public ICommand ShowReportWindowCommand { get; protected set; }
 
-        public ComicsViewModel(IArtistsService artistsService,
+        public ComicsViewModel(ComicsStoreDbContext comicsStoreDbContext,
+            IArtistsService artistsService,
             IBooksService booksService,
             ICharactersService charactersService,
             ICodesService codesService,
@@ -94,6 +96,10 @@ namespace ComicsLibrary.ViewModels
             NavigationService navigationService,
             IConfiguration configuration) : base(mapper)
         {
+            _comicsStoreDbContext = comicsStoreDbContext;
+
+            _comicsStoreDbContext.Database.EnsureCreated();
+
             _navigationService = navigationService;
             _configuration = configuration;
             ArtistView = new ArtistViewModel(artistsService, mapper);
@@ -386,7 +392,7 @@ namespace ComicsLibrary.ViewModels
             var result = await _navigationService.ShowDialogAsync(StoreWindows.OriginStoryWindow);
             if (result ?? false)
             {
-                GetItem(StoryView, StoryView.Item.Id);
+                StoryView.AddStoryOrigin(OriginStoryView.Item.Id);
             }
         }
 
@@ -394,13 +400,13 @@ namespace ComicsLibrary.ViewModels
         {
             //var storyOrigins = StoryView.GetOriginStories();
 
-            //GetItem(OriginStoryView, itemId);
+            GetItem(OriginStoryView, itemId);
 
-            //var result = await _navigationService.ShowDialogAsync(StoreWindows.OriginStoryWindow);
-            //if (result ?? false)
-            //{
+            var result = await _navigationService.ShowDialogAsync(StoreWindows.OriginStoryWindow);
+            if (result ?? false)
+            {
             //    StoryView.AddStoryOrigins(storyOrigins, OriginStoryView.Item.Id ?? itemId);
-            //}
+            }
         }
 
         private async void ShowStoryFromArtistWindow(int? itemId)
