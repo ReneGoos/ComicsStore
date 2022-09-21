@@ -49,10 +49,10 @@ namespace ComicsLibrary.EditModels
                             PublisherId = publisherId,
                             BookId = Id
                         });
-                    };
-
-                    BookPublisher = bookPublishers;
+                    }
                 }
+
+                BookPublisher = bookPublishers;
             }
         }
 
@@ -70,9 +70,9 @@ namespace ComicsLibrary.EditModels
                             BookId = Id
                         });
                     }
-
-                    StoryBook = storyBooks;
                 }
+
+                StoryBook = storyBooks;
             }
         }
 
@@ -90,9 +90,9 @@ namespace ComicsLibrary.EditModels
                             BookId = Id
                         });
                     }
-
-                    BookSeries = bookSeries;
                 }
+
+                BookSeries = bookSeries;
             }
         }
 

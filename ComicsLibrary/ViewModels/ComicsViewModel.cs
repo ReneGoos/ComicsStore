@@ -54,13 +54,17 @@ namespace ComicsLibrary.ViewModels
         public string DebugState => _configuration.GetConnectionString("ComicsStore");
 
         public ICommand ShowArtistFromStoryWindowCommand { get; protected set; }
+        public ICommand ShowArtistFromOriginStoryWindowCommand { get; protected set; }
         public ICommand ShowMainArtistFromArtistWindowCommand { get; protected set; }
         public ICommand ShowPseudonymArtistFromArtistWindowCommand { get; protected set; }
         public ICommand ShowBookFromPublisherWindowCommand { get; protected set; }
         public ICommand ShowBookFromSeriesWindowCommand { get; protected set; }
+        public ICommand ShowBookFromOriginStoryWindowCommand { get; protected set; }
         public ICommand ShowBookFromStoryWindowCommand { get; protected set; }
+        public ICommand ShowCharacterFromOriginStoryWindowCommand { get; protected set; }
         public ICommand ShowCharacterFromStoryWindowCommand { get; protected set; }
         public ICommand ShowCodeFromSeriesWindowCommand { get; protected set; }
+        public ICommand ShowCodeFromOriginStoryWindowCommand { get; protected set; }
         public ICommand ShowCodeFromStoryWindowCommand { get; protected set; }
         public ICommand ShowPublisherFromBookWindowCommand { get; protected set; }
         public ICommand ShowSeriesFromBookWindowCommand { get; protected set; }
@@ -68,6 +72,7 @@ namespace ComicsLibrary.ViewModels
         public ICommand ShowOriginStoryFromStoryWindowCommand { get; protected set; }
         public ICommand ShowStoryOriginFromStoryWindowCommand { get; protected set; }
         public ICommand ShowStoryFromArtistWindowCommand { get; protected set; }
+        public ICommand ShowStoryFromPseudonymArtistWindowCommand { get; protected set; }
         public ICommand ShowStoryFromBookWindowCommand { get; protected set; }
         public ICommand ShowStoryFromCharacterWindowCommand { get; protected set; }
         public ICommand ShowStoryFromCodeWindowCommand { get; protected set; }
@@ -121,14 +126,18 @@ namespace ComicsLibrary.ViewModels
             BookTypes = FillEnum<BookType>();
             StoryTypes = FillEnum<StoryType>();
 
+            ShowArtistFromOriginStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowArtistFromOriginStoryWindow));
             ShowArtistFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowArtistFromStoryWindow));                         
             ShowMainArtistFromArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowMainArtistFromArtistWindow));
             ShowPseudonymArtistFromArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowPseudonymArtistFromArtistWindow));
             ShowBookFromPublisherWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromPublisherWindow));
             ShowBookFromSeriesWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromSeriesWindow));
+            ShowBookFromOriginStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromOriginStoryWindow));
             ShowBookFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromStoryWindow));
+            ShowCharacterFromOriginStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCharacterFromOriginStoryWindow));
             ShowCharacterFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCharacterFromStoryWindow));
             ShowCodeFromSeriesWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCodeFromSeriesWindow));
+            ShowCodeFromOriginStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCodeFromOriginStoryWindow));
             ShowCodeFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowCodeFromStoryWindow));
             ShowPublisherFromBookWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowPublisherFromBookWindow));
             ShowSeriesFromBookWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowSeriesFromBookWindow));
@@ -136,6 +145,7 @@ namespace ComicsLibrary.ViewModels
             ShowOriginStoryFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowOriginStoryFromStoryWindow));
             ShowStoryOriginFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryOriginFromStoryWindow));
             ShowStoryFromArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromArtistWindow));
+            ShowStoryFromPseudonymArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromPseudonymArtistWindow));
             ShowStoryFromBookWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromBookWindow));
             ShowStoryFromCharacterWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromCharacterWindow));
             ShowStoryFromCodeWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowStoryFromCodeWindow));
@@ -263,6 +273,19 @@ namespace ComicsLibrary.ViewModels
             _ = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
         }
 
+        private async void ShowArtistFromOriginStoryWindow(int? itemId)
+        {
+            var storyArtists = OriginStoryView.GetStoryArtists();
+
+            GetItem(ArtistView, itemId);
+
+            var result = await _navigationService.ShowDialogAsync(StoreWindows.ArtistWindow);
+            if (result ?? false)
+            {
+                OriginStoryView.AddStoryArtist(storyArtists, ArtistView.Item.Id);
+            }
+        }
+
         private async void ShowArtistFromStoryWindow(int? itemId)
         {
             var storyArtists = StoryView.GetStoryArtists();
@@ -302,6 +325,19 @@ namespace ComicsLibrary.ViewModels
             }
         }
 
+        private async void ShowBookFromOriginStoryWindow(int? itemId)
+        {
+            var storyBooks = OriginStoryView.GetStoryBooks();
+
+            GetItem(BookView, itemId);
+
+            var result = await _navigationService.ShowDialogAsync(StoreWindows.BookWindow);
+            if (result ?? false)
+            {
+                OriginStoryView.AddStoryBook(storyBooks, BookView.Item.Id);
+            }
+        }
+
         private async void ShowBookFromStoryWindow(int? itemId)
         {
             var storyBooks = StoryView.GetStoryBooks();
@@ -312,6 +348,19 @@ namespace ComicsLibrary.ViewModels
             if (result ?? false)
             {
                 StoryView.AddStoryBook(storyBooks, BookView.Item.Id);
+            }
+        }
+
+        private async void ShowCharacterFromOriginStoryWindow(int? itemId)
+        {
+            var storyCharacters = OriginStoryView.GetStoryCharacters();
+
+            GetItem(CharacterView, itemId);
+
+            var result = await _navigationService.ShowDialogAsync(StoreWindows.CharacterWindow);
+            if (result ?? false)
+            {
+                OriginStoryView.AddStoryCharacter(storyCharacters, CharacterView.Item.Id);
             }
         }
 
@@ -336,6 +385,17 @@ namespace ComicsLibrary.ViewModels
             if (result ?? false)
             {
                 SeriesView.AddSeriesCode(CodeView.Item.Id);
+            }
+        }
+
+        private async void ShowCodeFromOriginStoryWindow(int? itemId)
+        {
+            GetItem(CodeView, itemId);
+
+            var result = await _navigationService.ShowDialogAsync(StoreWindows.CodeWindow);
+            if (result ?? false)
+            {
+                OriginStoryView.AddStoryCode(CodeView.Item.Id);
             }
         }
 
@@ -419,6 +479,19 @@ namespace ComicsLibrary.ViewModels
             if (result ?? false)
             {
                 ArtistView.AddArtistStory(storyArtists, StoryView.Item.Id ?? itemId);
+            }
+        }
+
+        private async void ShowStoryFromPseudonymArtistWindow(int? itemId)
+        {
+            var storyArtists = PseudonymArtistView.GetStoryArtists();
+
+            GetItem(StoryView, itemId);
+
+            var result = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
+            if (result ?? false)
+            {
+                PseudonymArtistView.AddArtistStory(storyArtists, StoryView.Item.Id ?? itemId);
             }
         }
 

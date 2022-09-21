@@ -28,9 +28,9 @@ namespace ComicsLibrary.EditModels
                             StoryId = storyId
                         });
                     }
-
-                    StoryCharacter = storyCharacters;
                 }
+
+                StoryCharacter = storyCharacters;
             }
         }
 

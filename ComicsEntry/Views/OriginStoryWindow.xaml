@@ -139,7 +139,7 @@
                 <Button Grid.Row ="5"
                         Grid.Column="7"
                         Background="Transparent"
-                        Command="{Binding DataContext.ShowCodeFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowCodeFromOriginStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         CommandParameter="{Binding CodeId}"
                         Content="{Binding CodeId}"
                         IsEnabled="{Binding DataContext.OpenCode, 
@@ -321,7 +321,7 @@
                         Height="25"
                         VerticalAlignment="Top"
                         Visibility="{Binding DataContext.OpenCharacter, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                        Command="{Binding DataContext.ShowCharacterFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowCharacterFromOriginStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         >
                     +
                 </Button>
@@ -338,7 +338,7 @@
                                             Width="50">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowCharacterFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowCharacterFromOriginStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding CharacterId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"       
@@ -379,7 +379,7 @@
                         Background="Transparent"
                         Height="25"
                         VerticalAlignment="Top"
-                        Command="{Binding DataContext.ShowArtistFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowArtistFromOriginStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         Visibility="{Binding DataContext.OpenArtist, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                         >
                     +
@@ -397,7 +397,7 @@
                                             Width="50">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowArtistFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowArtistFromOriginStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding ArtistId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"       
@@ -461,7 +461,7 @@
                         Background="Transparent"
                         Height="25"
                         VerticalAlignment="Top"
-                        Command="{Binding DataContext.ShowBookFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowBookFromOriginStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         Visibility="{Binding DataContext.OpenBook, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                         >
                     +
@@ -479,7 +479,7 @@
                                             Width="50">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowBookFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowBookFromOriginStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding BookId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"       

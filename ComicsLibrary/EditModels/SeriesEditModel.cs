@@ -47,9 +47,9 @@ namespace ComicsLibrary.EditModels
                             BookId = bookId
                         });
                     }
-
-                    BookSeries = bookSeries;
                 }
+
+                BookSeries = bookSeries;
             }
         }
 

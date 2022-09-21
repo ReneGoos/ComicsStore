@@ -66,9 +66,9 @@ namespace ComicsLibrary.EditModels
                             StoryId = storyId
                         });
                     }
-
-                    StoryArtist = storyArtists;
                 }
+
+                StoryArtist = storyArtists;
             }
         }
 
@@ -96,9 +96,9 @@ namespace ComicsLibrary.EditModels
                             MainArtistId = artistId
                         });
                     }
-
-                    PseudonymArtist = mainArtists;
                 }
+
+                PseudonymArtist = mainArtists;
             }
         }
 
@@ -116,9 +116,9 @@ namespace ComicsLibrary.EditModels
                             PseudonymArtistId = artistId
                         });
                     }
-
-                    MainArtist = pseudonymArtists;
                 }
+
+                MainArtist = pseudonymArtists;
             }
         }
 

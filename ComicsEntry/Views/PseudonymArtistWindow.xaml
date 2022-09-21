@@ -188,7 +188,7 @@
                         Height="25"
                         VerticalAlignment="Top"
                         Visibility="{Binding DataContext.OpenStory, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                        Command="{Binding DataContext.ShowStoryFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowStoryFromPseudonymArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         >
                     +
                 </Button>
@@ -206,7 +206,7 @@
                                             >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowStoryFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowStoryFromPseudonymArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding StoryId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"       
@@ -265,7 +265,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Button Grid.Row ="3"
+                <!-- Button Grid.Row ="3"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
@@ -274,7 +274,7 @@
                         Visibility="{Binding DataContext.OpenPseudonymArtist, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                         >
                     +
-                </Button>
+                </Button -->
                 <ListView DockPanel.Dock="Top"
                           Grid.Row ="3"
                           Grid.Column="1"                          
@@ -288,7 +288,7 @@
                                             Width="50">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowMainArtistFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowMainArtistFromPseudonymArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding MainArtistId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"       
@@ -324,7 +324,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Button Grid.Row ="5"
+                <!-- Button Grid.Row ="5"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
@@ -333,7 +333,7 @@
                         Visibility="{Binding DataContext.OpenPseudonymArtist, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                         >
                     +
-                </Button>
+                </Button -->
                 <ListView DockPanel.Dock="Top"
                           Grid.Row ="5"
                           Grid.Column="1"                          
@@ -347,7 +347,7 @@
                                             Width="50">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowPseudonymArtistFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowArtistFromPseudonymArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding PseudonymArtistId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"       

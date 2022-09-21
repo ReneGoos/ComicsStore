@@ -58,9 +58,9 @@ namespace ComicsLibrary.EditModels
                             StoryId = Id
                         });
                     }
-
-                    StoryArtist = storyArtists;
                 }
+
+                StoryArtist = storyArtists;
             }
         }
 
@@ -78,10 +78,10 @@ namespace ComicsLibrary.EditModels
                             StoryId = Id
                         });
                     }
-
-                    StoryBook = storyBooks;
                 }
-        }
+
+                StoryBook = storyBooks;
+            }
         }
 
         public void AddStoryCode(int? codeId)
@@ -120,9 +120,9 @@ namespace ComicsLibrary.EditModels
                             StoryId = Id
                         });
                     }
-
-                    StoryCharacter = storyCharacters;
                 }
+
+                StoryCharacter = storyCharacters;
             }
         }
 

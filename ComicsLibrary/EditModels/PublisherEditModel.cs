@@ -28,9 +28,9 @@ namespace ComicsLibrary.EditModels
                             BookId = bookId
                         });
                     }
-
-                    BookPublisher = bookPublishers;
                 }
+
+                BookPublisher = bookPublishers;
             }
         }
 

@@ -31,9 +31,9 @@ namespace ComicsLibrary.EditModels
                             CodeId = Id
                         });
                     }
-
-                    Series = seriesCodes;
                 }
+
+                Series = seriesCodes;
             }
         }
 
@@ -51,9 +51,9 @@ namespace ComicsLibrary.EditModels
                             CodeId = Id
                         });
                     }
-
-                    Story = storyCodes;
                 }
+
+                Story = storyCodes;
             }
         }
 
