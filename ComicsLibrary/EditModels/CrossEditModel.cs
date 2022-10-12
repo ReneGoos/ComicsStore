@@ -1,6 +1,8 @@
 ﻿namespace ComicsLibrary.EditModels
 {
-    public class CrossEditModel : BasicEditModel
+    public abstract class CrossEditModel : BasicEditModel
     {
+        public abstract int? MainId { get; set; }
+        public abstract int? LinkedId { get; set; }
     }
 }

@@ -6,45 +6,55 @@ using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsLibrary.Core;
 using System;
-using ComicsStore.Data.Model.Interfaces;
+using System.Windows.Input;
+using ComicsLibrary.Navigation;
+using ComicsStore.Data.Model;
 
 namespace ComicsLibrary.ViewModels
 {
     public class ArtistViewModel : BasicTableViewModel<IArtistsService, ArtistInputModel, ArtistInputModel, ArtistOutputModel, BasicSearch, ArtistEditModel>
     {
+        public ICommand DeleteMainArtistFromListCommand { get; protected set; }
+        public ICommand DeletePseudonymArtistFromListCommand { get; protected set; }
+        public ICommand DeleteStoryFromListCommand { get; protected set; }
+
         public ArtistViewModel(IArtistsService artistsService,
-            IMapper mapper) : base(artistsService, mapper)
+            INavigationService navigationService,
+            IMapper mapper) : base(artistsService, navigationService, mapper)
         {
+            DeleteMainArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteMainArtistFromList));
+            DeletePseudonymArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeletePseudonymArtistFromList));
+            DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
         }
 
-        public void AddArtistStory(ObservableChangedCollection<StoryArtistEditModel> storyArtists, int? storyId)
+        public void AddArtistStory(int? storyId, int? oldStoryId)
         {
-            Item.AddStoryArtist(storyArtists, storyId);
+            Item.AddStoryArtist(storyId, oldStoryId);
         }
 
-        public ObservableChangedCollection<StoryArtistEditModel> GetStoryArtists()
+        private void DeleteStoryFromList(int? storyId)
         {
-            return Item.GetStoryArtists();
+            Item.AddStoryArtist(null, storyId);
         }
 
-        public void AddMainArtist(ObservableChangedCollection<PseudonymEditModel> mainArtists, int? id)
+        public void AddMainArtist(int? mainArtistId, int? oldMainArtistId)
         {
-            Item.AddMainArtist(mainArtists, id);
+            Item.AddMainArtist(mainArtistId, oldMainArtistId);
         }
 
-        public void AddPseudonymArtist(ObservableChangedCollection<PseudonymEditModel> pseudonymArtists, int? id)
+        private void DeleteMainArtistFromList(int? mainArtistId)
         {
-            Item.AddPseudonymArtist(pseudonymArtists, id);
+            Item.AddMainArtist(null, mainArtistId);
         }
 
-        public ObservableChangedCollection<PseudonymEditModel> GetMainArtists()
+        public void AddPseudonymArtist(int? pseudonymArtistId, int? oldPseudonymArtistId)
         {
-            return Item.GetMainArtists();
+            Item.AddPseudonymArtist(pseudonymArtistId, oldPseudonymArtistId);
         }
 
-        public ObservableChangedCollection<PseudonymEditModel> GetPseudonymArtists()
+        private void DeletePseudonymArtistFromList(int? pseudonymArtistId)
         {
-            return Item.GetPseudonymArtists();
+            Item.AddPseudonymArtist(null, pseudonymArtistId);
         }
     }
 }

@@ -31,11 +31,6 @@
     <ProjectReference Include="..\ComicsStore.MiddleWare\ComicsStore.MiddleWare.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Views\PseudonymArtistWindow.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1local_1json__JsonSchema="https://appsemble.app/api.json" /></VisualStudio></ProjectExtensions>
 
 </Project>

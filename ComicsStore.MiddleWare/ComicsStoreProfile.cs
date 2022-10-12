@@ -82,7 +82,8 @@ namespace ComicsStore.MiddleWare
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FullName));
 
-            _ = CreateMap<Pseudonym, PseudonymOutputModel>();
+            _ = CreateMap<Pseudonym, ArtistPseudonymOutputModel>();
+            _ = CreateMap<Pseudonym, PseudonymArtistOutputModel>();
 
             _ = CreateMap<StoryBook, BookStoryOutputModel>().IncludeMembers(s => s.Story);
             _ = CreateMap<StoryBook, StoryBookOutputModel>().IncludeMembers(s => s.Book);
@@ -97,6 +98,8 @@ namespace ComicsStore.MiddleWare
             _ = CreateMap<Series, CodeSeriesOutputModel>()
                 .ForMember(cs => cs.SeriesId, opt => opt.MapFrom(s => s.Id));
             _ = CreateMap<Story, CodeStoryOutputModel>()
+                .ForMember(cs => cs.StoryId, opt => opt.MapFrom(s => s.Id));
+            _ = CreateMap<Story, StoryOriginOutputModel>()
                 .ForMember(cs => cs.StoryId, opt => opt.MapFrom(s => s.Id));
         }
     }

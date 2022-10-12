@@ -1,7 +1,4 @@
-﻿using ComicsStore.Data.Common;
-using ComicsStore.MiddleWare.Models.Output;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace ComicsStore.MiddleWare.Models.Input
 {

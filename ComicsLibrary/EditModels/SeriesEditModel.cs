@@ -1,19 +1,19 @@
 ﻿using ComicsLibrary.Core;
+using ComicsLibrary.Extensions;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace ComicsLibrary.EditModels
 {
     public class SeriesEditModel : TableEditModel
     {
-        private ObservableChangedCollection<BookSeriesEditModel> _bookSeries;
+        private ObservableChangedCollection<SeriesBookEditModel> _bookSeries;
         private int? _seriesNumber;
         private string _seriesLanguage;
         private int _codeId;
 
         public SeriesEditModel() : base()
         {
-            BookSeries = new ObservableChangedCollection<BookSeriesEditModel>();
+            BookSeries = new ObservableChangedCollection<SeriesBookEditModel>();
         }
 
         [Required]
@@ -31,37 +31,11 @@ namespace ComicsLibrary.EditModels
             }
         }
 
-        public ObservableChangedCollection<BookSeriesEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
+        public ObservableChangedCollection<SeriesBookEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
 
-        public void AddBookSeries(ObservableChangedCollection<BookSeriesEditModel> bookSeries, int? bookId)
+        public void AddBookSeries(int? bookId, int? oldBookId)
         {
-            if (bookId.HasValue)
-            {
-                if (!BookSeries.Any(s => s.BookId == bookId.Value))
-                {
-                    if (!bookSeries.Any(s => s.BookId == bookId.Value))
-                    {
-                        bookSeries.Add(new BookSeriesEditModel
-                        {
-                            SeriesId = Id,
-                            BookId = bookId
-                        });
-                    }
-                }
-
-                BookSeries = bookSeries;
-            }
-        }
-
-        public ObservableChangedCollection<BookSeriesEditModel> GetBookSeries()
-        {
-            return new ObservableChangedCollection<BookSeriesEditModel>(BookSeries.ToList().ConvertAll(s => new BookSeriesEditModel
-            {
-                BookId = s.BookId,
-                SeriesId = s.SeriesId,
-                Issue = s.Issue,
-                SeriesOrder = s.SeriesOrder
-            }));
+            BookSeries.HandleItem(Id, bookId, oldBookId);
         }
 
         public override void ResetId()

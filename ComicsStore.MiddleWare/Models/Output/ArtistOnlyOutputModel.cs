@@ -1,5 +1,4 @@
 ﻿using ComicsStore.Data.Common;
-using System.ComponentModel.DataAnnotations;
 
 namespace ComicsStore.MiddleWare.Models.Output
 {

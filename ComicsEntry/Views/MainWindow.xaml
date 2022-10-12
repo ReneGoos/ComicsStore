@@ -5,8 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ComicsEntry"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow"
+        Height="600"
+        Width="900"
+        DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
+        >
     <Grid>
-
+        <Frame Name="Main" DockPanel.Dock="Top" Content="">
+        </Frame>
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="45"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Column="1"
+                        IsDefault="True"
+                        Margin="6" 
+                        Name="OkButton"
+                        Click="OkButton_Click">
+                Ok
+            </Button>
+            <Button Grid.Column="3"
+                        IsCancel="True"
+                        Margin="6"
+                        Name="CancelButton"
+                        Click="CancelButton_Click">
+                Cancel
+            </Button>
+        </Grid>
     </Grid>
 </Window>

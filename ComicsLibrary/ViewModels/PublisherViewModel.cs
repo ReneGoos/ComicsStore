@@ -4,25 +4,32 @@ using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using ComicsLibrary.Navigation;
+using System.Windows.Input;
 using ComicsLibrary.Core;
+using System;
 
 namespace ComicsLibrary.ViewModels
 {
     public class PublisherViewModel : BasicTableViewModel<IPublishersService, PublisherInputModel, PublisherInputModel, PublisherOutputModel, BasicSearch, PublisherEditModel>
     {
+        public ICommand DeleteBookFromListCommand { get; protected set; }
+
         public PublisherViewModel(IPublishersService publishersService,
-            IMapper mapper) : base(publishersService, mapper)
+            INavigationService navigationService,
+            IMapper mapper) : base(publishersService, navigationService, mapper)
         {
+            DeleteBookFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteBookFromList));
         }
 
-        public void AddBookPublisher(ObservableChangedCollection<BookPublisherEditModel> bookPublishers, int? bookId)
+        public void AddBookPublisher(int? bookId, int? oldBookId)
         {
-            Item.AddBookPublisher(bookPublishers, bookId);
+            Item.AddBookPublisher(bookId, oldBookId);
         }
 
-        public ObservableChangedCollection<BookPublisherEditModel> GetBookPublishers()
+        public void DeleteBookFromList(int? bookId)
         {
-            return Item.GetBookPublishers();
+            Item.AddBookPublisher(null, bookId);
         }
     }
 }

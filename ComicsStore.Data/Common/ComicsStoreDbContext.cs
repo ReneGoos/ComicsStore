@@ -2,7 +2,6 @@
 using ComicsStore.Data.Model.Output;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace ComicsStore.Data.Common
 {

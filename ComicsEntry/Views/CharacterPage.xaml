@@ -1,4 +1,4 @@
-﻿<Window x:Class="ComicsEntry.Views.CharacterWindow"
+﻿<Page x:Class="ComicsEntry.Views.CharacterPage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,19 +7,20 @@
         xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
         mc:Ignorable="d"
-        Title="Character" Height="450" Width="800"
+        Title="Character"
+        Height="Auto"
+        Width="Auto"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
         >
-    <Window.Resources>
+    <Page.Resources>
         <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <helpers:NotConverter x:Key="NotConverter"/>
-    </Window.Resources>
-    <DockPanel DataContext="{Binding CharacterView}">
-        <DockPanel DockPanel.Dock="Top" 
-                   Background="LightGray" 
-                   Grid.IsSharedSizeScope="True">
+    </Page.Resources>
+    <StackPanel DataContext="{Binding CharacterView}">
+        <Grid Background="LightGray" >
             <control:SimpleToolbar FilteredItems="{Binding FilteredItems}"
                                    Id = "{Binding Item.Id, Mode=TwoWay}" 
+                                   PageChain = "{Binding DataContext.PageChain, RelativeSource={RelativeSource AncestorType=Page}}"
                                    IsClean = "{Binding IsClean}"
                                    IsDirty = "{Binding IsDirty}"
                                    Filter = "{Binding NameFilter}"
@@ -27,46 +28,20 @@
                                    SaveCommand = "{Binding SaveCommand}"
                                    UndoCommand = "{Binding UndoCommand}"
                                    DeleteCommand = "{Binding DeleteCommand}"
+                                   ExitCommand = "{Binding ExitCommand}"
                                    />
-        </DockPanel>
-        <Grid DockPanel.Dock="Bottom">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="5"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="45"/>
-            </Grid.RowDefinitions>
-            <Button Grid.Column="1"
-                    IsDefault="True"
-                    Margin="6" 
-                    Name="OkButton" 
-                    Click="OkButton_Click">
-                Ok
-            </Button>
-            <Button Grid.Column="3"
-                    IsCancel="True"
-                    Margin="6"
-                    Name="CancelButton" 
-                    Click="CancelButton_Click">
-                Cancel
-            </Button>
         </Grid>
-        <Grid DockPanel.Dock="Bottom"
-               DataContext="{Binding Item}">
+        <Grid DataContext="{Binding Item}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
-            <DockPanel DockPanel.Dock="Left">
+            <Grid>
                 <control:SimpleEntry Id="{Binding Id, Mode=TwoWay}"
                                      ItemName="{Binding Name, Mode=TwoWay}"
                                      ItemRemark="{Binding Remark, Mode=TwoWay}"
                                      ItemError="{Binding Error, Mode=TwoWay}"/>
-            </DockPanel>
+            </Grid>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5"/>
@@ -85,8 +60,8 @@
                         Background="Transparent"
                         Height="25"
                         VerticalAlignment="Top"
-                        Visibility="{Binding DataContext.OpenStory, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                        Command="{Binding DataContext.ShowStoryFromCharacterWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Visibility="{Binding DataContext.OpenStory, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                        Command="{Binding DataContext.ShowStoryFromCharacterWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                         >
                     +
                 </Button>
@@ -97,22 +72,38 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Id"
-                                            Width="50" 
+                            <GridViewColumn Header="Edit"
+                                            Width="75" 
                                             >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowStoryFromCharacterWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowStoryFromCharacterWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 CommandParameter="{Binding StoryId}"
                                                 Background="Transparent"
-                                                BorderThickness="0"       
-                                                Content="{Binding StoryId}"
-                                                IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                />
+                                                BorderThickness="0"
+                                                Width="63"       
+                                                IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                >
+                                            <TextBlock Text="{Binding StoryId}" HorizontalAlignment="Center" />
+                                        </Button>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-
+                            <GridViewColumn Header="Del" 
+                                            Width="40"
+                                            >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.DeleteStoryFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                                                CommandParameter="{Binding StoryId}"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Width="28">
+                                            <TextBlock Text="-" HorizontalAlignment="Center" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="Story" Width="350">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -121,8 +112,8 @@
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name" 
                                                   IsEditable="True" 
-                                                  ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                  IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                  IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                                                   IsSynchronizedWithCurrentItem ="False"
                                                   >
                                             <ComboBox.ItemsPanel>
@@ -139,5 +130,5 @@
                 </ListView>
             </Grid>
         </Grid>
-    </DockPanel>
-</Window>
+    </StackPanel>
+</Page>

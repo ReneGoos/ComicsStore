@@ -4,25 +4,32 @@ using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using ComicsLibrary.Navigation;
+using System.Windows.Input;
 using ComicsLibrary.Core;
+using System;
 
 namespace ComicsLibrary.ViewModels
 {
     public class CharacterViewModel : BasicTableViewModel<ICharactersService, CharacterInputModel, CharacterInputModel, CharacterOutputModel, BasicSearch, CharacterEditModel>
     {
+        public ICommand DeleteStoryFromListCommand { get; protected set; }
+
         public CharacterViewModel(ICharactersService charactersService,
-            IMapper mapper) : base(charactersService, mapper)
+            INavigationService navigationService,
+            IMapper mapper) : base(charactersService, navigationService, mapper)
         {
+            DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
         }
 
-        public void AddStoryCharacter(ObservableChangedCollection<StoryCharacterEditModel> storyCharacters, int? storyId)
+        public void AddStoryCharacter(int? storyId, int? oldStoryId)
         {
-            Item.AddStoryCharacter(storyCharacters, storyId);
+            Item.AddStoryCharacter(storyId, oldStoryId);
         }
 
-        public ObservableChangedCollection<StoryCharacterEditModel> GetStoryCharacters()
+        private void DeleteStoryFromList(int? storyId)
         {
-            return Item.GetStoryCharacters();
+            Item.AddStoryCharacter(null, storyId);
         }
     }
 }

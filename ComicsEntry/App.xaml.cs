@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Windows;
+using ComicsLibrary.Windows;
 
 namespace ComicsEntry
 {
@@ -54,48 +55,52 @@ namespace ComicsEntry
             var mapper = mappingConfig.CreateMapper();
             _ = services.AddSingleton(mapper);
 
-            // Add INavigationService for the application.
-            _ = services.AddScoped(serviceProvider =>
+            _ = services.AddScoped<INavigationService,NavigationService>(serviceProvider =>
             {
                 var navigationService = new NavigationService(serviceProvider);
-                navigationService.Configure(StoreWindows.ArtistWindow, typeof(ArtistWindow));
-                navigationService.Configure(StoreWindows.BookWindow, typeof(BookWindow));
-                navigationService.Configure(StoreWindows.CharacterWindow, typeof(CharacterWindow));
-                navigationService.Configure(StoreWindows.CodeWindow, typeof(CodeWindow));
-                navigationService.Configure(StoreWindows.OriginStoryWindow, typeof(OriginStoryWindow));
-                navigationService.Configure(StoreWindows.PseudonymArtistWindow, typeof(PseudonymArtistWindow));
-                navigationService.Configure(StoreWindows.PublisherWindow, typeof(PublisherWindow));
-                navigationService.Configure(StoreWindows.SeriesWindow, typeof(SeriesWindow));
-                navigationService.Configure(StoreWindows.StoryWindow, typeof(StoryWindow));
-                navigationService.Configure(StoreWindows.StartWindow, typeof(StartWindow));
-                navigationService.Configure(StoreWindows.ReportWindow, typeof(ReportWindow));
 
+                navigationService.Configure(StoreWindows.Artist, typeof(ArtistPage));
+                navigationService.Configure(StoreWindows.Book, typeof(BookPage));
+                navigationService.Configure(StoreWindows.Character, typeof(CharacterPage));
+                navigationService.Configure(StoreWindows.Code, typeof(CodePage));
+                navigationService.Configure(StoreWindows.OriginStory, typeof(OriginStoryPage));
+                navigationService.Configure(StoreWindows.PseudonymArtist, typeof(PseudonymArtistPage));
+                navigationService.Configure(StoreWindows.Publisher, typeof(PublisherPage));
+                navigationService.Configure(StoreWindows.Series, typeof(SeriesPage));
+                navigationService.Configure(StoreWindows.Story, typeof(StoryPage));
+                navigationService.Configure(StoreWindows.Report, typeof(ReportWindow), false);
                 return navigationService;
             });
+
 
             // Register all ViewModels.
             _ = services.AddSingleton<ComicsViewModel>();
 
             // Register all the Windows of the applications.
-            _ = services.AddTransient<ArtistWindow>();
-            _ = services.AddTransient<BookWindow>();
-            _ = services.AddTransient<CharacterWindow>();
-            _ = services.AddTransient<CodeWindow>();
-            _ = services.AddTransient<OriginStoryWindow>();
-            _ = services.AddTransient<PseudonymArtistWindow>();
-            _ = services.AddTransient<PublisherWindow>();
-            _ = services.AddTransient<SeriesWindow>();
-            _ = services.AddTransient<StoryWindow>();
             _ = services.AddTransient<StartWindow>();
             _ = services.AddTransient<ReportWindow>();
+            _ = services.AddTransient<MainWindow>();
+
+            _ = services.AddTransient<NavigateWindow>();
+            _ = services.AddTransient<ArtistPage>();
+            _ = services.AddTransient<BookPage>();
+            _ = services.AddTransient<CharacterPage>();
+            _ = services.AddTransient<CodePage>();
+            _ = services.AddTransient<OriginStoryPage>();
+            _ = services.AddTransient<PseudonymArtistPage>();
+            _ = services.AddTransient<PublisherPage>();
+            _ = services.AddTransient<SeriesPage>();
+            _ = services.AddTransient<StoryPage>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)
         {
             await _host.StartAsync();
 
-            var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
-            _ = await navigationService.ShowDialogAsync(StoreWindows.StartWindow);
+            this.StartupUri = new System.Uri("./Views/StartWindow.xaml", System.UriKind.Relative);
+
+            //var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
+            //_ = await navigationService.ShowDialogAsync(StoreWindows.MainWindow);
 
             base.OnStartup(e);
         }

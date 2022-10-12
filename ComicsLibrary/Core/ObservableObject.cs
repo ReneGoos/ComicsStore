@@ -19,6 +19,14 @@ namespace ComicsLibrary.Core
             RaisePropertyChanged(info);
         }
 
+        protected void SetIfValue<T>(ref T input, T value, [CallerMemberName] string info = null)
+        {
+            if (value == null)
+                return;
+            input = value;
+            RaisePropertyChanged(info);
+        }
+
         public virtual bool IsDirty { get => _isDirty; set { Set(ref _isDirty, value); RaisePropertyChanged("IsClean"); } }
         public bool IsClean { get => !IsDirty; }
     }

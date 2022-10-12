@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Linq;
 using ComicsLibrary.Helpers;
+using ComicsLibrary.Navigation;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -52,17 +53,32 @@ namespace ComicsLibrary.ViewModels
             RaisePropertyChanged("QueryItems");
         }
 
-        public BasicTableViewModel(TService service, IMapper mapper) : base(mapper)
+        public BasicTableViewModel(TService service,
+            INavigationService navigationService,
+            IMapper mapper) : base(navigationService, mapper)
         {
             _itemService = service;
-
             GetCommand = new RelayCommand<int>(new Action<int>(GetItemAsync));
             NewCommand = new RelayCommand<bool>(new Action<bool>(NewItem));
             SaveCommand = new RelayCommand(new Action(SaveAsync));
             UndoCommand = new RelayCommand(new Action(CancelSaveAsync));
             DeleteCommand = new RelayCommand<int>(new Action<int>(DeleteAsync));
+            ExitCommand = new RelayCommand<bool>(new Action<bool>(ExitAsync));
 
             NewItem();
+        }
+
+        private async void ExitAsync(bool save)
+        {
+            if (save)
+            {
+                SaveAsync();
+            }
+
+            if (!save || !IsDirty)
+            {
+                await NavigationService.ClosePageAsync(save, _item.Id);
+            }
         }
 
         protected virtual void QueryResults(object sender, FilterEventArgs e)
@@ -126,6 +142,7 @@ namespace ComicsLibrary.ViewModels
 
             if (!Item.Validate())
             {
+                IsDirty = true;
                 return;
             }
 

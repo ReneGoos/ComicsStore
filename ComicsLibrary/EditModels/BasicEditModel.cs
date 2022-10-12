@@ -139,6 +139,5 @@ namespace ComicsLibrary.EditModels
         }
 
         internal Dictionary<string, List<string>> Errors { get; } = new();
-
     }
 }

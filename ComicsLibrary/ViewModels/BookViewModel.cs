@@ -4,45 +4,57 @@ using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using ComicsLibrary.Navigation;
+using System.Windows.Input;
 using ComicsLibrary.Core;
+using System;
+using ComicsStore.Data.Model;
 
 namespace ComicsLibrary.ViewModels
 {
     public class BookViewModel : BasicTableViewModel<IBooksService, BookInputModel, BookInputPatchModel, BookOutputModel, BasicSearch, BookEditModel>
     {
+        public ICommand DeletePublisherFromListCommand { get; protected set; }
+        public ICommand DeleteSeriesFromListCommand { get; protected set; }
+        public ICommand DeleteStoryFromListCommand { get; protected set; }
+
         public BookViewModel(IBooksService booksService,
-            IMapper mapper) : base(booksService, mapper)
+            INavigationService navigationService,
+            IMapper mapper) : base(booksService, navigationService, mapper)
         {
+            DeletePublisherFromListCommand = new RelayCommand<int?>(new Action<int?>(DeletePublisherFromList));
+            DeleteSeriesFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteSeriesFromList));
+            DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
         }
 
-        public void AddBookPublisher(ObservableChangedCollection<BookPublisherEditModel> bookPublishers, int? publisherId)
+        public void AddBookPublisher(int? publisherId, int? oldPublisherId)
         {
-            Item.AddBookPublisher(bookPublishers, publisherId);
+            Item.AddBookPublisher(publisherId, oldPublisherId);
         }
 
-        public void AddBookSeries(ObservableChangedCollection<BookSeriesEditModel> bookSeries, int? seriesId)
+        private void DeletePublisherFromList(int? publisherId)
         {
-            Item.AddBookSeries(bookSeries, seriesId);
+            Item.AddBookPublisher(null, publisherId);
         }
 
-        public void AddStoryBook(ObservableChangedCollection<StoryBookEditModel> storyBooks, int? storyId)
+        public void AddBookSeries(int? seriesId, int? oldSeriesId)
         {
-            Item.AddStoryBook(storyBooks, storyId);
+            Item.AddBookSeries(seriesId, oldSeriesId);
         }
 
-        public ObservableChangedCollection<BookPublisherEditModel> GetBookPublishers()
+        private void DeleteSeriesFromList(int? seriesId)
         {
-            return Item.GetBookPublishers();
+            Item.AddBookSeries(null, seriesId);
         }
 
-        public ObservableChangedCollection<BookSeriesEditModel> GetBookSeries()
+        public void AddBookStory(int? storyId, int? oldStoryId)
         {
-            return Item.GetBookSeries();
+            Item.AddBookStory(storyId, oldStoryId);
         }
 
-        public ObservableChangedCollection<StoryBookEditModel> GetStoryBooks()
+        private void DeleteStoryFromList(int? storyId)
         {
-            return Item.GetStoryBooks();
+            Item.AddBookStory(null, storyId);
         }
     }
 }

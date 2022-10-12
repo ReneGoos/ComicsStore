@@ -91,11 +91,14 @@ namespace ComicsLibrary.EditModels
             PropertyChanged += StoryArtistEditModel_PropertyChanged;
         }
 
-        public int? ArtistId { get => _artistId; set => Set(ref _artistId, value); }
-        public int? StoryId { get => _storyId; set => Set(ref _storyId, value); }
+        public int? ArtistId { get => _artistId; set => SetIfValue(ref _artistId, value); }
+        public int? StoryId { get => _storyId; set => SetIfValue(ref _storyId, value); }
         [Required]
         public ICollection<string> ArtistType { get => _artistType; set => Set(ref _artistType, value); }
 
         public ObservableCollection<EnumCheckedType> Roles { get { if (_roles is null) { _roles = FillRoles(); } return _roles; } set => Set(ref _roles, value); }
+
+        public override int? MainId { get => StoryId; set => StoryId = value; }
+        public override int? LinkedId { get => ArtistId; set => ArtistId = value; }
     }
 }

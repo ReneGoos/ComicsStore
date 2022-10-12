@@ -2,16 +2,16 @@
 {
     public static class StoreWindows
     {
-        public const string ArtistWindow = nameof(ArtistWindow);
-        public const string BookWindow = nameof(BookWindow);
-        public const string CharacterWindow = nameof(CharacterWindow);
-        public const string CodeWindow = nameof(CodeWindow);
-        public const string OriginStoryWindow = nameof(OriginStoryWindow);
-        public const string PseudonymArtistWindow = nameof(PseudonymArtistWindow);
-        public const string PublisherWindow = nameof(PublisherWindow);
-        public const string SeriesWindow = nameof(SeriesWindow);
-        public const string StoryWindow = nameof(StoryWindow);
-        public const string StartWindow = nameof(StartWindow);
-        public const string ReportWindow = nameof(ReportWindow);
+        public const string Artist = nameof(Artist);
+        public const string Book = nameof(Book);
+        public const string Character = nameof(Character);
+        public const string Code = nameof(Code);
+        public const string OriginStory = nameof(OriginStory);
+        public const string PseudonymArtist = nameof(PseudonymArtist);
+        public const string Publisher = nameof(Publisher);
+        public const string Series = nameof(Series);
+        public const string Story = nameof(Story);
+        public const string Start = nameof(Start);
+        public const string Report = nameof(Report);
     }
 }

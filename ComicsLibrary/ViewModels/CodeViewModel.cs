@@ -4,35 +4,44 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsLibrary.EditModels;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.Data.Model.Search;
+using ComicsLibrary.Navigation;
 using ComicsLibrary.Core;
+using System;
+using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels
 {
     public class CodeViewModel : BasicTableViewModel<ICodesService, CodeInputModel, CodeInputModel, CodeOutputModel, BasicSearch, CodeEditModel>
     {
+        public ICommand DeleteSeriesFromListCommand { get; protected set; }
+        public ICommand DeleteStoryFromListCommand { get; protected set; }
+
         public CodeViewModel(ICodesService codesService,
-            IMapper mapper) : base(codesService, mapper)
+            INavigationService navigationService,
+            IMapper mapper) : base(codesService, navigationService, mapper)
         {
+            DeleteSeriesFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteSeriesFromList));
+            DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
         }
 
-        public void AddSeriesCodes(ObservableChangedCollection<SeriesCodeEditModel> seriesCodes, int? seriesId)
+        public void AddSeriesCodes(int? seriesId, int? oldSeriesId)
         {
-            Item.AddSeriesCodes(seriesCodes, seriesId);
+            Item.AddSeriesCodes(seriesId, oldSeriesId);
         }
 
-        public void AddStoryCodes(ObservableChangedCollection<StoryCodeEditModel> storyCodes, int? storyId)
+        public void DeleteSeriesFromList(int? seriesId)
         {
-            Item.AddStoryCodes(storyCodes, storyId);
+            Item.AddSeriesCodes(null, seriesId);
         }
 
-        public ObservableChangedCollection<SeriesCodeEditModel> GetSeriesCodes()
+        public void AddStoryCodes(int? storyId, int? oldStoryId)
         {
-            return Item.GetSeriesCodes();
+            Item.AddStoryCodes(storyId, oldStoryId);
         }
 
-        public ObservableChangedCollection<StoryCodeEditModel> GetStoryCodes()
+        public void DeleteStoryFromList(int? storyId)
         {
-            return Item.GetStoryCodes();
+            Item.AddStoryCodes(null, storyId);
         }
     }
 }

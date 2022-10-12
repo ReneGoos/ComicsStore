@@ -40,6 +40,7 @@
                 Height="25" 
                 Width="100"
                 Command="{Binding DataContext.ShowArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                 >
             Artist
         </Button>
@@ -55,6 +56,7 @@
                 Height="25" 
                 Width="100"
                 Command="{Binding DataContext.ShowCharacterWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                IsEnabled="{Binding DataContext.OpenCharacter, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                 >
             Character
         </Button>
@@ -62,6 +64,7 @@
                 Height="25" 
                 Width="100"
                 Command="{Binding DataContext.ShowCodeWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                IsEnabled="{Binding DataContext.OpenCode, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                 >
             Code
         </Button>
@@ -69,6 +72,7 @@
                 Height="25" 
                 Width="100"
                 Command="{Binding DataContext.ShowPublisherWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                IsEnabled="{Binding DataContext.OpenPublisher, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                 >
             Publisher
         </Button>
@@ -76,6 +80,7 @@
                 Height="25"
                 Width="100"
                 Command="{Binding DataContext.ShowSeriesWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                IsEnabled="{Binding DataContext.OpenSeries, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                >
             Series
         </Button>
@@ -83,6 +88,7 @@
                 Height="25" 
                 Width="100"
                 Command="{Binding DataContext.ShowStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
                 >
             Story
         </Button>

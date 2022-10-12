@@ -12,14 +12,13 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.Data.Common;
 using Microsoft.Extensions.Configuration;
-using ComicsStore.MiddleWare.Services;
 
 namespace ComicsLibrary.ViewModels
 {
-    public class ComicsViewModel : BasicViewModel
+    public class ComicsViewModel : ObservableObject
     {
         private readonly ComicsStoreDbContext _comicsStoreDbContext;
-        private readonly NavigationService _navigationService;
+        private readonly INavigationService _navigationService;
         private readonly IConfiguration _configuration;
 
         public ArtistViewModel ArtistView { get; private set; }
@@ -41,15 +40,16 @@ namespace ComicsLibrary.ViewModels
         public List<string> Pseudonyms { get; set; }
         public List<LanguageType> Languages { get; set; }
 
-        public bool OpenArtist => _navigationService.DialogActive(StoreWindows.ArtistWindow);
-        public bool OpenBook => _navigationService.DialogActive(StoreWindows.BookWindow);
-        public bool OpenCharacter => _navigationService.DialogActive(StoreWindows.CharacterWindow);
-        public bool OpenCode => _navigationService.DialogActive(StoreWindows.CodeWindow);
-        public bool OpenOriginStory => _navigationService.DialogActive(StoreWindows.OriginStoryWindow);
-        public bool OpenPseudonymArtist => _navigationService.DialogActive(StoreWindows.PseudonymArtistWindow);
-        public bool OpenPublisher => _navigationService.DialogActive(StoreWindows.PublisherWindow);
-        public bool OpenSeries => _navigationService.DialogActive(StoreWindows.SeriesWindow);
-        public bool OpenStory => _navigationService.DialogActive(StoreWindows.StoryWindow);
+        public bool OpenArtist => _navigationService.PageActive(StoreWindows.Artist);
+        public bool OpenBook => _navigationService.PageActive(StoreWindows.Book);
+        public bool OpenCharacter => _navigationService.PageActive(StoreWindows.Character);
+        public bool OpenCode => _navigationService.PageActive(StoreWindows.Code);
+        public bool OpenOriginStory => _navigationService.PageActive(StoreWindows.OriginStory);
+        public bool OpenPseudonymArtist => _navigationService.PageActive(StoreWindows.PseudonymArtist);
+        public bool OpenPublisher => _navigationService.PageActive(StoreWindows.Publisher);
+        public bool OpenSeries => _navigationService.PageActive(StoreWindows.Series);
+        public bool OpenStory => _navigationService.PageActive(StoreWindows.Story);
+        public string PageChain => _navigationService.PageChain;
 
         public string DebugState => _configuration.GetConnectionString("ComicsStore");
 
@@ -98,26 +98,29 @@ namespace ComicsLibrary.ViewModels
             IStoriesService storiesService,
             IExportBooksService exportBooksService,
             IMapper mapper,
-            NavigationService navigationService,
-            IConfiguration configuration) : base(mapper)
+            INavigationService navigationService,
+            IConfiguration configuration) : base()
         {
             _comicsStoreDbContext = comicsStoreDbContext;
 
             _comicsStoreDbContext.Database.EnsureCreated();
 
             _navigationService = navigationService;
-            _configuration = configuration;
-            ArtistView = new ArtistViewModel(artistsService, mapper);
-            BookView = new BookViewModel(booksService, mapper);
-            CharacterView = new CharacterViewModel(charactersService, mapper);
-            CodeView = new CodeViewModel(codesService, mapper);
-            PublisherView = new PublisherViewModel(publishersService, mapper);
-            SeriesView = new SeriesViewModel(seriesService, mapper);
-            StoryView = new StoryViewModel(storiesService, mapper);
-            ReportView = new ReportViewModel(exportBooksService, mapper);
+            _navigationService.PropertyChanged += _navigationService_PropertyChanged;
 
-            PseudonymArtistView = new ArtistViewModel(artistsService, mapper);
-            OriginStoryView = new StoryViewModel(storiesService, mapper);
+            _configuration = configuration;
+            ArtistView = new ArtistViewModel(artistsService, navigationService, mapper);
+            BookView = new BookViewModel(booksService, navigationService, mapper);
+            CharacterView = new CharacterViewModel(charactersService, navigationService, mapper);
+            CodeView = new CodeViewModel(codesService, navigationService, mapper);
+            PublisherView = new PublisherViewModel(publishersService, navigationService, mapper);
+            SeriesView = new SeriesViewModel(seriesService, navigationService, mapper);
+            StoryView = new StoryViewModel(storiesService, navigationService, mapper);
+
+            PseudonymArtistView = new ArtistViewModel(artistsService, navigationService, mapper);
+            OriginStoryView = new StoryViewModel(storiesService, navigationService, mapper);
+
+            ReportView = new ReportViewModel(exportBooksService, mapper);
 
             Languages = LanguageType.FillLanguages();
             Actives = FillEnum<Active>();
@@ -162,6 +165,23 @@ namespace ComicsLibrary.ViewModels
             ShowReportWindowCommand = new RelayCommand(new Action(ShowReportWindow));
         }
 
+        private void _navigationService_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals("ActivePages"))
+            {
+                RaisePropertyChanged("OpenArtist");
+                RaisePropertyChanged("OpenBook");
+                RaisePropertyChanged("OpenCharacter");
+                RaisePropertyChanged("OpenCode");
+                RaisePropertyChanged("OpenOriginStory");
+                RaisePropertyChanged("OpenPseudonymArtist");
+                RaisePropertyChanged("OpenPublisher");
+                RaisePropertyChanged("OpenSeries");
+                RaisePropertyChanged("OpenStory");
+                RaisePropertyChanged("PageChain");
+            }
+        }
+
         public override bool IsDirty
         {
             get => base.IsDirty;
@@ -197,339 +217,214 @@ namespace ComicsLibrary.ViewModels
             }
         }
 
-        private async void ShowReportWindow()
-        {
-            await _navigationService.ShowAsync(StoreWindows.ReportWindow);
-        }
-
         private async void ShowArtistWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(StoreWindows.ArtistWindow);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Artist, null, null);
         }
 
         private async void ShowBookWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(StoreWindows.BookWindow);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, null, null);
         }
 
         private async void ShowCharacterWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(StoreWindows.CharacterWindow);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Character, null, null);
         }
 
         private async void ShowCodeWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(StoreWindows.CodeWindow);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Code, null, null);
         }
 
         private async void ShowOriginStoryWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(StoreWindows.OriginStoryWindow);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.OriginStory, null, null);
         }
 
         private async void ShowPseudonymArtistWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(StoreWindows.PseudonymArtistWindow);
-        }
-
-        private async void ShowPseudonymArtistFromArtistWindow(int? itemId)
-        {
-            var pseudonymArtists = ArtistView.GetPseudonymArtists();
-
-            GetItem(PseudonymArtistView, itemId);
-
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.PseudonymArtistWindow);
-            if (result ?? false)
-            {
-                ArtistView.AddPseudonymArtist(pseudonymArtists, PseudonymArtistView.Item.Id);
-            }
-        }
-
-        private async void ShowMainArtistFromArtistWindow(int? itemId)
-        {
-            var mainArtists = ArtistView.GetMainArtists();
-
-            GetItem(PseudonymArtistView, itemId);
-
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.PseudonymArtistWindow);
-            if (result ?? false)
-            {
-                ArtistView.AddMainArtist(mainArtists, PseudonymArtistView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.PseudonymArtist, null, null);
         }
 
         private async void ShowPublisherWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(StoreWindows.PublisherWindow);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Publisher, null, null);
         }
 
         private async void ShowSeriesWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(StoreWindows.SeriesWindow);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Series, null, null);
         }
 
         private async void ShowStoriesWindow()
         {
-            _ = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, null, null);
         }
 
         private async void ShowArtistFromOriginStoryWindow(int? itemId)
         {
-            var storyArtists = OriginStoryView.GetStoryArtists();
-
             GetItem(ArtistView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.ArtistWindow);
-            if (result ?? false)
-            {
-                OriginStoryView.AddStoryArtist(storyArtists, ArtistView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Artist, itemId, OriginStoryView.AddStoryArtist);
         }
 
         private async void ShowArtistFromStoryWindow(int? itemId)
         {
-            var storyArtists = StoryView.GetStoryArtists();
-
             GetItem(ArtistView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.ArtistWindow);
-            if (result ?? false)
-            {
-                StoryView.AddStoryArtist(storyArtists, ArtistView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Artist, itemId, StoryView.AddStoryArtist);
+        }
+
+        private async void ShowPseudonymArtistFromArtistWindow(int? itemId)
+        {
+            GetItem(PseudonymArtistView, itemId);
+
+            _ = await _navigationService.ShowPageAsync(StoreWindows.PseudonymArtist, itemId, ArtistView.AddPseudonymArtist);
+        }
+
+        private async void ShowMainArtistFromArtistWindow(int? itemId)
+        {
+            GetItem(PseudonymArtistView, itemId);
+
+            _ = await _navigationService.ShowPageAsync(StoreWindows.PseudonymArtist, itemId, ArtistView.AddMainArtist);
         }
 
         private async void ShowBookFromPublisherWindow(int? itemId)
         {
-            var bookPublishers = PublisherView.GetBookPublishers();
-
             GetItem(BookView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.BookWindow);
-            if (result ?? false)
-            {
-                PublisherView.AddBookPublisher(bookPublishers, BookView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, PublisherView.AddBookPublisher);
         }
 
         private async void ShowBookFromSeriesWindow(int? itemId)
         {
-            var bookSeries = SeriesView.GetBookSeries();
-
             GetItem(BookView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.BookWindow);
-            if (result ?? false)
-            {
-                SeriesView.AddBookSeries(bookSeries, BookView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, SeriesView.AddSeriesBook);
         }
 
         private async void ShowBookFromOriginStoryWindow(int? itemId)
         {
-            var storyBooks = OriginStoryView.GetStoryBooks();
-
             GetItem(BookView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.BookWindow);
-            if (result ?? false)
-            {
-                OriginStoryView.AddStoryBook(storyBooks, BookView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, OriginStoryView.AddStoryBook);
         }
 
         private async void ShowBookFromStoryWindow(int? itemId)
         {
-            var storyBooks = StoryView.GetStoryBooks();
-
             GetItem(BookView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.BookWindow);
-            if (result ?? false)
-            {
-                StoryView.AddStoryBook(storyBooks, BookView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, StoryView.AddStoryBook);
         }
 
         private async void ShowCharacterFromOriginStoryWindow(int? itemId)
         {
-            var storyCharacters = OriginStoryView.GetStoryCharacters();
-
             GetItem(CharacterView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.CharacterWindow);
-            if (result ?? false)
-            {
-                OriginStoryView.AddStoryCharacter(storyCharacters, CharacterView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Character, itemId, OriginStoryView.AddStoryCharacter);
         }
 
         private async void ShowCharacterFromStoryWindow(int? itemId)
         {
-            var storyCharacters = StoryView.GetStoryCharacters();
-
             GetItem(CharacterView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.CharacterWindow);
-            if (result ?? false)
-            {
-                StoryView.AddStoryCharacter(storyCharacters, CharacterView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Character, itemId, StoryView.AddStoryCharacter);
         }
 
         private async void ShowCodeFromSeriesWindow(int? itemId)
         {
             GetItem(CodeView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.CodeWindow);
-            if (result ?? false)
-            {
-                SeriesView.AddSeriesCode(CodeView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Code, itemId, SeriesView.AddSeriesCode);
         }
 
         private async void ShowCodeFromOriginStoryWindow(int? itemId)
         {
             GetItem(CodeView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.CodeWindow);
-            if (result ?? false)
-            {
-                OriginStoryView.AddStoryCode(CodeView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Code, itemId, OriginStoryView.AddStoryCode);
         }
 
         private async void ShowCodeFromStoryWindow(int? itemId)
         {
             GetItem(CodeView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.CodeWindow);
-            if (result ?? false)
-            {
-                StoryView.AddStoryCode(CodeView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Code, itemId, StoryView.AddStoryCode);
         }
 
         private async void ShowPublisherFromBookWindow(int? itemId)
         {
-            var bookPublishers = BookView.GetBookPublishers();
+            GetItem(PublisherView, itemId);
 
-            GetItem(CharacterView, itemId);
-
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.PublisherWindow);
-            if (result ?? false)
-            {
-                BookView.AddBookPublisher(bookPublishers, PublisherView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Publisher, itemId, BookView.AddBookPublisher);
         }
+
         private async void ShowSeriesFromBookWindow(int? itemId)
         {
-            var bookSeries = BookView.GetBookSeries();
-
             GetItem(SeriesView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.SeriesWindow);
-            if (result ?? false)
-            {
-                BookView.AddBookSeries(bookSeries, SeriesView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Series, itemId, BookView.AddBookSeries);
         }
         private async void ShowSeriesFromCodeWindow(int? itemId)
         {
             GetItem(SeriesView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.SeriesWindow);
-            if (result ?? false)
-            {
-                GetItem(CodeView, CodeView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Series, itemId, CodeView.AddSeriesCodes);
         }
 
         private async void ShowOriginStoryFromStoryWindow(int? itemId)
         {
             GetItem(OriginStoryView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.OriginStoryWindow);
-            if (result ?? false)
-            {
-                StoryView.AddStoryOrigin(OriginStoryView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.OriginStory, itemId, StoryView.AddOriginStory);
         }
 
         private async void ShowStoryOriginFromStoryWindow(int? itemId)
         {
-            //var storyOrigins = StoryView.GetOriginStories();
-
             GetItem(OriginStoryView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.OriginStoryWindow);
-            if (result ?? false)
-            {
-            //    StoryView.AddStoryOrigins(storyOrigins, OriginStoryView.Item.Id ?? itemId);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.OriginStory, itemId, null); // StoryView.AddStoryOrigin);
         }
 
         private async void ShowStoryFromArtistWindow(int? itemId)
         {
-            var storyArtists = ArtistView.GetStoryArtists();
-
             GetItem(StoryView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
-            if (result ?? false)
-            {
-                ArtistView.AddArtistStory(storyArtists, StoryView.Item.Id ?? itemId);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, ArtistView.AddArtistStory);
         }
 
         private async void ShowStoryFromPseudonymArtistWindow(int? itemId)
         {
-            var storyArtists = PseudonymArtistView.GetStoryArtists();
-
             GetItem(StoryView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
-            if (result ?? false)
-            {
-                PseudonymArtistView.AddArtistStory(storyArtists, StoryView.Item.Id ?? itemId);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, PseudonymArtistView.AddArtistStory);
         }
 
         private async void ShowStoryFromBookWindow(int? itemId)
         {
-            var bookStories = BookView.GetStoryBooks();
-
             GetItem(StoryView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
-            if (result ?? false)
-            {
-                BookView.AddStoryBook(bookStories, StoryView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, BookView.AddBookStory);
         }
 
         private async void ShowStoryFromCharacterWindow(int? itemId)
         {
-            var characterStories = CharacterView.GetStoryCharacters();
-
             GetItem(StoryView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
-            if (result ?? false)
-            {
-                CharacterView.AddStoryCharacter(characterStories, StoryView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, CharacterView.AddStoryCharacter);
         }
 
         private async void ShowStoryFromCodeWindow(int? itemId)
         {
             GetItem(StoryView, itemId);
 
-            var result = await _navigationService.ShowDialogAsync(StoreWindows.StoryWindow);
-            if (result ?? false)
-            {
-                GetItem(CodeView, CodeView.Item.Id);
-            }
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, CodeView.AddStoryCodes);
+        }
+
+        private async void ShowReportWindow()
+        {
+            await _navigationService.ShowWindowAsync(StoreWindows.Report);
         }
     }
 }

@@ -11,5 +11,15 @@ namespace ComicsEntry
         {
             InitializeComponent();
         }
+
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace ComicsStore.MiddleWare.Common
             _ = services.AddDbContext<ComicsStoreDbContext>(options => options
                 .UseSqlite(conn, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
                 .EnableSensitiveDataLogging());
-//                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+            //                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 
             _ = services.AddScoped<IArtistsService, ArtistsService>();
             _ = services.AddScoped<IBooksService, BooksService>();

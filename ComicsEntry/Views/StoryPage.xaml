@@ -1,4 +1,4 @@
-﻿<Window x:Class="ComicsEntry.Views.StoryWindow"
+﻿<Page x:Class="ComicsEntry.Views.StoryPage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,10 +8,10 @@
         xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
         mc:Ignorable="d"
         Title="Story"
-        Height="650"
-        Width="1000"
+        Height="Auto"
+        Width="Auto"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}">
-    <Window.Resources>
+    <Page.Resources>
         <helpers:ArrayConverter x:Key="ArrayConverter"/>
         <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <helpers:IsNullConverter x:Key="IsNullConverter"/>
@@ -20,14 +20,13 @@
             <helpers:IsNullConverter />
             <helpers:NotConverter />
         </helpers:ValueConverterGroup>
-    </Window.Resources>
-    <DockPanel DataContext="{Binding StoryView}"
-               Name="View">
-        <DockPanel DockPanel.Dock="Top" 
-                   Background="LightGray" 
-                   Grid.IsSharedSizeScope="True">
+    </Page.Resources>
+    <StackPanel DataContext="{Binding StoryView}">
+        <Grid Background="LightGray" 
+              Grid.IsSharedSizeScope="True">
             <control:SimpleToolbar FilteredItems="{Binding FilteredItems}"
                                    Id = "{Binding Item.Id, Mode=TwoWay}" 
+                                   PageChain = "{Binding DataContext.PageChain, RelativeSource={RelativeSource AncestorType=Page}}"
                                    IsClean = "{Binding IsClean}"
                                    IsDirty = "{Binding IsDirty}"
                                    Filter = "{Binding NameFilter}"
@@ -35,36 +34,9 @@
                                    SaveCommand = "{Binding SaveCommand}"
                                    UndoCommand = "{Binding UndoCommand}"
                                    DeleteCommand = "{Binding DeleteCommand}"
-                                   />
-        </DockPanel>
-        <Grid DockPanel.Dock="Bottom">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="5"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="45"/>
-            </Grid.RowDefinitions>
-            <Button Grid.Column="1"
-                    IsDefault="True"
-                    Margin="6" 
-                    Name="OkButton"
-                    Click="OkButton_Click">
-                Ok
-            </Button>
-            <Button Grid.Column="3"
-                    IsCancel="True"
-                    Margin="6"
-                    Name="CancelButton"
-                    Click="CancelButton_Click">
-                Cancel
-            </Button>
+                                   ExitCommand = "{Binding ExitCommand}"/> 
         </Grid>
-        <Grid DockPanel.Dock="Top" 
-              DataContext="{Binding Item}">
+        <Grid DataContext="{Binding Item}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
@@ -104,7 +76,7 @@
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
-
+                
                 <Label Grid.Column="1"
                        Grid.Row="1" Content="{Binding Id, Mode=OneWay}"/>
 
@@ -127,7 +99,7 @@
                           SelectedValuePath = "Id" 
                           DisplayMemberPath = "Name" 
                           IsEditable="True" 
-                          ItemsSource="{Binding Path=DataContext.CodeView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                          ItemsSource="{Binding Path=DataContext.CodeView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
                           IsSynchronizedWithCurrentItem ="False"
                           >
                     <ComboBox.ItemsPanel>
@@ -139,12 +111,12 @@
                 <Button Grid.Row ="5"
                         Grid.Column="7"
                         Background="Transparent"
-                        Command="{Binding DataContext.ShowCodeFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowCodeFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                         CommandParameter="{Binding CodeId}"
                         Content="{Binding CodeId}"
                         IsEnabled="{Binding DataContext.OpenCode, 
                                     Converter={StaticResource NotConverter}, 
-                                    RelativeSource={RelativeSource AncestorType=Window}}"
+                                    RelativeSource={RelativeSource AncestorType=Page}}"
                         />
 
                 <Label Grid.Column="1"
@@ -156,7 +128,7 @@
                           Grid.ColumnSpan="5"
                           SelectedValue = "{Binding StoryType, Mode=TwoWay}"
                           IsEditable="True" 
-                          ItemsSource="{Binding Path=DataContext.StoryTypes, RelativeSource={RelativeSource AncestorType=Window}}">
+                          ItemsSource="{Binding Path=DataContext.StoryTypes, RelativeSource={RelativeSource AncestorType=Page}}">
                     <ComboBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel />
@@ -196,7 +168,7 @@
                           SelectedValuePath="Id"
                           DisplayMemberPath = "Name" 
                           IsEditable="True" 
-                          ItemsSource="{Binding Path=DataContext.Languages, RelativeSource={RelativeSource AncestorType=Window}}"
+                          ItemsSource="{Binding Path=DataContext.Languages, RelativeSource={RelativeSource AncestorType=Page}}"
                           IsSynchronizedWithCurrentItem ="False">
                     <ComboBox.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -225,7 +197,7 @@
                           SelectedValuePath = "Id" 
                           DisplayMemberPath = "Name" 
                           IsEditable="True" 
-                          ItemsSource="{Binding Path=DataContext.StoryView.OriginStories, RelativeSource={RelativeSource AncestorType=Window}}"
+                          ItemsSource="{Binding Path=DataContext.StoryView.OriginStories, RelativeSource={RelativeSource AncestorType=Page}}"
                           IsSynchronizedWithCurrentItem ="False"
                           >
                     <ComboBox.ItemsPanel>
@@ -237,12 +209,12 @@
                 <Button Grid.Row ="17"
                         Grid.Column="7"
                         Background="Transparent"
-                        Command="{Binding DataContext.ShowOriginStoryFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowOriginStoryFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                         CommandParameter="{Binding OriginStoryId}"
                         Content="{Binding OriginStoryId}"
                         IsEnabled="{Binding DataContext.OpenOriginStory, 
                                     Converter={StaticResource NotConverter}, 
-                                    RelativeSource={RelativeSource AncestorType=Window}}"
+                                    RelativeSource={RelativeSource AncestorType=Page}}"
                         />
 
                 <Label Grid.Column="3"  
@@ -274,8 +246,8 @@
                         Background="Transparent"
                         Height="25"
                         VerticalAlignment="Top"
-                        Visibility="{Binding DataContext.OpenOriginStory, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                        Command="{Binding DataContext.ShowStoryOriginFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Visibility="{Binding DataContext.OpenOriginStory, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                        Command="{Binding DataContext.ShowStoryOriginFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                         >
                     +
                 </Button>
@@ -288,30 +260,31 @@
                           >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Id"
-                                            Width="50">
+                            <GridViewColumn Header="Edit"
+                                            Width="75">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowStoryOriginFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding Id}"
+                                        <Button Command="{Binding DataContext.ShowStoryOriginFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                CommandParameter="{Binding StoryId}"
                                                 Background="Transparent"
-                                                BorderThickness="0"       
-                                                Content="{Binding Id}"
-                                                />
+                                                BorderThickness="0"
+                                                Width="63"
+                                                >
+                                            <TextBlock Text="{Binding StoryId}" HorizontalAlignment="Center" />
+                                        </Button>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-
                             <GridViewColumn Header="Story from Origin"
                                             Width="350">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ComboBox Width="338"
-                                                  SelectedValue="{Binding Id}"
+                                                  SelectedValue="{Binding StoryId}"
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name" 
                                                   IsEditable="True" 
-                                                  ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
                                                   IsEnabled="False"
                                                   IsSynchronizedWithCurrentItem ="False"
                                                   >
@@ -332,8 +305,8 @@
                         Background="Transparent"
                         Height="25"
                         VerticalAlignment="Top"
-                        Visibility="{Binding DataContext.OpenCharacter, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                        Command="{Binding DataContext.ShowCharacterFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Visibility="{Binding DataContext.OpenCharacter, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                        Command="{Binding DataContext.ShowCharacterFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                         >
                     +
                 </Button>
@@ -346,21 +319,37 @@
                           >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Id"
-                                            Width="50">
+                            <GridViewColumn Header="Edit"
+                                            Width="75">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowCharacterFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowCharacterFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 CommandParameter="{Binding CharacterId}"
                                                 Background="Transparent"
-                                                BorderThickness="0"       
-                                                Content="{Binding CharacterId}"
-                                                IsEnabled="{Binding DataContext.OpenCharacter, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                />
+                                                BorderThickness="0"
+                                                Width="63"
+                                                IsEnabled="{Binding DataContext.OpenCharacter, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                >
+                                            <TextBlock Text="{Binding CharacterId}" HorizontalAlignment="Center" />
+                                        </Button>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-
+                            <GridViewColumn Header="Del" 
+                                            Width="40"
+                                            >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.DeleteCharacterFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                                                CommandParameter="{Binding CharacterId}"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Width="28">
+                                            <TextBlock Text="-" HorizontalAlignment="Center" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="Character"
                                             Width="350">
                                 <GridViewColumn.CellTemplate>
@@ -370,8 +359,8 @@
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name" 
                                                   IsEditable="True" 
-                                                  ItemsSource="{Binding Path=DataContext.CharacterView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                  IsEnabled="{Binding DataContext.OpenCharacter, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  ItemsSource="{Binding Path=DataContext.CharacterView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                  IsEnabled="{Binding DataContext.OpenCharacter, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                                                   IsSynchronizedWithCurrentItem ="False"
                                                   >
                                             <ComboBox.ItemsPanel>
@@ -391,8 +380,8 @@
                         Background="Transparent"
                         Height="25"
                         VerticalAlignment="Top"
-                        Command="{Binding DataContext.ShowArtistFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                        Visibility="{Binding DataContext.OpenArtist, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowArtistFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                        Visibility="{Binding DataContext.OpenArtist, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                         >
                     +
                 </Button>
@@ -405,21 +394,37 @@
                           >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Id"
-                                            Width="50">
+                            <GridViewColumn Header="Edit"
+                                            Width="75">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowArtistFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowArtistFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 CommandParameter="{Binding ArtistId}"
                                                 Background="Transparent"
-                                                BorderThickness="0"       
-                                                Content="{Binding ArtistId}"
-                                                IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                />
+                                                BorderThickness="0"
+                                                Width="63"
+                                                IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                >
+                                            <TextBlock Text="{Binding ArtistId}" HorizontalAlignment="Center" />
+                                        </Button>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
-                            </GridViewColumn> 
-
+                            </GridViewColumn>
+                            <GridViewColumn Header="Del" 
+                                            Width="40"
+                                            >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.DeleteArtistFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                                                CommandParameter="{Binding ArtistId}"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Width="28">
+                                            <TextBlock Text="-" HorizontalAlignment="Center" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="Artist"
                                             Width="250">
                                 <GridViewColumn.CellTemplate>
@@ -429,8 +434,8 @@
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name"
                                                   IsEditable="True" 
-                                                  ItemsSource="{Binding Path=DataContext.ArtistView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                  IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  ItemsSource="{Binding Path=DataContext.ArtistView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                  IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                                                   IsSynchronizedWithCurrentItem ="False"
                                                   >
                                             <ComboBox.ItemsPanel>
@@ -443,17 +448,17 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Header="Role" 
-                                            Width="170">
+                                            Width="160">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ComboBox IsEditable="True"
                                                   IsReadOnly="True"
-                                                  Width="158"
+                                                  Width="148"
                                                   ItemsSource="{Binding Path=Roles}"
                                                   Text="{Binding ArtistType, 
                                                             Converter={StaticResource ArrayConverter},
                                                             ConverterParameter=EnumCheckedType}"
-                                                  IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}">
+                                                  IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate DataType="{x:Type helpers:EnumCheckedType}">
                                                     <CheckBox Content="{Binding Name}"
@@ -473,8 +478,8 @@
                         Background="Transparent"
                         Height="25"
                         VerticalAlignment="Top"
-                        Command="{Binding DataContext.ShowBookFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                        Visibility="{Binding DataContext.OpenBook, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Command="{Binding DataContext.ShowBookFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                        Visibility="{Binding DataContext.OpenBook, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                         >
                     +
                 </Button>
@@ -487,21 +492,37 @@
                           >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Id"
-                                            Width="50">
+                            <GridViewColumn Header="Edit"
+                                            Width="75">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowBookFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        <Button Command="{Binding DataContext.ShowBookFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 CommandParameter="{Binding BookId}"
                                                 Background="Transparent"
-                                                BorderThickness="0"       
-                                                Content="{Binding BookId}"
-                                                IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                />
+                                                BorderThickness="0"
+                                                Width="63"
+                                                IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                >
+                                            <TextBlock Text="{Binding BookId}" HorizontalAlignment="Center" />
+                                        </Button>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-
+                            <GridViewColumn Header="Del" 
+                                            Width="40"
+                                            >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.DeleteBookFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                                                CommandParameter="{Binding BookId}"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Width="28">
+                                            <TextBlock Text="-" HorizontalAlignment="Center" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="Book"
                                             Width="350">
                                 <GridViewColumn.CellTemplate>
@@ -511,8 +532,8 @@
                                                   SelectedValuePath = "Id" 
                                                   DisplayMemberPath = "Name" 
                                                   IsEditable="True" 
-                                                  ItemsSource="{Binding Path=DataContext.BookView.Items, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                  IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  ItemsSource="{Binding Path=DataContext.BookView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                  IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                                                   IsSynchronizedWithCurrentItem ="False"
                                                   >
                                             <ComboBox.ItemsPanel>
@@ -529,5 +550,5 @@
                 </ListView>
             </Grid>
         </Grid>
-    </DockPanel>
-</Window>
+    </StackPanel>
+</Page>

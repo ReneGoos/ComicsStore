@@ -1,7 +1,4 @@
-﻿using ComicsStore.Data.Common;
-using System.ComponentModel.DataAnnotations;
-
-namespace ComicsStore.Data.Model
+﻿namespace ComicsStore.Data.Model
 {
     public class Pseudonym : CrossTable
     {
