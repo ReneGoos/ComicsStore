@@ -11,6 +11,8 @@ using ComicsLibrary.Navigation;
 using System.Windows.Input;
 using ComicsLibrary.Core;
 using System;
+using ComicsStore.MiddleWare.Services;
+using ComicsStore.Data.Model;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -22,6 +24,10 @@ namespace ComicsLibrary.ViewModels
         public ICommand DeleteOriginFromListCommand { get; protected set; }
 
         private ICollection<StoryOutputModel> _originStories;
+        private readonly IArtistsService _artistsService;
+        private readonly IBooksService _booksService;
+        private readonly ICharactersService _charactersService;
+        private readonly ICodesService _codesService;
 
         private void StoryViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -32,6 +38,10 @@ namespace ComicsLibrary.ViewModels
         }
 
         public StoryViewModel(IStoriesService storiesService,
+            IArtistsService artistsService,
+            IBooksService booksService,
+            ICharactersService charactersService, 
+            ICodesService codesService,
             INavigationService navigationService,
             IMapper mapper) : base(storiesService, navigationService, mapper)
         {
@@ -41,6 +51,10 @@ namespace ComicsLibrary.ViewModels
             DeleteOriginFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteOriginFromList));
 
             PropertyChanged += StoryViewModel_PropertyChanged;
+            _artistsService = artistsService;
+            _booksService = booksService;
+            _charactersService = charactersService;
+            _codesService = codesService;
         }
 
         public IEnumerable<StoryOutputModel> OriginStories
@@ -70,54 +84,59 @@ namespace ComicsLibrary.ViewModels
             RaisePropertyChanged("OriginStories");
         }
 
-        public void AddStoryArtist(int? artistId, int? oldArtistId)
+        public async void HandleArtist(int? artistId, int? oldArtistId)
         {
-            Item.AddStoryArtist(artistId, oldArtistId);
+            var artist = artistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _artistsService.GetAsync(artistId.Value)) : null;
+            Item.HandleArtist(oldArtistId, artist);
         }
 
         public void DeleteArtistFromList(int? artistId)
         {
-            Item.AddStoryArtist(null, artistId);
+            Item.HandleArtist(artistId, null);
         }
 
-        public void AddStoryBook(int? bookId, int? oldBookId)
+        public async void HandleBook(int? bookId, int? oldBookId)
         {
-            Item.AddStoryBook(bookId, oldBookId);
+            var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
+            Item.HandleBook(oldBookId, book);
         }
 
         public void DeleteBookFromList(int? bookId)
         {
-            Item.AddStoryBook(null, bookId);
+            Item.HandleBook(bookId, null);
         }
 
-        public void AddStoryCharacter(int? characterId, int? oldCharacterId)
+        public async void HandleCharacter(int? characterId, int? oldCharacterId)
         {
-            Item.AddStoryCharacter(characterId, oldCharacterId);
+            var character = characterId.HasValue ? Mapper.Map<CharacterOnlyEditModel>(await _charactersService.GetAsync(characterId.Value)) : null;
+            Item.HandleCharacter(oldCharacterId, character);
         }
 
         public void DeleteCharacterFromList(int? characterId)
         {
-            Item.AddStoryCharacter(null, characterId);
+            Item.HandleCharacter(characterId, null);
         }
 
-        public void AddStoryCode(int? codeId, int? oldCodeId)
+        public void HandleCode(int? codeId, int? oldCodeId)
         {
-            Item.AddStoryCode(codeId, oldCodeId);
+            Item.HandleCode(codeId);
         }
 
-        public void AddOriginStory(int? originStoryId, int? oldOriginStoryId)
+        public async void HandleOriginStory(int? originStoryId, int? oldOriginStoryId)
         {
-            Item.AddOriginStory(originStoryId, oldOriginStoryId);
+            var story = originStoryId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _itemService.GetAsync(originStoryId.Value)) : null;
+            Item.HandleOriginStory(originStoryId, oldOriginStoryId);
         }
 
-        public void AddStoryOrigin(int? originStoryId, int? oldOriginStoryId)
+        public async void HandleStoryOrigin(int? originStoryId, int? oldOriginStoryId)
         {
-            Item.AddStoryOrigin(originStoryId, oldOriginStoryId);
+            var originStory = originStoryId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _itemService.GetAsync(originStoryId.Value)) : null;
+            Item.HandleStoryOrigin(oldOriginStoryId, originStory);
         }
 
         public void DeleteOriginFromList(int? originStoryId)
         {
-            Item.AddStoryOrigin(null, originStoryId);
+            Item.HandleStoryOrigin(originStoryId, null);
         }
     }
 }

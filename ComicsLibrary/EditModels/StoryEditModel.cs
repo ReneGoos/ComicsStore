@@ -1,18 +1,12 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace ComicsLibrary.EditModels
 {
-    public class StoryEditModel : TableEditModel
+    public class StoryEditModel : StoryOnlyEditModel
     {
-        private string _storyType;
-        private int? _storyNumber;
-        private double? _pages;
-        private string _extraInfo;
-        private string _language;
-        private int _codeId;
-        private int? _originStoryId;
         private ObservableChangedCollection<StoryOriginEditModel> _storyFromOrigin;
         private ObservableChangedCollection<StoryArtistEditModel> _storyArtist;
         private ObservableChangedCollection<StoryBookEditModel> _storyBook;
@@ -26,38 +20,30 @@ namespace ComicsLibrary.EditModels
             StoryCharacter = new ObservableChangedCollection<StoryCharacterEditModel>();
         }
 
-        [Required]
-        public string StoryType { get => _storyType; set => Set(ref _storyType, value); }
-        public int? StoryNumber { get => _storyNumber; set => Set(ref _storyNumber, value); }
-        public double? Pages { get => _pages; set => Set(ref _pages, value); }
-        public string ExtraInfo { get => _extraInfo; set => Set(ref _extraInfo, value); }
-        [Required]
-        public string Language { get => _language; set => Set(ref _language, value); }
-        [Required]
-        public int CodeId { get => _codeId; set => Set(ref _codeId, value); }
-        public int? OriginStoryId { get => _originStoryId; set => Set(ref _originStoryId, value); }
+        public CodeOnlyEditModel Code { get; set; }
+        public StoryOnlyEditModel OriginStory { get; set; }
 
         public ObservableChangedCollection<StoryOriginEditModel> StoryFromOrigin { get => _storyFromOrigin; set => Set(ref _storyFromOrigin, value); }
         public ObservableChangedCollection<StoryArtistEditModel> StoryArtist { get => _storyArtist; set => Set(ref _storyArtist, value); }
         public ObservableChangedCollection<StoryBookEditModel> StoryBook { get => _storyBook; set => Set(ref _storyBook, value); }
         public ObservableChangedCollection<StoryCharacterEditModel> StoryCharacter { get => _storyCharacter; set => Set(ref _storyCharacter, value); }
 
-        public void AddStoryArtist(int? artistId, int? oldArtistId)
+        public void HandleArtist(int? oldArtistId, ArtistOnlyEditModel artist)
         {
-            StoryArtist.HandleItem(Id, artistId, oldArtistId);
+            StoryArtist.HandleItem(Id, oldArtistId, artist);
         }
 
-        public void AddStoryBook(int? bookId, int? oldBookId)
+        public void HandleBook(int? oldBookId, BookOnlyEditModel book)
         {
-            StoryBook.HandleItem(Id, bookId, oldBookId);
+            StoryBook.HandleItem(Id, oldBookId, book);
         }
 
-        public void AddStoryCharacter(int? characterId, int? oldCharacterId)
+        public void HandleCharacter(int? oldCharacterId, CharacterOnlyEditModel character)
         {
-            StoryCharacter.HandleItem(Id, characterId, oldCharacterId);
+            StoryCharacter.HandleItem(Id, oldCharacterId, character);
         }
 
-        public void AddStoryCode(int? codeId, int? oldCodeId)
+        public void HandleCode(int? codeId)
         {
             if (codeId.HasValue)
             {
@@ -68,7 +54,7 @@ namespace ComicsLibrary.EditModels
             }
         }
 
-        public void AddOriginStory(int? originStoryId, int? oldOriginStoryId)
+        public void HandleOriginStory(int? originStoryId, int? oldOriginStoryId)
         {
             if (originStoryId.HasValue)
             {
@@ -79,12 +65,21 @@ namespace ComicsLibrary.EditModels
             }
         }
 
-        public void AddStoryOrigin(int? originStoryId, int? oldOriginStoryId)
+        public void HandleStoryOrigin(int? oldOriginStoryId, StoryOnlyEditModel originStory)
         {
-            StoryFromOrigin.HandleItem(Id, originStoryId, oldOriginStoryId);
+            if (originStory is null)
+            {
+                return;
+            }
+
+            if (oldOriginStoryId.HasValue)
+            {
+                var storyFromOrigin = StoryFromOrigin.FirstOrDefault(s => s.Id == oldOriginStoryId.Value);
+                storyFromOrigin.Name = originStory.Name;
+            }
         }
 
-        public override void ResetId()
+        public void ResetId()
         {
             Id = null;
 

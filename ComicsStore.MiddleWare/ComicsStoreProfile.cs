@@ -65,42 +65,43 @@ namespace ComicsStore.MiddleWare
             _ = CreateMap<ExportBook, ExportBooksOutputModel>();
             _ = CreateMap<ExportStory, ExportBooksOutputModel>();
 
-            _ = CreateMap<BookSeries, BookSeriesOutputModel>().IncludeMembers(b => b.Series);
-            _ = CreateMap<BookSeries, SeriesBookOutputModel>().IncludeMembers(b => b.Book);
+            _ = CreateMap<BookSeries, BookSeriesOutputModel>();
+            _ = CreateMap<BookSeries, SeriesBookOutputModel>();
             _ = CreateMap<Series, BookSeriesOutputModel>();
             _ = CreateMap<Book, SeriesBookOutputModel>();
 
-            _ = CreateMap<BookPublisher, BookPublisherOutputModel>().IncludeMembers(b => b.Publisher);
-            _ = CreateMap<BookPublisher, PublisherBookOutputModel>().IncludeMembers(b => b.Book);
+            _ = CreateMap<BookPublisher, BookPublisherOutputModel>();
+            _ = CreateMap<BookPublisher, PublisherBookOutputModel>();
             _ = CreateMap<Publisher, BookPublisherOutputModel>();
             _ = CreateMap<Book, PublisherBookOutputModel>();
 
-            _ = CreateMap<StoryArtist, ArtistStoryOutputModel>().IncludeMembers(s => s.Story);
-            _ = CreateMap<StoryArtist, StoryArtistOutputModel>().IncludeMembers(s => s.Artist);
+            _ = CreateMap<StoryArtist, ArtistStoryOutputModel>();
+            _ = CreateMap<StoryArtist, StoryArtistOutputModel>();
             _ = CreateMap<Story, ArtistStoryOutputModel>();
-            _ = CreateMap<Artist, StoryArtistOutputModel>()
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FullName));
+            _ = CreateMap<Artist, StoryArtistOutputModel>();
 
             _ = CreateMap<Pseudonym, ArtistPseudonymOutputModel>();
             _ = CreateMap<Pseudonym, PseudonymArtistOutputModel>();
 
-            _ = CreateMap<StoryBook, BookStoryOutputModel>().IncludeMembers(s => s.Story);
-            _ = CreateMap<StoryBook, StoryBookOutputModel>().IncludeMembers(s => s.Book);
+            _ = CreateMap<StoryBook, BookStoryOutputModel>();
+            _ = CreateMap<StoryBook, StoryBookOutputModel>();
             _ = CreateMap<Story, BookStoryOutputModel>();
             _ = CreateMap<Book, StoryBookOutputModel>();
 
-            _ = CreateMap<StoryCharacter, CharacterStoryOutputModel>().IncludeMembers(s => s.Story);
-            _ = CreateMap<StoryCharacter, StoryCharacterOutputModel>().IncludeMembers(s => s.Character);
+            _ = CreateMap<StoryCharacter, CharacterStoryOutputModel>();
+            _ = CreateMap<StoryCharacter, StoryCharacterOutputModel>();
             _ = CreateMap<Character, StoryCharacterOutputModel>();
             _ = CreateMap<Story, CharacterStoryOutputModel>();
 
             _ = CreateMap<Series, CodeSeriesOutputModel>()
-                .ForMember(cs => cs.SeriesId, opt => opt.MapFrom(s => s.Id));
+                .ForMember(cs => cs.SeriesId, opt => opt.MapFrom(s => s.Id))
+                .ForMember(cs => cs.Series, opt => opt.MapFrom(s => s));
             _ = CreateMap<Story, CodeStoryOutputModel>()
-                .ForMember(cs => cs.StoryId, opt => opt.MapFrom(s => s.Id));
+                .ForMember(cs => cs.StoryId, opt => opt.MapFrom(s => s.Id))
+                .ForMember(cs => cs.Story, opt => opt.MapFrom(s => s));
             _ = CreateMap<Story, StoryOriginOutputModel>()
-                .ForMember(cs => cs.StoryId, opt => opt.MapFrom(s => s.Id));
+                .ForMember(cs => cs.StoryId, opt => opt.MapFrom(s => s.Id))
+                .ForMember(cs => cs.StoryFromOrigin, opt => opt.MapFrom(s => s));
         }
     }
 }

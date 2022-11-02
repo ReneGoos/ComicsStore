@@ -54,7 +54,7 @@ namespace ComicsStore.Data.Repositories
             return characters;
         }
 
-        public override Task<Character> GetAsync(int characterId, bool extended = false)
+        public override Task<Character> GetAsync(int characterId, bool extended = true)
         {
             if (extended)
             {

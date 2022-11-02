@@ -16,7 +16,7 @@ namespace ComicsStore.Data.Repositories
         {
         }
 
-        public abstract Task<T> GetAsync(int id, bool extended = false);
+        public abstract Task<T> GetAsync(int id, bool extended = true);
         public abstract Task<List<T>> GetAsync(TSearch model);
         public abstract Task<T> PatchAsync(int id, IDictionary<string, object> data);
 

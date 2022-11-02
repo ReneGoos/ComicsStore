@@ -9,52 +9,66 @@ using System.Windows.Input;
 using ComicsLibrary.Core;
 using System;
 using ComicsStore.Data.Model;
+using ComicsStore.MiddleWare.Services;
 
 namespace ComicsLibrary.ViewModels
 {
     public class BookViewModel : BasicTableViewModel<IBooksService, BookInputModel, BookInputPatchModel, BookOutputModel, BasicSearch, BookEditModel>
     {
+        private readonly IPublishersService _publishersService;
+        private readonly ISeriesService _seriesService;
+        private readonly IStoriesService _storiesService;
+
         public ICommand DeletePublisherFromListCommand { get; protected set; }
         public ICommand DeleteSeriesFromListCommand { get; protected set; }
         public ICommand DeleteStoryFromListCommand { get; protected set; }
 
         public BookViewModel(IBooksService booksService,
+            IPublishersService publishersService, 
+            ISeriesService seriesService,
+            IStoriesService storiesService,
             INavigationService navigationService,
             IMapper mapper) : base(booksService, navigationService, mapper)
         {
             DeletePublisherFromListCommand = new RelayCommand<int?>(new Action<int?>(DeletePublisherFromList));
             DeleteSeriesFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteSeriesFromList));
             DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
+            _publishersService = publishersService;
+            _seriesService = seriesService;
+            _storiesService = storiesService;
         }
 
-        public void AddBookPublisher(int? publisherId, int? oldPublisherId)
+        public async void HandlePublisher(int? publisherId, int? oldPublisherId)
         {
-            Item.AddBookPublisher(publisherId, oldPublisherId);
+            var publisher = publisherId.HasValue ? Mapper.Map<PublisherOnlyEditModel>(await _publishersService.GetAsync(publisherId.Value)) : null;
+            Item.HandlePublisher(oldPublisherId, publisher);
         }
 
         private void DeletePublisherFromList(int? publisherId)
         {
-            Item.AddBookPublisher(null, publisherId);
+            Item.HandlePublisher(publisherId, null);
         }
 
-        public void AddBookSeries(int? seriesId, int? oldSeriesId)
+        public async void HandleSeries(int? seriesId, int? oldSeriesId)
         {
-            Item.AddBookSeries(seriesId, oldSeriesId);
+            var series = seriesId.HasValue ? Mapper.Map<SeriesOnlyEditModel>(await _seriesService.GetAsync(seriesId.Value)) : null;
+            Item.HandleSeries(oldSeriesId, series);
         }
 
         private void DeleteSeriesFromList(int? seriesId)
         {
-            Item.AddBookSeries(null, seriesId);
+            Item.HandleSeries(seriesId, null);
         }
 
-        public void AddBookStory(int? storyId, int? oldStoryId)
+        public async void HandleStory(int? storyId, int? oldStoryId)
         {
-            Item.AddBookStory(storyId, oldStoryId);
+            var story = storyId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _storiesService.GetAsync(storyId.Value)) : null;
+            Item.HandleStory(oldStoryId, story);
         }
 
         private void DeleteStoryFromList(int? storyId)
         {
-            Item.AddBookStory(null, storyId);
+            Item.HandleStory(storyId, null);
         }
     }
 }

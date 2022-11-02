@@ -47,7 +47,7 @@ namespace ComicsStore.Data.Repositories
             return artists;
         }
 
-        public override Task<Artist> GetAsync(int artistId, bool extended = false)
+        public override Task<Artist> GetAsync(int artistId, bool extended = true)
         {
             if (extended)
             {

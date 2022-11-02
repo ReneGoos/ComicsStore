@@ -137,6 +137,18 @@
                        Content="{Binding Error}"/>
             </Grid>
             <Grid Grid.Column="1">
+                <Grid.Resources>
+                    <Style TargetType="ListViewItem">
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                                <Setter Property="Background" Value="White" />
+                            </Trigger>
+                            <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                                <Setter Property="Background" Value="LightGray" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5"/>
                     <ColumnDefinition Width="*"/>
@@ -165,23 +177,23 @@
                 </Button>
                 <ListView Grid.Row ="1"
                           Grid.Column="1"
-                          DockPanel.Dock="Top"
                           VerticalAlignment="Top"
+                          AlternationCount="2"
                           ItemsSource="{Binding Path=StoryArtist}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Edit" 
-                                            Width="75"
+                                            Width="60"
                                             >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowStoryFromPseudonymArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                        <Button Command="{Binding DataContext.ShowStoryFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 CommandParameter="{Binding StoryId}"
                                                 Background="Transparent"
-                                                BorderThickness="0"
-                                                Width="63"
+                                                BorderThickness="0"       
+                                                Width="48"
                                                 IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 >
                                             <TextBlock Text="{Binding StoryId}" HorizontalAlignment="Center" />
@@ -190,7 +202,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Header="Del" 
-                                            Width="40"
+                                            Width="25"
                                             >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -198,7 +210,7 @@
                                                 CommandParameter="{Binding StoryId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                Width="28">
+                                                Width="10">
                                             <TextBlock Text="-" HorizontalAlignment="Center" />
                                         </Button>
                                     </DataTemplate>
@@ -208,21 +220,25 @@
                                             Width="250">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="238"
-                                                  SelectedValue="{Binding StoryId, Mode=TwoWay}"
-                                                  SelectedValuePath = "Id" 
-                                                  DisplayMemberPath = "Name" 
-                                                  IsEditable="True" 
-                                                  ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                  IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                  IsSynchronizedWithCurrentItem ="False"
-                                                  >
-                                            <ComboBox.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <VirtualizingStackPanel />
-                                                </ItemsPanelTemplate>
-                                            </ComboBox.ItemsPanel>
-                                        </ComboBox>
+                                        <Label Content="{Binding Story.Name}"></Label>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Type"
+                                            Width="50">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Story.StoryType}"></Label>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Number"
+                                            Width="50">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Story.StoryNumber}"
+                                               Width="40"
+                                               HorizontalContentAlignment="Right"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -266,20 +282,21 @@
                           Grid.Row ="3"
                           Grid.Column="1"                          
                           VerticalAlignment="Top" 
+                          AlternationCount="2"
                           ItemsSource="{Binding Path=PseudonymArtist}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Edit"
-                                            Width="75">
+                                            Width="60">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowMainArtistFromPseudonymArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 CommandParameter="{Binding MainArtistId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                Width="63"
+                                                Width="48"
                                                 IsEnabled="{Binding DataContext.OpenPseudonymArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 >
                                             <TextBlock Text="{Binding MainArtistId}" HorizontalAlignment="Center" />
@@ -306,21 +323,7 @@
                                             Width="250">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="238"
-                                                  SelectedValue="{Binding MainArtistId, Mode=TwoWay}"
-                                                  SelectedValuePath = "Id" 
-                                                  DisplayMemberPath = "Name"
-                                                  IsEditable="True" 
-                                                  ItemsSource="{Binding Path=DataContext.ArtistView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                  IsEnabled="{Binding DataContext.OpenPseudonymArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                  IsSynchronizedWithCurrentItem ="False"
-                                                  >
-                                            <ComboBox.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <VirtualizingStackPanel />
-                                                </ItemsPanelTemplate>
-                                            </ComboBox.ItemsPanel>
-                                        </ComboBox>
+                                        <Label Content="{Binding MainArtist.Name}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -341,20 +344,21 @@
                           Grid.Row ="5"
                           Grid.Column="1"                          
                           VerticalAlignment="Top" 
+                          AlternationCount="2"
                           ItemsSource="{Binding Path=MainArtist}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Edit"
-                                            Width="75">
+                                            Width="60">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowArtistFromPseudonymArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 CommandParameter="{Binding PseudonymArtistId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                Width="63"
+                                                Width="48"
                                                 IsEnabled="{Binding DataContext.OpenPseudonymArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 >
                                             <TextBlock Text="{Binding PseudonymArtistId}" HorizontalAlignment="Center" />
@@ -381,21 +385,7 @@
                                             Width="250">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="238"
-                                                  SelectedValue="{Binding PseudonymArtistId, Mode=TwoWay}"
-                                                  SelectedValuePath = "Id" 
-                                                  DisplayMemberPath = "Name"
-                                                  IsEditable="True" 
-                                                  ItemsSource="{Binding Path=DataContext.ArtistView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                  IsEnabled="{Binding DataContext.OpenPseudonymArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                  IsSynchronizedWithCurrentItem ="False"
-                                                  >
-                                            <ComboBox.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <VirtualizingStackPanel />
-                                                </ItemsPanelTemplate>
-                                            </ComboBox.ItemsPanel>
-                                        </ComboBox>
+                                        <Label Content="{Binding PseudonymArtist.Name}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

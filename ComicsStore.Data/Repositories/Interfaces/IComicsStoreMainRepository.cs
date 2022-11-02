@@ -9,7 +9,7 @@ namespace ComicsStore.Data.Repositories.Interfaces
         where T : BasicsTable
         where TSearch : BasicSearch
     {
-        Task<T> GetAsync(int id, bool extended = false);
+        Task<T> GetAsync(int id, bool extended = true);
         Task<List<T>> GetAsync(TSearch model);
         Task<T> PatchAsync(int id, IDictionary<string, object> data);
     }

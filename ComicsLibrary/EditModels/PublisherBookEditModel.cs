@@ -1,8 +1,18 @@
-﻿namespace ComicsLibrary.EditModels
+﻿using ComicsStore.Data.Model;
+
+namespace ComicsLibrary.EditModels
 {
-    public class PublisherBookEditModel : BookPublisherEditModel
+    public class PublisherBookEditModel : BasicEditModel, ICrossEditModel
     {
-        public override int? MainId { get => PublisherId; set => PublisherId = value; }
-        public override int? LinkedId { get => BookId; set => BookId = value; }
+        private int? _bookId;
+        private int? _publisherId;
+
+        public int? BookId { get => _bookId; set => SetIfValue(ref _bookId, value); }
+        public int? PublisherId { get => _publisherId; set => SetIfValue(ref _publisherId, value); }
+        public BookOnlyEditModel Book { get; set; }
+
+        public int? MainId { get => PublisherId; set => PublisherId = value; }
+        public int? LinkedId { get => BookId; set => BookId = value; }
+        public TableEditModel ChildItem { get => Book; set => Book = value as BookOnlyEditModel; }
     }
 }

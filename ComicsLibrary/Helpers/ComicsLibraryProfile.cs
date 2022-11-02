@@ -11,16 +11,21 @@ namespace ComicsLibrary.Helpers
     {
         public ComicsLibraryProfile() : base()
         {
-            _ = CreateMap<ICollection<EnumCheckedType>, ICollection<string>>().ConstructUsing(src => CheckedArrayMapper<ArtistType>.GetStringList(src));
-            _ = CreateMap<ICollection<string>, ICollection<EnumCheckedType>>().ConstructUsing(src => CheckedArrayMapper<ArtistType>.GetCheckedList(src));
+            _ = CreateMap<ICollection<EnumCheckedType>, ICollection<string>>()
+                .ConstructUsing(src => CheckedArrayMapper<ArtistType>.GetStringList(src));
+            _ = CreateMap<ICollection<string>, ICollection<EnumCheckedType>>()
+                .ConstructUsing(src => CheckedArrayMapper<ArtistType>.GetCheckedList(src));
 
             _ = CreateMap<ArtistEditModel, ArtistInputModel>();
             _ = CreateMap<BookEditModel, BookInputModel>();
             _ = CreateMap<CharacterEditModel, CharacterInputModel>();
             _ = CreateMap<CodeEditModel, CodeInputModel>();
             _ = CreateMap<PublisherEditModel, PublisherInputModel>();
-            _ = CreateMap<SeriesEditModel, SeriesInputModel>();
-            _ = CreateMap<StoryEditModel, StoryInputModel>();
+            _ = CreateMap<SeriesEditModel, SeriesInputModel>()
+                .ForMember(src => src.Code, opt => opt.Ignore());
+            _ = CreateMap<StoryEditModel, StoryInputModel>()
+                .ForMember(src => src.Code, opt => opt.Ignore())
+                .ForMember(src => src.OriginStory, opt => opt.Ignore());
             _ = CreateMap<ExportBooksOutputModel, ReportEditModel>();
 
             _ = CreateMap<ArtistOutputModel, ArtistEditModel>();
@@ -30,6 +35,14 @@ namespace ComicsLibrary.Helpers
             _ = CreateMap<PublisherOutputModel, PublisherEditModel>();
             _ = CreateMap<SeriesOutputModel, SeriesEditModel>();
             _ = CreateMap<StoryOutputModel, StoryEditModel>();
+
+            _ = CreateMap<ArtistOnlyOutputModel, ArtistOnlyEditModel>();
+            _ = CreateMap<BookOnlyOutputModel, BookOnlyEditModel>();
+            _ = CreateMap<CharacterOnlyOutputModel, CharacterOnlyEditModel>();
+            _ = CreateMap<CodeOnlyOutputModel, CodeOnlyEditModel>();
+            _ = CreateMap<PublisherOnlyOutputModel, PublisherOnlyEditModel>();
+            _ = CreateMap<SeriesOnlyOutputModel, SeriesOnlyEditModel>();
+            _ = CreateMap<StoryOnlyOutputModel, StoryOnlyEditModel>();
 
             _ = CreateMap<ArtistPseudonymEditModel, PseudonymInputModel>();
             _ = CreateMap<ArtistStoryEditModel, StoryArtistInputModel>();

@@ -2,10 +2,12 @@
 
 namespace ComicsStore.MiddleWare.Models.Output
 {
-    public class ArtistStoryOutputModel : StoryOnlyOutputModel, IArtistStoryOutputModel
+    public class ArtistStoryOutputModel : IArtistStoryOutputModel
     {
         public int ArtistId { get; set; }
         public int StoryId { get; set; }
         public ICollection<string> ArtistType { get; set; }
+
+        public StoryOnlyOutputModel Story { get; set; }
     }
 }

@@ -5,10 +5,11 @@ using System.Collections.ObjectModel;
 using ComicsStore.Data.Common;
 using System.ComponentModel.DataAnnotations;
 using ComicsLibrary.Helpers;
+using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsLibrary.EditModels
 {
-    public class StoryArtistEditModel : CrossEditModel
+    public class StoryArtistEditModel : BasicEditModel, ICrossEditModel
     {
         private int? _artistId;
         private int? _storyId;
@@ -97,8 +98,10 @@ namespace ComicsLibrary.EditModels
         public ICollection<string> ArtistType { get => _artistType; set => Set(ref _artistType, value); }
 
         public ObservableCollection<EnumCheckedType> Roles { get { if (_roles is null) { _roles = FillRoles(); } return _roles; } set => Set(ref _roles, value); }
+        public ArtistOnlyEditModel Artist { get; set; }
 
-        public override int? MainId { get => StoryId; set => StoryId = value; }
-        public override int? LinkedId { get => ArtistId; set => ArtistId = value; }
+        public int? MainId { get => StoryId; set => StoryId = value; }
+        public int? LinkedId { get => ArtistId; set => ArtistId = value; }
+        public TableEditModel ChildItem { get => Artist; set => Artist = value as ArtistOnlyEditModel; }
     }
 }

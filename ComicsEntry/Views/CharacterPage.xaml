@@ -43,6 +43,18 @@
                                      ItemError="{Binding Error, Mode=TwoWay}"/>
             </Grid>
             <Grid Grid.Column="1">
+                <Grid.Resources>
+                    <Style TargetType="ListViewItem">
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                                <Setter Property="Background" Value="White" />
+                            </Trigger>
+                            <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                                <Setter Property="Background" Value="LightGray" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5"/>
                     <ColumnDefinition Width="*"/>
@@ -68,12 +80,13 @@
                 <ListView Grid.Row ="1"
                           Grid.Column="1"
                           VerticalAlignment="Top" 
+                          AlternationCount="2"
                           ItemsSource="{Binding Path=StoryCharacter}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Edit"
-                                            Width="75" 
+                                            Width="60" 
                                             >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -81,7 +94,7 @@
                                                 CommandParameter="{Binding StoryId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                Width="63"       
+                                                Width="48"       
                                                 IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 >
                                             <TextBlock Text="{Binding StoryId}" HorizontalAlignment="Center" />
@@ -107,21 +120,25 @@
                             <GridViewColumn Header="Story" Width="350">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="338"
-                                                  SelectedValue="{Binding StoryId}"
-                                                  SelectedValuePath = "Id" 
-                                                  DisplayMemberPath = "Name" 
-                                                  IsEditable="True" 
-                                                  ItemsSource="{Binding Path=DataContext.StoryView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                  IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                  IsSynchronizedWithCurrentItem ="False"
-                                                  >
-                                            <ComboBox.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <VirtualizingStackPanel />
-                                                </ItemsPanelTemplate>
-                                            </ComboBox.ItemsPanel>
-                                        </ComboBox>
+                                        <Label Content="{Binding Story.Name}"></Label>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Type"
+                                            Width="50">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Story.StoryType}"></Label>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Number"
+                                            Width="50">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Story.StoryNumber}"
+                                               Width="40"
+                                               HorizontalContentAlignment="Right"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

@@ -3,7 +3,7 @@ using ComicsLibrary.Extensions;
 
 namespace ComicsLibrary.EditModels
 {
-    public class PublisherEditModel : TableEditModel
+    public class PublisherEditModel : PublisherOnlyEditModel
     {
         private ObservableChangedCollection<PublisherBookEditModel> _bookPublishers;
 
@@ -14,13 +14,13 @@ namespace ComicsLibrary.EditModels
 
         public ObservableChangedCollection<PublisherBookEditModel> BookPublisher { get => _bookPublishers; set => Set(ref _bookPublishers, value); }
 
-        public void AddBookPublisher(int? bookId, int? oldBookId)
+        public void HandleBook(int? oldBookId, BookOnlyEditModel book)
         {
 
-            BookPublisher.HandleItem(Id, bookId, oldBookId);
+            BookPublisher.HandleItem(Id, oldBookId, book);
         }
 
-        public override void ResetId()
+        public void ResetId()
         {
             Id = null;
 

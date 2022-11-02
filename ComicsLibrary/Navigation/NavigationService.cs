@@ -1,4 +1,5 @@
 ﻿using ComicsLibrary.Core;
+using ComicsLibrary.EditModels;
 using ComicsLibrary.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 
 namespace ComicsLibrary.Navigation
 {
@@ -16,17 +18,17 @@ namespace ComicsLibrary.Navigation
         {
             public NavigationContext(string windowKey
                 , int? itemId
-                , Action<int?, int?> AddItem
+                , Action<int?, int?> HandleItem
                 )
             {
                 WindowKey = windowKey;
                 ItemId = itemId;
-                this.AddItem = AddItem;
+                this.HandleItem = HandleItem;
             }
 
             public string WindowKey { get; }
             public int? ItemId { get; }
-            public Action<int?, int?> AddItem { get; }
+            public Action<int?, int?> HandleItem { get; }
         }
 
         private readonly IServiceProvider _serviceProvider;
@@ -78,14 +80,14 @@ namespace ComicsLibrary.Navigation
             return true;
         }
 
-        public async Task ClosePageAsync(bool result, int? id = null)
+        public async Task ClosePageAsync(bool result, int? itemId = null)
         {
             var context = ActivePages.Pop();
             RaisePropertyChanged("ActivePages");
 
-            if (result && context.AddItem != null)
+            if (result && context.HandleItem != null)
             {
-                context.AddItem(id, context.ItemId);
+                context.HandleItem(itemId, context.ItemId);
             }
 
             if (ActivePages.Count > 0)

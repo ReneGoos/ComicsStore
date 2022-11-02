@@ -109,16 +109,16 @@ namespace ComicsLibrary.ViewModels
             _navigationService.PropertyChanged += _navigationService_PropertyChanged;
 
             _configuration = configuration;
-            ArtistView = new ArtistViewModel(artistsService, navigationService, mapper);
-            BookView = new BookViewModel(booksService, navigationService, mapper);
-            CharacterView = new CharacterViewModel(charactersService, navigationService, mapper);
-            CodeView = new CodeViewModel(codesService, navigationService, mapper);
-            PublisherView = new PublisherViewModel(publishersService, navigationService, mapper);
-            SeriesView = new SeriesViewModel(seriesService, navigationService, mapper);
-            StoryView = new StoryViewModel(storiesService, navigationService, mapper);
+            ArtistView = new ArtistViewModel(artistsService, storiesService, navigationService, mapper);
+            BookView = new BookViewModel(booksService, publishersService, seriesService, storiesService, navigationService, mapper);
+            CharacterView = new CharacterViewModel(charactersService, storiesService, navigationService, mapper);
+            CodeView = new CodeViewModel(codesService, seriesService, storiesService, navigationService, mapper);
+            PublisherView = new PublisherViewModel(publishersService, booksService, navigationService, mapper);
+            SeriesView = new SeriesViewModel(seriesService, booksService, codesService, navigationService, mapper);
+            StoryView = new StoryViewModel(storiesService, artistsService, booksService, charactersService, codesService, navigationService, mapper);
 
-            PseudonymArtistView = new ArtistViewModel(artistsService, navigationService, mapper);
-            OriginStoryView = new StoryViewModel(storiesService, navigationService, mapper);
+            PseudonymArtistView = new ArtistViewModel(artistsService, storiesService, navigationService, mapper);
+            OriginStoryView = new StoryViewModel(storiesService, artistsService, booksService, charactersService, codesService, navigationService, mapper);
 
             ReportView = new ReportViewModel(exportBooksService, mapper);
 
@@ -266,160 +266,160 @@ namespace ComicsLibrary.ViewModels
         {
             GetItem(ArtistView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Artist, itemId, OriginStoryView.AddStoryArtist);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Artist, itemId, OriginStoryView.HandleArtist);
         }
 
         private async void ShowArtistFromStoryWindow(int? itemId)
         {
             GetItem(ArtistView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Artist, itemId, StoryView.AddStoryArtist);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Artist, itemId, StoryView.HandleArtist);
         }
 
         private async void ShowPseudonymArtistFromArtistWindow(int? itemId)
         {
             GetItem(PseudonymArtistView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.PseudonymArtist, itemId, ArtistView.AddPseudonymArtist);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.PseudonymArtist, itemId, ArtistView.HandlePseudonymArtist);
         }
 
         private async void ShowMainArtistFromArtistWindow(int? itemId)
         {
             GetItem(PseudonymArtistView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.PseudonymArtist, itemId, ArtistView.AddMainArtist);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.PseudonymArtist, itemId, ArtistView.HandleMainArtist);
         }
 
         private async void ShowBookFromPublisherWindow(int? itemId)
         {
             GetItem(BookView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, PublisherView.AddBookPublisher);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, PublisherView.HandleBook);
         }
 
         private async void ShowBookFromSeriesWindow(int? itemId)
         {
             GetItem(BookView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, SeriesView.AddSeriesBook);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, SeriesView.HandleBook);
         }
 
         private async void ShowBookFromOriginStoryWindow(int? itemId)
         {
             GetItem(BookView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, OriginStoryView.AddStoryBook);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, OriginStoryView.HandleBook);
         }
 
         private async void ShowBookFromStoryWindow(int? itemId)
         {
             GetItem(BookView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, StoryView.AddStoryBook);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, StoryView.HandleBook);
         }
 
         private async void ShowCharacterFromOriginStoryWindow(int? itemId)
         {
             GetItem(CharacterView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Character, itemId, OriginStoryView.AddStoryCharacter);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Character, itemId, OriginStoryView.HandleCharacter);
         }
 
         private async void ShowCharacterFromStoryWindow(int? itemId)
         {
             GetItem(CharacterView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Character, itemId, StoryView.AddStoryCharacter);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Character, itemId, StoryView.HandleCharacter);
         }
 
         private async void ShowCodeFromSeriesWindow(int? itemId)
         {
             GetItem(CodeView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Code, itemId, SeriesView.AddSeriesCode);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Code, itemId, SeriesView.HandleCode);
         }
 
         private async void ShowCodeFromOriginStoryWindow(int? itemId)
         {
             GetItem(CodeView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Code, itemId, OriginStoryView.AddStoryCode);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Code, itemId, OriginStoryView.HandleCode);
         }
 
         private async void ShowCodeFromStoryWindow(int? itemId)
         {
             GetItem(CodeView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Code, itemId, StoryView.AddStoryCode);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Code, itemId, StoryView.HandleCode);
         }
 
         private async void ShowPublisherFromBookWindow(int? itemId)
         {
             GetItem(PublisherView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Publisher, itemId, BookView.AddBookPublisher);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Publisher, itemId, BookView.HandlePublisher);
         }
 
         private async void ShowSeriesFromBookWindow(int? itemId)
         {
             GetItem(SeriesView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Series, itemId, BookView.AddBookSeries);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Series, itemId, BookView.HandleSeries);
         }
         private async void ShowSeriesFromCodeWindow(int? itemId)
         {
             GetItem(SeriesView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Series, itemId, CodeView.AddSeriesCodes);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Series, itemId, CodeView.HandleSeries);
         }
 
         private async void ShowOriginStoryFromStoryWindow(int? itemId)
         {
             GetItem(OriginStoryView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.OriginStory, itemId, StoryView.AddOriginStory);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.OriginStory, itemId, StoryView.HandleOriginStory);
         }
 
         private async void ShowStoryOriginFromStoryWindow(int? itemId)
         {
             GetItem(OriginStoryView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.OriginStory, itemId, null); // StoryView.AddStoryOrigin);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.OriginStory, itemId, StoryView.HandleStoryOrigin);
         }
 
         private async void ShowStoryFromArtistWindow(int? itemId)
         {
             GetItem(StoryView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, ArtistView.AddArtistStory);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, ArtistView.HandleStory); 
         }
 
         private async void ShowStoryFromPseudonymArtistWindow(int? itemId)
         {
             GetItem(StoryView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, PseudonymArtistView.AddArtistStory);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, PseudonymArtistView.HandleStory);
         }
 
         private async void ShowStoryFromBookWindow(int? itemId)
         {
             GetItem(StoryView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, BookView.AddBookStory);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, BookView.HandleStory);
         }
 
         private async void ShowStoryFromCharacterWindow(int? itemId)
         {
             GetItem(StoryView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, CharacterView.AddStoryCharacter);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, CharacterView.HandleStory);
         }
 
         private async void ShowStoryFromCodeWindow(int? itemId)
         {
             GetItem(StoryView, itemId);
 
-            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, CodeView.AddStoryCodes);
+            _ = await _navigationService.ShowPageAsync(StoreWindows.Story, itemId, CodeView.HandleStory);
         }
 
         private async void ShowReportWindow()

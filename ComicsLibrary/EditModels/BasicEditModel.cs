@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ComicsLibrary.EditModels
 {
-    public abstract class BasicEditModel : ObservableObject, IDataErrorInfo
+    public abstract class BasicEditModel : ObservableObject, IDataErrorInfo, IBasicEditModel
     {
         private DateTime _creationDate;
         private DateTime _dateUpdate;
@@ -55,12 +55,12 @@ namespace ComicsLibrary.EditModels
                 if (type.IsGenericType)
                 {
                     Type itemType = type.GetGenericArguments()[0];
-                    if (itemType.IsSubclassOf(typeof(CrossEditModel)))
+                    if (itemType.IsSubclassOf(typeof(ICrossEditModel)))
                     {
                         Errors[coll.Name] = new List<string>();
                         foreach (var element in (System.Collections.IEnumerable)coll.GetValue(this))
                         {
-                            var crossEditModel = (CrossEditModel)element;
+                            var crossEditModel = (ICrossEditModel)element;
                             if (!crossEditModel.Validate())
                             {
                                 Errors[coll.Name].Add(crossEditModel.Error);
@@ -70,7 +70,7 @@ namespace ComicsLibrary.EditModels
                         {
                             _ = Errors.Remove(coll.Name);
                         }
-                    } 
+                    }
                 }
             }
 

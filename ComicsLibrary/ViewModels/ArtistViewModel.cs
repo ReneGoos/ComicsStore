@@ -9,52 +9,81 @@ using System;
 using System.Windows.Input;
 using ComicsLibrary.Navigation;
 using ComicsStore.Data.Model;
+using System.ComponentModel;
+using System.Linq;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace ComicsLibrary.ViewModels
 {
     public class ArtistViewModel : BasicTableViewModel<IArtistsService, ArtistInputModel, ArtistInputModel, ArtistOutputModel, BasicSearch, ArtistEditModel>
     {
+        private readonly IStoriesService _storiesService;
+
         public ICommand DeleteMainArtistFromListCommand { get; protected set; }
         public ICommand DeletePseudonymArtistFromListCommand { get; protected set; }
         public ICommand DeleteStoryFromListCommand { get; protected set; }
+        public PagedCollection<ArtistStoryEditModel> PagedStories { get; }
 
         public ArtistViewModel(IArtistsService artistsService,
+            IStoriesService storiesService,
             INavigationService navigationService,
             IMapper mapper) : base(artistsService, navigationService, mapper)
         {
             DeleteMainArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteMainArtistFromList));
             DeletePseudonymArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeletePseudonymArtistFromList));
             DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
+
+            PagedStories = new PagedCollection<ArtistStoryEditModel>();
+            _storiesService = storiesService;
         }
 
-        public void AddArtistStory(int? storyId, int? oldStoryId)
+        public async void HandleStory(int? storyId, int? oldStoryId)
         {
-            Item.AddStoryArtist(storyId, oldStoryId);
+            var story = storyId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _storiesService.GetAsync(storyId.Value)) : null;
+            Item.HandleStory(oldStoryId, story);
         }
 
         private void DeleteStoryFromList(int? storyId)
         {
-            Item.AddStoryArtist(null, storyId);
+            Item.HandleStory(storyId, null);
         }
 
-        public void AddMainArtist(int? mainArtistId, int? oldMainArtistId)
+        public async void HandleMainArtist(int? mainArtistId, int? oldMainArtistId)
         {
-            Item.AddMainArtist(mainArtistId, oldMainArtistId);
+            var artist = mainArtistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _itemService.GetAsync(mainArtistId.Value)) : null;
+            Item.HandleMainArtist(oldMainArtistId, artist);
         }
 
         private void DeleteMainArtistFromList(int? mainArtistId)
         {
-            Item.AddMainArtist(null, mainArtistId);
+            Item.HandleMainArtist(mainArtistId, null);
         }
 
-        public void AddPseudonymArtist(int? pseudonymArtistId, int? oldPseudonymArtistId)
+        public async void HandlePseudonymArtist(int? pseudonymArtistId, int? oldPseudonymArtistId)
         {
-            Item.AddPseudonymArtist(pseudonymArtistId, oldPseudonymArtistId);
+            var artist = pseudonymArtistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _storiesService.GetAsync(pseudonymArtistId.Value)) : null;
+            Item.HandlePseudonymArtist(oldPseudonymArtistId, artist);
         }
 
         private void DeletePseudonymArtistFromList(int? pseudonymArtistId)
         {
-            Item.AddPseudonymArtist(null, pseudonymArtistId);
+            Item.HandlePseudonymArtist(pseudonymArtistId, null);
+        }
+
+        protected override void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.ItemPropertyChanged(sender, e);
+
+            switch (e.PropertyName)
+            {
+                case "Story":
+                case "Id":
+                    RaisePropertyChanged(nameof(PagedStories));
+                    PagedStories.SelectedPage = 0;
+                    PagedStories.Items = Item.StoryArtist; 
+                    break;
+            }
         }
     }
 }

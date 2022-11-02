@@ -42,7 +42,7 @@ namespace ComicsStore.Data.Repositories
             return codes;
         }
 
-        public override Task<Code> GetAsync(int codeId, bool extended = false)
+        public override Task<Code> GetAsync(int codeId, bool extended = true)
         {
             //if (extended)
             {

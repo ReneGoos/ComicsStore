@@ -1,29 +1,28 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
+using ComicsStore.MiddleWare.Models.Output;
 using System.ComponentModel.DataAnnotations;
 
 namespace ComicsLibrary.EditModels
 {
-    public class SeriesEditModel : TableEditModel
+    public class SeriesEditModel : SeriesOnlyEditModel
     {
         private ObservableChangedCollection<SeriesBookEditModel> _bookSeries;
-        private int? _seriesNumber;
-        private string _seriesLanguage;
-        private int _codeId;
 
         public SeriesEditModel() : base()
         {
             BookSeries = new ObservableChangedCollection<SeriesBookEditModel>();
         }
 
-        [Required]
-        public int? SeriesNumber { get => _seriesNumber; set => Set(ref _seriesNumber, value); }
-        [Required]
-        public string SeriesLanguage { get => _seriesLanguage; set => Set(ref _seriesLanguage, value); }
-        [Required]
-        public int CodeId { get => _codeId; set => Set(ref _codeId, value); }
+        public CodeOnlyOutputModel Code { get; set; }
+        public ObservableChangedCollection<SeriesBookEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
 
-        public void AddSeriesCode(int? codeId)
+        public void HandleBook(int? oldBookId, BookOnlyEditModel book)
+        {
+            BookSeries.HandleItem(Id, oldBookId, book);
+        }
+
+        public void HandleCode(int? codeId)
         {
             if (CodeId != codeId.Value)
             {
@@ -31,14 +30,7 @@ namespace ComicsLibrary.EditModels
             }
         }
 
-        public ObservableChangedCollection<SeriesBookEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
-
-        public void AddBookSeries(int? bookId, int? oldBookId)
-        {
-            BookSeries.HandleItem(Id, bookId, oldBookId);
-        }
-
-        public override void ResetId()
+        public void ResetId()
         {
             Id = null;
 

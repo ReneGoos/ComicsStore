@@ -18,7 +18,5 @@ namespace ComicsLibrary.EditModels
         [Required]
         public string Name { get => _name; set => Set(ref _name, value); }
         public string Remark { get => _remark; set => Set(ref _remark, value); }
-
-        public abstract void ResetId();
     }
 }

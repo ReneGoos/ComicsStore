@@ -186,7 +186,7 @@ namespace ComicsLibrary.ViewModels
             if (bKeep)
             {
                 item = Item.CloneJson();
-                item.ResetId();
+                //item.ResetId();
             }
 
             Item = item;

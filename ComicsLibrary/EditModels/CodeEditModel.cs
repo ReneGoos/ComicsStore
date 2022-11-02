@@ -3,7 +3,7 @@ using ComicsLibrary.Extensions;
 
 namespace ComicsLibrary.EditModels
 {
-    public class CodeEditModel : TableEditModel
+    public class CodeEditModel : CodeOnlyEditModel
     {
         private ObservableChangedCollection<CodeSeriesEditModel> _seriesCodes;
         private ObservableChangedCollection<CodeStoryEditModel> _storyCodes;
@@ -17,17 +17,17 @@ namespace ComicsLibrary.EditModels
         public ObservableChangedCollection<CodeSeriesEditModel> Series { get => _seriesCodes; set => Set(ref _seriesCodes, value); }
         public ObservableChangedCollection<CodeStoryEditModel> Story { get => _storyCodes; set => Set(ref _storyCodes, value); }
 
-        public void AddSeriesCodes(int? seriesId, int? oldSeriesId)
+        public void HandleSeries(int? oldSeriesId, SeriesOnlyEditModel series)
         {
-            Series.HandleItem(Id, seriesId, oldSeriesId);
+            Series.HandleItem(Id, oldSeriesId, series);
         }
 
-        public void AddStoryCodes(int? storyId, int? oldStoryId)
+        public void HandleStory(int? oldStoryId, StoryOnlyEditModel story)
         {
-            Story.HandleItem(Id, storyId, oldStoryId);
+            Story.HandleItem(Id, oldStoryId, story);
         }
 
-        public override void ResetId()
+        public void ResetId()
         {
             Id = null;
         }

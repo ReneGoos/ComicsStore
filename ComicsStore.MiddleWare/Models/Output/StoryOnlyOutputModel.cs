@@ -9,8 +9,5 @@
         public string Language { get; set; }
         public int CodeId { get; set; }
         public int? OriginStoryId { get; set; }
-
-        public CodeOnlyOutputModel Code { get; set; }
-        public StoryOnlyOutputModel OriginStory { get; set; }
     }
 }

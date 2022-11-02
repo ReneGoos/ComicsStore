@@ -6,6 +6,5 @@
         public string SeriesLanguage { get; set; }
 
         public int CodeId { get; set; }
-        public CodeOutputModel Code { get; set; }
     }
 }
