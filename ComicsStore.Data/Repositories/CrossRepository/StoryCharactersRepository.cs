@@ -3,11 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ComicsStore.Data.Model;
-using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.Data.Model.Interfaces;
 using ComicsStore.Data.Common;
+using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 
-namespace ComicsStore.Data.Repositories
+namespace ComicsStore.Data.Repositories.CrossRepository
 {
     public class StoryCharactersRepository : ComicsStoreCrossRepository<StoryCharacter, IStoryCharacter>, IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter>
     {

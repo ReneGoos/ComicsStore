@@ -6,7 +6,7 @@ using ComicsStore.Data.Model;
 using ComicsStore.Data.Model.Search;
 using Microsoft.EntityFrameworkCore;
 
-namespace ComicsStore.Data.Repositories
+namespace ComicsStore.Data.Repositories.MainRepository
 {
     public abstract class ComicsStoreMainRepository<T, TSearch> : ComicsStoreRepository<T>
         where T : MainTable
@@ -16,7 +16,7 @@ namespace ComicsStore.Data.Repositories
         {
         }
 
-        public abstract Task<T> GetAsync(int id, bool extended = true);
+        public abstract Task<T> GetAsync(int id, bool extended);
         public abstract Task<List<T>> GetAsync(TSearch model);
         public abstract Task<T> PatchAsync(int id, IDictionary<string, object> data);
 

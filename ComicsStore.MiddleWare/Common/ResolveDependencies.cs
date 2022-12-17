@@ -8,7 +8,10 @@ using ComicsStore.MiddleWare.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ComicsStore.Data.Repositories;
+using ComicsStore.Data.Repositories.CrossRepository;
+using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
+using ComicsStore.Data.Repositories.Interfaces.MainRepository;
+using ComicsStore.Data.Repositories.MainRepository;
 
 namespace ComicsStore.MiddleWare.Common
 {

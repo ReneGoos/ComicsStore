@@ -6,9 +6,10 @@ using ComicsStore.Data.Model.Search;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using ComicsStore.Data.Model.Interfaces;
+using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
+using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.MiddleWare.Services
 {

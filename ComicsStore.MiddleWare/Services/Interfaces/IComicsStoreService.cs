@@ -22,7 +22,7 @@ namespace ComicsStore.MiddleWare.Services.Interfaces
 
         Task<ICollection<TOut>> GetAsync(TSearch searchModel);
 
-        Task<TOut> GetAsync(int id);
+        Task<TOut> GetAsync(int id, bool extended = false);
 
         Task<TOut> UpdateAsync(int id, TIn input);
 

@@ -31,7 +31,7 @@ namespace ComicsStore.API.Controllers
         [ProducesResponseType(typeof(PublisherOutputModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var showModel = await _publishersService.GetAsync(id);
+            var showModel = await _publishersService.GetAsync(id, true);
 
             if (showModel == null)
             {

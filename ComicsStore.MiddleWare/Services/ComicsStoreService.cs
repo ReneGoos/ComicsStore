@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using ComicsStore.Data.Model;
-using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
@@ -8,6 +7,7 @@ using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.MiddleWare.Services
 {
@@ -45,7 +45,7 @@ namespace ComicsStore.MiddleWare.Services
 
         public async Task DeleteAsync(int id)
         {
-            var item = await _tableRepository.GetAsync(id);
+            var item = await _tableRepository.GetAsync(id, false);
 
             if (item == null)
             {
@@ -57,7 +57,7 @@ namespace ComicsStore.MiddleWare.Services
 
         public async Task<bool> ExistsAsync(int id)
         {
-            return await _tableRepository.GetAsync(id) != null;
+            return await _tableRepository.GetAsync(id, false) != null;
         }
 
         public async Task<ICollection<TOut>> GetAsync()
@@ -74,9 +74,9 @@ namespace ComicsStore.MiddleWare.Services
             return _mapper.Map<ICollection<TOut>>(items);
         }
 
-        public async Task<TOut> GetAsync(int id)
+        public async Task<TOut> GetAsync(int id, bool extended = false)
         {
-            var item = await _tableRepository.GetAsync(id);
+            var item = await _tableRepository.GetAsync(id, extended);
 
             return _mapper.Map<TOut>(item);
         }

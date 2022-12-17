@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace ComicsStore
+namespace ComicsStore.API
 {
     public class Startup
     {

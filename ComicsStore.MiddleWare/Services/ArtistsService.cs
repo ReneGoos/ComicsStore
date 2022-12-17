@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System;
 using ComicsStore.Data.Model.Interfaces;
-using ComicsStore.Data.Repositories.Interfaces;
+using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
+using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.MiddleWare.Services
 {

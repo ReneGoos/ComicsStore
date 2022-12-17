@@ -196,7 +196,7 @@ namespace ComicsLibrary.ViewModels
 
         protected virtual async void GetItemAsync(int id)
         {
-            Item = Mapper.Map<TEdit>(await _itemService.GetAsync(id));
+            Item = Mapper.Map<TEdit>(await _itemService.GetAsync(id, true));
 
             if (Item == null)
             {
@@ -222,9 +222,9 @@ namespace ComicsLibrary.ViewModels
                     }
 
                     break;
-                case "Name":
-                    GetItems();
-                    goto default;
+                //case "Name":
+                //    GetItems();
+                //    goto default;
                 case "Error":
                     break;
                 default:

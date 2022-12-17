@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ComicsStore.Data.Model;
 using ComicsStore.Data.Model.Search;
-using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.Data.Common;
+using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
-namespace ComicsStore.Data.Repositories
+namespace ComicsStore.Data.Repositories.MainRepository
 {
     public class CodesRepository : ComicsStoreMainRepository<Code, BasicSearch>, IComicsStoreMainRepository<Code, BasicSearch>
     {
@@ -42,7 +42,7 @@ namespace ComicsStore.Data.Repositories
             return codes;
         }
 
-        public override Task<Code> GetAsync(int codeId, bool extended = true)
+        public override Task<Code> GetAsync(int codeId, bool extended)
         {
             //if (extended)
             {

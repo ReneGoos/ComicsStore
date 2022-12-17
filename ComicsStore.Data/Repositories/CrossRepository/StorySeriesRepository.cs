@@ -7,7 +7,7 @@ using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.Data.Common;
 using ComicsStore.Data.Model.Output;
 
-namespace ComicsStore.Data.Repositories
+namespace ComicsStore.Data.Repositories.CrossRepository
 {
     public class StorySeriesRepository : IExportBooksRepository
     {
@@ -24,7 +24,10 @@ namespace ComicsStore.Data.Repositories
                           where (!model.Active.HasValue || storySeries.Deleted == model.Active.Value)
                           && (model.Filter == null ||
                                 model.Filter.Length == 0 ||
-                                storySeries.StoryName.ToLower().Contains(model.Filter.ToLower())
+                                storySeries.StoryName.ToLower().Contains(model.Filter.ToLower()) ||
+                                storySeries.SeriesName.ToLower().Contains(model.Filter.ToLower()) ||
+                                storySeries.CharacterName.ToLower().Contains(model.Filter.ToLower()) ||
+                                storySeries.ArtistName.ToLower().Contains(model.Filter.ToLower())
                                 )
                           orderby storySeries.StoryName,
                           storySeries.StoryNumber,

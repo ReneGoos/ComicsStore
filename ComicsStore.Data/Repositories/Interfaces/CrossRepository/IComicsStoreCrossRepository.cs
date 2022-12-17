@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ComicsStore.Data.Model;
 
-namespace ComicsStore.Data.Repositories.Interfaces
+namespace ComicsStore.Data.Repositories.Interfaces.CrossRepository
 {
     public interface IComicsStoreCrossRepository<T, IObject>
         where T : CrossTable

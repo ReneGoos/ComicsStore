@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using ComicsStore.Data.Model;
 using Microsoft.EntityFrameworkCore;
-using ComicsStore.Data.Repositories.Interfaces;
 using System.Collections.Generic;
 using ComicsStore.Data.Common;
+using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 
-namespace ComicsStore.Data.Repositories
+namespace ComicsStore.Data.Repositories.CrossRepository
 {
     public abstract class ComicsStoreCrossRepository<T, IObject> : ComicsStoreRepository<T>, IComicsStoreCrossRepository<T, IObject>
         where T : CrossTable

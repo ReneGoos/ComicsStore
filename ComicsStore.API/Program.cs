@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace ComicsStore
+namespace ComicsStore.API
 {
     public class Program
     {
