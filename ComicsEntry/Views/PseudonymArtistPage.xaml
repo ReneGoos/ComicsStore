@@ -252,7 +252,7 @@
                             </GridViewColumn>
                             <GridViewColumn Width="160">
                                 <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Roles">Role</GridViewColumnHeader>
+                                    <GridViewColumnHeader>Role</GridViewColumnHeader>
                                 </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
