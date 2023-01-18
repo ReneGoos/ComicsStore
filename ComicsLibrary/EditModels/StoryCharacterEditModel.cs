@@ -1,6 +1,4 @@
-﻿using ComicsStore.Data.Model;
-
-namespace ComicsLibrary.EditModels
+﻿namespace ComicsLibrary.EditModels
 {
     public class StoryCharacterEditModel : BasicEditModel, ICrossEditModel
     {

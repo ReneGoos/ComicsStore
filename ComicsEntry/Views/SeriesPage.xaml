@@ -194,7 +194,7 @@
                         >
                     +
                 </Button>
-                <ListView Grid.Row ="1"
+                <control:HeaderSortListView Grid.Row ="1"
                           Grid.Column="1"
                           VerticalAlignment="Top" 
                           AlternationCount="2"
@@ -202,9 +202,11 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Edit" 
-                                            Width="60"
+                            <GridViewColumn Width="60"
                                             >
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="BookId">Edit</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowBookFromSeriesWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
@@ -234,22 +236,30 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Book" Width="250">
+                            <GridViewColumn Width="250">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Book.Name">Book</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Book.Name}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Status" Width="70">
+                            <GridViewColumn Width="70">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Book.Active">Status</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Book.Active}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Issue" 
-                                            Width="80">
+                            <GridViewColumn Width="80">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Issue">Issue</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBox  Width="68"
@@ -258,8 +268,10 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Order" 
-                                            Width="80">
+                            <GridViewColumn Width="80">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="SeriesOrder">Order</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBox  Width="68"
@@ -270,7 +282,7 @@
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </control:HeaderSortListView>
             </Grid>
         </Grid>
     </StackPanel>

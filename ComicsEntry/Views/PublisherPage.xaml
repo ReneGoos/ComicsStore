@@ -78,17 +78,20 @@
                         >
                     +
                 </Button>
-                <ListView Grid.Row ="1"
-                          Grid.Column="1"
-                          VerticalAlignment="Top" 
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=BookPublisher}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <control:HeaderSortListView Name="BookView"
+                                            Grid.Row ="1"
+                                            Grid.Column="1"
+                                            VerticalAlignment="Top" 
+                                            AlternationCount="2"
+                                            ItemsSource="{Binding Path=BookPublisher}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Edit" 
-                                            Width="60"
-                                            >
+                            <GridViewColumn Width="60">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="BookId">Id</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowBookFromPublisherWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
@@ -103,9 +106,10 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Del" 
-                                            Width="40"
-                                            >
+                            <GridViewColumn Width="40">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader>Del</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.DeleteBookFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
@@ -118,14 +122,20 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Book" Width="350">
+                            <GridViewColumn Width="350">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Book.Name">Name</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Book.Name}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Status" Width="70">
+                            <GridViewColumn Width="70">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Book.Active">Status</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Book.Active}"></Label>
@@ -134,7 +144,7 @@
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </control:HeaderSortListView>
             </Grid>
         </Grid>
     </StackPanel>

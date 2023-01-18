@@ -1,7 +1,6 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
 using ComicsStore.MiddleWare.Models.Output;
-using System.ComponentModel.DataAnnotations;
 
 namespace ComicsLibrary.EditModels
 {

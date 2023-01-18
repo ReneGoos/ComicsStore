@@ -50,7 +50,8 @@
                                        DisplayMemberPath="Name"
                                        SelectedValue = "{Binding Id, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:SimpleToolbar}}" 
                                        SelectedValuePath = "Id" 
-                                       FilterPredicate="{Binding Filter, RelativeSource={RelativeSource AncestorType=local:SimpleToolbar}}" Background="White"                                       
+                                       FilterPredicate="{Binding Filter, RelativeSource={RelativeSource AncestorType=local:SimpleToolbar}}"
+                                       Background="White"                                       
                                        />
         </Border>
         <Button Grid.Row="1" 

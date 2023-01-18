@@ -1,5 +1,4 @@
 ﻿using ComicsLibrary.Core;
-using ComicsLibrary.EditModels;
 using ComicsLibrary.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -8,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 
 namespace ComicsLibrary.Navigation
 {

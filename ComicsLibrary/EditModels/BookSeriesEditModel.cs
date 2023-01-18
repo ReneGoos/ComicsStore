@@ -1,5 +1,4 @@
-﻿using ComicsStore.Data.Model.Interfaces;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 

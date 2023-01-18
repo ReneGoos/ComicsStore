@@ -175,7 +175,7 @@
                         >
                     +
                 </Button>
-                <ListView Grid.Row ="1"
+                <control:HeaderSortListView Grid.Row ="1"
                           Grid.Column="1"
                           VerticalAlignment="Top"
                           AlternationCount="2"
@@ -184,9 +184,11 @@
                           >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Edit" 
-                                            Width="60"
+                            <GridViewColumn Width="60"
                                             >
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="StoryId">Edit</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowStoryFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
@@ -216,24 +218,30 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Story"
-                                            Width="250">
+                            <GridViewColumn Width="250">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Story.Name">Story</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Story.Name}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Type"
-                                            Width="50">
+                            <GridViewColumn Width="50">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Story.StoryType">Type</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Story.StoryType}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Number"
-                                            Width="50">
+                            <GridViewColumn Width="50">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Story.StoryNumber">Number</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Story.StoryNumber}"
@@ -242,8 +250,10 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Role" 
-                                            Width="160">
+                            <GridViewColumn Width="160">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Roles">Role</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ComboBox IsEditable="True"
@@ -267,7 +277,7 @@
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </control:HeaderSortListView>
                 <!-- Button Grid.Row ="3"
                         Grid.Column="3"
                         Background="Transparent"
@@ -278,7 +288,7 @@
                         >
                     +
                 </Button -->
-                <ListView DockPanel.Dock="Top"
+                <control:HeaderSortListView DockPanel.Dock="Top"
                           Grid.Row ="3"
                           Grid.Column="1"                          
                           VerticalAlignment="Top" 
@@ -288,8 +298,10 @@
                           >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Edit"
-                                            Width="60">
+                            <GridViewColumn Width="60">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="MainArtistId">Edit</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowMainArtistFromPseudonymArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
@@ -319,8 +331,10 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Main Artist"
-                                            Width="250">
+                            <GridViewColumn Width="250">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="MainArtist.Name">Main Artist</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding MainArtist.Name}"></Label>
@@ -329,7 +343,7 @@
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </control:HeaderSortListView>
                 <!-- Button Grid.Row ="5"
                         Grid.Column="3"
                         Background="Transparent"
@@ -340,7 +354,7 @@
                         >
                     +
                 </Button -->
-                <ListView DockPanel.Dock="Top"
+                <control:HeaderSortListView DockPanel.Dock="Top"
                           Grid.Row ="5"
                           Grid.Column="1"                          
                           VerticalAlignment="Top" 
@@ -350,8 +364,10 @@
                           >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Edit"
-                                            Width="60">
+                            <GridViewColumn Width="60">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="PseudonymArtistId">Edit</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowArtistFromPseudonymArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
@@ -381,8 +397,10 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Pseudonym"
-                                            Width="250">
+                            <GridViewColumn Width="250">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="PseudonymArtist.Name">Pseudonym</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding PseudonymArtist.Name}"></Label>
@@ -391,7 +409,7 @@
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </control:HeaderSortListView>
             </Grid>
         </Grid>
     </StackPanel>

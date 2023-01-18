@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using ComicsStore.Data.Common;
 using System.ComponentModel.DataAnnotations;
 using ComicsLibrary.Helpers;
-using ComicsStore.Data.Model.Interfaces;
 
 namespace ComicsLibrary.EditModels
 {

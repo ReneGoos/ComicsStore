@@ -8,11 +8,7 @@ using ComicsLibrary.Core;
 using System;
 using System.Windows.Input;
 using ComicsLibrary.Navigation;
-using ComicsStore.Data.Model;
 using System.ComponentModel;
-using System.Linq;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 
 namespace ComicsLibrary.ViewModels
 {

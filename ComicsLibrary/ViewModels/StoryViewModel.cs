@@ -11,8 +11,6 @@ using ComicsLibrary.Navigation;
 using System.Windows.Input;
 using ComicsLibrary.Core;
 using System;
-using ComicsStore.MiddleWare.Services;
-using ComicsStore.Data.Model;
 
 namespace ComicsLibrary.ViewModels
 {

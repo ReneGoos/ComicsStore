@@ -1,36 +1,52 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace ComicsEntry.Views
+namespace ComicsLibrary.UserControls
 {
-    /// <summary>
-    /// Interaction logic for PublisherPage.xaml
-    /// </summary>
-    public partial class PublisherPage : Page
+    public class HeaderSortListView : ListView
     {
-        public PublisherPage()
-        {
-            InitializeComponent();
-        }
-
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
         private void Sort(string sortBy, ListSortDirection direction)
         {
-            ICollectionView dataView =
-              CollectionViewSource.GetDefaultView(BookView.ItemsSource);
+            var dataView =
+              CollectionViewSource.GetDefaultView(ItemsSource);
 
             dataView.SortDescriptions.Clear();
-            SortDescription sd = new SortDescription(sortBy, direction);
+            var sd = new SortDescription(sortBy, direction);
             dataView.SortDescriptions.Add(sd);
             dataView.Refresh();
         }
 
-        void ListView_Click(object sender, RoutedEventArgs e)
+        protected override void OnInitialized(EventArgs e)
+        {
+            AddHandler(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, new RoutedEventHandler(HeaderSortListViewClickEvent));
+            ((INotifyCollectionChanged)ItemsSource).CollectionChanged += HeaderSortListViewCollectionChangedEvent;
+            base.OnInitialized(e);
+        }
+
+        private void HeaderSortListViewCollectionChangedEvent(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (_lastHeaderClicked != null)
+            {
+                if (_lastHeaderClicked.Tag is string sortBy)
+                {
+                    Sort(sortBy, _lastDirection);
+                }
+            }
+        }
+
+        void HeaderSortListViewClickEvent(object sender, RoutedEventArgs e)
         {
             var headerClicked = e.OriginalSource as GridViewColumnHeader;
             ListSortDirection direction;
@@ -64,12 +80,12 @@ namespace ComicsEntry.Views
                         if (direction == ListSortDirection.Ascending)
                         {
                             headerClicked.Column.HeaderTemplate =
-                              Resources["HeaderTemplateArrowUp"] as DataTemplate;
+                              TryFindResource("HeaderTemplateArrowUp") as DataTemplate;
                         }
                         else
                         {
                             headerClicked.Column.HeaderTemplate =
-                              Resources["HeaderTemplateArrowDown"] as DataTemplate;
+                              TryFindResource("HeaderTemplateArrowDown") as DataTemplate;
                         }
 
                         // Remove arrow from previously sorted header

@@ -9,7 +9,6 @@ using ComicsLibrary.Core;
 using System;
 using System.Windows.Input;
 using System.ComponentModel;
-using ComicsStore.MiddleWare.Services;
 
 namespace ComicsLibrary.ViewModels
 {

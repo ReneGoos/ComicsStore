@@ -1,8 +1,6 @@
 ﻿using ComicsLibrary.EditModels;
-using ComicsStore.Data.Model;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Windows.ApplicationModel.Calls;
 
 namespace ComicsLibrary.Extensions
 {

@@ -263,7 +263,7 @@
                         >
                     +
                 </Button-->
-                <ListView DockPanel.Dock="Top"
+                <control:HeaderSortListView DockPanel.Dock="Top"
                           Grid.Row ="1"
                           Grid.Column="1"
                           VerticalAlignment="Top" 
@@ -273,8 +273,10 @@
                           >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Edit"
-                                            Width="60">
+                            <GridViewColumn Width="60">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="StoryId">Edit</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowStoryOriginFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
@@ -288,24 +290,30 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Story from Origin"
-                                            Width="250">
+                            <GridViewColumn Width="250">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="StoryFromOrigin.Name">Story from Origin</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding StoryFromOrigin.Name}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Type"
-                                            Width="50">
+                            <GridViewColumn Width="50">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="StoryFromOrigin.StoryType">Type</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding StoryFromOrigin.StoryType}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Number"
-                                            Width="50">
+                            <GridViewColumn Width="50">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="StoryFromOrigin.StoryNumber">Number</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding StoryFromOrigin.StoryNumber}"
@@ -316,7 +324,7 @@
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </control:HeaderSortListView>
                 <Button Grid.Row ="3"
                         Grid.Column="3"
                         Background="Transparent"
@@ -327,7 +335,7 @@
                         >
                     +
                 </Button>
-                <ListView DockPanel.Dock="Top"
+                <control:HeaderSortListView DockPanel.Dock="Top"
                           Grid.Row ="3"
                           Grid.Column="1"
                           VerticalAlignment="Top" 
@@ -337,8 +345,10 @@
                           >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Edit"
-                                            Width="60">
+                            <GridViewColumn Width="60">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="CharacterId">Edit</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowCharacterFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
@@ -368,8 +378,10 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Character"
-                                            Width="350">
+                            <GridViewColumn Width="350">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Character.Name">Character</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Character.Name}"></Label>
@@ -378,7 +390,7 @@
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </control:HeaderSortListView>
                 <Button Grid.Row ="5"
                         Grid.Column="3"
                         Background="Transparent"
@@ -389,7 +401,7 @@
                         >
                     +
                 </Button>
-                <ListView DockPanel.Dock="Top"
+                <control:HeaderSortListView DockPanel.Dock="Top"
                           Grid.Row ="5"
                           Grid.Column="1"                          
                           VerticalAlignment="Top" 
@@ -399,8 +411,10 @@
                           >
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Edit"
-                                            Width="60">
+                            <GridViewColumn Width="60">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="ArtistId">Edit</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowArtistFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
@@ -430,16 +444,20 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Artist"
-                                            Width="250">
+                            <GridViewColumn Width="250">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Artist.Name">Artist</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Artist.Name}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Role" 
-                                            Width="160">
+                            <GridViewColumn Width="160">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Roles">Role</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ComboBox IsEditable="True"
@@ -463,7 +481,7 @@
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </control:HeaderSortListView>
                 <Button Grid.Row ="7"
                         Grid.Column="3"
                         Background="Transparent"
@@ -474,7 +492,7 @@
                         >
                     +
                 </Button>
-                <ListView DockPanel.Dock="Top"
+                <control:HeaderSortListView DockPanel.Dock="Top"
                           Grid.Row ="7"
                           Grid.Column="1"
                           VerticalAlignment="Top" 
@@ -482,10 +500,12 @@
                           ItemsSource="{Binding Path=StoryBook}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           >
-                    <ListView.View>
+                    <control:HeaderSortListView.View>
                         <GridView>
-                            <GridViewColumn Header="Edit"
-                                            Width="60">
+                            <GridViewColumn Width="60">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="BookId">Edit</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.ShowBookFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
@@ -515,24 +535,30 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Book"
-                                            Width="350">
+                            <GridViewColumn Width="350">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Book.Name">Book</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Book.Name}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Type"
-                                            Width="50">
+                            <GridViewColumn Width="50">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Book.BookType">Type</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Book.BookType}"></Label>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Status"
-                                            Width="80">
+                            <GridViewColumn Width="80">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Book.Active">Status</GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding Book.Active}"
@@ -542,8 +568,8 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                         </GridView>
-                    </ListView.View>
-                </ListView>
+                    </control:HeaderSortListView.View>
+                </control:HeaderSortListView>
             </Grid>
         </Grid>
     </StackPanel>

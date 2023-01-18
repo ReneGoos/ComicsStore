@@ -1,6 +1,4 @@
-﻿using ComicsStore.Data.Common;
-using ComicsStore.Data.Model;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ComicsLibrary.EditModels
 {
