@@ -11,15 +11,15 @@
     <Grid>
         <ScrollViewer>
             <Frame Name="Main"
-               NavigationUIVisibility="Hidden"
-               Content=""
-               Width="Auto"
-               Height="Auto"
-               VerticalAlignment="Stretch"
-               HorizontalAlignment="Stretch"
-               ScrollViewer.CanContentScroll="True"
-               ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-               ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                   NavigationUIVisibility="Hidden"
+                   Content=""
+                   Width="Auto"
+                   Height="Auto"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Stretch"
+                   ScrollViewer.CanContentScroll="True"
+                   ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                   ScrollViewer.VerticalScrollBarVisibility="Auto" />
         </ScrollViewer>
     </Grid>
 </Window>

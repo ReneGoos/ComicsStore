@@ -188,7 +188,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Row ="1"
+                <Button Grid.Row ="5"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
@@ -198,12 +198,12 @@
                         >
                     +
                 </Button>
-                <control:HeaderSortListView  Grid.Row ="1"
-                          Grid.Column="1"
-                          VerticalAlignment="Top" 
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=BookSeries}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <control:HeaderSortListView  Grid.Row ="5"
+                                             Grid.Column="1"
+                                             VerticalAlignment="Top" 
+                                             AlternationCount="2"
+                                             ItemsSource="{Binding Path=BookSeries}"
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="60" 
@@ -295,12 +295,12 @@
                         >
                     +
                 </Button>
-                <control:HeaderSortListView Grid.Row ="3"                              
-                          Grid.Column="1"
-                          VerticalAlignment="Top" 
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=BookPublisher}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <control:HeaderSortListView Grid.Row ="3"      
+                                            Grid.Column="1"
+                                            VerticalAlignment="Top" 
+                                            AlternationCount="2"
+                                            ItemsSource="{Binding Path=BookPublisher}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="60" 
@@ -350,7 +350,7 @@
                         </GridView>
                     </ListView.View>
                 </control:HeaderSortListView>
-                <Button Grid.Row ="5"
+                <Button Grid.Row ="1"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
@@ -360,12 +360,13 @@
                         >
                     +
                 </Button>
-                <control:HeaderSortListView Grid.Row ="5"
-                          Grid.Column="1"
-                          VerticalAlignment="Top" 
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=StoryBook}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <control:HeaderSortListView Grid.Row ="1"
+                                            Grid.Column="1"
+                                            MaxHeight="400"
+                                            VerticalAlignment="Top" 
+                                            AlternationCount="2"
+                                            ItemsSource="{Binding Path=StoryBook}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="60" >

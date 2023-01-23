@@ -264,13 +264,13 @@
                     +
                 </Button-->
                 <control:HeaderSortListView DockPanel.Dock="Top"
-                          Grid.Row ="1"
-                          Grid.Column="1"
-                          VerticalAlignment="Top" 
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=StoryFromOrigin}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          >
+                                            Grid.Row ="1"
+                                            Grid.Column="1"
+                                            VerticalAlignment="Top" 
+                                            AlternationCount="2"
+                                            ItemsSource="{Binding Path=StoryFromOrigin}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="60">
@@ -336,13 +336,13 @@
                     +
                 </Button>
                 <control:HeaderSortListView DockPanel.Dock="Top"
-                          Grid.Row ="3"
-                          Grid.Column="1"
-                          VerticalAlignment="Top" 
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=StoryCharacter}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          >
+                                            Grid.Row ="3"
+                                            Grid.Column="1"
+                                            VerticalAlignment="Top" 
+                                            AlternationCount="2"
+                                            ItemsSource="{Binding Path=StoryCharacter}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="60">
@@ -402,13 +402,14 @@
                     +
                 </Button>
                 <control:HeaderSortListView DockPanel.Dock="Top"
-                          Grid.Row ="5"
-                          Grid.Column="1"                          
-                          VerticalAlignment="Top" 
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=StoryArtist}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          >
+                                            Grid.Row ="5"
+                                            Grid.Column="1"
+                                            MaxHeight="400"
+                                            VerticalAlignment="Top" 
+                                            AlternationCount="2"
+                                            ItemsSource="{Binding Path=StoryArtist}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="60">
@@ -493,13 +494,15 @@
                     +
                 </Button>
                 <control:HeaderSortListView DockPanel.Dock="Top"
-                          Grid.Row ="7"
-                          Grid.Column="1"
-                          VerticalAlignment="Top" 
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=StoryBook}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          >
+                                            Grid.Row ="7"
+                                            Grid.Column="1"
+                                            MaxHeight="400"
+                                            VerticalAlignment="Top" 
+                                            AlternationCount="2"
+                                            MaxItems ="100"
+                                            ItemsSource="{Binding Path=StoryBook}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            >
                     <control:HeaderSortListView.View>
                         <GridView>
                             <GridViewColumn Width="60">

@@ -81,6 +81,7 @@
                 <control:HeaderSortListView Name="BookView"
                                             Grid.Row ="1"
                                             Grid.Column="1"
+                                            MaxHeight="600"
                                             VerticalAlignment="Top" 
                                             AlternationCount="2"
                                             ItemsSource="{Binding Path=BookPublisher}"

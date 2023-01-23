@@ -1,11 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -17,41 +14,119 @@ namespace ComicsLibrary.UserControls
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
+        public int Page
+        {
+            get { return (int)GetValue(PageProperty); }
+            set { SetValue(PageProperty, value); }
+        }
+
+        public static readonly DependencyProperty PageProperty
+            = DependencyProperty.Register(
+                  "Page",
+                  typeof(int),
+                  typeof(HeaderSortListView),
+                  new PropertyMetadata(0, new PropertyChangedCallback(OnPageChanged))
+              );
+
+        public int MaxItems
+        {
+            get { return (int)GetValue(MaxItemsProperty); }
+            set { SetValue(MaxItemsProperty, value); }
+        }
+
+        public static readonly DependencyProperty MaxItemsProperty
+            = DependencyProperty.Register(
+                  "MaxItems",
+                  typeof(int),
+                  typeof(HeaderSortListView),
+                  new PropertyMetadata(0, new PropertyChangedCallback(OnMaxItemsChanged))
+              );
+
+        private static void OnMaxItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as HeaderSortListView)?.ResetDataView();
+        }
+
+        private static void OnPageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as HeaderSortListView)?.ResetDataView();
+        }
+
+        protected void ResetDataView()
+        {
+            ICollectionView cvCollectionView = CollectionViewSource.GetDefaultView(ItemsSource);
+            if (cvCollectionView == null)
+                return;
+
+            // filtrer ... exemple pour tests DI-2015-05105-0
+            cvCollectionView.Filter = p_oObject => { return true; /* use your own filter */ };
+
+            // page configuration
+            int iMaxItemPerPage = MaxItems;
+            int iCurrentPage = Page;
+            int iStartIndex = iCurrentPage * iMaxItemPerPage;
+
+            // déterminer les objects "de la page"
+            int iCurrentIndex = 0;
+            HashSet<object> hsObjectsInPage = new HashSet<object>();
+            foreach (object oObject in cvCollectionView)
+            {
+                // break if MaxItemCount is reached
+                if (hsObjectsInPage.Count > iMaxItemPerPage)
+                    break;
+
+                // add if StartIndex is reached
+                if (iCurrentIndex >= iStartIndex)
+                    hsObjectsInPage.Add(oObject);
+
+                // increment
+                iCurrentIndex++;
+            }
+
+            // refilter
+            cvCollectionView.Filter = p_oObject =>
+            {
+                return cvCollectionView.Contains(p_oObject) && hsObjectsInPage.Contains(p_oObject);
+            };
+        }
+
         private void Sort(string sortBy, ListSortDirection direction)
         {
-            var dataView =
-              CollectionViewSource.GetDefaultView(ItemsSource);
+            var dataView = CollectionViewSource.GetDefaultView(ItemsSource);
 
             dataView.SortDescriptions.Clear();
             var sd = new SortDescription(sortBy, direction);
             dataView.SortDescriptions.Add(sd);
             dataView.Refresh();
+            ResetDataView();
         }
 
         protected override void OnInitialized(EventArgs e)
         {
             AddHandler(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, new RoutedEventHandler(HeaderSortListViewClickEvent));
-            ((INotifyCollectionChanged)ItemsSource).CollectionChanged += HeaderSortListViewCollectionChangedEvent;
             base.OnInitialized(e);
         }
 
-        private void HeaderSortListViewCollectionChangedEvent(object sender, NotifyCollectionChangedEventArgs e)
+        protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
         {
-            if (_lastHeaderClicked != null)
+            base.OnItemsSourceChanged(oldValue, newValue);
+
+            if (_lastHeaderClicked != null && _lastHeaderClicked.Tag is string sortBy)
             {
-                if (_lastHeaderClicked.Tag is string sortBy)
-                {
-                    Sort(sortBy, _lastDirection);
-                }
+                Sort(sortBy, _lastDirection);
+            }
+            else
+            {
+                var dataView = CollectionViewSource.GetDefaultView(ItemsSource);
+                ResetDataView();
             }
         }
 
         void HeaderSortListViewClickEvent(object sender, RoutedEventArgs e)
         {
-            var headerClicked = e.OriginalSource as GridViewColumnHeader;
             ListSortDirection direction;
 
-            if (headerClicked != null)
+            if (e.OriginalSource is GridViewColumnHeader headerClicked)
             {
                 if (headerClicked.Tag is string sortBy)
                 {

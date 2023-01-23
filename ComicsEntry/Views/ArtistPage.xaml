@@ -9,7 +9,6 @@
       xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
       mc:Ignorable="d"
       Title="Artist"
-      Height="Auto"
       Width="Auto"
       DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
       >
@@ -215,12 +214,14 @@
                     </Button>
                 </Grid>
                 <control:HeaderSortListView Grid.Row ="1"
-                          Grid.Column="1"
-                          VerticalAlignment="Top"
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=Item.StoryArtist}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          >
+                                            Grid.Column="1"
+                                            VerticalAlignment="Top"
+                                            AlternationCount="2"
+                                            MaxItems ="10"
+                                            Page="{Binding PagedStories.SelectedPage, Mode=TwoWay}"
+                                            ItemsSource="{Binding Path=Item.StoryArtist}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="60"
