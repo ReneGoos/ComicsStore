@@ -78,74 +78,83 @@
                         >
                     +
                 </Button>
-                <control:HeaderSortListView Name="BookView"
-                                            Grid.Row ="1"
-                                            Grid.Column="1"
-                                            MaxHeight="600"
-                                            VerticalAlignment="Top" 
-                                            AlternationCount="2"
-                                            ItemsSource="{Binding Path=BookPublisher}"
-                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                            >
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Width="60">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="BookId">Id</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowBookFromPublisherWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                CommandParameter="{Binding BookId}"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                Width="48"
-                                                IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                <StackPanel Grid.Row ="1"
+                            Grid.Column="1"
+                            >
+                    <control:HeaderSortListView Name="BookView"                                            
+                                                MaxHeight="600"
+                                                VerticalAlignment="Top" 
+                                                AlternationCount="2"
+                                                MaxItems ="{Binding PageSize, ElementName=pagingControl, Mode=OneWay}"
+                                                Page="{Binding Page, ElementName=pagingControl, Mode=OneWay}"
+                                                ItemsSource="{Binding ItemsSource, ElementName=pagingControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                 >
-                                            <TextBlock Text="{Binding BookId}" HorizontalAlignment="Center" />
-                                        </Button>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="40">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader>Del</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.DeleteBookFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
-                                                CommandParameter="{Binding BookId}"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                Width="28">
-                                            <TextBlock Text="-" HorizontalAlignment="Center" />
-                                        </Button>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="350">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Book.Name">Name</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Book.Name}"></Label>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="70">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Book.Active">Status</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Book.Active}"></Label>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </control:HeaderSortListView>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="60">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="BookId">Id</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ShowBookFromPublisherWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding BookId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="48"
+                                                    IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    >
+                                                <TextBlock Text="{Binding BookId}" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="40">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader>Del</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.DeleteBookFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                                                    CommandParameter="{Binding BookId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="28">
+                                                <TextBlock Text="-" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="350">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Book.Name">Name</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Book.Name}"></Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="70">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Book.Active">Status</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Book.Active}"></Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </control:HeaderSortListView>
+                    <control:PagingControl Name="pagingControl"
+                                           VerticalAlignment="Bottom"
+                                           ItemsSource="{Binding Path=BookPublisher}">
+
+                    </control:PagingControl>
+                </StackPanel>
             </Grid>
         </Grid>
     </StackPanel>

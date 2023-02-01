@@ -19,7 +19,6 @@ namespace ComicsLibrary.ViewModels
         public ICommand DeleteMainArtistFromListCommand { get; protected set; }
         public ICommand DeletePseudonymArtistFromListCommand { get; protected set; }
         public ICommand DeleteStoryFromListCommand { get; protected set; }
-        public PagedCollection<ArtistStoryEditModel> PagedStories { get; }
 
         public ArtistViewModel(IArtistsService artistsService,
             IStoriesService storiesService,
@@ -30,7 +29,6 @@ namespace ComicsLibrary.ViewModels
             DeletePseudonymArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeletePseudonymArtistFromList));
             DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
 
-            PagedStories = new PagedCollection<ArtistStoryEditModel>();
             _storiesService = storiesService;
         }
 
@@ -65,21 +63,6 @@ namespace ComicsLibrary.ViewModels
         private void DeletePseudonymArtistFromList(int? pseudonymArtistId)
         {
             Item.HandlePseudonymArtist(pseudonymArtistId, null);
-        }
-
-        protected override void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            base.ItemPropertyChanged(sender, e);
-
-            switch (e.PropertyName)
-            {
-                case "Story":
-                case "Id":
-                    RaisePropertyChanged(nameof(PagedStories));
-                    PagedStories.SelectedPage = 0;
-                    PagedStories.Items = Item.StoryArtist; 
-                    break;
-            }
         }
     }
 }

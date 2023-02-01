@@ -54,40 +54,43 @@ namespace ComicsLibrary.UserControls
 
         protected void ResetDataView()
         {
-            ICollectionView cvCollectionView = CollectionViewSource.GetDefaultView(ItemsSource);
-            if (cvCollectionView == null)
+            var collectionView = CollectionViewSource.GetDefaultView(ItemsSource);
+            if (collectionView == null)
                 return;
+            
+            // use your own filter 
+            collectionView.Filter = o => { return true; };
 
-            // filtrer ... exemple pour tests DI-2015-05105-0
-            cvCollectionView.Filter = p_oObject => { return true; /* use your own filter */ };
-
-            // page configuration
-            int iMaxItemPerPage = MaxItems;
-            int iCurrentPage = Page;
-            int iStartIndex = iCurrentPage * iMaxItemPerPage;
-
-            // déterminer les objects "de la page"
-            int iCurrentIndex = 0;
-            HashSet<object> hsObjectsInPage = new HashSet<object>();
-            foreach (object oObject in cvCollectionView)
+            if (MaxItems > 0)
             {
-                // break if MaxItemCount is reached
-                if (hsObjectsInPage.Count > iMaxItemPerPage)
-                    break;
+                // page configuration
+                int maxItemPerPage = MaxItems;
+                int currentPage = Page == 0 ? 0 : Page - 1;
+                int startIndex = currentPage * maxItemPerPage;
 
-                // add if StartIndex is reached
-                if (iCurrentIndex >= iStartIndex)
-                    hsObjectsInPage.Add(oObject);
+                // get the objects "on the page"
+                int currentIndex = 0;
+                var objectsInPage = new HashSet<object>();
+                foreach (var o in collectionView)
+                {
+                    // break if MaxItemCount is reached
+                    if (objectsInPage.Count >= maxItemPerPage)
+                        break;
 
-                // increment
-                iCurrentIndex++;
+                    // add if StartIndex is reached
+                    if (currentIndex >= startIndex)
+                        objectsInPage.Add(o);
+
+                    // increment
+                    currentIndex++;
+                }
+
+                // refilter
+                collectionView.Filter = o =>
+                {
+                    return collectionView.Contains(o) && objectsInPage.Contains(o);
+                };
             }
-
-            // refilter
-            cvCollectionView.Filter = p_oObject =>
-            {
-                return cvCollectionView.Contains(p_oObject) && hsObjectsInPage.Contains(p_oObject);
-            };
         }
 
         private void Sort(string sortBy, ListSortDirection direction)
@@ -117,7 +120,6 @@ namespace ComicsLibrary.UserControls
             }
             else
             {
-                var dataView = CollectionViewSource.GetDefaultView(ItemsSource);
                 ResetDataView();
             }
         }

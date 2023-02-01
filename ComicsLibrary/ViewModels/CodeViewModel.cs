@@ -32,9 +32,6 @@ namespace ComicsLibrary.ViewModels
             _storiesService = storiesService;
         }
 
-        public ObservableChangedCollection<CodeSeriesEditModel> SelectedSeries { get => Item.Series; }
-        public ObservableChangedCollection<CodeStoryEditModel> SelectedStory { get => Item.Story; }
-
         public async void HandleSeries(int? seriesId, int? oldSeriesId)
         {
             var series = seriesId.HasValue ? Mapper.Map<SeriesOnlyEditModel>(await _seriesService.GetAsync(seriesId.Value)) : null;
@@ -55,25 +52,6 @@ namespace ComicsLibrary.ViewModels
         private void DeleteStoryFromList(int? storyId)
         {
             Item.HandleStory(storyId, null);
-        }
-
-        protected override void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            base.ItemPropertyChanged(sender, e);
-
-            switch (e.PropertyName)
-            {
-                case "Id":
-                    RaisePropertyChanged("SelectedSeries");
-                    RaisePropertyChanged("SelectedStory");
-                    break;
-                case "Series":
-                    RaisePropertyChanged("SelectedSeries");
-                    break;
-                case "Story":
-                    RaisePropertyChanged("SelectedStory");
-                    break;
-            }
         }
     }
 }

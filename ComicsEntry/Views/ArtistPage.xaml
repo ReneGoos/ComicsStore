@@ -33,7 +33,7 @@
                                    ExitCommand = "{Binding ExitCommand}"
                                    />
         </Grid>
-        <Grid>
+        <Grid DataContext="{Binding Item}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
@@ -72,7 +72,7 @@
 
                 <Label Grid.Column="1"
                        Grid.Row="1" 
-                       Content="{Binding Item.Id, Mode=OneWay}"/>
+                       Content="{Binding Id, Mode=OneWay}"/>
 
                 <Label Grid.Column="1" 
                        Grid.Row="3">
@@ -81,7 +81,7 @@
                 <TextBox Grid.Column="3" 
                          Grid.Row="3"
                          Grid.ColumnSpan="3"
-                         Text="{Binding Item.LastName, Mode=TwoWay}"/>
+                         Text="{Binding LastName, Mode=TwoWay}"/>
 
                 <Label Grid.Column="1" 
                        Grid.Row="5">
@@ -89,11 +89,11 @@
                 </Label>
                 <TextBox Grid.Column="3" 
                          Grid.Row="5"
-                         Text="{Binding Item.FirstName, Mode=TwoWay}"/>
+                         Text="{Binding FirstName, Mode=TwoWay}"/>
 
                 <ComboBox Grid.Column="5"
                           Grid.Row="5"
-                          SelectedValue = "{Binding Item.Pseudonym, Mode=TwoWay}"
+                          SelectedValue = "{Binding Pseudonym, Mode=TwoWay}"
                           IsEditable="True" 
                           ItemsSource="{Binding Path=DataContext.Pseudonyms, RelativeSource={RelativeSource AncestorType=Page}}">
                     <ComboBox.ItemsPanel>
@@ -110,7 +110,7 @@
                 <TextBox Grid.Column="3" 
                          Grid.Row="7"
                          Grid.ColumnSpan="3"
-                         Text="{Binding Item.RealLastName, Mode=TwoWay}"/>
+                         Text="{Binding RealLastName, Mode=TwoWay}"/>
 
                 <Label Grid.Column="1"
                        Grid.Row="9">
@@ -119,7 +119,7 @@
                 <TextBox Grid.Column="3" 
                          Grid.Row="9"
                          Grid.ColumnSpan="3"
-                         Text="{Binding Item.RealFirstName, Mode=TwoWay}"/>
+                         Text="{Binding RealFirstName, Mode=TwoWay}"/>
 
                 <Label Grid.Column="1"
                        Grid.Row="13">
@@ -128,12 +128,12 @@
                 <TextBox Grid.Column="3"  
                          Grid.Row="13" 
                          Grid.ColumnSpan="3"
-                         Text="{Binding Item.Remark, Mode=TwoWay}"/>
+                         Text="{Binding Remark, Mode=TwoWay}"/>
 
                 <Label Grid.Column="3" 
                        Grid.Row="15" 
                        Foreground="Red"
-                       Content="{Binding Item.Error}"/>
+                       Content="{Binding Error}"/>
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.Resources>
@@ -164,160 +164,127 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row ="1"
-                      Grid.Column="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="10"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="5"/>
-                        <RowDefinition Height="25"/>
-                    </Grid.RowDefinitions>
-                    <Button Grid.Row ="0"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="3"
-                            Background="Transparent"
-                            Height="25"
-                            VerticalAlignment="Top"
-                            Visibility="{Binding DataContext.OpenStory, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
-                            Command="{Binding DataContext.ShowStoryFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                            >
-                        +
-                    </Button>
-                    <Button Grid.Row ="2"
-                            Grid.Column="0"
-                            Background="Transparent"
-                            Height="15"
-                            VerticalAlignment="Top"
-                            IsEnabled="{Binding PagedStories.FirstPage, Converter={StaticResource NotConverter}}"
-                            Command="{Binding PagedStories.ButtonDownCommand}"
-                            >
-                        -
-                    </Button>
-                    <TextBox Grid.Row="2"
-                             Grid.Column="1" 
-                             Height="15"
-                             VerticalAlignment="Top"
-                             Text="{Binding PagedStories.SelectedPage, Mode=TwoWay}"/>
-                    <Button Grid.Row ="2"
-                            Grid.Column="2"
-                            Background="Transparent"
-                            Height="15"
-                            VerticalAlignment="Top"
-                            IsEnabled="{Binding PagedStories.LastPage, Converter={StaticResource NotConverter}}"
-                            Command="{Binding PagedStories.ButtonUpCommand}"
-                            >
-                        +
-                    </Button>
-                </Grid>
-                <control:HeaderSortListView Grid.Row ="1"
-                                            Grid.Column="1"
-                                            VerticalAlignment="Top"
-                                            AlternationCount="2"
-                                            MaxItems ="10"
-                                            Page="{Binding PagedStories.SelectedPage, Mode=TwoWay}"
-                                            ItemsSource="{Binding Path=Item.StoryArtist}"
-                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                            >
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Width="60"
-                                            >
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="StoryId">Edit</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowStoryFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                CommandParameter="{Binding StoryId}"
-                                                Background="Transparent"
-                                                BorderThickness="0"       
-                                                Width="48"
-                                                IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                <Button Grid.Row ="1"
+                        Grid.Column="3"
+                        Background="Transparent"
+                        Height="25"
+                        VerticalAlignment="Top"
+                        Visibility="{Binding DataContext.OpenStory, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                        Command="{Binding DataContext.ShowStoryFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                        >
+                    +
+                </Button>
+                <StackPanel Grid.Row="1"
+                            Grid.Column="1">
+                    <control:HeaderSortListView VerticalAlignment="Top"
+                                                AlternationCount="2"
+                                                MaxItems ="{Binding PageSize, ElementName=pagingControl, Mode=OneWay}"
+                                                Page="{Binding Page, ElementName=pagingControl, Mode=OneWay}"
+                                                ItemsSource="{Binding ItemsSource, ElementName=pagingControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                 >
-                                            <TextBlock Text="{Binding StoryId}" HorizontalAlignment="Center" />
-                                        </Button>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Header="Del" 
-                                            Width="25"
-                                            >
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.DeleteStoryFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
-                                                CommandParameter="{Binding StoryId}"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                Width="10">
-                                            <TextBlock Text="-" HorizontalAlignment="Center" />
-                                        </Button>      
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="250">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Story.Name">Story</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Story.Name}"></Label>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="50">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Story.StoryType">Type</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Story.StoryType}"></Label>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="50">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Story.StoryNumber">Number</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Story.StoryNumber}"
-                                               Width="40"
-                                               HorizontalContentAlignment="Right"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="160">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader>Role</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ComboBox IsEditable="True"
-                                                  IsReadOnly="True"
-                                                  Width="148"
-                                                  ItemsSource="{Binding Path=Roles}"
-                                                  Text="{Binding ArtistType, 
-                                                                 Converter={StaticResource ArrayConverter},
-                                                                 ConverterParameter=EnumCheckedType}"
-                                                  IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
-                                            <ComboBox.ItemTemplate>
-                                                <DataTemplate DataType="{x:Type helpers:EnumCheckedType}">
-                                                    <CheckBox Content="{Binding Name}"
-                                                              IsChecked="{Binding Checked}"
-                                                              />
-                                                </DataTemplate>
-                                            </ComboBox.ItemTemplate>
-                                        </ComboBox>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </control:HeaderSortListView>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="60"
+                                                >
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="StoryId">Edit</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ShowStoryFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding StoryId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"       
+                                                    Width="48"
+                                                    IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    >
+                                                <TextBlock Text="{Binding StoryId}" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Del" 
+                                                Width="25"
+                                                >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.DeleteStoryFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                                                    CommandParameter="{Binding StoryId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="10">
+                                                <TextBlock Text="-" HorizontalAlignment="Center" />
+                                            </Button>      
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="250">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Story.Name">Story</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Story.Name}"></Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="50">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Story.StoryType">Type</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Story.StoryType}"></Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="50">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Story.StoryNumber">Number</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Story.StoryNumber}"
+                                                   Width="40"
+                                                   HorizontalContentAlignment="Right"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="160">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader>Role</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox IsEditable="True"
+                                                      IsReadOnly="True"
+                                                      Width="148"
+                                                      ItemsSource="{Binding Path=Roles}"
+                                                      Text="{Binding ArtistType, 
+                                                                     Converter={StaticResource ArrayConverter},
+                                                                     ConverterParameter=EnumCheckedType}"
+                                                      IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type helpers:EnumCheckedType}">
+                                                        <CheckBox Content="{Binding Name}"
+                                                                  IsChecked="{Binding Checked}"
+                                                                  />
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </control:HeaderSortListView>
+                    <control:PagingControl Name="pagingControl"
+                                           VerticalAlignment="Bottom"
+                                           ItemsSource="{Binding Path=Item.StoryArtist}">
+
+                    </control:PagingControl>
+                </StackPanel>
                 <Button Grid.Row ="3"
                         Grid.Column="3"
                         Background="Transparent"
@@ -332,7 +299,7 @@
                           Grid.Column="1"                          
                           VerticalAlignment="Top" 
                           AlternationCount="2"
-                          ItemsSource="{Binding Path=Item.PseudonymArtist}"
+                          ItemsSource="{Binding Path=PseudonymArtist}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           >
                     <ListView.View>
@@ -397,7 +364,7 @@
                           Grid.Column="1"                          
                           VerticalAlignment="Top" 
                           AlternationCount="2"
-                          ItemsSource="{Binding Path=Item.MainArtist}"
+                          ItemsSource="{Binding Path=MainArtist}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           >
                     <ListView.View>

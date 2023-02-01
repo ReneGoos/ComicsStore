@@ -57,123 +57,140 @@
                     </Style>
                 </Grid.Resources>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="5"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
-                <control:HeaderSortListView Grid.Row="0"
-                          Margin="5" 
-                          VerticalAlignment="Top" 
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=SelectedSeries}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          >
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Width="60"
-                                            >
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="SeriesId">Edit</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowSeriesFromCodeWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                CommandParameter="{Binding SeriesId}"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                Width="48" 
-                                                IsEnabled="{Binding DataContext.OpenSeries, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                <StackPanel Grid.Row="1">
+                    <control:HeaderSortListView VerticalAlignment="Top" 
+                                                AlternationCount="2"
+                                                MaxItems ="{Binding PageSize, ElementName=pagingControlSeries, Mode=OneWay}"
+                                                Page="{Binding Page, ElementName=pagingControlSeries, Mode=OneWay}"
+                                                ItemsSource="{Binding ItemsSource, ElementName=pagingControlSeries, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                 >
-                                            <TextBlock Text="{Binding SeriesId}" HorizontalAlignment="Center" />
-                                        </Button>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="350">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Series.Name">Series</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Series.Name}"></Label>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="50">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Series.SeriesNumber">Number</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Series.SeriesNumber}"></Label>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </control:HeaderSortListView>
-                <control:HeaderSortListView Grid.Row="1"
-                          Margin="5" 
-                          VerticalAlignment="Top" 
-                          AlternationCount="2"
-                          ItemsSource="{Binding Path=SelectedStory}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          >
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Width="60"
-                                            >
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="StoryId">Edit</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowStoryFromCodeWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                CommandParameter="{Binding StoryId}"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                Width="48" 
-                                                IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="60"
                                                 >
-                                            <TextBlock Text="{Binding StoryId}" HorizontalAlignment="Center" />
-                                        </Button>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="350">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Story.Name">Story</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Story.Name}"></Label>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="50">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Story.StoryType">Type</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Story.StoryType}"></Label>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="50">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Story.StoryNumber">Number</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Story.StoryNumber}"
-                                               Width="40"
-                                               HorizontalContentAlignment="Right"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </control:HeaderSortListView>
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="SeriesId">Edit</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ShowSeriesFromCodeWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding SeriesId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="48" 
+                                                    IsEnabled="{Binding DataContext.OpenSeries, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    >
+                                                <TextBlock Text="{Binding SeriesId}" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="350">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Series.Name">Series</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Series.Name}"></Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="50">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Series.SeriesNumber">Number</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Series.SeriesNumber}"></Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </control:HeaderSortListView>
+                    <control:PagingControl Name="pagingControlSeries"
+                                           VerticalAlignment="Bottom"
+                                           ItemsSource="{Binding Path=Item.Series}">
+
+                    </control:PagingControl>
+                </StackPanel>
+                <StackPanel Grid.Row="3">
+                    <control:HeaderSortListView VerticalAlignment="Top" 
+                                                AlternationCount="2"
+                                                MaxItems ="{Binding PageSize, ElementName=pagingControlStory, Mode=OneWay}"
+                                                Page="{Binding Page, ElementName=pagingControlStory, Mode=OneWay}"
+                                                ItemsSource="{Binding ItemsSource, ElementName=pagingControlStory, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="60"
+                                                >
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="StoryId">Edit</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ShowStoryFromCodeWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding StoryId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="48" 
+                                                    IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    >
+                                                <TextBlock Text="{Binding StoryId}" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="350">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Story.Name">Story</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Story.Name}"></Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="50">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Story.StoryType">Type</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Story.StoryType}"></Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="50">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Story.StoryNumber">Number</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Story.StoryNumber}"
+                                                   Width="40"
+                                                   HorizontalContentAlignment="Right"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </control:HeaderSortListView>
+                    <control:PagingControl Name="pagingControlStory"
+                                           VerticalAlignment="Bottom"
+                                           ItemsSource="{Binding Path=Item.Story}">
+
+                    </control:PagingControl>
+                </StackPanel>
             </Grid>
         </Grid>
     </StackPanel>
