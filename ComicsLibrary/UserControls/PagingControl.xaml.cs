@@ -1,22 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.CodeDom;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ComicsLibrary.UserControls
 {
@@ -38,10 +22,7 @@ namespace ComicsLibrary.UserControls
             }
             set
             {
-                if (PageSize > 0)
-                {
-                    TotalPages = ((uint)(value.Count - 1) / PageSize) + 1;
-                }
+                TotalPages = CalculateTotalPages((uint)value.Count, PageSize);
                 SetValue(ItemsSourceProperty, value);
             }
         }
@@ -84,7 +65,7 @@ namespace ComicsLibrary.UserControls
             {
                 if (ItemsSource is not null && PageSize > 0)
                 {
-                    TotalPages = ((uint)(ItemsSource.Count + 1) / PageSize) + 1;
+                    TotalPages = CalculateTotalPages((uint)ItemsSource.Count, PageSize);
                 }
                 SetValue(ItemsSourceProperty, value);
             }
@@ -123,13 +104,22 @@ namespace ComicsLibrary.UserControls
                     case "ItemsSource":
                         if (PageSize > 0)
                         {
-                            TotalPages = ((uint)(((ICollection)e.NewValue).Count + 1) / PageSize) + 1;
+                            TotalPages = CalculateTotalPages((uint)((ICollection)e.NewValue).Count, PageSize);
                             Page = 1;
                         }
                         break;
                 }
             }
             base.OnPropertyChanged(e);
+        }
+
+        private uint CalculateTotalPages(uint count, uint size)
+        {
+            if (size > 0)
+            {
+                return ((uint)(count - 1) / size) + 1;
+            }
+            return 1;
         }
 
         private void FirstPageButton_Click(object sender, RoutedEventArgs e)
