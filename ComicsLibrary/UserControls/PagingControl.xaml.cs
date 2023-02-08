@@ -40,7 +40,7 @@ namespace ComicsLibrary.UserControls
             {
                 if (PageSize > 0)
                 {
-                    TotalPages = ((uint)(value.Count + 1) / PageSize) + 1;
+                    TotalPages = ((uint)(value.Count - 1) / PageSize) + 1;
                 }
                 SetValue(ItemsSourceProperty, value);
             }
@@ -106,15 +106,28 @@ namespace ComicsLibrary.UserControls
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-            switch (e.Property.Name)
+            if (!e.Property.Name.StartsWith("Is"))
             {
-                case "ItemsSource":
-                    if (PageSize > 0)
-                    {
-                        TotalPages = ((uint)(((ICollection)e.NewValue).Count + 1) / PageSize) + 1;
-                        Page = 1;
-                    }
-                    break;
+                switch (e.Property.Name)
+                {
+                    case "Page":
+                        if (Page <= 0)
+                        {
+                            Page = 1;
+                        }
+                        else if (Page > TotalPages)
+                        {
+                            Page = TotalPages;
+                        }
+                        break;
+                    case "ItemsSource":
+                        if (PageSize > 0)
+                        {
+                            TotalPages = ((uint)(((ICollection)e.NewValue).Count + 1) / PageSize) + 1;
+                            Page = 1;
+                        }
+                        break;
+                }
             }
             base.OnPropertyChanged(e);
         }

@@ -193,6 +193,8 @@
                 <Label Grid.Column="3"
                        Grid.Row="17" 
                        Grid.ColumnSpan="3"
+                       BorderThickness="1"
+                       BorderBrush="LightGray"
                        Content="{Binding OriginStory.Name}"
                        />
                 <Button Grid.Row ="17"
