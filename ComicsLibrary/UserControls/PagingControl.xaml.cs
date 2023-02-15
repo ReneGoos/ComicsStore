@@ -104,7 +104,14 @@ namespace ComicsLibrary.UserControls
                     case "ItemsSource":
                         if (PageSize > 0)
                         {
-                            TotalPages = CalculateTotalPages((uint)((ICollection)e.NewValue).Count, PageSize);
+                            if (e.NewValue is null)
+                            {
+                                TotalPages = 1;
+                            }
+                            else
+                            {
+                                TotalPages = CalculateTotalPages((uint)((ICollection)e.NewValue).Count, PageSize);
+                            }
                             Page = 1;
                         }
                         break;

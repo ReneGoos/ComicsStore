@@ -33,6 +33,7 @@ namespace ComicsLibrary.Navigation
         private NavigateWindow _navigationWindow = null;
 
         private Dictionary<string, Type> Pages { get; } = new Dictionary<string, Type>();
+        private Dictionary<string, Page> LoadedPages { get; } = new Dictionary<string, Page>();
         private Stack<NavigationContext> ActivePages { get; } = new Stack<NavigationContext>();
 
         private Dictionary<string, Type> Windows { get; } = new Dictionary<string, Type>();
@@ -118,14 +119,17 @@ namespace ComicsLibrary.Navigation
 
         private async Task<Page> GetAndActivatePageAsync(string windowKey, object parameter = null)
         {
-            var page = _serviceProvider.GetRequiredService(Pages[windowKey]) as Page;
+            if (!LoadedPages.ContainsKey(windowKey))
+            {
+                LoadedPages[windowKey] = _serviceProvider.GetRequiredService(Pages[windowKey]) as Page;
+            }
 
-            if (page.DataContext is IActivable activable)
+            if (LoadedPages[windowKey].DataContext is IActivable activable)
             {
                 await activable.ActivateAsync(parameter);
             }
 
-            return page;
+            return LoadedPages[windowKey];
         }
 
         private async Task SetPage(string windowKey, int? id)
