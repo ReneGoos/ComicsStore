@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,8 +17,14 @@ namespace ComicsLibrary.UserControls
 
         public int Page
         {
-            get { return (int)GetValue(PageProperty); }
-            set { SetValue(PageProperty, value); }
+            get 
+            { 
+                return (int)GetValue(PageProperty); 
+            }
+            set 
+            { 
+                SetValue(PageProperty, value); 
+            }
         }
 
         public static readonly DependencyProperty PageProperty
@@ -30,8 +37,18 @@ namespace ComicsLibrary.UserControls
 
         public int MaxItems
         {
-            get { return (int)GetValue(MaxItemsProperty); }
-            set { SetValue(MaxItemsProperty, value); }
+            get
+            { 
+                return (int)GetValue(MaxItemsProperty); 
+            }
+            set
+            {
+                if (ItemsSource is ICollection collection && value > 0)
+                {
+                    TotalPages = CalculateTotalPages(collection.Count, value);
+                }
+                SetValue(MaxItemsProperty, value);
+            }
         }
 
         public static readonly DependencyProperty MaxItemsProperty
@@ -41,6 +58,26 @@ namespace ComicsLibrary.UserControls
                   typeof(HeaderSortListView),
                   new PropertyMetadata(0, new PropertyChangedCallback(OnMaxItemsChanged))
               );
+
+        public int TotalPages
+        {
+            get
+            {
+                return (int)GetValue(TotalPagesProperty);
+            }
+            set
+            {
+                SetValue(TotalPagesProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty TotalPagesProperty
+            = DependencyProperty.Register(
+                "TotalPages",
+                typeof(int),
+                typeof(HeaderSortListView),
+                new PropertyMetadata(0, new PropertyChangedCallback(OnTotalPagesChanged))
+                );
 
         private static void OnMaxItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -52,17 +89,22 @@ namespace ComicsLibrary.UserControls
             (d as HeaderSortListView)?.ResetDataView();
         }
 
+        private static void OnTotalPagesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as HeaderSortListView)?.ResetDataView();
+        }
+
         protected void ResetDataView()
         {
-            var collectionView = CollectionViewSource.GetDefaultView(ItemsSource);
-            if (collectionView == null)
-                return;
-            
-            // use your own filter 
-            collectionView.Filter = o => { return true; };
-
             if (MaxItems > 0)
             {
+                var collectionView = CollectionViewSource.GetDefaultView(ItemsSource);
+                if (collectionView == null)
+                    return;
+            
+                // use your own filter 
+                collectionView.Filter = o => { return true; };
+
                 // page configuration
                 int maxItemPerPage = MaxItems;
                 int currentPage = Page == 0 ? 0 : Page - 1;
@@ -104,6 +146,15 @@ namespace ComicsLibrary.UserControls
             ResetDataView();
         }
 
+        private static int CalculateTotalPages(int count, int size)
+        {
+            if (size > 0 && count > 0)
+            {
+                return ((count - 1) / size) + 1;
+            }
+            return 1;
+        }
+
         protected override void OnInitialized(EventArgs e)
         {
             AddHandler(System.Windows.Controls.Primitives.ButtonBase.ClickEvent, new RoutedEventHandler(HeaderSortListViewClickEvent));
@@ -113,6 +164,13 @@ namespace ComicsLibrary.UserControls
         protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
         {
             base.OnItemsSourceChanged(oldValue, newValue);
+            ((INotifyCollectionChanged)ItemsSource).CollectionChanged += new NotifyCollectionChangedEventHandler(SourceCollectionChanged);
+
+            if (ItemsSource is ICollection collection && MaxItems > 0)
+            {
+                TotalPages = CalculateTotalPages(collection.Count, MaxItems);
+                Page = (TotalPages > 0) ? 1 : 0;
+            }
 
             if (_lastHeaderClicked != null && _lastHeaderClicked.Tag is string sortBy)
             {
@@ -120,6 +178,15 @@ namespace ComicsLibrary.UserControls
             }
             else
             {
+                ResetDataView();
+            }
+        }
+
+        public void SourceCollectionChanged(Object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (ItemsSource is ICollection collection && (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Remove))
+            {
+                TotalPages = CalculateTotalPages(collection.Count, MaxItems);
                 ResetDataView();
             }
         }

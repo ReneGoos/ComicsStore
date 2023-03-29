@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ComicsLibrary.UserControls"
+             xmlns:h="clr-namespace:ComicsLibrary.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="0,2,0,0">
@@ -12,14 +12,35 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Button Name="FirstPageButton" Content="&lt;&lt;" Grid.Column="0" Click="FirstPageButton_Click"/>
         <Button Name="PreviousPageButton" Content="&lt;" Grid.Column="1" Click="PreviousPageButton_Click"/>
-        <TextBox Name="PageTextBox" Grid.Column="2" Text="{Binding ElementName=_pagingControl, Path=Page, Mode=TwoWay}" TextAlignment="Center"/>
-        <Button Name="NextPageButton" Content="&gt;" Grid.Column="3" Click="NextPageButton_Click"/>
-        <Button Name="LastPageButton" Content="&gt;&gt;" Grid.Column="4" Click="LastPageButton_Click"/>
+        <TextBox Name="PageTextBox" Grid.Column="2" TextAlignment="Center">
+            <TextBox.Resources>
+                <h:BindingProxy x:Key="proxy" Data="{Binding ElementName=_pagingControl}"/>
+            </TextBox.Resources>
+            <TextBox.Text>
+                <Binding ElementName="_pagingControl" Path="Page" Mode="TwoWay">
+                    <Binding.ValidationRules>
+                        <h:PageRangeRule>
+                            <h:PageRangeRule.Wrapper>
+                                <h:Wrapper MinPage="1" MaxPage="{Binding Data.TotalPages, Source={StaticResource proxy}}"/>
+                            </h:PageRangeRule.Wrapper>
+                        </h:PageRangeRule>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox> 
+        <TextBlock Grid.Column="3" TextAlignment="Center">
+            <Run Text=" ("/>
+            <Run Text="{Binding ElementName=_pagingControl, Path=TotalPages, Mode=TwoWay}"/>
+            <Run Text=")"/>
+        </TextBlock>
+        <Button Name="NextPageButton" Content="&gt;" Grid.Column="4" Click="NextPageButton_Click"/>
+        <Button Name="LastPageButton" Content="&gt;&gt;" Grid.Column="5" Click="LastPageButton_Click"/>
     </Grid>
 </UserControl>

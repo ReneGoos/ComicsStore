@@ -8,7 +8,6 @@ using ComicsLibrary.Core;
 using System;
 using System.Windows.Input;
 using ComicsLibrary.Navigation;
-using System.ComponentModel;
 
 namespace ComicsLibrary.ViewModels
 {

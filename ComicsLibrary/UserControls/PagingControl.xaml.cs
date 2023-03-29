@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,10 +10,14 @@ namespace ComicsLibrary.UserControls
     /// </summary>
     public partial class PagingControl : UserControl
     {
-        public static readonly DependencyProperty ItemsSourceProperty;
-        public static readonly DependencyProperty PageProperty;
-        public static readonly DependencyProperty TotalPagesProperty;
-        public static readonly DependencyProperty PageSizeProperty;
+        public static readonly DependencyProperty ItemsSourceProperty 
+            = DependencyProperty.Register("ItemsSource", typeof(ICollection), typeof(PagingControl));
+        public static readonly DependencyProperty PageProperty 
+            = DependencyProperty.Register("Page", typeof(int), typeof(PagingControl), new PropertyMetadata(1));
+        public static readonly DependencyProperty TotalPagesProperty 
+            = DependencyProperty.Register("TotalPages", typeof(int), typeof(PagingControl));
+        public static readonly DependencyProperty PageSizeProperty 
+            = DependencyProperty.Register("PageSize", typeof(int), typeof(PagingControl), new PropertyMetadata(10));
 
         public ICollection ItemsSource
         {
@@ -22,71 +27,70 @@ namespace ComicsLibrary.UserControls
             }
             set
             {
-                TotalPages = CalculateTotalPages((uint)value.Count, PageSize);
-                SetValue(ItemsSourceProperty, value);
+               SetValue(ItemsSourceProperty, value);
             }
         }
 
-        public uint Page
+        public int Page
         {
             get
             {
-                return (uint)GetValue(PageProperty);
+                return (int)GetValue(PageProperty);
             }
             set
             {
+                if (TotalPages == 0)
+                {
+                    value = 1;
+                }
+                else if (value < 1)
+                {
+                    value = 1;
+                }
+                else if (value > TotalPages)
+                {
+                    value = TotalPages;
+                }
+
                 SetValue(PageProperty, value);
-                FirstPageButton.IsEnabled = value > 1;
-                PreviousPageButton.IsEnabled = value > 1;
-                NextPageButton.IsEnabled = value < TotalPages;
-                LastPageButton.IsEnabled = value < TotalPages;
+                EnableButtons(value, TotalPages);
             }
         }
 
-        public uint TotalPages
+        public int TotalPages
         {
             get
             {
-                return (uint)GetValue(TotalPagesProperty);
+                return (int)GetValue(TotalPagesProperty);
             }
-            protected set
+            set
             {
                 SetValue(TotalPagesProperty, value);
+                EnableButtons(Page, value);
             }
         }
 
-        public uint PageSize
+        public int PageSize
         {
             get
             {
-                return (uint)GetValue(PageSizeProperty);
+                return (int)GetValue(PageSizeProperty);
             }
-            protected set
+            set
             {
-                if (ItemsSource is not null && PageSize > 0)
-                {
-                    TotalPages = CalculateTotalPages((uint)ItemsSource.Count, PageSize);
-                }
-                SetValue(ItemsSourceProperty, value);
+                SetValue(PageSizeProperty, value);
             }
-        }
-
-        static PagingControl()
-        {
-            ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(ICollection), typeof(PagingControl));
-            PageProperty = DependencyProperty.Register("Page", typeof(uint), typeof(PagingControl), new PropertyMetadata((uint)1));
-            TotalPagesProperty = DependencyProperty.Register("TotalPages", typeof(uint), typeof(PagingControl));
-            PageSizeProperty = DependencyProperty.Register("PageSize", typeof(uint), typeof(PagingControl), new PropertyMetadata((uint)10));
         }
 
         public PagingControl()
         {
             InitializeComponent();
-            Page = 1;
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+                return;
             if (!e.Property.Name.StartsWith("Is"))
             {
                 switch (e.Property.Name)
@@ -94,39 +98,32 @@ namespace ComicsLibrary.UserControls
                     case "Page":
                         if (Page <= 0)
                         {
-                            Page = 1;
+                            SetValue(PageProperty, 0);
                         }
                         else if (Page > TotalPages)
                         {
-                            Page = TotalPages;
+                            SetValue(PageProperty, TotalPages);
                         }
+                        EnableButtons(Page, TotalPages);
                         break;
-                    case "ItemsSource":
-                        if (PageSize > 0)
+                    case "TotalPages":
+                        if (Page > TotalPages)
                         {
-                            if (e.NewValue is null)
-                            {
-                                TotalPages = 1;
-                            }
-                            else
-                            {
-                                TotalPages = CalculateTotalPages((uint)((ICollection)e.NewValue).Count, PageSize);
-                            }
-                            Page = 1;
+                            SetValue(PageProperty, TotalPages);
                         }
+                        EnableButtons(Page, TotalPages);
                         break;
                 }
             }
             base.OnPropertyChanged(e);
         }
 
-        private uint CalculateTotalPages(uint count, uint size)
+        private void EnableButtons(int page, int totalPages)
         {
-            if (size > 0)
-            {
-                return ((uint)(count - 1) / size) + 1;
-            }
-            return 1;
+            FirstPageButton.IsEnabled = page > 1;
+            PreviousPageButton.IsEnabled = page > 1;
+            NextPageButton.IsEnabled = page < totalPages;
+            LastPageButton.IsEnabled = page < totalPages;
         }
 
         private void FirstPageButton_Click(object sender, RoutedEventArgs e)

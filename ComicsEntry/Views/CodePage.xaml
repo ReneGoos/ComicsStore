@@ -64,11 +64,11 @@
                     <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="1">
-                    <control:HeaderSortListView VerticalAlignment="Top" 
+                    <control:HeaderSortListView Name="CodeSeriesList"
+                                                VerticalAlignment="Top" 
                                                 AlternationCount="2"
-                                                MaxItems ="{Binding PageSize, ElementName=pagingControlSeries, Mode=OneWay}"
-                                                Page="{Binding Page, ElementName=pagingControlSeries, Mode=OneWay}"
-                                                ItemsSource="{Binding ItemsSource, ElementName=pagingControlSeries, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                MaxItems ="10"
+                                                ItemsSource="{Binding Path=Item.Series}" 
                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                 >
                         <ListView.View>
@@ -117,16 +117,17 @@
                     </control:HeaderSortListView>
                     <control:PagingControl Name="pagingControlSeries"
                                            VerticalAlignment="Bottom"
-                                           ItemsSource="{Binding Path=Item.Series}">
-
-                    </control:PagingControl>
+                                           PageSize ="{Binding MaxItems, ElementName=CodeSeriesList, Mode=OneWay}"
+                                           TotalPages ="{Binding TotalPages, ElementName=CodeSeriesList, Mode=OneWay}"
+                                           Page ="{Binding Page, ElementName=CodeSeriesList, Mode=TwoWay}"
+                                           />
                 </StackPanel>
                 <StackPanel Grid.Row="3">
-                    <control:HeaderSortListView VerticalAlignment="Top" 
+                    <control:HeaderSortListView Name="CodeStoriesList"
+                                                VerticalAlignment="Top" 
                                                 AlternationCount="2"
-                                                MaxItems ="{Binding PageSize, ElementName=pagingControlStory, Mode=OneWay}"
-                                                Page="{Binding Page, ElementName=pagingControlStory, Mode=OneWay}"
-                                                ItemsSource="{Binding ItemsSource, ElementName=pagingControlStory, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                MaxItems ="10"
+                                                ItemsSource="{Binding Path=Item.Story}" 
                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                 >
                         <ListView.View>
@@ -187,9 +188,10 @@
                     </control:HeaderSortListView>
                     <control:PagingControl Name="pagingControlStory"
                                            VerticalAlignment="Bottom"
-                                           ItemsSource="{Binding Path=Item.Story}">
-
-                    </control:PagingControl>
+                                           PageSize ="{Binding MaxItems, ElementName=CodeStoriesList, Mode=OneWay}"
+                                           TotalPages ="{Binding TotalPages, ElementName=CodeStoriesList, Mode=OneWay}"
+                                           Page ="{Binding Page, ElementName=CodeStoriesList, Mode=TwoWay}"
+                                           />
                 </StackPanel>
             </Grid>
         </Grid>

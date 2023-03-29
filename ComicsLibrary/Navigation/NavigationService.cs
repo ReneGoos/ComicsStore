@@ -81,18 +81,18 @@ namespace ComicsLibrary.Navigation
 
         public async Task ClosePageAsync(bool result, int? itemId = null)
         {
-            var context = ActivePages.Pop();
+            var currContext = ActivePages.Pop();
             RaisePropertyChanged("ActivePages");
-
-            if (result && context.HandleItem != null)
-            {
-                context.HandleItem(itemId, context.ItemId);
-            }
 
             if (ActivePages.Count > 0)
             {
-                context = ActivePages.Peek();
-                await SetPage(context.WindowKey, null);
+                var newContext = ActivePages.Peek();
+                await SetPage(newContext.WindowKey, null);
+
+                if (result && currContext.HandleItem != null)
+                {
+                    currContext.HandleItem(itemId, currContext.ItemId);
+                }
             }
             else
             {

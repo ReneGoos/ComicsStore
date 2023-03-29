@@ -201,11 +201,11 @@
                 <StackPanel Grid.Row ="1"
                             Grid.Column="1"
                             >
-                    <control:HeaderSortListView VerticalAlignment="Top" 
+                    <control:HeaderSortListView Name="BookStoryList"
+                                                VerticalAlignment="Top" 
                                                 AlternationCount="2"
-                                                MaxItems ="{Binding PageSize, ElementName=pagingControl, Mode=OneWay}"
-                                                Page="{Binding Page, ElementName=pagingControl, Mode=OneWay}"
-                                                ItemsSource="{Binding ItemsSource, ElementName=pagingControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                MaxItems ="10"
+                                                ItemsSource="{Binding Path=StoryBook}" 
                                                 ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <ListView.View>
                             <GridView>
@@ -232,7 +232,7 @@
                                                 >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Command="{Binding DataContext.DeleteStoryFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                                            <Button Command="{Binding DataContext.DeleteStoryFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel, AncestorLevel=2}}"
                                                     CommandParameter="{Binding StoryId}"
                                                     Background="Transparent"
                                                     BorderThickness="0"
@@ -279,9 +279,10 @@
                     </control:HeaderSortListView>
                     <control:PagingControl Name="pagingControl"
                                            VerticalAlignment="Bottom"
-                                           ItemsSource="{Binding Path=StoryBook}">
-
-                    </control:PagingControl>
+                                           PageSize ="{Binding MaxItems, ElementName=BookStoryList, Mode=OneWay}"
+                                           TotalPages ="{Binding TotalPages, ElementName=BookStoryList, Mode=OneWay}"
+                                           Page ="{Binding Page, ElementName=BookStoryList, Mode=TwoWay}"
+                                           />
                 </StackPanel>
                 <Button Grid.Row ="3"
                         Grid.Column="3"

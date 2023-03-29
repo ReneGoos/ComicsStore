@@ -81,13 +81,12 @@
                 <StackPanel Grid.Row ="1"
                             Grid.Column="1"
                             >
-                    <control:HeaderSortListView Name="BookView"                                            
+                    <control:HeaderSortListView Name="PublisherBookList"                                            
                                                 MaxHeight="600"
                                                 VerticalAlignment="Top" 
-                                                AlternationCount="2"
-                                                MaxItems ="{Binding PageSize, ElementName=pagingControl, Mode=OneWay}"
-                                                Page="{Binding Page, ElementName=pagingControl, Mode=OneWay}"
-                                                ItemsSource="{Binding ItemsSource, ElementName=pagingControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                AlternationCount="2"                                                
+                                                MaxItems ="10"
+                                                ItemsSource="{Binding Path=BookPublisher}" 
                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                 >
                         <ListView.View>
@@ -116,7 +115,7 @@
                                     </GridViewColumn.Header>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Command="{Binding DataContext.DeleteBookFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                                            <Button Command="{Binding DataContext.DeleteBookFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel, AncestorLevel=2}}"
                                                     CommandParameter="{Binding BookId}"
                                                     Background="Transparent"
                                                     BorderThickness="0"
@@ -151,9 +150,10 @@
                     </control:HeaderSortListView>
                     <control:PagingControl Name="pagingControl"
                                            VerticalAlignment="Bottom"
-                                           ItemsSource="{Binding Path=BookPublisher}">
-
-                    </control:PagingControl>
+                                           PageSize ="{Binding MaxItems, ElementName=PublisherBookList, Mode=OneWay}"
+                                           TotalPages ="{Binding TotalPages, ElementName=PublisherBookList, Mode=OneWay}"
+                                           Page ="{Binding Page, ElementName=PublisherBookList, Mode=TwoWay}"
+                                           />
                 </StackPanel>
             </Grid>
         </Grid>
