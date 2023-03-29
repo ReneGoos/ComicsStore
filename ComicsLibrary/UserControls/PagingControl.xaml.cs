@@ -111,6 +111,7 @@ namespace ComicsLibrary.UserControls
                         {
                             SetValue(PageProperty, TotalPages);
                         }
+                        Visibility = (TotalPages == 1 ? Visibility.Collapsed : Visibility.Visible);
                         EnableButtons(Page, TotalPages);
                         break;
                 }

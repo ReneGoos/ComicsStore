@@ -7,12 +7,12 @@
              xmlns:h="clr-namespace:ComicsLibrary.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Margin="0,2,0,0">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -34,12 +34,13 @@
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
-        </TextBox> 
-        <TextBlock Grid.Column="3" TextAlignment="Center">
-            <Run Text=" ("/>
-            <Run Text="{Binding ElementName=_pagingControl, Path=TotalPages, Mode=TwoWay}"/>
-            <Run Text=")"/>
-        </TextBlock>
+        </TextBox>
+        <Border Grid.Column="3" BorderBrush="DarkGray"  BorderThickness="1">
+            <TextBlock TextAlignment="Center">
+               <Run Text="of "/>
+               <Run Text="{Binding ElementName=_pagingControl, Path=TotalPages, Mode=TwoWay}"/>
+            </TextBlock>
+        </Border>
         <Button Name="NextPageButton" Content="&gt;" Grid.Column="4" Click="NextPageButton_Click"/>
         <Button Name="LastPageButton" Content="&gt;&gt;" Grid.Column="5" Click="LastPageButton_Click"/>
     </Grid>
