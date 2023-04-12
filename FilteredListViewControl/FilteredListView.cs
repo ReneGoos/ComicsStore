@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
@@ -62,7 +64,11 @@ namespace FilteredListViewControl
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.ItemsSource);
             if (collectionView == null) return;
             collectionView.Filter = (item) => FilterPredicate(item, FilterText);
-        }
 
+            if (collectionView.Cast<object>().Count() == 1)
+            {
+                SelectedItem = collectionView.Cast<object>().First();
+            }
+        }
     }
 }
