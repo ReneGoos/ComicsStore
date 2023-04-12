@@ -40,7 +40,8 @@ namespace ComicsLibrary.Core
 
         public void EntityViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, sender);
+            //I would have liked to use Replace, but that is not allowed?
+            var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, sender, sender);
             OnCollectionChanged(args);
         }
     }
