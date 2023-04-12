@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -94,21 +95,22 @@ namespace ComicsLibrary.UserControls
             (d as HeaderSortListView)?.ResetDataView();
         }
 
-        protected void ResetDataView()
+        protected int ResetDataView(object _currentObject = null)
         {
             if (MaxItems > 0)
             {
                 var collectionView = CollectionViewSource.GetDefaultView(ItemsSource);
                 if (collectionView == null)
-                    return;
+                    return 1;
             
                 // use your own filter 
                 collectionView.Filter = o => { return true; };
 
                 // page configuration
                 int maxItemPerPage = MaxItems;
-                int currentPage = Page == 0 ? 0 : Page - 1;
+                int currentPage = (_currentObject is not null || Page == 0) ? 0 : Page - 1;
                 int startIndex = currentPage * maxItemPerPage;
+                int newPage = _currentObject is not null ? -1 : currentPage;
 
                 // get the objects "on the page"
                 int currentIndex = 0;
@@ -117,11 +119,25 @@ namespace ComicsLibrary.UserControls
                 {
                     // break if MaxItemCount is reached
                     if (objectsInPage.Count >= maxItemPerPage)
-                        break;
+                    {
+                        if (newPage == -1)
+                        {
+                            objectsInPage.Clear();
+                            currentPage++;
+                            startIndex = currentPage * maxItemPerPage;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
 
                     // add if StartIndex is reached
                     if (currentIndex >= startIndex)
                         objectsInPage.Add(o);
+
+                    if (o == _currentObject)
+                        newPage = currentPage;
 
                     // increment
                     currentIndex++;
@@ -132,7 +148,11 @@ namespace ComicsLibrary.UserControls
                 {
                     return collectionView.Contains(o) && objectsInPage.Contains(o);
                 };
+
+                return newPage;
             }
+
+            return 1;
         }
 
         private void Sort(string sortBy, ListSortDirection direction)
@@ -143,7 +163,6 @@ namespace ComicsLibrary.UserControls
             var sd = new SortDescription(sortBy, direction);
             dataView.SortDescriptions.Add(sd);
             dataView.Refresh();
-            ResetDataView();
         }
 
         private static int CalculateTotalPages(int count, int size)
@@ -175,6 +194,7 @@ namespace ComicsLibrary.UserControls
             if (_lastHeaderClicked != null && _lastHeaderClicked.Tag is string sortBy)
             {
                 Sort(sortBy, _lastDirection);
+                ResetDataView();
             }
             else
             {
@@ -184,10 +204,28 @@ namespace ComicsLibrary.UserControls
 
         public void SourceCollectionChanged(Object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (ItemsSource is ICollection collection && (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Remove))
+            if (ItemsSource is ICollection collection)
             {
+                object currentObject = null;
+
+                if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Replace)
+                {
+                    currentObject = e.NewItems[0];
+
+                    if (_lastHeaderClicked != null)
+                    {
+                        Sort(_lastHeaderClicked.Tag as string, _lastDirection);
+                    }
+                }
+
                 TotalPages = CalculateTotalPages(collection.Count, MaxItems);
-                ResetDataView();
+                int page = ResetDataView(currentObject);
+
+                if (currentObject != null) 
+                {
+                    Page = page + 1;
+                }
+
             }
         }
 
@@ -220,6 +258,7 @@ namespace ComicsLibrary.UserControls
                         //var columnBinding = headerClicked.Column.DisplayMemberBinding as Binding;
                         //var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
                         Sort(sortBy, direction);
+                        ResetDataView();
 
                         if (direction == ListSortDirection.Ascending)
                         {

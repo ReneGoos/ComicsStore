@@ -45,8 +45,8 @@ namespace ComicsLibrary.Extensions
                     };
                 }
 
-                item.LinkedId = childItem?.Id;
                 item.ChildItem = (TChild)childItem;
+                item.LinkedId = childItem?.Id;
 
                 if (!oldItemId.HasValue)
                 {
