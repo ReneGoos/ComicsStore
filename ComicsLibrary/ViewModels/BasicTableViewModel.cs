@@ -155,28 +155,40 @@ namespace ComicsLibrary.ViewModels
             IsDirty = false;
         }
 
-        private static bool ContinueDelete()
+        private static MessageBoxResult ContinueDelete()
         {
             var messageBoxText = "Are you sure you want to delete?";
             var caption = "Delete Item";
+
+            var btnMessageBox = MessageBoxButton.YesNo;
+            var icnMessageBox = MessageBoxImage.Warning;
+
+            var rsltMessageBox = MessageBox.Show(messageBoxText, caption, btnMessageBox, icnMessageBox);
+
+            return rsltMessageBox;
+        }
+
+        private static MessageBoxResult ContinueSwitch()
+        {
+            var messageBoxText = "Do you want to save the item before the switch?";
+            var caption = "Save Item";
 
             var btnMessageBox = MessageBoxButton.YesNoCancel;
             var icnMessageBox = MessageBoxImage.Warning;
 
             var rsltMessageBox = MessageBox.Show(messageBoxText, caption, btnMessageBox, icnMessageBox);
 
-            return rsltMessageBox == MessageBoxResult.Yes;
+            return rsltMessageBox;
         }
 
         protected virtual async void DeleteAsync(int id)
         {
-            if (ContinueDelete())
+            if (ContinueDelete() == MessageBoxResult.Yes)
             {
                 await _itemService.DeleteAsync(id);
                 UpdateItemsList(new TOut { Id = id }, true);
+                NewItem();
             }
-
-            NewItem();
         }
 
         protected virtual void NewItem(bool bKeep = false)
@@ -196,6 +208,21 @@ namespace ComicsLibrary.ViewModels
 
         protected virtual async void GetItemAsync(int id)
         {
+            if (IsDirty)
+            {
+                switch (ContinueSwitch())
+                {
+                    case MessageBoxResult.Yes:
+                        SaveAsync();
+                        break;
+                    case MessageBoxResult.No:
+                        CancelSaveAsync();
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return;
+                }
+            }
+
             Item = Mapper.Map<TEdit>(await _itemService.GetAsync(id, true));
 
             if (Item == null)

@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:ComicsStore.Controls"
-    xmlns:filteredview="clr-namespace:FilteredListViewControl;assembly=FilteredListViewControl">
+    xmlns:filteredview="clr-namespace:ComicsStore.Controls"
+    >
 
     <FontFamily x:Key="FontAwesome">pack://application:,,,/ComicsStore.Controls;component/fonts/fontawesome-webfont.ttf#FontAwesome</FontFamily>
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows10.0.19041</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
@@ -12,23 +12,6 @@
     <None Remove="fonts\fontawesome-webfont.woff" />
     <None Remove="fonts\fontawesome-webfont.woff2" />
     <None Remove="fonts\FontAwesome.otf" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\FilteredListViewControl\FilteredListViewControl.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="fonts\fontawesome-webfont.eot" />
-    <Resource Include="fonts\fontawesome-webfont.svg" />
-    <Resource Include="fonts\fontawesome-webfont.ttf" />
-    <Resource Include="fonts\fontawesome-webfont.woff" />
-    <Resource Include="fonts\fontawesome-webfont.woff2" />
-    <Resource Include="fonts\FontAwesome.otf" />
   </ItemGroup>
 
 </Project>
