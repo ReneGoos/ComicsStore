@@ -1,17 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="fonts\fontawesome-webfont.eot" />
-    <None Remove="fonts\fontawesome-webfont.svg" />
-    <None Remove="fonts\fontawesome-webfont.ttf" />
-    <None Remove="fonts\fontawesome-webfont.woff" />
-    <None Remove="fonts\fontawesome-webfont.woff2" />
-    <None Remove="fonts\FontAwesome.otf" />
+ 	<Resource Include="fonts\FontAwesome.otf" />
+	<Resource Include="fonts\fontawesome-webfont.ttf" />
+	<Resource Include="fonts\fontawesome-webfont.eot" />
+	<Resource Include="fonts\fontawesome-webfont.woff" />
+	<Resource Include="fonts\fontawesome-webfont.woff2" />
   </ItemGroup>
 
 </Project>
