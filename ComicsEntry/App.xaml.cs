@@ -13,9 +13,6 @@ using ComicsLibrary.Windows;
 
 namespace ComicsEntry
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         private readonly IHost _host;
@@ -77,7 +74,7 @@ namespace ComicsEntry
             _ = services.AddSingleton<ComicsViewModel>();
 
             // Register all the Windows of the applications.
-            _ = services.AddTransient<StartWindow>();
+            _ = services.AddSingleton<StartWindow>();
             _ = services.AddTransient<ReportWindow>();
             _ = services.AddTransient<MainWindow>();
 
@@ -97,7 +94,9 @@ namespace ComicsEntry
         {
             await _host.StartAsync();
 
-            this.StartupUri = new System.Uri("./Views/StartWindow.xaml", System.UriKind.Relative);
+            var startupForm = _host.Services.GetRequiredService<StartWindow>();
+            startupForm.Show();
+            //this.StartupUri = new System.Uri("./Views/StartWindow.xaml", System.UriKind.Relative);
 
             //var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
             //_ = await navigationService.ShowDialogAsync(StoreWindows.MainWindow);
@@ -107,10 +106,7 @@ namespace ComicsEntry
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            using (_host)
-            {
-                await _host.StopAsync(TimeSpan.FromSeconds(5));
-            }
+            await _host.StopAsync();
 
             base.OnExit(e);
         }

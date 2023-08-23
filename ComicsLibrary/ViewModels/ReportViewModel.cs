@@ -14,7 +14,7 @@ namespace ComicsLibrary.ViewModels
 {
     public class ReportViewModel : BasicEditModel
     {
-        private readonly IExportBooksService _exportBooksService;
+        private readonly IViewService _exportBooksService;
         private readonly IMapper _mapper;
         private PagingCollectionView<ReportEditModel> _pagingCollection;
 
@@ -24,7 +24,7 @@ namespace ComicsLibrary.ViewModels
 
         public ICommand StoreReportWindowCommand { get; protected set; }
 
-        public ReportViewModel(IExportBooksService exportBooksService,
+        public ReportViewModel(IViewService exportBooksService,
                                 IMapper mapper) : base()
         {
             _exportBooksService = exportBooksService;
@@ -35,12 +35,14 @@ namespace ComicsLibrary.ViewModels
 
         private async void StoreReportWindow()
         {
-            var saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Text file (*.txt)|*.txt|CSV file (*.csv)|*.csv";
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Text file (*.txt)|*.txt|CSV file (*.csv)|*.csv"
+            };
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                var report = await _exportBooksService.GetExportAsync(new StorySeriesSearch
+                var report = await _exportBooksService.GetExportAsync(new ViewSearch
                 {
                     Filter = _itemFilter,
                     Active = _active.HasValue ? (_active.Value ? ComicsStore.Data.Common.Active.active : ComicsStore.Data.Common.Active.deleted) : null
@@ -52,7 +54,7 @@ namespace ComicsLibrary.ViewModels
 
         private async void Refresh()
         {
-            var list = _mapper.Map<List<ReportEditModel>>(await _exportBooksService.GetAsync(new StorySeriesSearch
+            var list = _mapper.Map<List<ReportEditModel>>(await _exportBooksService.GetAsync(new ViewSearch
             {
                 Filter = _itemFilter,
                 Active = _active.HasValue ? (_active.Value ? ComicsStore.Data.Common.Active.active : ComicsStore.Data.Common.Active.deleted) : null

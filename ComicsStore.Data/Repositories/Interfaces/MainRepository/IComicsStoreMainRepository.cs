@@ -7,7 +7,7 @@ namespace ComicsStore.Data.Repositories.Interfaces.MainRepository
 {
     public interface IComicsStoreMainRepository<T, TSearch> : IComicsStoreRepository<T>
         where T : BasicsTable
-        where TSearch : BasicSearch
+        where TSearch : IBasicSearch
     {
         Task<T> GetAsync(int id, bool extended);
         Task<List<T>> GetAsync(TSearch model);

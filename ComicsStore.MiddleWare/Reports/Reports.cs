@@ -83,7 +83,7 @@ namespace ComicsStore.MiddleWare.Reports
                     storyId = story.StoryId;
                     bookId = story.BookId;
                     seriesId = story.SeriesId;
-                    title = story.Title;
+                    title = story.Title + (story.OriginalTitle is null || story.OriginalTitle.Equals(story.Title) ? null : " (" + story.OriginalTitle + ")");
                     storyNumber = !story.StoryNumber.HasValue ? story.ExtraInfo : story.StoryNumber.Value.ToString();
                     storyType = story.StoryType;
                     bookType = story.BookType;

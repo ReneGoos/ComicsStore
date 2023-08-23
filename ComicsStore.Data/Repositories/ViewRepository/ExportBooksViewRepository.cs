@@ -7,18 +7,18 @@ using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.Data.Common;
 using ComicsStore.Data.Model.Output;
 
-namespace ComicsStore.Data.Repositories
+namespace ComicsStore.Data.Repositories.ViewRepository
 {
-    public class ExportBooksRepository : IExportBooksRepository
+    public class ExportBooksViewRepository : IViewRepository<ExportBook, ViewSearch>
     {
         protected readonly ComicsStoreDbContext _context;
 
-        public ExportBooksRepository(ComicsStoreDbContext context)
+        public ExportBooksViewRepository(ComicsStoreDbContext context)
         {
             _context = context;
         }
 
-        public Task<List<ExportBook>> GetAsync(StorySeriesSearch model)
+        public Task<List<ExportBook>> GetAsync(ViewSearch model)
         {
             var exports = _context.ExportBooks
                 .Where(s => (!model.Active.HasValue || s.Deleted == model.Active.Value)
@@ -37,7 +37,8 @@ namespace ComicsStore.Data.Repositories
             return exports;
         }
 
-        public Task<List<ExportStory>> GetStoryAsync(StorySeriesSearch model)
+        /*
+        public Task<List<ExportStory>> GetStoryAsync(ViewSearch model)
         {
             var exports = _context.ExportStory
                 .AsNoTracking()
@@ -45,5 +46,6 @@ namespace ComicsStore.Data.Repositories
 
             return exports;
         }
+        */
     }
 }

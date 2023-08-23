@@ -5,9 +5,9 @@ using ComicsStore.Data.Model.Search;
 
 namespace ComicsStore.MiddleWare.Services.Interfaces
 {
-    public interface IExportBooksService
+    public interface IViewService
     {
-        Task<ICollection<ExportBooksOutputModel>> GetAsync(StorySeriesSearch searchModel);
-        Task<string> GetExportAsync(StorySeriesSearch searchModel);
+        Task<ICollection<ExportBooksOutputModel>> GetAsync(ViewSearch searchModel);
+        Task<string> GetExportAsync(ViewSearch searchModel);
     }
 }

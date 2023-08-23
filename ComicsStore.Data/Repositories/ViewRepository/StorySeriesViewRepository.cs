@@ -9,16 +9,16 @@ using ComicsStore.Data.Model.Output;
 
 namespace ComicsStore.Data.Repositories.CrossRepository
 {
-    public class StorySeriesRepository : IExportBooksRepository
+    public class StorySeriesViewRepository : IViewRepository<ExportBook, ViewSearch>
     {
         protected readonly ComicsStoreDbContext _context;
 
-        public StorySeriesRepository(ComicsStoreDbContext context)
+        public StorySeriesViewRepository(ComicsStoreDbContext context)
         {
             _context = context;
         }
 
-        public Task<List<ExportBook>> GetAsync(StorySeriesSearch model)
+        public Task<List<ExportBook>> GetAsync(ViewSearch model)
         {
             var exports = from storySeries in _context.StorySeries
                           where (!model.Active.HasValue || storySeries.Deleted == model.Active.Value)
@@ -56,7 +56,7 @@ namespace ComicsStore.Data.Repositories.CrossRepository
                               Character = storySeries.CharacterName,
                               StoryCode = storySeries.StoryCode,
                               Artist = storySeries.ArtistName,
-                              /*ArtistType = storySeries.ArtistType is null ? ArtistType.translator : storySeries.ArtistType,*/
+                              ArtistType = storySeries.ArtistType == 0 ? ArtistType.translator : storySeries.ArtistType,
                               Issue = storySeries.Issue,
                               IssueTitle = storySeries.IssueTitle,
                               Language = storySeries.Language,
@@ -72,7 +72,7 @@ namespace ComicsStore.Data.Repositories.CrossRepository
                 .ToListAsync();
         }
 
-        public Task<List<ExportStory>> GetStoryAsync(StorySeriesSearch model)
+        public Task<List<ExportStory>> GetStoryAsync(ViewSearch model)
         {
             var exports = _context.ExportStory
                 .AsNoTracking()

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComicsStore.Data.Model.Output
 {
-    public class ExportBook
+    public class ExportBook : ResultView
     {
         public int StoryId { get; set; }
         public int BookId { get; set; }

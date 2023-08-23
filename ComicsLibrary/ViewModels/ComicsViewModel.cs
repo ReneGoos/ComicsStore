@@ -96,7 +96,7 @@ namespace ComicsLibrary.ViewModels
             IPublishersService publishersService,
             ISeriesService seriesService,
             IStoriesService storiesService,
-            IExportBooksService exportBooksService,
+            IViewService exportBooksService,
             IMapper mapper,
             INavigationService navigationService,
             IConfiguration configuration) : base()

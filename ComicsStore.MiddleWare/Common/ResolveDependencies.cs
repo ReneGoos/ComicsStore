@@ -12,6 +12,8 @@ using ComicsStore.Data.Repositories.CrossRepository;
 using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 using ComicsStore.Data.Repositories.MainRepository;
+using ComicsStore.Data.Repositories.ViewRepository;
+using ComicsStore.Data.Model.Output;
 
 namespace ComicsStore.MiddleWare.Common
 {
@@ -32,7 +34,7 @@ namespace ComicsStore.MiddleWare.Common
             _ = services.AddScoped<IPublishersService, PublishersService>();
             _ = services.AddScoped<ISeriesService, SeriesService>();
             _ = services.AddScoped<IStoriesService, StoriesService>();
-            _ = services.AddScoped<IExportBooksService, ExportBooksService>();
+            _ = services.AddScoped<IViewService, ViewService>();
 
             _ = services.AddScoped<IComicsStoreMainRepository<Artist, BasicSearch>, ArtistsRepository>();
             _ = services.AddScoped<IComicsStoreMainRepository<Book, BasicSearch>, BooksRepository>();
@@ -41,7 +43,7 @@ namespace ComicsStore.MiddleWare.Common
             _ = services.AddScoped<IComicsStoreMainRepository<Publisher, BasicSearch>, PublishersRepository>();
             _ = services.AddScoped<IComicsStoreMainRepository<Series, SeriesSearch>, SeriesRepository>();
             _ = services.AddScoped<IComicsStoreMainRepository<Story, StorySearch>, StoriesRepository>();
-            _ = services.AddScoped<IExportBooksRepository, StorySeriesRepository>();
+            _ = services.AddScoped<IViewRepository<ExportBook, ViewSearch>, StorySeriesViewRepository>();
 
             _ = services.AddScoped<IComicsStoreCrossRepository<BookPublisher, IBookPublisher>, BookPublishersRepository>();
             _ = services.AddScoped<IComicsStoreCrossRepository<BookSeries, IBookSeries>, BookSeriesRepository>();

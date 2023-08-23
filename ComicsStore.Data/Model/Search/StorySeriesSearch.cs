@@ -2,7 +2,7 @@
 
 namespace ComicsStore.Data.Model.Search
 {
-    public class StorySeriesSearch
+    public class ViewSearch : IViewSearch
     {
         public Active? Active { get; set; }
         public string Filter { get; set; }

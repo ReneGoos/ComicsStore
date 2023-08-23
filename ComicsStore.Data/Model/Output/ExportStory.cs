@@ -2,7 +2,7 @@
 
 namespace ComicsStore.Data.Model.Output
 {
-    public class ExportStory
+    public class ExportStory : ResultView
     {
         public string Title { get; set; }
         public int? StoryNumber { get; set; }

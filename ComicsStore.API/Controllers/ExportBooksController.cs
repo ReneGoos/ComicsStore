@@ -12,16 +12,16 @@ namespace ComicsStore.API.Controllers
     [ApiController]
     public class ExportBooksController : ControllerBase
     {
-        private readonly IExportBooksService _exportBooksService;
+        private readonly IViewService _exportBooksService;
 
-        public ExportBooksController(IExportBooksService exportBooksService)
+        public ExportBooksController(IViewService exportBooksService)
         {
             _exportBooksService = exportBooksService;
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(ICollection<ExportBooksOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync([FromQuery] StorySeriesSearch storySearch)
+        public async Task<IActionResult> GetAsync([FromQuery] ViewSearch storySearch)
         {
             var result = await _exportBooksService.GetAsync(storySearch);
             return Ok(result);
@@ -30,7 +30,7 @@ namespace ComicsStore.API.Controllers
         [Route("report")]
         [HttpGet]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetReportAsync([FromQuery] StorySeriesSearch storySearch)
+        public async Task<IActionResult> GetReportAsync([FromQuery] ViewSearch storySearch)
         {
             var export = await _exportBooksService.GetExportAsync(storySearch);
 
