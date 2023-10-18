@@ -12,6 +12,7 @@ namespace ComicsLibrary.Extensions
         {
             if (childItem is null)
             {
+                // item deleted outside or unlinked, remove from list
                 if (oldItemId.HasValue && list.Any(s => s.LinkedId == oldItemId.Value))
                 {
                     var oldItem = list.FirstOrDefault(s => s.LinkedId == oldItemId.Value);
@@ -22,9 +23,16 @@ namespace ComicsLibrary.Extensions
                 }
             }
             else
-            { 
+            {
+                if (oldItemId.HasValue && childItem.Id == oldItemId.Value  && !list.Any(s => s.LinkedId == oldItemId.Value))
+                {
+                    // item updated outside, but not linked
+                    return;
+                }
+
                 if (!oldItemId.HasValue || (oldItemId.HasValue && childItem.Id != oldItemId.Value))
                 {
+                    // item replace only if not linked otherwise
                     var fetchItem = list.FirstOrDefault(s => s.LinkedId == childItem.Id);
                     if (fetchItem != null)
                     {

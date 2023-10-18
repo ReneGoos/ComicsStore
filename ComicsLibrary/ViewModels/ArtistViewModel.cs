@@ -8,6 +8,7 @@ using ComicsLibrary.Core;
 using System;
 using System.Windows.Input;
 using ComicsLibrary.Navigation;
+using ComicsStore.Data.Common;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -55,13 +56,47 @@ namespace ComicsLibrary.ViewModels
 
         public async void HandlePseudonymArtist(int? pseudonymArtistId, int? oldPseudonymArtistId)
         {
-            var artist = pseudonymArtistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _storiesService.GetAsync(pseudonymArtistId.Value)) : null;
+            var artist = pseudonymArtistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _itemService.GetAsync(pseudonymArtistId.Value)) : null;
             Item.HandlePseudonymArtist(oldPseudonymArtistId, artist);
         }
 
         private void DeletePseudonymArtistFromList(int? pseudonymArtistId)
         {
             Item.HandlePseudonymArtist(pseudonymArtistId, null);
+        }
+
+        public override void ItemChange(TableType table, int? id, ActionType actionType)
+        {
+            switch (actionType)
+            {
+                case ActionType.deleteItem:
+                    switch (table)
+                    {
+                        case TableType.artist:
+                            DeleteMainArtistFromList(id);
+                            DeletePseudonymArtistFromList(id);
+                            break;
+
+                        case TableType.story:
+                            DeleteStoryFromList(id);
+                            break;
+                    }
+                    break;
+
+                case ActionType.updateItem:
+                    switch (table)
+                    {
+                        case TableType.artist:
+                            HandleMainArtist(id, id);
+                            HandlePseudonymArtist(id, id);
+                            break;
+
+                        case TableType.story:
+                            HandleStory(id, id);
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
+using ComicsStore.Data.Model;
 using System.Linq;
 
 namespace ComicsLibrary.EditModels
@@ -42,40 +43,47 @@ namespace ComicsLibrary.EditModels
             StoryCharacter.HandleItem(Id, oldCharacterId, character);
         }
 
-        public void HandleCode(int? codeId)
+        public void HandleCode(int? oldCodeId, CodeOnlyEditModel code)
         {
-            if (codeId.HasValue)
+            if (code == null)
             {
-                if (CodeId != codeId.Value)
-                {
-                    CodeId = codeId.Value;
-                }
+                CodeId = 0;
+                return;
+            }
+
+            if (oldCodeId.HasValue && code.Id.Value == oldCodeId.Value && CodeId != oldCodeId.Value)
+            {
+                return;
+            }
+
+            if (CodeId != code.Id.Value)
+            {
+                CodeId = code.Id.Value;
             }
         }
 
-        public void HandleOriginStory(int? originStoryId, int? oldOriginStoryId)
+        public void HandleOriginStory(int? oldOriginStoryId, StoryOnlyEditModel story)
         {
-            if (originStoryId.HasValue)
+            if (story == null)
             {
-                if (OriginStoryId != originStoryId.Value)
-                {
-                    OriginStoryId = originStoryId.Value;
-                }
+                OriginStoryId = null;
+                return;
+            }
+
+            if (oldOriginStoryId.HasValue && story.Id.Value == oldOriginStoryId.Value && CodeId != oldOriginStoryId.Value)
+            {
+                return;
+            }
+
+            if (OriginStoryId != story.Id.Value)
+            {
+                OriginStoryId = story.Id.Value;
             }
         }
 
         public void HandleStoryOrigin(int? oldOriginStoryId, StoryOnlyEditModel originStory)
         {
-            if (originStory is null)
-            {
-                return;
-            }
-
-            if (oldOriginStoryId.HasValue)
-            {
-                var storyFromOrigin = StoryFromOrigin.FirstOrDefault(s => s.Id == oldOriginStoryId.Value);
-                storyFromOrigin.Name = originStory.Name;
-            }
+            StoryFromOrigin.HandleItem(Id, oldOriginStoryId, originStory);
         }
 
         public void ResetId()

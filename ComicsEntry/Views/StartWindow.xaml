@@ -6,98 +6,81 @@
         xmlns:local="clr-namespace:ComicsEntry.Views"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
         mc:Ignorable="d"
-        Title="StartWindow" Height="450" Width="800"
+        Title="ComicStore"
+        Height="770"
+        Width="1500"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}">
     <Window.Resources>
         <helpers:NotConverter x:Key="NotConverter"/>
     </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="15"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="5"/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
                    Text="{Binding DebugState}"
                    />
-        <Button Grid.Row="1" 
-                Height="25" 
-                Width="100"
-                Command="{Binding DataContext.ShowArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                >
-            Artist
-        </Button>
-        <Button Grid.Row="3"
-                Height="25" 
-                Width="100"
-                Command="{Binding DataContext.ShowBookWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-               >
-            Book
-        </Button>
-        <Button Grid.Row="5" 
-                Height="25" 
-                Width="100"
-                Command="{Binding DataContext.ShowCharacterWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                IsEnabled="{Binding DataContext.OpenCharacter, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                >
-            Character
-        </Button>
-        <Button Grid.Row="7" 
-                Height="25" 
-                Width="100"
-                Command="{Binding DataContext.ShowCodeWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                IsEnabled="{Binding DataContext.OpenCode, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                >
-            Code
-        </Button>
-        <Button Grid.Row="9" 
-                Height="25" 
-                Width="100"
-                Command="{Binding DataContext.ShowPublisherWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                IsEnabled="{Binding DataContext.OpenPublisher, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                >
-            Publisher
-        </Button>
-        <Button Grid.Row="11"
-                Height="25"
-                Width="100"
-                Command="{Binding DataContext.ShowSeriesWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                IsEnabled="{Binding DataContext.OpenSeries, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-               >
-            Series
-        </Button>
-        <Button Grid.Row="13"
-                Height="25" 
-                Width="100"
-                Command="{Binding DataContext.ShowStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
-                >
-            Story
-        </Button>
-        <Button Grid.Row="17"
-                Height="25" 
-                Width="100"
-                Command="{Binding DataContext.ShowReportWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                >
-            Report
-        </Button>
+            <Menu Grid.Row="1"
+                  FontSize="14"
+                  >
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+                <MenuItem Header="Artist"
+                          Command="{Binding DataContext.ShowArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                          />
+                <MenuItem Header="Book"
+                          Command="{Binding DataContext.ShowBookWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                          />
+                <MenuItem Header="Character"
+                          Command="{Binding DataContext.ShowCharacterWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          IsEnabled="{Binding DataContext.OpenCharacter, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                          />
+                <MenuItem Header="Code"
+                          Command="{Binding DataContext.ShowCodeWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          IsEnabled="{Binding DataContext.OpenCode, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                          />
+                <MenuItem Header="Publisher"
+                          Command="{Binding DataContext.ShowPublisherWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          IsEnabled="{Binding DataContext.OpenPublisher, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                          />
+                <MenuItem Header="Series"
+                          Command="{Binding DataContext.ShowSeriesWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          IsEnabled="{Binding DataContext.OpenSeries, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                         />
+                <MenuItem Header="Story"
+                          Command="{Binding DataContext.ShowStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                />
+                <Separator/>
+                <MenuItem Header="Report"
+                          Command="{Binding DataContext.ShowReportWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          />
+            </Menu>
+        </Grid>
+        <Grid Grid.Column="1">
+            <ScrollViewer>
+                <Frame Name="Main"
+                  NavigationUIVisibility="Hidden"
+                  Content=""
+                  Width="Auto"
+                  Height="Auto"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch"
+                  ScrollViewer.CanContentScroll="True"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                  ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Window>

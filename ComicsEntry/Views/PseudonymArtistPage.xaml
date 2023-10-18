@@ -1,12 +1,11 @@
 ﻿<Page x:Class="ComicsEntry.Views.PseudonymArtistPage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:ComicsEntry"
-        xmlns:data="clr-namespace:ComicsLibrary.ViewModels;assembly=ComicsLibrary"
-        xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
+        xmlns:local="clr-namespace:ComicsEntry"
+        xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
         mc:Ignorable="d"
         Title="Pseudonym"
         Height="Auto"
@@ -96,7 +95,7 @@
                           Grid.Row="5"
                           SelectedValue = "{Binding Pseudonym, Mode=TwoWay}"
                           IsEditable="True" 
-                          ItemsSource="{Binding Path=DataContext.Pseudonyms, RelativeSource={RelativeSource AncestorType=Page}}">
+                          ItemsSource="{Binding Path=DataContext.YesNoInds, RelativeSource={RelativeSource AncestorType=Page}}">
                     <ComboBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel />
@@ -158,7 +157,7 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
@@ -252,6 +251,18 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
+                                <GridViewColumn Width="50">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Story.Language">Lang.</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Story.Language}"
+                                                   Width="40"
+                                                   HorizontalContentAlignment="Right"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Width="160">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader>Role</GridViewColumnHeader>
@@ -287,16 +298,6 @@
                                            Page ="{Binding Page, ElementName=ArtistStoryList, Mode=TwoWay}"
                                            />
                 </StackPanel>
-                <!-- Button Grid.Row ="3"
-                        Grid.Column="3"
-                        Background="Transparent"
-                        Height="25"
-                        VerticalAlignment="Top"
-                        Command="{Binding DataContext.ShowMainArtistFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                        Visibility="{Binding DataContext.OpenPseudonymArtist, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
-                        >
-                    +
-                </Button -->
                 <control:HeaderSortListView Grid.Row ="3"
                                             Grid.Column="1"
                                             VerticalAlignment="Top" 
@@ -352,16 +353,6 @@
                         </GridView>
                     </ListView.View>
                 </control:HeaderSortListView>
-                <!-- Button Grid.Row ="5"
-                        Grid.Column="3"
-                        Background="Transparent"
-                        Height="25"
-                        VerticalAlignment="Top"
-                        Command="{Binding DataContext.ShowPseudonymArtistFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                        Visibility="{Binding DataContext.OpenPseudonymArtist, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
-                        >
-                    +
-                </Button -->
                 <control:HeaderSortListView Grid.Row ="5"
                                             Grid.Column="1"
                                             VerticalAlignment="Top" 

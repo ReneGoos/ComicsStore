@@ -11,6 +11,7 @@ using ComicsLibrary.Navigation;
 using System.Windows.Input;
 using ComicsLibrary.Core;
 using System;
+using ComicsStore.Data.Common;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -115,15 +116,26 @@ namespace ComicsLibrary.ViewModels
             Item.HandleCharacter(characterId, null);
         }
 
-        public void HandleCode(int? codeId, int? oldCodeId)
+        public async void HandleCode(int? codeId, int? oldCodeId)
         {
-            Item.HandleCode(codeId);
+            var code = codeId.HasValue ? Mapper.Map<CodeOnlyEditModel>(await _codesService.GetAsync(codeId.Value)) : null;
+            Item.HandleCode(oldCodeId, code);
+        }
+
+        public void DeleteCode(int? codeId)
+        {
+            Item.HandleCode(codeId, null);
         }
 
         public async void HandleOriginStory(int? originStoryId, int? oldOriginStoryId)
         {
             var story = originStoryId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _itemService.GetAsync(originStoryId.Value)) : null;
-            Item.HandleOriginStory(originStoryId, oldOriginStoryId);
+            Item.HandleOriginStory(oldOriginStoryId, story);
+        }
+
+        public void DeleteOriginStory(int? originStoryId)
+        {
+            Item.HandleOriginStory(originStoryId, null);
         }
 
         public async void HandleStoryOrigin(int? originStoryId, int? oldOriginStoryId)
@@ -135,6 +147,64 @@ namespace ComicsLibrary.ViewModels
         public void DeleteOriginFromList(int? originStoryId)
         {
             Item.HandleStoryOrigin(originStoryId, null);
+        }
+
+        public override void ItemChange(TableType table, int? id, ActionType actionType)
+        {
+            switch (actionType)
+            {
+                case ActionType.deleteItem:
+                    switch (table)
+                    {
+                        case TableType.artist:
+                            DeleteArtistFromList(id);
+                            break;
+
+                        case TableType.book:
+                            DeleteBookFromList(id);
+                            break;
+
+                        case TableType.character:
+                            DeleteCharacterFromList(id);
+                            break;
+
+                        case TableType.code:
+                            DeleteCode(id);
+                            break;
+
+                        case TableType.story:
+                            DeleteOriginStory(id);
+                            DeleteOriginFromList(id);
+                            break;
+                    }
+                    break;
+
+                case ActionType.updateItem:
+                    switch (table)
+                    {
+                        case TableType.artist:
+                            HandleArtist(id, id);
+                            break;
+
+                        case TableType.book:
+                            HandleBook(id, id);
+                            break;
+
+                        case TableType.character:
+                            HandleCharacter(id, id);
+                            break;
+
+                        case TableType.code:
+                            HandleCode(id, id);
+                            break;
+
+                        case TableType.story:
+                            HandleOriginStory(id, id);
+                            HandleStoryOrigin(id, id);
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }

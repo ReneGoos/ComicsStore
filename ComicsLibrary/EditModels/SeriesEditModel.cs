@@ -21,11 +21,22 @@ namespace ComicsLibrary.EditModels
             BookSeries.HandleItem(Id, oldBookId, book);
         }
 
-        public void HandleCode(int? codeId)
+        public void HandleCode(int? oldCodeId, CodeOnlyEditModel code)
         {
-            if (CodeId != codeId.Value)
+            if (code == null)
             {
-                CodeId = codeId.Value;
+                CodeId = 0;
+                return;
+            }
+
+            if (oldCodeId.HasValue && code.Id.Value == oldCodeId.Value && CodeId != oldCodeId.Value)
+            {
+                return;
+            }
+
+            if (CodeId != code.Id.Value)
+            {
+                CodeId = code.Id.Value;
             }
         }
 

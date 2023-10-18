@@ -12,6 +12,7 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.Data.Common;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -34,10 +35,10 @@ namespace ComicsLibrary.ViewModels
         public StoryViewModel OriginStoryView { get; private set; }
 
         public List<string> Actives { get; set; }
-        public List<string> FirstPrints { get; set; }
         public List<string> BookTypes { get; set; }
+        public List<string> CoverTypes { get; set; }
         public List<string> StoryTypes { get; set; }
-        public List<string> Pseudonyms { get; set; }
+        public List<string> YesNoInds { get; set; }
         public List<LanguageType> Languages { get; set; }
 
         public bool OpenArtist => _navigationService.PageActive(StoreWindows.Artist);
@@ -51,7 +52,15 @@ namespace ComicsLibrary.ViewModels
         public bool OpenStory => _navigationService.PageActive(StoreWindows.Story);
         public string PageChain => _navigationService.PageChain;
 
-        public string DebugState => _configuration.GetConnectionString("ComicsStore");
+        public string DebugState
+        {
+            get
+            {
+                var connectionString = _configuration.GetConnectionString("ComicsStore");
+                return connectionString[connectionString.LastIndexOf('\\')..];
+            }
+        }
+
 
         public ICommand ShowArtistFromStoryWindowCommand { get; protected set; }
         public ICommand ShowArtistFromOriginStoryWindowCommand { get; protected set; }
@@ -106,28 +115,37 @@ namespace ComicsLibrary.ViewModels
             _comicsStoreDbContext.Database.EnsureCreated();
 
             _navigationService = navigationService;
-            _navigationService.PropertyChanged += _navigationService_PropertyChanged;
+            _navigationService.PropertyChanged += NavigationService_PropertyChanged;
 
             _configuration = configuration;
             ArtistView = new ArtistViewModel(artistsService, storiesService, navigationService, mapper);
+            ArtistView.ItemChanged += ArtistView_ItemChanged;
             BookView = new BookViewModel(booksService, publishersService, seriesService, storiesService, navigationService, mapper);
+            BookView.ItemChanged += BookView_ItemChanged;
             CharacterView = new CharacterViewModel(charactersService, storiesService, navigationService, mapper);
+            CharacterView.ItemChanged += CharacterView_ItemChanged;
             CodeView = new CodeViewModel(codesService, seriesService, storiesService, navigationService, mapper);
+            CodeView.ItemChanged += CodeView_ItemChanged;
             PublisherView = new PublisherViewModel(publishersService, booksService, navigationService, mapper);
+            PublisherView.ItemChanged += PublisherView_ItemChanged;
             SeriesView = new SeriesViewModel(seriesService, booksService, codesService, navigationService, mapper);
+            SeriesView.ItemChanged += SeriesView_ItemChanged;
             StoryView = new StoryViewModel(storiesService, artistsService, booksService, charactersService, codesService, navigationService, mapper);
+            StoryView.ItemChanged += StoryView_ItemChanged;
 
             PseudonymArtistView = new ArtistViewModel(artistsService, storiesService, navigationService, mapper);
+            PseudonymArtistView.ItemChanged += PseudonymArtistView_ItemChanged;
             OriginStoryView = new StoryViewModel(storiesService, artistsService, booksService, charactersService, codesService, navigationService, mapper);
+            OriginStoryView.ItemChanged += OriginStoryView_ItemChanged;
 
             ReportView = new ReportViewModel(exportBooksService, mapper);
 
             Languages = LanguageType.FillLanguages();
             Actives = FillEnum<Active>();
-            FirstPrints = FillEnum<FirstPrint>();
-            Pseudonyms = FillEnum<PseudonymInd>();
             BookTypes = FillEnum<BookType>();
+            CoverTypes = FillEnum<CoverType>();
             StoryTypes = FillEnum<StoryType>();
+            YesNoInds = FillEnum<YesNoInd>();
 
             ShowArtistFromOriginStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowArtistFromOriginStoryWindow));
             ShowArtistFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowArtistFromStoryWindow));                         
@@ -165,7 +183,73 @@ namespace ComicsLibrary.ViewModels
             ShowReportWindowCommand = new RelayCommand(new Action(ShowReportWindow));
         }
 
-        private void _navigationService_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void ArtistView_ItemChanged(object sender, ItemChangedEventArgs e)
+        {
+            PseudonymArtistView.ItemChange(TableType.artist, e.Id, e.ActionType);
+            StoryView.ItemChange(TableType.artist, e.Id, e.ActionType);
+            OriginStoryView.ItemChange(TableType.artist, e.Id, e.ActionType);
+        }
+
+        private void PseudonymArtistView_ItemChanged(object sender, ItemChangedEventArgs e)
+        {
+            ArtistView.ItemChange(TableType.artist, e.Id, e.ActionType);
+            StoryView.ItemChange(TableType.artist, e.Id, e.ActionType);
+            OriginStoryView.ItemChange(TableType.artist, e.Id, e.ActionType);
+        }
+
+        private void BookView_ItemChanged(object sender, ItemChangedEventArgs e)
+        {
+            PublisherView.ItemChange(TableType.book, e.Id, e.ActionType);
+            SeriesView.ItemChange(TableType.book, e.Id, e.ActionType);
+            StoryView.ItemChange(TableType.book, e.Id, e.ActionType);
+            OriginStoryView.ItemChange(TableType.book, e.Id, e.ActionType);
+        }
+
+        private void CharacterView_ItemChanged(object sender, ItemChangedEventArgs e)
+        {
+            StoryView.ItemChange(TableType.character, e.Id, e.ActionType);
+            OriginStoryView.ItemChange(TableType.character, e.Id, e.ActionType);
+        }
+
+        private void CodeView_ItemChanged(object sender, ItemChangedEventArgs e)
+        {
+            SeriesView.ItemChange(TableType.code, e.Id, e.ActionType);
+            StoryView.ItemChange(TableType.code, e.Id, e.ActionType);
+            OriginStoryView.ItemChange(TableType.code, e.Id, e.ActionType);
+        }
+
+        private void PublisherView_ItemChanged(object sender, ItemChangedEventArgs e)
+        {
+            BookView.ItemChange(TableType.publisher, e.Id, e.ActionType);
+        }
+
+        private void SeriesView_ItemChanged(object sender, ItemChangedEventArgs e)
+        {
+            BookView.ItemChange(TableType.series, e.Id, e.ActionType);
+            CodeView.ItemChange(TableType.series, e.Id, e.ActionType);
+        }
+
+        private void StoryView_ItemChanged(object sender, ItemChangedEventArgs e)
+        {
+            ArtistView.ItemChange(TableType.story, e.Id, e.ActionType);
+            PseudonymArtistView.ItemChange(TableType.story, e.Id, e.ActionType);
+            BookView.ItemChange(TableType.story, e.Id, e.ActionType);
+            CharacterView.ItemChange(TableType.story, e.Id, e.ActionType);
+            CodeView.ItemChange(TableType.story, e.Id, e.ActionType);
+            OriginStoryView.ItemChange(TableType.story, e.Id, e.ActionType);
+        }
+
+        private void OriginStoryView_ItemChanged(object sender, ItemChangedEventArgs e)
+        {
+            ArtistView.ItemChange(TableType.story, e.Id, e.ActionType);
+            PseudonymArtistView.ItemChange(TableType.story, e.Id, e.ActionType);
+            BookView.ItemChange(TableType.story, e.Id, e.ActionType);
+            CharacterView.ItemChange(TableType.story, e.Id, e.ActionType);
+            CodeView.ItemChange(TableType.story, e.Id, e.ActionType);
+            StoryView.ItemChange(TableType.story, e.Id, e.ActionType);
+        }
+
+        private void NavigationService_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals("ActivePages"))
             {
@@ -184,7 +268,16 @@ namespace ComicsLibrary.ViewModels
 
         public override bool IsDirty
         {
-            get => base.IsDirty;
+            get
+            {
+                return ArtistView.IsDirty ||
+                    BookView.IsDirty ||
+                    CharacterView.IsDirty ||
+                    CodeView.IsDirty ||
+                    PublisherView.IsDirty ||
+                    SeriesView.IsDirty ||
+                    StoryView.IsDirty;
+            }
             set
             {
                 base.IsDirty = value;

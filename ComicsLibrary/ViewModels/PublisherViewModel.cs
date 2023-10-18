@@ -8,6 +8,7 @@ using ComicsLibrary.Navigation;
 using System.Windows.Input;
 using ComicsLibrary.Core;
 using System;
+using ComicsStore.Data.Common;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -35,6 +36,30 @@ namespace ComicsLibrary.ViewModels
         public void DeleteBookFromList(int? bookId)
         {
             Item.HandleBook(bookId, null);
+        }
+
+        public override void ItemChange(TableType table, int? id, ActionType actionType)
+        {
+            switch (actionType)
+            {
+                case ActionType.deleteItem:
+                    switch (table)
+                    {
+                        case TableType.book:
+                            DeleteBookFromList(id);
+                            break;
+                    }
+                    break;
+
+                case ActionType.updateItem:
+                    switch (table)
+                    {
+                        case TableType.book:
+                            HandleBook(id, id);
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }

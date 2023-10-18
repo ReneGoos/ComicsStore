@@ -9,6 +9,9 @@ namespace ComicsLibrary.EditModels
         private int _firstYear;
         private int? _thisYear;
         private string _firstPrint;
+        private string _signed;
+        private string _checked;
+        private string _hardCover;
 
         [Required]
         public string BookType { get => _bookType; set => Set(ref _bookType, value); }
@@ -19,5 +22,8 @@ namespace ComicsLibrary.EditModels
         public int? ThisYear { get => _thisYear; set => Set(ref _thisYear, value); }
         [Required]
         public string FirstPrint { get => _firstPrint; set => Set(ref _firstPrint, value); }
+        public string Signed { get => _signed; set => Set(ref _signed, value); }
+        public string Checked { get => _checked; set => Set(ref _checked, value); }
+        public string CoverType { get => _hardCover; set => Set(ref _hardCover, value); }
     }
 }

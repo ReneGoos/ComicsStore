@@ -6,7 +6,7 @@ namespace ComicsStore.MiddleWare.Models.Output
     {
         public string LastName { get; set; }
         public string FirstName { get; set; }
-        public PseudonymInd Pseudonym { get; set; }
+        public YesNoInd Pseudonym { get; set; }
         public string RealLastName { get; set; }
         public string RealFirstName { get; set; }
     }

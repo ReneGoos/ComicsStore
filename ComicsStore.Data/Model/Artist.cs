@@ -17,8 +17,8 @@ namespace ComicsStore.Data.Model
 
         public string FullName { get; private set; }
         public string FirstName { get; set; }
-        [EnumDataType(typeof(PseudonymInd), ErrorMessage = "Value doesn't exist within enum")]
-        public PseudonymInd Pseudonym { get; set; }
+        [EnumDataType(typeof(YesNoInd), ErrorMessage = "Value doesn't exist within enum")]
+        public YesNoInd Pseudonym { get; set; }
         public string RealLastName { get; set; }
         public string RealFirstName { get; set; }
 

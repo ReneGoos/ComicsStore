@@ -14,6 +14,7 @@ namespace ComicsLibrary.EditModels
         private int? _storyId;
         private ICollection<string> _artistType;
         private ObservableCollection<EnumCheckedType> _roles;
+        private ArtistOnlyEditModel _artist;
 
         private void StoryArtistEditModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -97,7 +98,7 @@ namespace ComicsLibrary.EditModels
         public ICollection<string> ArtistType { get => _artistType; set => Set(ref _artistType, value); }
 
         public ObservableCollection<EnumCheckedType> Roles { get { if (_roles is null) { _roles = FillRoles(); } return _roles; } set => Set(ref _roles, value); }
-        public ArtistOnlyEditModel Artist { get; set; }
+        public ArtistOnlyEditModel Artist { get => _artist; set => SetIfValue(ref _artist, value); }
 
         public int? MainId { get => StoryId; set => StoryId = value; }
         public int? LinkedId { get => ArtistId; set => ArtistId = value; }

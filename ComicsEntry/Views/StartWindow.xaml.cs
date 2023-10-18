@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using ComicsLibrary.Navigation;
+using System.ComponentModel;
+using System.Windows;
 
 namespace ComicsEntry.Views
 {
@@ -7,9 +9,22 @@ namespace ComicsEntry.Views
     /// </summary>
     public partial class StartWindow : Window
     {
-        public StartWindow()
+        private readonly INavigationService _navigationService;
+
+        public StartWindow(INavigationService navigationService)
         {
             InitializeComponent();
+            _navigationService = navigationService;
+
+            _navigationService.NavigationWindow = this;
+            _navigationService.NavigationFrame = Main;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            e.Cancel = !_navigationService.CanClose();
         }
     }
 }

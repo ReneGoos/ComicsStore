@@ -14,10 +14,11 @@ using System.Windows.Data;
 using System.Linq;
 using ComicsLibrary.Helpers;
 using ComicsLibrary.Navigation;
+using ComicsStore.Data.Common;
 
 namespace ComicsLibrary.ViewModels
 {
-    public class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, TEdit> : BasicViewModel, IBasicTableViewModel<TEdit, TOut>
+    public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, TEdit> : BasicViewModel, IBasicTableViewModel<TEdit, TOut>
         where TService : IComicsStoreService<TIn, TPatch, TOut, TSearch>
         where TIn : BasicInputModel
         where TPatch : BasicInputModel
@@ -68,19 +69,6 @@ namespace ComicsLibrary.ViewModels
             NewItem();
         }
 
-        private async void ExitAsync(bool save)
-        {
-            if (save)
-            {
-                SaveAsync();
-            }
-
-            if (!save || !IsDirty)
-            {
-                await NavigationService.ClosePageAsync(save, _item.Id);
-            }
-        }
-
         protected virtual void QueryResults(object sender, FilterEventArgs e)
         {
             if (_queryText is null || _queryText.Length == 0)
@@ -121,40 +109,6 @@ namespace ComicsLibrary.ViewModels
 
         public Func<object, string, bool> NameFilter => FilterByString;
 
-        protected virtual void CancelSaveAsync()
-        {
-            if (Item.Id.HasValue)
-            {
-                GetItemAsync(Item.Id.Value);
-            }
-            else
-            {
-                NewItem();
-            }
-        }
-
-        protected virtual async void SaveAsync()
-        {
-            if (Item == null)
-            {
-                return;
-            }
-
-            if (!Item.Validate())
-            {
-                IsDirty = true;
-                return;
-            }
-
-            var itemInput = Mapper.Map<TIn>(Item);
-            var itemOut = Item.Id.HasValue ? await _itemService.UpdateAsync(Item.Id.Value, itemInput) : await _itemService.AddAsync(itemInput);
-            UpdateItemsList(itemOut);
-
-            Item = Mapper.Map<TEdit>(itemOut);
-            Item.PropertyChanged += ItemPropertyChanged;
-            IsDirty = false;
-        }
-
         private static MessageBoxResult ContinueDelete()
         {
             var messageBoxText = "Are you sure you want to delete?";
@@ -181,11 +135,91 @@ namespace ComicsLibrary.ViewModels
             return rsltMessageBox;
         }
 
+        private bool CancelSwitch()
+        {
+            if (Item.Id.HasValue && IsDirty)
+            {
+                switch (ContinueSwitch())
+                {
+                    case MessageBoxResult.Yes:
+                        SaveAsync();
+                        break;
+                    case MessageBoxResult.No:
+                        IsDirty = false;
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        protected virtual void CancelSaveAsync()
+        {
+            if (!CancelSwitch()) 
+            {
+                if (Item.Id.HasValue)
+                {
+                    GetItemAsync(Item.Id.Value);
+                }
+                else
+                {
+                    NewItem();
+                }
+            }
+        }
+
+        protected virtual async void SaveAsync()
+        {
+            if (Item == null)
+            {
+                return;
+            }
+
+            if (!IsDirty && !Item.Id.HasValue)
+            {
+                return;
+            }
+
+            if (!Item.Validate())
+            {
+                IsDirty = true;
+                return;
+            }
+
+            var itemInput = Mapper.Map<TIn>(Item);
+            var itemOut = Item.Id.HasValue ? await _itemService.UpdateAsync(Item.Id.Value, itemInput) : await _itemService.AddAsync(itemInput);
+            RaiseItemChanged(typeof(TEdit).Name, itemOut.Id, ActionType.updateItem);
+            UpdateItemsList(itemOut);
+
+            Item = Mapper.Map<TEdit>(itemOut);
+            Item.PropertyChanged += ItemPropertyChanged;
+            IsDirty = false;
+        }
+
+        private async void ExitAsync(bool save)
+        {
+            if (save)
+            {
+                SaveAsync();
+            }
+            else if (CancelSwitch())
+            {
+                return;
+            }
+
+            if (!save || !IsDirty)
+            {
+                await NavigationService.ClosePageAsync(save, _item.Id);
+            }
+        }
+
         protected virtual async void DeleteAsync(int id)
         {
             if (ContinueDelete() == MessageBoxResult.Yes)
             {
                 await _itemService.DeleteAsync(id);
+                RaiseItemChanged(typeof(TEdit).Name, id, ActionType.deleteItem);
                 UpdateItemsList(new TOut { Id = id }, true);
                 NewItem();
             }
@@ -208,19 +242,9 @@ namespace ComicsLibrary.ViewModels
 
         protected virtual async void GetItemAsync(int id)
         {
-            if (IsDirty)
+            if (CancelSwitch())
             {
-                switch (ContinueSwitch())
-                {
-                    case MessageBoxResult.Yes:
-                        SaveAsync();
-                        break;
-                    case MessageBoxResult.No:
-                        CancelSaveAsync();
-                        break;
-                    case MessageBoxResult.Cancel:
-                        return;
-                }
+                return;
             }
 
             Item = Mapper.Map<TEdit>(await _itemService.GetAsync(id, true));
@@ -259,6 +283,8 @@ namespace ComicsLibrary.ViewModels
                     break;
             }
         }
+
+        public abstract void ItemChange(TableType table, int? id, ActionType actionType);
 
         public string QueryText
         {

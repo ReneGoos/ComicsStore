@@ -10,6 +10,7 @@ namespace ComicsLibrary.EditModels
         private int? _seriesId;
         private string _issue;
         private decimal? _seriesOrder;
+        private SeriesOnlyEditModel _series;
 
         public int? BookId { get => _bookId; set => SetIfValue(ref _bookId, value); }
         public int? SeriesId { get => _seriesId; set => SetIfValue(ref _seriesId, value); }
@@ -29,7 +30,7 @@ namespace ComicsLibrary.EditModels
 
         [Required]
         public decimal? SeriesOrder { get => _seriesOrder; set => Set(ref _seriesOrder, value); }
-        public SeriesOnlyEditModel Series { get; set; }
+        public SeriesOnlyEditModel Series { get => _series; set => SetIfValue(ref _series, value); }
 
         public int? MainId { get => BookId; set => BookId = value; }
         public int? LinkedId { get => SeriesId; set => SeriesId = value; }

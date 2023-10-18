@@ -1,12 +1,11 @@
 ﻿<Page x:Class="ComicsEntry.Views.ArtistPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ComicsEntry.Views"
-      xmlns:data="clr-namespace:ComicsLibrary.ViewModels;assembly=ComicsLibrary"
-      xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
+      xmlns:local="clr-namespace:ComicsEntry.Views"
+      xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
       mc:Ignorable="d"
       Title="Artist"
       Width="Auto"
@@ -95,7 +94,7 @@
                           Grid.Row="5"
                           SelectedValue = "{Binding Pseudonym, Mode=TwoWay}"
                           IsEditable="True" 
-                          ItemsSource="{Binding Path=DataContext.Pseudonyms, RelativeSource={RelativeSource AncestorType=Page}}">
+                          ItemsSource="{Binding Path=DataContext.YesNoInds, RelativeSource={RelativeSource AncestorType=Page}}">
                     <ComboBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel />
@@ -246,6 +245,18 @@
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Label Content="{Binding Story.StoryNumber}"
+                                                   Width="40"
+                                                   HorizontalContentAlignment="Right"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="50">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Story.Language">Lang.</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Story.Language}"
                                                    Width="40"
                                                    HorizontalContentAlignment="Right"/>
                                         </DataTemplate>

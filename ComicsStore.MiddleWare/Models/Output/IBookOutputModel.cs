@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ComicsStore.Data.Common;
+using System.Collections.Generic;
 
 namespace ComicsStore.MiddleWare.Models.Output
 {
@@ -9,6 +10,9 @@ namespace ComicsStore.MiddleWare.Models.Output
         int FirstYear { get; set; }
         int? ThisYear { get; set; }
         string FirstPrint { get; set; }
+        string Signed { get; set; }
+        string Checked { get; set; }
+        string CoverType { get; set; }
 
         ICollection<BookPublisherOutputModel> BookPublisher { get; set; }
         ICollection<BookSeriesOutputModel> BookSeries { get; set; }

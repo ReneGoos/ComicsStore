@@ -3,10 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
         xmlns:local="clr-namespace:ComicsEntry.Views"
         xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
-        xmlns:vm="clr-namespace:ComicsLibrary.EditModels;assembly=ComicsLibrary"
-        xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
         mc:Ignorable="d"
         Title="Book"
         Height="Auto"
@@ -46,8 +45,12 @@
                     <ColumnDefinition Width="5"/>
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="25"/>
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="5"/>
@@ -79,7 +82,7 @@
                 </Label>
                 <TextBox Grid.Column="3" 
                          Grid.Row="3"
-                         Grid.ColumnSpan="3"
+                         Grid.ColumnSpan="5"
                          Text="{Binding Name, Mode=TwoWay}"/>
 
                 <Label Grid.Column="1" 
@@ -87,14 +90,15 @@
                     First Year of print
                 </Label>
                 <TextBox Grid.Column="3" 
+                         Grid.ColumnSpan="3"
                          Grid.Row="5"
                          Text="{Binding FirstYear, Mode=TwoWay}"/>
 
-                <ComboBox Grid.Column="5"
+                <ComboBox Grid.Column="7"
                           Grid.Row="5"
                           SelectedValue = "{Binding FirstPrint, Mode=TwoWay}"
                           IsEditable="True" 
-                          ItemsSource="{Binding Path=DataContext.FirstPrints, RelativeSource={RelativeSource AncestorType=Page}}">
+                          ItemsSource="{Binding Path=DataContext.YesNoInds, RelativeSource={RelativeSource AncestorType=Page}}">
                     <ComboBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel />
@@ -108,7 +112,7 @@
                 </Label>
                 <TextBox Grid.Column="3" 
                          Grid.Row="7"
-                         Grid.ColumnSpan="3"
+                         Grid.ColumnSpan="5"
                          Text="{Binding ThisYear, Mode=TwoWay}"/>
 
                 <Label Grid.Column="1"
@@ -117,7 +121,7 @@
                 </Label>
                 <ComboBox Grid.Column="3" 
                           Grid.Row="9"
-                          Grid.ColumnSpan="3"
+                          Grid.ColumnSpan="5"
                           SelectedValue="{Binding Active, Mode=TwoWay}"
                           IsEditable="True" 
                           ItemsSource="{Binding Path=DataContext.Actives, RelativeSource={RelativeSource AncestorType=Page}}">
@@ -134,7 +138,7 @@
                 </Label>
                 <ComboBox Grid.Column="3"
                           Grid.Row="11"
-                          Grid.ColumnSpan="3"
+                          Grid.ColumnSpan="5"
                           SelectedValue = "{Binding BookType, Mode=TwoWay}"
                           IsEditable="True" 
                           ItemsSource="{Binding Path=DataContext.BookTypes, RelativeSource={RelativeSource AncestorType=Page}}">
@@ -149,15 +153,67 @@
                        Grid.Row="13">
                     Remark
                 </Label>
+                
                 <TextBox Grid.Column="3"  
                          Grid.Row="13" 
-                         Grid.ColumnSpan="3"
+                         Grid.ColumnSpan="5"
                          Text="{Binding Remark, Mode=TwoWay}"/>
 
-                <Label Grid.Column="3" 
-                       Grid.Row="15" 
+                <Label Grid.Column="1"
+                       Grid.Row="15">
+                    Cover
+                </Label>
+                
+                <ComboBox Grid.Column="3"
+                          Grid.Row="15"
+                          SelectedValue = "{Binding CoverType, Mode=TwoWay}"
+                          IsEditable="True" 
+                          ItemsSource="{Binding Path=DataContext.CoverTypes, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+
+                <Label Grid.Column="5"
+                       Grid.Row="15">
+                    Signed
+                </Label>
+
+                <ComboBox Grid.Column="7"
+                          Grid.Row="15"
+                          SelectedValue = "{Binding Signed, Mode=TwoWay}"
+                          IsEditable="True" 
+                          ItemsSource="{Binding Path=DataContext.YesNoInds, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+
+                <Label Grid.Column="1"
+                       Grid.ColumnSpan="3"
+                       Grid.Row="17" 
                        Foreground="Red"
                        Content="{Binding Error}"/>
+
+                <Label Grid.Column="5"
+                       Grid.Row="17" 
+                       Content="Checked"/>
+
+                <ComboBox Grid.Column="7"
+                          Grid.Row="17"
+                          SelectedValue = "{Binding Checked, Mode=TwoWay}"
+                          IsEditable="True" 
+                          ItemsSource="{Binding Path=DataContext.YesNoInds, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.Resources>

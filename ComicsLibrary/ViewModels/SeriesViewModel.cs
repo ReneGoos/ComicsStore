@@ -8,6 +8,7 @@ using ComicsLibrary.Navigation;
 using System.Windows.Input;
 using ComicsLibrary.Core;
 using System;
+using ComicsStore.Data.Common;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -40,9 +41,47 @@ namespace ComicsLibrary.ViewModels
             Item.HandleBook(bookId, null);
         }
 
-        public void HandleCode(int? codeId, int? oldCodeId)
+        public async void HandleCode(int? codeId, int? oldCodeId)
         {
-            Item.HandleCode(codeId);
+            var code = codeId.HasValue ? Mapper.Map<CodeOnlyEditModel>(await _codesService.GetAsync(codeId.Value)) : null;
+            Item.HandleCode(oldCodeId, code);
+        }
+
+        public void DeleteCode(int? codeId)
+        {
+            Item.HandleCode(codeId, null);
+        }
+
+        public override void ItemChange(TableType table, int? id, ActionType actionType)
+        {
+            switch (actionType)
+            {
+                case ActionType.deleteItem:
+                    switch (table)
+                    {
+                        case TableType.book:
+                            DeleteBookFromList(id);
+                            break;
+
+                        case TableType.code:
+                            DeleteCode(id);
+                            break;
+                    }
+                    break;
+
+                case ActionType.updateItem:
+                    switch (table)
+                    {
+                        case TableType.book:
+                            HandleBook(id, id);
+                            break;
+
+                        case TableType.code:
+                            HandleCode(id, id);
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }

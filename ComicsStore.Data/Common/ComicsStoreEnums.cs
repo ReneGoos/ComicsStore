@@ -16,16 +16,16 @@ namespace ComicsStore.Data.Common
         periodical = 2
     }
 
-    public enum PseudonymInd
+    public enum YesNoInd
     {
         yes = 0,
         no = 1
     }
 
-    public enum FirstPrint
+    public enum CoverType
     {
-        yes = 0,
-        no = 1
+        softcover = 0,
+        hardcover = 1
     }
 
     public enum StoryType
@@ -36,6 +36,17 @@ namespace ComicsStore.Data.Common
         cartoon = 3
     }
 
+    public enum TableType
+    {
+        artist = 0,
+        book,
+        character,
+        code,
+        publisher,
+        series,
+        story
+    }
+
     [Flags]
     public enum ArtistType
     {
@@ -44,7 +55,6 @@ namespace ComicsStore.Data.Common
         penciller = 4,
         inker = 8,
         colorist = 16,
-        [Display(Name = "inspiration")]
         master = 32,
         letterer = 64,
         translator = 128

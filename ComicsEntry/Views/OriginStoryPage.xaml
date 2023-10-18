@@ -410,7 +410,7 @@
                                             >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Command="{Binding DataContext.DeleteArtistFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                                        <Button Command="{Binding DataContext.DeleteArtistFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel, AncestorLevel=2}}"
                                                 CommandParameter="{Binding ArtistId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"

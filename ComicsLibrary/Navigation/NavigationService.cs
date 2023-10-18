@@ -1,5 +1,4 @@
 ﻿using ComicsLibrary.Core;
-using ComicsLibrary.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -30,7 +29,9 @@ namespace ComicsLibrary.Navigation
         }
 
         private readonly IServiceProvider _serviceProvider;
-        private NavigateWindow _navigationWindow = null;
+        private Frame _navigationFrame;
+        private Window _navigationWindow;
+        private string _title;
 
         private Dictionary<string, Type> Pages { get; } = new Dictionary<string, Type>();
         private Dictionary<string, Page> LoadedPages { get; } = new Dictionary<string, Page>();
@@ -49,6 +50,16 @@ namespace ComicsLibrary.Navigation
         public NavigationService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
+        }
+
+        public Window NavigationWindow
+        {
+            get => _navigationWindow; set { _navigationWindow = value; _title = _navigationWindow.Title; }
+        }
+
+        public Frame NavigationFrame
+        {
+            get => _navigationFrame; set => _navigationFrame = value;
         }
 
         public void Configure(string key, Type pageFile, bool isPage = true)
@@ -74,7 +85,7 @@ namespace ComicsLibrary.Navigation
             ActivePages.Push(new NavigationContext(windowKey, itemId, AddItemToList));
             RaisePropertyChanged("ActivePages");
 
-            await SetPage(windowKey, itemId);
+            await SetPage(windowKey);
 
             return true;
         }
@@ -87,7 +98,7 @@ namespace ComicsLibrary.Navigation
             if (ActivePages.Count > 0)
             {
                 var newContext = ActivePages.Peek();
-                await SetPage(newContext.WindowKey, null);
+                await SetPage(newContext.WindowKey);
 
                 if (result && currContext.HandleItem != null)
                 {
@@ -96,7 +107,8 @@ namespace ComicsLibrary.Navigation
             }
             else
             {
-                _navigationWindow.Close();
+                _navigationWindow.Title = _title;
+                _navigationFrame.Content = null;
             }
         }
 
@@ -132,19 +144,20 @@ namespace ComicsLibrary.Navigation
             return LoadedPages[windowKey];
         }
 
-        private async Task SetPage(string windowKey, int? id)
+        private async Task SetPage(string windowKey)
         {
             var page = await GetAndActivatePageAsync(windowKey);
-
-            if (_navigationWindow == null || _navigationWindow.IsClosed)
-            {
-                _navigationWindow = new NavigateWindow(this);
-                _navigationWindow.Show();
-            }
             _navigationWindow.Title = page.Title;
-            _navigationWindow.Main.Content = page;
-            //_navigationWindow.Main.DataContext = page.DataContext;
-            //_navigationWindow.Show();
+            _navigationFrame.Content = page;
+        }
+
+        public bool CanClose()
+        {
+            if (ActivePages.Count == 0)
+            {
+                return true;
+            }
+            return ((ObservableObject)_navigationFrame.DataContext).IsClean;
         }
     }
 }

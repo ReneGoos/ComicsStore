@@ -249,7 +249,7 @@
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="5"/>
@@ -402,67 +402,68 @@
                         >
                     +
                 </Button>
-                <control:HeaderSortListView DockPanel.Dock="Top"
-                                            Grid.Row ="5"
-                                            Grid.Column="1"
-                                            MaxHeight="400"
-                                            VerticalAlignment="Top" 
-                                            AlternationCount="2"
-                                            ItemsSource="{Binding Path=StoryArtist}"
-                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                            >
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Width="60">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="ArtistId">Edit</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.ShowArtistFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                <StackPanel Grid.Row="5"
+                            Grid.Column="1">
+                    <control:HeaderSortListView DockPanel.Dock="Top"
+                                                Name="ArtistStoryList"
+                                                MaxItems ="10"
+                                                VerticalAlignment="Top" 
+                                                AlternationCount="2"
+                                                ItemsSource="{Binding Path=StoryArtist}"
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="60">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="ArtistId">Edit</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ShowArtistFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 CommandParameter="{Binding ArtistId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"
                                                 Width="48"
                                                 IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                                                 >
-                                            <TextBlock Text="{Binding ArtistId}" HorizontalAlignment="Center" />
-                                        </Button>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Header="Del" 
+                                                <TextBlock Text="{Binding ArtistId}" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Del" 
                                             Width="40"
                                             >
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding DataContext.DeleteArtistFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.DeleteArtistFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel, AncestorLevel=2}}"
                                                 CommandParameter="{Binding ArtistId}"
                                                 Background="Transparent"
                                                 BorderThickness="0"
                                                 Width="28">
-                                            <TextBlock Text="-" HorizontalAlignment="Center" />
-                                        </Button>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="250">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="Artist.Name">Artist</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding Artist.Name}"></Label>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="160">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader>Role</GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ComboBox IsEditable="True"
+                                                <TextBlock Text="-" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="250">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Artist.Name">Artist</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Artist.Name}"></Label>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="160">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader>Role</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox IsEditable="True"
                                                   IsReadOnly="True"
                                                   Width="148"
                                                   ItemsSource="{Binding Path=Roles}"
@@ -470,20 +471,27 @@
                                                             Converter={StaticResource ArrayConverter},
                                                             ConverterParameter=EnumCheckedType}"
                                                   IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
-                                            <ComboBox.ItemTemplate>
-                                                <DataTemplate DataType="{x:Type helpers:EnumCheckedType}">
-                                                    <CheckBox Content="{Binding Name}"
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type helpers:EnumCheckedType}">
+                                                        <CheckBox Content="{Binding Name}"
                                                               IsChecked="{Binding Checked}"
                                                               />
-                                                </DataTemplate>
-                                            </ComboBox.ItemTemplate>
-                                        </ComboBox>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </control:HeaderSortListView>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </control:HeaderSortListView>
+                    <control:PagingControl Name="pagingControlArtists"
+                                           VerticalAlignment="Bottom"
+                                           PageSize ="{Binding MaxItems, ElementName=ArtistStoryList, Mode=OneWay}"
+                                           TotalPages ="{Binding TotalPages, ElementName=ArtistStoryList, Mode=OneWay}"
+                                           Page ="{Binding Page, ElementName=ArtistStoryList, Mode=TwoWay}"
+                                           />
+                </StackPanel>
                 <Button Grid.Row ="7"
                         Grid.Column="3"
                         Background="Transparent"
@@ -575,7 +583,7 @@
                             </GridView>
                         </control:HeaderSortListView.View>
                     </control:HeaderSortListView>
-                    <control:PagingControl Name="pagingControl"
+                    <control:PagingControl Name="pagingControlBooks"
                                            VerticalAlignment="Bottom"
                                            PageSize ="{Binding MaxItems, ElementName=StoryBookList, Mode=OneWay}"
                                            TotalPages ="{Binding TotalPages, ElementName=StoryBookList, Mode=OneWay}"
