@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System;
+using ComicsLibrary.EditModels.Interfaces;
 
 namespace ComicsLibrary.EditModels
 {

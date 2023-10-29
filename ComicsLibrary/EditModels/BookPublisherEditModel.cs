@@ -1,4 +1,6 @@
-﻿namespace ComicsLibrary.EditModels
+﻿using ComicsLibrary.EditModels.Interfaces;
+
+namespace ComicsLibrary.EditModels
 {
     public class BookPublisherEditModel : BasicEditModel, ICrossEditModel
     {

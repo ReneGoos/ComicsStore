@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ComicsLibrary.EditModels
 {
@@ -30,6 +31,26 @@ namespace ComicsLibrary.EditModels
             }
         }
 
+        public override bool Validate(Dictionary<string, List<string>> errors)
+        {
+            var validate = base.Validate(errors);
+
+            if (Pseudonym is not null && Pseudonym.Equals("yes"))
+            {
+                if ((RealLastName is null || RealLastName.Length == 0) && (RealFirstName is null || RealFirstName.Length == 0))
+                {
+                    errors["RealName"] = new List<string>
+                    {
+                        "Pseudonym requires a real name"
+                    };
+                    validate = false;
+                }
+            }
+
+            return validate;
+        }
+
+        [Required]
         public string Pseudonym { get => _pseudonym; set => Set(ref _pseudonym, value); }
         public string RealLastName { get => _realLastName; set => Set(ref _realLastName, value); }
         public string RealFirstName { get => _realFirstName; set => Set(ref _realFirstName, value); }

@@ -1,4 +1,5 @@
 ﻿using ComicsLibrary.EditModels;
+using ComicsLibrary.EditModels.Interfaces;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -40,18 +41,21 @@ namespace ComicsLibrary.Extensions
                     }
                 }
 
-                T item;
+                T item = default;
                 if (oldItemId.HasValue)
                 {
-                    item = (list.First(a => a.LinkedId == oldItemId.Value));
+                    // if oldItem is removed, return null
+                    item = list.FirstOrDefault(a => a.LinkedId == oldItemId.Value);
+                    if (item is null)
+                    { 
+                        oldItemId = null;
+                    }
                 }
-                else
-                {
-                    item = new T
+
+                item ??= new T
                     {
                         MainId = id
                     };
-                }
 
                 item.ChildItem = (TChild)childItem;
                 item.LinkedId = childItem?.Id;

@@ -72,15 +72,19 @@ namespace ComicsLibrary.ViewModels
                 if (value is null)
                 {
                     GetOriginStories();
-                    RaisePropertyChanged();
                 }
+                else
+                {
+                    _originStories = value.ToList();
+                }
+                RaisePropertyChanged();
             }
         }
 
         private void GetOriginStories()
         {
-            _originStories = _items.Where(item => item.OriginStoryId is null).OrderBy(item => item.Name).ToList();
-            RaisePropertyChanged("OriginStories");
+            OriginStories = _items.Where(item => item.OriginStoryId is null).OrderBy(item => item.Name);
+            //RaisePropertyChanged("OriginStories");
         }
 
         public async void HandleArtist(int? artistId, int? oldArtistId)

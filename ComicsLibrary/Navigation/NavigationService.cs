@@ -98,7 +98,7 @@ namespace ComicsLibrary.Navigation
             if (ActivePages.Count > 0)
             {
                 var newContext = ActivePages.Peek();
-                await SetPage(newContext.WindowKey);
+                await SetPage(newContext.WindowKey, currContext);
 
                 if (result && currContext.HandleItem != null)
                 {
@@ -144,9 +144,9 @@ namespace ComicsLibrary.Navigation
             return LoadedPages[windowKey];
         }
 
-        private async Task SetPage(string windowKey)
+        private async Task SetPage(string windowKey, NavigationContext context = null)
         {
-            var page = await GetAndActivatePageAsync(windowKey);
+            var page = await GetAndActivatePageAsync(windowKey, context?.WindowKey);
             _navigationWindow.Title = page.Title;
             _navigationFrame.Content = page;
         }

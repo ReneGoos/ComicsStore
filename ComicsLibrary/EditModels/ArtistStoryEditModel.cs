@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System;
 using System.Linq;
+using ComicsLibrary.Core;
+using ComicsLibrary.EditModels.Interfaces;
 
 namespace ComicsLibrary.EditModels
 {
@@ -95,7 +97,7 @@ namespace ComicsLibrary.EditModels
 
         public int? ArtistId { get => _artistId; set => SetIfValue(ref _artistId, value); }
         public int? StoryId { get => _storyId; set => SetIfValue(ref _storyId, value); }
-        [Required]
+        [CannotBeEmpty(ErrorMessage = "ArtistType cannot be empty")]
         public ICollection<string> ArtistType { get => _artistType; set => Set(ref _artistType, value); }
 
         public ObservableCollection<EnumCheckedType> Roles { get { if (_roles is null) { _roles = FillRoles(); } return _roles; } set => Set(ref _roles, value); }

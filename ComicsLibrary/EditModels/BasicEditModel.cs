@@ -1,4 +1,5 @@
 ﻿using ComicsLibrary.Core;
+using ComicsLibrary.EditModels.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,11 +9,10 @@ using System.Text;
 
 namespace ComicsLibrary.EditModels
 {
-    public abstract class BasicEditModel : ObservableObject, IDataErrorInfo, IBasicEditModel
+    public abstract class BasicEditModel : ObservableObject, IBasicEditModel
     {
         private DateTime _creationDate;
         private DateTime _dateUpdate;
-        private string _error;
 
         public BasicEditModel()
         {
@@ -21,14 +21,12 @@ namespace ComicsLibrary.EditModels
         public DateTime CreationDate { get => _creationDate; protected set => Set(ref _creationDate, value); }
         public DateTime DateUpdate { get => _dateUpdate; protected set => Set(ref _dateUpdate, value); }
 
-        public string Error { get => _error; set => Set(ref _error, value); }
-
-        public virtual bool Validate()
+        public virtual bool Validate(Dictionary<string, List<string>> errors)
         {
             var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(ValidationAttribute), false));
             foreach (var prop in properties)
             {
-                Errors[prop.Name] = new List<string>();
+                errors[prop.Name] = new List<string>();
                 foreach (var validation in (ValidationAttribute[])prop.GetCustomAttributes(typeof(ValidationAttribute), false))
                 {
                     if (validation.IsValid(prop.GetValue(this)))
@@ -40,11 +38,11 @@ namespace ComicsLibrary.EditModels
                     {
                         dn = pa.DisplayName;
                     }
-                    Errors[prop.Name].Add(validation.FormatErrorMessage(dn));
+                    errors[prop.Name].Add(validation.FormatErrorMessage(dn));
                 }
-                if (Errors[prop.Name].Count == 0)
+                if (errors[prop.Name].Count == 0)
                 {
-                    _ = Errors.Remove(prop.Name);
+                    errors.Remove(prop.Name); 
                 }
             }
 
@@ -55,89 +53,19 @@ namespace ComicsLibrary.EditModels
                 if (type.IsGenericType)
                 {
                     Type itemType = type.GetGenericArguments()[0];
-                    if (itemType.IsSubclassOf(typeof(ICrossEditModel)))
+                    if (typeof(ICrossEditModel).IsAssignableFrom(itemType))
                     {
-                        Errors[coll.Name] = new List<string>();
+                        //errors[coll.Name] = new List<string>();
                         foreach (var element in (System.Collections.IEnumerable)coll.GetValue(this))
                         {
                             var crossEditModel = (ICrossEditModel)element;
-                            if (!crossEditModel.Validate())
-                            {
-                                Errors[coll.Name].Add(crossEditModel.Error);
-                            }
-                        }
-                        if (Errors[coll.Name].Count == 0)
-                        {
-                            _ = Errors.Remove(coll.Name);
+                            if (!crossEditModel.Validate(errors)) {}
                         }
                     }
                 }
             }
 
-            if (Errors.Count == 0)
-            {
-                return true;
-            }
-
-            Error = SetError();
-            return false;
+            return (errors.Count == 0);
         }
-
-        private string SetError()
-        {
-            var builder = new StringBuilder();
-            foreach (var error in Errors)
-            {
-                if (error.Value.Count > 0)
-                {
-                    foreach (var text in error.Value)
-                    {
-                        _ = builder.AppendLine(text);
-                    }
-                }
-            }
-            return builder.Length > 0 ? builder.ToString(0, builder.Length - 2) : builder.ToString();
-        }
-
-        public virtual string this[string columnName]
-        {
-            get
-            {
-                var modelClassProperties = TypeDescriptor.GetProperties(GetType());
-                foreach (PropertyDescriptor prop in modelClassProperties)
-                {
-                    if (prop.Name != columnName)
-                    {
-                        continue;
-                    }
-                    Errors[columnName] = new List<string>();
-                    foreach (var attribute in prop.Attributes)
-                    {
-                        if (!(attribute is ValidationAttribute))
-                        {
-                            continue;
-                        }
-                        var validation = attribute as ValidationAttribute;
-                        if (validation.IsValid(prop.GetValue(this)))
-                        {
-                            continue;
-                        }
-                        var dn = prop.Name;
-                        foreach (var pa in prop.Attributes.OfType<DisplayNameAttribute>())
-                        {
-                            dn = pa.DisplayName;
-                        }
-                        Errors[columnName].Add(validation.FormatErrorMessage(dn));
-                        Error = SetError();
-                        return validation.FormatErrorMessage(dn);
-                    }
-                }
-                _ = Errors.Remove(columnName);
-                Error = SetError();
-                return null;
-            }
-        }
-
-        internal Dictionary<string, List<string>> Errors { get; } = new();
     }
 }

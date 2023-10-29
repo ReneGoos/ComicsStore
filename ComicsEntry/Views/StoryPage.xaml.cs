@@ -11,5 +11,10 @@ namespace ComicsEntry.Views
         {
             InitializeComponent();
         }
+
+        private void OriginStories_ComboBox_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+            int i = 12;
+        }
     }
 }

@@ -13,10 +13,11 @@ using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.Data.Common;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace ComicsLibrary.ViewModels
 {
-    public class ComicsViewModel : ObservableObject
+    public class ComicsViewModel : ObservableObject, IActivable
     {
         private readonly ComicsStoreDbContext _comicsStoreDbContext;
         private readonly INavigationService _navigationService;
@@ -518,6 +519,11 @@ namespace ComicsLibrary.ViewModels
         private async void ShowReportWindow()
         {
             await _navigationService.ShowWindowAsync(StoreWindows.Report);
+        }
+
+        public Task ActivateAsync(object parameter)
+        {
+            return Task.CompletedTask;
         }
     }
 }

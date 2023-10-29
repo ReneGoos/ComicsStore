@@ -1,6 +1,8 @@
-﻿namespace ComicsLibrary.EditModels
+﻿using ComicsLibrary.EditModels.Interfaces;
+
+namespace ComicsLibrary.EditModels
 {
-    public class StoryOriginEditModel : TableEditModel, ICrossEditModel
+    public class StoryOriginEditModel : BasicEditModel, ICrossEditModel
     {
         private int? _storyId;
         private int? _originStoryId;

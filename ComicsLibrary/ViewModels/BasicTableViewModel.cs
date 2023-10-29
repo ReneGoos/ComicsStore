@@ -15,6 +15,8 @@ using System.Linq;
 using ComicsLibrary.Helpers;
 using ComicsLibrary.Navigation;
 using ComicsStore.Data.Common;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -30,6 +32,7 @@ namespace ComicsLibrary.ViewModels
         protected ICollection<TOut> _items;
         private TEdit _item;
         private string _queryText;
+        private string _error;
 
         private CollectionViewSource _itemsFilteredViewSource;
         private CollectionViewSource _itemsQueryViewSource;
@@ -65,9 +68,10 @@ namespace ComicsLibrary.ViewModels
             UndoCommand = new RelayCommand(new Action(CancelSaveAsync));
             DeleteCommand = new RelayCommand<int>(new Action<int>(DeleteAsync));
             ExitCommand = new RelayCommand<bool>(new Action<bool>(ExitAsync));
-
             NewItem();
         }
+
+        public string Error { get => _error; set => Set(ref _error, value); }
 
         protected virtual void QueryResults(object sender, FilterEventArgs e)
         {
@@ -169,6 +173,27 @@ namespace ComicsLibrary.ViewModels
             }
         }
 
+        private void SetError(Dictionary<string, List<string>> errors)
+        {
+            var builder = new StringBuilder();
+            foreach (var error in errors)
+            {
+                if (error.Value.Count > 0)
+                {
+                    foreach (var text in error.Value)
+                    {
+                        _ = builder.AppendLine(text);
+                    }
+                }
+            }
+            Error = builder.Length > 0 ? builder.ToString(0, builder.Length - 2) : builder.ToString();
+        }
+
+        private void ClearError()
+        {
+            Error = null;
+        }
+
         protected virtual async void SaveAsync()
         {
             if (Item == null)
@@ -181,11 +206,16 @@ namespace ComicsLibrary.ViewModels
                 return;
             }
 
-            if (!Item.Validate())
+            Dictionary<string, List<string>> errors = new();
+
+            if (!Item.Validate(errors))
             {
+                SetError(errors);
                 IsDirty = true;
                 return;
             }
+
+            ClearError();
 
             var itemInput = Mapper.Map<TIn>(Item);
             var itemOut = Item.Id.HasValue ? await _itemService.UpdateAsync(Item.Id.Value, itemInput) : await _itemService.AddAsync(itemInput);
@@ -237,6 +267,7 @@ namespace ComicsLibrary.ViewModels
 
             Item = item;
             Item.PropertyChanged += ItemPropertyChanged;
+            ClearError();
             IsDirty = false;
         }
 
@@ -254,6 +285,7 @@ namespace ComicsLibrary.ViewModels
                 Item = new TEdit();
             }
             Item.PropertyChanged += ItemPropertyChanged;
+            ClearError();
             IsDirty = false;
             //return Item is not null;
         }

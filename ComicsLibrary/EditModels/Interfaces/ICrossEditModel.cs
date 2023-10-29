@@ -1,4 +1,4 @@
-﻿namespace ComicsLibrary.EditModels
+﻿namespace ComicsLibrary.EditModels.Interfaces
 {
     public interface ICrossEditModel : IBasicEditModel
     {
