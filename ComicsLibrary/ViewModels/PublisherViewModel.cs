@@ -30,12 +30,12 @@ namespace ComicsLibrary.ViewModels
         public async void HandleBook(int? bookId, int? oldBookId)
         {
             var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
-            Item.HandleBook(oldBookId, book);
+            IsDirty = IsDirty || Item.HandleBook(oldBookId, book);
         }
 
         public void DeleteBookFromList(int? bookId)
         {
-            Item.HandleBook(bookId, null);
+            IsDirty = IsDirty || Item.HandleBook(bookId, null);
         }
 
         public override void ItemChange(TableType table, int? id, ActionType actionType)

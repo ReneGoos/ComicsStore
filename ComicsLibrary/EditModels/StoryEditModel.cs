@@ -28,62 +28,66 @@ namespace ComicsLibrary.EditModels
         public ObservableChangedCollection<StoryBookEditModel> StoryBook { get => _storyBook; set => Set(ref _storyBook, value); }
         public ObservableChangedCollection<StoryCharacterEditModel> StoryCharacter { get => _storyCharacter; set => Set(ref _storyCharacter, value); }
 
-        public void HandleArtist(int? oldArtistId, ArtistOnlyEditModel artist)
+        public bool HandleArtist(int? oldArtistId, ArtistOnlyEditModel artist)
         {
-            StoryArtist.HandleItem(Id, oldArtistId, artist);
+            return StoryArtist.HandleItem(Id, oldArtistId, artist);
         }
 
-        public void HandleBook(int? oldBookId, BookOnlyEditModel book)
+        public bool HandleBook(int? oldBookId, BookOnlyEditModel book)
         {
-            StoryBook.HandleItem(Id, oldBookId, book);
+            return StoryBook.HandleItem(Id, oldBookId, book);
         }
 
-        public void HandleCharacter(int? oldCharacterId, CharacterOnlyEditModel character)
+        public bool HandleCharacter(int? oldCharacterId, CharacterOnlyEditModel character)
         {
-            StoryCharacter.HandleItem(Id, oldCharacterId, character);
+            return StoryCharacter.HandleItem(Id, oldCharacterId, character);
         }
 
-        public void HandleCode(int? oldCodeId, CodeOnlyEditModel code)
+        public bool HandleCode(int? oldCodeId, CodeOnlyEditModel code)
         {
             if (code == null)
             {
                 CodeId = 0;
-                return;
+                return oldCodeId.HasValue;
             }
 
             if (oldCodeId.HasValue && code.Id.Value == oldCodeId.Value && CodeId != oldCodeId.Value)
             {
-                return;
+                return false;
             }
 
             if (CodeId != code.Id.Value)
             {
                 CodeId = code.Id.Value;
+                return true;
             }
+            return false;
         }
 
-        public void HandleOriginStory(int? oldOriginStoryId, StoryOnlyEditModel story)
+        public bool HandleOriginStory(int? oldOriginStoryId, StoryOnlyEditModel story)
         {
             if (story == null)
             {
                 OriginStoryId = null;
-                return;
+                return oldOriginStoryId.HasValue;
             }
 
             if (oldOriginStoryId.HasValue && story.Id.Value == oldOriginStoryId.Value && CodeId != oldOriginStoryId.Value)
             {
-                return;
+                return false;
             }
 
             if (OriginStoryId != story.Id.Value)
             {
                 OriginStoryId = story.Id.Value;
+                return true;
             }
+            return false;
         }
 
-        public void HandleStoryOrigin(int? oldOriginStoryId, StoryOnlyEditModel originStory)
+        public bool HandleStoryOrigin(int? oldOriginStoryId, StoryOnlyEditModel originStory)
         {
-            StoryFromOrigin.HandleItem(Id, oldOriginStoryId, originStory);
+            return StoryFromOrigin.HandleItem(Id, oldOriginStoryId, originStory);
         }
 
         public void ResetId()

@@ -16,28 +16,30 @@ namespace ComicsLibrary.EditModels
         public CodeOnlyOutputModel Code { get; set; }
         public ObservableChangedCollection<SeriesBookEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
 
-        public void HandleBook(int? oldBookId, BookOnlyEditModel book)
+        public bool HandleBook(int? oldBookId, BookOnlyEditModel book)
         {
-            BookSeries.HandleItem(Id, oldBookId, book);
+            return BookSeries.HandleItem(Id, oldBookId, book);
         }
 
-        public void HandleCode(int? oldCodeId, CodeOnlyEditModel code)
+        public bool HandleCode(int? oldCodeId, CodeOnlyEditModel code)
         {
             if (code == null)
             {
                 CodeId = 0;
-                return;
+                return oldCodeId.HasValue;
             }
 
             if (oldCodeId.HasValue && code.Id.Value == oldCodeId.Value && CodeId != oldCodeId.Value)
             {
-                return;
+                return false;
             }
 
             if (CodeId != code.Id.Value)
             {
                 CodeId = code.Id.Value;
+                return true;
             }
+            return false;
         }
 
         public void ResetId()

@@ -14,10 +14,10 @@ namespace ComicsLibrary.EditModels
 
         public ObservableChangedCollection<PublisherBookEditModel> BookPublisher { get => _bookPublishers; set => Set(ref _bookPublishers, value); }
 
-        public void HandleBook(int? oldBookId, BookOnlyEditModel book)
+        public bool HandleBook(int? oldBookId, BookOnlyEditModel book)
         {
 
-            BookPublisher.HandleItem(Id, oldBookId, book);
+            return BookPublisher.HandleItem(Id, oldBookId, book);
         }
 
         public void ResetId()

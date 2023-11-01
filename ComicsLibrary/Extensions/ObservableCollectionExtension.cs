@@ -7,7 +7,7 @@ namespace ComicsLibrary.Extensions
 {
     public static class ObservableCollectionExtension
     {
-        public static void HandleItem<T, TChild>(this ObservableCollection<T> list, int? id, int? oldItemId, TChild childItem) 
+        public static bool HandleItem<T, TChild>(this ObservableCollection<T> list, int? id, int? oldItemId, TChild childItem) 
             where T : BasicEditModel, ICrossEditModel, new()
             where TChild: TableEditModel
         {
@@ -20,6 +20,7 @@ namespace ComicsLibrary.Extensions
                     if (oldItem != null)
                     {
                         list.Remove(oldItem);
+                        return true;
                     }
                 }
             }
@@ -28,7 +29,7 @@ namespace ComicsLibrary.Extensions
                 if (oldItemId.HasValue && childItem.Id == oldItemId.Value  && !list.Any(s => s.LinkedId == oldItemId.Value))
                 {
                     // item updated outside, but not linked
-                    return;
+                    return false;
                 }
 
                 if (!oldItemId.HasValue || (oldItemId.HasValue && childItem.Id != oldItemId.Value))
@@ -37,7 +38,7 @@ namespace ComicsLibrary.Extensions
                     var fetchItem = list.FirstOrDefault(s => s.LinkedId == childItem.Id);
                     if (fetchItem != null)
                     {
-                        return;
+                        return false;
                     }
                 }
 
@@ -63,8 +64,12 @@ namespace ComicsLibrary.Extensions
                 if (!oldItemId.HasValue)
                 {
                     list.Add(item);
+                    return true;
                 }
+
+                return (oldItemId != item.LinkedId);
             }
+            return false;
         }
         
     }

@@ -14,9 +14,9 @@ namespace ComicsLibrary.EditModels
 
         public ObservableChangedCollection<CharacterStoryEditModel> StoryCharacter { get => _storyCharacters; set => Set(ref _storyCharacters, value); }
 
-        public void HandleStory(int? oldStoryId, StoryOnlyEditModel story)
+        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story)
         {
-            StoryCharacter.HandleItem(Id, oldStoryId, story);
+            return StoryCharacter.HandleItem(Id, oldStoryId, story);
         }
 
         public void ResetId()

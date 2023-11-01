@@ -20,19 +20,19 @@ namespace ComicsLibrary.EditModels
         public ObservableChangedCollection<ArtistPseudonymEditModel> MainArtist { get => _mainArtist; set => Set(ref _mainArtist, value); }
         public ObservableChangedCollection<PseudonymArtistEditModel> PseudonymArtist { get => _pseudonymArtist; set => Set(ref _pseudonymArtist, value); }
 
-        public void HandleStory(int? oldStoryId, StoryOnlyEditModel story)
+        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story)
         {
-            StoryArtist.HandleItem(Id, oldStoryId, story);
+            return StoryArtist.HandleItem(Id, oldStoryId, story);
         }
 
-        public void HandleMainArtist(int? oldArtistId, ArtistOnlyEditModel artist)
+        public bool HandleMainArtist(int? oldArtistId, ArtistOnlyEditModel artist)
         {
-            PseudonymArtist.HandleItem(Id, oldArtistId, artist);
+            return PseudonymArtist.HandleItem(Id, oldArtistId, artist);
         }
 
-        public void HandlePseudonymArtist(int? oldArtistId, ArtistOnlyEditModel artist)
+        public bool HandlePseudonymArtist(int? oldArtistId, ArtistOnlyEditModel artist)
         {
-            MainArtist.HandleItem(Id, oldArtistId, artist);
+            return MainArtist.HandleItem(Id, oldArtistId, artist);
         }
 
         public void ResetId()

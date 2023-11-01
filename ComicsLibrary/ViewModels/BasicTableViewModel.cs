@@ -37,8 +37,17 @@ namespace ComicsLibrary.ViewModels
         private CollectionViewSource _itemsFilteredViewSource;
         private CollectionViewSource _itemsQueryViewSource;
 
-        private void UpdateItemsList(TOut item, bool removeOnly = false)
+        protected void UpdateItemsList(TOut item, bool removeOnly = false)
         {
+            if (_items == null)
+            {
+                GetItems();
+                if (_items == null)
+                { 
+                    return;
+                }
+            }
+
             var itemFind = _items.FirstOrDefault(i => i.Id == item.Id);
             if (itemFind is not null)
             {

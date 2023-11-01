@@ -20,19 +20,19 @@ namespace ComicsLibrary.EditModels
         public ObservableChangedCollection<BookSeriesEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
         public ObservableChangedCollection<BookStoryEditModel> StoryBook { get => _bookStories; set => Set(ref _bookStories, value); }
 
-        public void HandlePublisher(int? oldPublisherId, PublisherOnlyEditModel publisher)
+        public bool HandlePublisher(int? oldPublisherId, PublisherOnlyEditModel publisher)
         {
-            BookPublisher.HandleItem(Id, oldPublisherId, publisher);
+            return BookPublisher.HandleItem(Id, oldPublisherId, publisher);
         }
 
-        public void HandleStory(int? oldStoryId, StoryOnlyEditModel story)
+        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story)
         {
-            StoryBook.HandleItem(Id, oldStoryId, story);
+            return StoryBook.HandleItem(Id, oldStoryId, story);
         }
 
-        public void HandleSeries(int? oldSeriesId, SeriesOnlyEditModel series)
+        public bool HandleSeries(int? oldSeriesId, SeriesOnlyEditModel series)
         {
-            BookSeries.HandleItem(Id, oldSeriesId, series);
+            return BookSeries.HandleItem(Id, oldSeriesId, series);
         }
 
         public void ResetId()

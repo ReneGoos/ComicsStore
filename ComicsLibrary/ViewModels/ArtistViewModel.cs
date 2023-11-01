@@ -35,34 +35,34 @@ namespace ComicsLibrary.ViewModels
         public async void HandleStory(int? storyId, int? oldStoryId)
         {
             var story = storyId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _storiesService.GetAsync(storyId.Value)) : null;
-            Item.HandleStory(oldStoryId, story);
+            IsDirty = IsDirty || Item.HandleStory(oldStoryId, story);
         }
 
         private void DeleteStoryFromList(int? storyId)
         {
-            Item.HandleStory(storyId, null);
+            IsDirty = IsDirty || Item.HandleStory(storyId, null);
         }
 
         public async void HandleMainArtist(int? mainArtistId, int? oldMainArtistId)
         {
             var artist = mainArtistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _itemService.GetAsync(mainArtistId.Value)) : null;
-            Item.HandleMainArtist(oldMainArtistId, artist);
+            IsDirty = IsDirty || Item.HandleMainArtist(oldMainArtistId, artist);
         }
 
         private void DeleteMainArtistFromList(int? mainArtistId)
         {
-            Item.HandleMainArtist(mainArtistId, null);
+            IsDirty = IsDirty || Item.HandleMainArtist(mainArtistId, null);
         }
 
         public async void HandlePseudonymArtist(int? pseudonymArtistId, int? oldPseudonymArtistId)
         {
             var artist = pseudonymArtistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _itemService.GetAsync(pseudonymArtistId.Value)) : null;
-            Item.HandlePseudonymArtist(oldPseudonymArtistId, artist);
+            IsDirty = IsDirty || Item.HandlePseudonymArtist(oldPseudonymArtistId, artist);
         }
 
         private void DeletePseudonymArtistFromList(int? pseudonymArtistId)
         {
-            Item.HandlePseudonymArtist(pseudonymArtistId, null);
+            IsDirty = IsDirty || Item.HandlePseudonymArtist(pseudonymArtistId, null);
         }
 
         public override void ItemChange(TableType table, int? id, ActionType actionType)

@@ -33,23 +33,23 @@ namespace ComicsLibrary.ViewModels
         public async void HandleBook(int? bookId, int? oldBookId)
         {
             var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
-            Item.HandleBook(oldBookId, book);
+            IsDirty = IsDirty || Item.HandleBook(oldBookId, book);
         }
 
         public void DeleteBookFromList(int? bookId)
         {
-            Item.HandleBook(bookId, null);
+            IsDirty = IsDirty || Item.HandleBook(bookId, null);
         }
 
         public async void HandleCode(int? codeId, int? oldCodeId)
         {
             var code = codeId.HasValue ? Mapper.Map<CodeOnlyEditModel>(await _codesService.GetAsync(codeId.Value)) : null;
-            Item.HandleCode(oldCodeId, code);
+            IsDirty = IsDirty || Item.HandleCode(oldCodeId, code);
         }
 
         public void DeleteCode(int? codeId)
         {
-            Item.HandleCode(codeId, null);
+            IsDirty = IsDirty || Item.HandleCode(codeId, null);
         }
 
         public override void ItemChange(TableType table, int? id, ActionType actionType)

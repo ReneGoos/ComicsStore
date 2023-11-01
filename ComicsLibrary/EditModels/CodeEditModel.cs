@@ -17,14 +17,14 @@ namespace ComicsLibrary.EditModels
         public ObservableChangedCollection<CodeSeriesEditModel> Series { get => _seriesCodes; set => Set(ref _seriesCodes, value); }
         public ObservableChangedCollection<CodeStoryEditModel> Story { get => _storyCodes; set => Set(ref _storyCodes, value); }
 
-        public void HandleSeries(int? oldSeriesId, SeriesOnlyEditModel series)
+        public bool HandleSeries(int? oldSeriesId, SeriesOnlyEditModel series)
         {
-            Series.HandleItem(Id, oldSeriesId, series);
+            return Series.HandleItem(Id, oldSeriesId, series);
         }
 
-        public void HandleStory(int? oldStoryId, StoryOnlyEditModel story)
+        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story)
         {
-            Story.HandleItem(Id, oldStoryId, story);
+            return Story.HandleItem(Id, oldStoryId, story);
         }
 
         public void ResetId()
