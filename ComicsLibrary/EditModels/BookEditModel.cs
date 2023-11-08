@@ -1,5 +1,6 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
+using System.ComponentModel;
 
 namespace ComicsLibrary.EditModels
 {
@@ -20,19 +21,19 @@ namespace ComicsLibrary.EditModels
         public ObservableChangedCollection<BookSeriesEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
         public ObservableChangedCollection<BookStoryEditModel> StoryBook { get => _bookStories; set => Set(ref _bookStories, value); }
 
-        public bool HandlePublisher(int? oldPublisherId, PublisherOnlyEditModel publisher)
+        public bool HandlePublisher(int? oldPublisherId, PublisherOnlyEditModel publisher, PropertyChangedEventHandler propertyChanged = null)
         {
-            return BookPublisher.HandleItem(Id, oldPublisherId, publisher);
+            return BookPublisher.HandleItem(Id, oldPublisherId, publisher, propertyChanged);
         }
 
-        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story)
+        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story, PropertyChangedEventHandler propertyChanged = null)
         {
-            return StoryBook.HandleItem(Id, oldStoryId, story);
+            return StoryBook.HandleItem(Id, oldStoryId, story, propertyChanged);
         }
 
-        public bool HandleSeries(int? oldSeriesId, SeriesOnlyEditModel series)
+        public bool HandleSeries(int? oldSeriesId, SeriesOnlyEditModel series, PropertyChangedEventHandler propertyChanged = null)
         {
-            return BookSeries.HandleItem(Id, oldSeriesId, series);
+            return BookSeries.HandleItem(Id, oldSeriesId, series, propertyChanged);
         }
 
         public void ResetId()

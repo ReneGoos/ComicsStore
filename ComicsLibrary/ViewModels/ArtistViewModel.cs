@@ -35,34 +35,34 @@ namespace ComicsLibrary.ViewModels
         public async void HandleStory(int? storyId, int? oldStoryId)
         {
             var story = storyId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _storiesService.GetAsync(storyId.Value)) : null;
-            IsDirty = IsDirty || Item.HandleStory(oldStoryId, story);
+            IsDirty |= Item.HandleStory(oldStoryId, story, ItemPropertyChanged);
         }
 
         private void DeleteStoryFromList(int? storyId)
         {
-            IsDirty = IsDirty || Item.HandleStory(storyId, null);
+            IsDirty |= Item.HandleStory(storyId, null);
         }
 
         public async void HandleMainArtist(int? mainArtistId, int? oldMainArtistId)
         {
             var artist = mainArtistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _itemService.GetAsync(mainArtistId.Value)) : null;
-            IsDirty = IsDirty || Item.HandleMainArtist(oldMainArtistId, artist);
+            IsDirty |= Item.HandleMainArtist(oldMainArtistId, artist, ItemPropertyChanged);
         }
 
         private void DeleteMainArtistFromList(int? mainArtistId)
         {
-            IsDirty = IsDirty || Item.HandleMainArtist(mainArtistId, null);
+            IsDirty |= Item.HandleMainArtist(mainArtistId, null);
         }
 
         public async void HandlePseudonymArtist(int? pseudonymArtistId, int? oldPseudonymArtistId)
         {
             var artist = pseudonymArtistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _itemService.GetAsync(pseudonymArtistId.Value)) : null;
-            IsDirty = IsDirty || Item.HandlePseudonymArtist(oldPseudonymArtistId, artist);
+            IsDirty |= Item.HandlePseudonymArtist(oldPseudonymArtistId, artist, ItemPropertyChanged);
         }
 
         private void DeletePseudonymArtistFromList(int? pseudonymArtistId)
         {
-            IsDirty = IsDirty || Item.HandlePseudonymArtist(pseudonymArtistId, null);
+            IsDirty |= Item.HandlePseudonymArtist(pseudonymArtistId, null);
         }
 
         public override void ItemChange(TableType table, int? id, ActionType actionType)

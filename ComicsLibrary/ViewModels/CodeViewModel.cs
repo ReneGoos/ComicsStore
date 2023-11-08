@@ -35,23 +35,23 @@ namespace ComicsLibrary.ViewModels
         public async void HandleSeries(int? seriesId, int? oldSeriesId)
         {
             var series = seriesId.HasValue ? Mapper.Map<SeriesOnlyEditModel>(await _seriesService.GetAsync(seriesId.Value)) : null;
-            IsDirty = IsDirty || Item.HandleSeries(oldSeriesId, series);
+            IsDirty |= Item.HandleSeries(oldSeriesId, series, ItemPropertyChanged);
         }
 
         public void DeleteSeriesFromList(int? seriesId)
         {
-            IsDirty = IsDirty || Item.HandleSeries(seriesId, null);
+            IsDirty |= Item.HandleSeries(seriesId, null);
         }
 
         public async void HandleStory(int? storyId, int? oldStoryId)
         {
             var story = storyId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _storiesService.GetAsync(storyId.Value)) : null;
-            IsDirty = IsDirty || Item.HandleStory(oldStoryId, story);
+            IsDirty |= Item.HandleStory(oldStoryId, story, ItemPropertyChanged);
         }
 
         private void DeleteStoryFromList(int? storyId)
         {
-            IsDirty = IsDirty || Item.HandleStory(storyId, null);
+            IsDirty |= Item.HandleStory(storyId, null);
         }
 
         public override void ItemChange(TableType table, int? id, ActionType actionType)

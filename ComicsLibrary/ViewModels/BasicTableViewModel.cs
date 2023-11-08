@@ -17,6 +17,7 @@ using ComicsLibrary.Navigation;
 using ComicsStore.Data.Common;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text;
+using ComicsLibrary.EditModels.Interfaces;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -232,7 +233,8 @@ namespace ComicsLibrary.ViewModels
             UpdateItemsList(itemOut);
 
             Item = Mapper.Map<TEdit>(itemOut);
-            Item.PropertyChanged += ItemPropertyChanged;
+            //child items PropertyChanged
+            ItemsPropertyChanged();
             IsDirty = false;
         }
 
@@ -280,6 +282,29 @@ namespace ComicsLibrary.ViewModels
             IsDirty = false;
         }
 
+        private void ItemsPropertyChanged()
+        {
+            Item.PropertyChanged += ItemPropertyChanged;
+
+            var collections = Item.GetType().GetProperties().Where(prop => prop.PropertyType.GetInterfaces().Contains(typeof(System.Collections.IEnumerable)) && prop.PropertyType != typeof(System.String));
+            foreach (var coll in collections)
+            {
+                Type type = coll.PropertyType;
+                if (type.IsGenericType)
+                {
+                    Type itemType = type.GetGenericArguments()[0];
+                    if (typeof(ICrossEditModel).IsAssignableFrom(itemType))
+                    {
+                        //errors[coll.Name] = new List<string>();
+                        foreach (var element in (System.Collections.IEnumerable)coll.GetValue(Item))
+                        {
+                            (element as ICrossEditModel).PropertyChanged += ItemPropertyChanged;
+                        }
+                    }
+                }
+            }
+        }
+
         protected virtual async void GetItemAsync(int id)
         {
             if (CancelSwitch())
@@ -288,15 +313,18 @@ namespace ComicsLibrary.ViewModels
             }
 
             Item = Mapper.Map<TEdit>(await _itemService.GetAsync(id, true));
-
             if (Item == null)
             {
-                Item = new TEdit();
+                NewItem();
             }
-            Item.PropertyChanged += ItemPropertyChanged;
-            ClearError();
-            IsDirty = false;
-            //return Item is not null;
+            else
+            {
+                ItemsPropertyChanged();
+
+                ClearError();
+                IsDirty = false;
+                //return Item is not null
+            }
         }
 
         protected virtual void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)

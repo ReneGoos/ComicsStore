@@ -1,6 +1,7 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
 using ComicsStore.MiddleWare.Models.Output;
+using System.ComponentModel;
 
 namespace ComicsLibrary.EditModels
 {
@@ -16,9 +17,9 @@ namespace ComicsLibrary.EditModels
         public CodeOnlyOutputModel Code { get; set; }
         public ObservableChangedCollection<SeriesBookEditModel> BookSeries { get => _bookSeries; set => Set(ref _bookSeries, value); }
 
-        public bool HandleBook(int? oldBookId, BookOnlyEditModel book)
+        public bool HandleBook(int? oldBookId, BookOnlyEditModel book, PropertyChangedEventHandler propertyChanged = null)
         {
-            return BookSeries.HandleItem(Id, oldBookId, book);
+            return BookSeries.HandleItem(Id, oldBookId, book, propertyChanged);
         }
 
         public bool HandleCode(int? oldCodeId, CodeOnlyEditModel code)

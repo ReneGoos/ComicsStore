@@ -1,5 +1,6 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
+using System.ComponentModel;
 
 namespace ComicsLibrary.EditModels
 {
@@ -20,19 +21,19 @@ namespace ComicsLibrary.EditModels
         public ObservableChangedCollection<ArtistPseudonymEditModel> MainArtist { get => _mainArtist; set => Set(ref _mainArtist, value); }
         public ObservableChangedCollection<PseudonymArtistEditModel> PseudonymArtist { get => _pseudonymArtist; set => Set(ref _pseudonymArtist, value); }
 
-        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story)
+        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story, PropertyChangedEventHandler propertyChanged = null)
         {
-            return StoryArtist.HandleItem(Id, oldStoryId, story);
+            return StoryArtist.HandleItem(Id, oldStoryId, story, propertyChanged);
         }
 
-        public bool HandleMainArtist(int? oldArtistId, ArtistOnlyEditModel artist)
+        public bool HandleMainArtist(int? oldArtistId, ArtistOnlyEditModel artist, PropertyChangedEventHandler propertyChanged = null)
         {
-            return PseudonymArtist.HandleItem(Id, oldArtistId, artist);
+            return PseudonymArtist.HandleItem(Id, oldArtistId, artist, propertyChanged);
         }
 
-        public bool HandlePseudonymArtist(int? oldArtistId, ArtistOnlyEditModel artist)
+        public bool HandlePseudonymArtist(int? oldArtistId, ArtistOnlyEditModel artist, PropertyChangedEventHandler propertyChanged = null)
         {
-            return MainArtist.HandleItem(Id, oldArtistId, artist);
+            return MainArtist.HandleItem(Id, oldArtistId, artist, propertyChanged);
         }
 
         public void ResetId()

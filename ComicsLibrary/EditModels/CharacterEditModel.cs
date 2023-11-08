@@ -1,5 +1,6 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
+using System.ComponentModel;
 
 namespace ComicsLibrary.EditModels
 {
@@ -14,9 +15,9 @@ namespace ComicsLibrary.EditModels
 
         public ObservableChangedCollection<CharacterStoryEditModel> StoryCharacter { get => _storyCharacters; set => Set(ref _storyCharacters, value); }
 
-        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story)
+        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story, PropertyChangedEventHandler propertyChanged = null)
         {
-            return StoryCharacter.HandleItem(Id, oldStoryId, story);
+            return StoryCharacter.HandleItem(Id, oldStoryId, story, propertyChanged);
         }
 
         public void ResetId()

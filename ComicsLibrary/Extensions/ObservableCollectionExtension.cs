@@ -1,13 +1,14 @@
 ﻿using ComicsLibrary.EditModels;
 using ComicsLibrary.EditModels.Interfaces;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ComicsLibrary.Extensions
 {
     public static class ObservableCollectionExtension
     {
-        public static bool HandleItem<T, TChild>(this ObservableCollection<T> list, int? id, int? oldItemId, TChild childItem) 
+        public static bool HandleItem<T, TChild>(this ObservableCollection<T> list, int? id, int? oldItemId, TChild childItem, PropertyChangedEventHandler propertyChanged = null) 
             where T : BasicEditModel, ICrossEditModel, new()
             where TChild: TableEditModel
         {
@@ -45,7 +46,7 @@ namespace ComicsLibrary.Extensions
                 T item = default;
                 if (oldItemId.HasValue)
                 {
-                    // if oldItem is removed, return null
+                    // if oldItem is removed, set oldItemId null for follow up test
                     item = list.FirstOrDefault(a => a.LinkedId == oldItemId.Value);
                     if (item is null)
                     { 
@@ -60,6 +61,11 @@ namespace ComicsLibrary.Extensions
 
                 item.ChildItem = (TChild)childItem;
                 item.LinkedId = childItem?.Id;
+
+                if (propertyChanged != null)
+                {
+                    item.PropertyChanged += propertyChanged;
+                }
 
                 if (!oldItemId.HasValue)
                 {

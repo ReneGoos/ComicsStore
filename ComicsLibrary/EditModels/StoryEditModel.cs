@@ -1,6 +1,7 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
 using ComicsStore.Data.Model;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ComicsLibrary.EditModels
@@ -28,19 +29,19 @@ namespace ComicsLibrary.EditModels
         public ObservableChangedCollection<StoryBookEditModel> StoryBook { get => _storyBook; set => Set(ref _storyBook, value); }
         public ObservableChangedCollection<StoryCharacterEditModel> StoryCharacter { get => _storyCharacter; set => Set(ref _storyCharacter, value); }
 
-        public bool HandleArtist(int? oldArtistId, ArtistOnlyEditModel artist)
+        public bool HandleArtist(int? oldArtistId, ArtistOnlyEditModel artist, PropertyChangedEventHandler propertyChanged = null)
         {
-            return StoryArtist.HandleItem(Id, oldArtistId, artist);
+            return StoryArtist.HandleItem(Id, oldArtistId, artist, propertyChanged);
         }
 
-        public bool HandleBook(int? oldBookId, BookOnlyEditModel book)
+        public bool HandleBook(int? oldBookId, BookOnlyEditModel book, PropertyChangedEventHandler propertyChanged = null)
         {
-            return StoryBook.HandleItem(Id, oldBookId, book);
+            return StoryBook.HandleItem(Id, oldBookId, book, propertyChanged);
         }
 
-        public bool HandleCharacter(int? oldCharacterId, CharacterOnlyEditModel character)
+        public bool HandleCharacter(int? oldCharacterId, CharacterOnlyEditModel character, PropertyChangedEventHandler propertyChanged = null)
         {
-            return StoryCharacter.HandleItem(Id, oldCharacterId, character);
+            return StoryCharacter.HandleItem(Id, oldCharacterId, character, propertyChanged);
         }
 
         public bool HandleCode(int? oldCodeId, CodeOnlyEditModel code)
@@ -85,9 +86,9 @@ namespace ComicsLibrary.EditModels
             return false;
         }
 
-        public bool HandleStoryOrigin(int? oldOriginStoryId, StoryOnlyEditModel originStory)
+        public bool HandleStoryOrigin(int? oldOriginStoryId, StoryOnlyEditModel originStory, PropertyChangedEventHandler propertyChanged = null)
         {
-            return StoryFromOrigin.HandleItem(Id, oldOriginStoryId, originStory);
+            return StoryFromOrigin.HandleItem(Id, oldOriginStoryId, originStory, propertyChanged);
         }
 
         public void ResetId()

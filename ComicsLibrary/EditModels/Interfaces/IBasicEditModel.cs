@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace ComicsLibrary.EditModels.Interfaces
 {
-    public interface IBasicEditModel
+    public interface IBasicEditModel : INotifyPropertyChanged
     {
         //string this[string columnName] { get; }
 

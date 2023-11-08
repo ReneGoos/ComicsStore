@@ -90,67 +90,67 @@ namespace ComicsLibrary.ViewModels
         public async void HandleArtist(int? artistId, int? oldArtistId)
         {
             var artist = artistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _artistsService.GetAsync(artistId.Value)) : null;
-            IsDirty = IsDirty || Item.HandleArtist(oldArtistId, artist);
+            IsDirty |= Item.HandleArtist(oldArtistId, artist, ItemPropertyChanged);
         }
 
         public void DeleteArtistFromList(int? artistId)
         {
-            IsDirty = IsDirty || Item.HandleArtist(artistId, null);
+            IsDirty |= Item.HandleArtist(artistId, null);
         }
 
         public async void HandleBook(int? bookId, int? oldBookId)
         {
             var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
-            IsDirty = IsDirty || Item.HandleBook(oldBookId, book);
+            IsDirty |= Item.HandleBook(oldBookId, book, ItemPropertyChanged);
         }
 
         public void DeleteBookFromList(int? bookId)
         {
-            IsDirty = IsDirty || Item.HandleBook(bookId, null);
+            IsDirty |= Item.HandleBook(bookId, null);
         }
 
         public async void HandleCharacter(int? characterId, int? oldCharacterId)
         {
             var character = characterId.HasValue ? Mapper.Map<CharacterOnlyEditModel>(await _charactersService.GetAsync(characterId.Value)) : null;
-            IsDirty = IsDirty || Item.HandleCharacter(oldCharacterId, character);
+            IsDirty |= Item.HandleCharacter(oldCharacterId, character, ItemPropertyChanged);
         }
 
         public void DeleteCharacterFromList(int? characterId)
         {
-            IsDirty = IsDirty || Item.HandleCharacter(characterId, null);
+            IsDirty |= Item.HandleCharacter(characterId, null);
         }
 
         public async void HandleCode(int? codeId, int? oldCodeId)
         {
             var code = codeId.HasValue ? Mapper.Map<CodeOnlyEditModel>(await _codesService.GetAsync(codeId.Value)) : null;
-            IsDirty = IsDirty || Item.HandleCode(oldCodeId, code);
+            IsDirty |= Item.HandleCode(oldCodeId, code);
         }
 
         public void DeleteCode(int? codeId)
         {
-            IsDirty = IsDirty || Item.HandleCode(codeId, null);
+            IsDirty |= Item.HandleCode(codeId, null);
         }
 
         public async void HandleOriginStory(int? originStoryId, int? oldOriginStoryId)
         {
             var story = originStoryId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _itemService.GetAsync(originStoryId.Value)) : null;
-            IsDirty = IsDirty || Item.HandleOriginStory(oldOriginStoryId, story);
+            IsDirty |= Item.HandleOriginStory(oldOriginStoryId, story);
         }
 
         public void DeleteOriginStory(int? originStoryId)
         {
-            IsDirty = IsDirty || Item.HandleOriginStory(originStoryId, null);
+            IsDirty |= Item.HandleOriginStory(originStoryId, null);
         }
 
         public async void HandleStoryOrigin(int? originStoryId, int? oldOriginStoryId)
         {
             var originStory = originStoryId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _itemService.GetAsync(originStoryId.Value)) : null;
-            IsDirty = IsDirty || Item.HandleStoryOrigin(oldOriginStoryId, originStory);
+            IsDirty |= Item.HandleStoryOrigin(oldOriginStoryId, originStory, ItemPropertyChanged);
         }
 
         public void DeleteOriginFromList(int? originStoryId)
         {
-            IsDirty = IsDirty || Item.HandleStoryOrigin(originStoryId, null);
+            IsDirty |= Item.HandleStoryOrigin(originStoryId, null);
         }
 
         public override async void ItemChange(TableType table, int? id, ActionType actionType)
