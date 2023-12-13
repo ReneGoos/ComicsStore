@@ -1,5 +1,6 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace ComicsLibrary.EditModels
@@ -12,9 +13,9 @@ namespace ComicsLibrary.EditModels
 
         public ArtistEditModel() : base()
         {
-            StoryArtist = new ObservableChangedCollection<ArtistStoryEditModel>();
-            MainArtist = new ObservableChangedCollection<ArtistPseudonymEditModel>();
-            PseudonymArtist = new ObservableChangedCollection<PseudonymArtistEditModel>();
+            StoryArtist = [];
+            MainArtist = [];
+            PseudonymArtist = [];
         }
 
         public ObservableChangedCollection<ArtistStoryEditModel> StoryArtist { get => _storyArtist; set => Set(ref _storyArtist, value); }
@@ -44,6 +45,25 @@ namespace ComicsLibrary.EditModels
             {
                 story.ArtistId = null;
             }
+        }
+
+        public override bool Validate(Dictionary<string, List<string>> errors)
+        {
+            var validate = base.Validate(errors);
+
+            if (Pseudonym is not null && Pseudonym.Equals("yes"))
+            {
+                if ((RealLastName is null || RealLastName.Length == 0) && (RealFirstName is null || RealFirstName.Length == 0) && PseudonymArtist.Count == 0)
+                {
+                    errors["RealName"] =
+                    [
+                        "Pseudonym requires a real name"
+                    ];
+                    validate = false;
+                }
+            }
+
+            return validate;
         }
     }
 }

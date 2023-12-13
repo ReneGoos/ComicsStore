@@ -12,9 +12,9 @@ namespace ComicsLibrary.EditModels
 
         public BookEditModel() : base()
         {
-            BookPublisher = new ObservableChangedCollection<BookPublisherEditModel>();
-            BookSeries = new ObservableChangedCollection<BookSeriesEditModel>();
-            StoryBook = new ObservableChangedCollection<BookStoryEditModel>();
+            BookPublisher = [];
+            BookSeries = [];
+            StoryBook = [];
         }
 
         public ObservableChangedCollection<BookPublisherEditModel> BookPublisher { get => _bookPublishers; set => Set(ref _bookPublishers, value); }

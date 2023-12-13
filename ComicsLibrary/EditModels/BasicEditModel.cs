@@ -26,7 +26,7 @@ namespace ComicsLibrary.EditModels
             var properties = GetType().GetProperties().Where(prop => prop.IsDefined(typeof(ValidationAttribute), false));
             foreach (var prop in properties)
             {
-                errors[prop.Name] = new List<string>();
+                errors[prop.Name] = [];
                 foreach (var validation in (ValidationAttribute[])prop.GetCustomAttributes(typeof(ValidationAttribute), false))
                 {
                     if (validation.IsValid(prop.GetValue(this)))

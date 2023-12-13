@@ -75,10 +75,10 @@ namespace ComicsStore.MiddleWare.Reports
                             exportText);
                     }
 
-                    characters = new SortedSet<string>();
-                    artists = new SortedList<string, ArtistType>();
-                    series = new SortedSet<string>();
-                    publishers = new SortedSet<string>();
+                    characters = [];
+                    artists = [];
+                    series = [];
+                    publishers = [];
 
                     storyId = story.StoryId;
                     bookId = story.BookId;

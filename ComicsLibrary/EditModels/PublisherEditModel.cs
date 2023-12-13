@@ -10,7 +10,7 @@ namespace ComicsLibrary.EditModels
 
         public PublisherEditModel() : base()
         {
-            BookPublisher = new ObservableChangedCollection<PublisherBookEditModel>();
+            BookPublisher = [];
         }
 
         public ObservableChangedCollection<PublisherBookEditModel> BookPublisher { get => _bookPublishers; set => Set(ref _bookPublishers, value); }

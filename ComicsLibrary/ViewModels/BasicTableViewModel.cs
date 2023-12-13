@@ -18,6 +18,7 @@ using ComicsStore.Data.Common;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text;
 using ComicsLibrary.EditModels.Interfaces;
+using System.Data;
 
 namespace ComicsLibrary.ViewModels
 {
@@ -216,7 +217,7 @@ namespace ComicsLibrary.ViewModels
                 return;
             }
 
-            Dictionary<string, List<string>> errors = new();
+            Dictionary<string, List<string>> errors = [];
 
             if (!Item.Validate(errors))
             {
@@ -257,12 +258,22 @@ namespace ComicsLibrary.ViewModels
 
         protected virtual async void DeleteAsync(int id)
         {
-            if (ContinueDelete() == MessageBoxResult.Yes)
+            try
             {
-                await _itemService.DeleteAsync(id);
-                RaiseItemChanged(typeof(TEdit).Name, id, ActionType.deleteItem);
-                UpdateItemsList(new TOut { Id = id }, true);
-                NewItem();
+                if (ContinueDelete() == MessageBoxResult.Yes)
+                {
+                    await _itemService.DeleteAsync(id);
+                    RaiseItemChanged(typeof(TEdit).Name, id, ActionType.deleteItem);
+                    UpdateItemsList(new TOut { Id = id }, true);
+                    NewItem();
+                }
+            }
+            catch (DataException e)
+            {
+                SetError(new Dictionary<string, List<string>>
+                {
+                    ["Delete"] = [e.Message]
+                });
             }
         }
 

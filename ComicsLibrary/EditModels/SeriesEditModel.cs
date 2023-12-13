@@ -11,7 +11,7 @@ namespace ComicsLibrary.EditModels
 
         public SeriesEditModel() : base()
         {
-            BookSeries = new ObservableChangedCollection<SeriesBookEditModel>();
+            BookSeries = [];
         }
 
         public CodeOnlyOutputModel Code { get; set; }

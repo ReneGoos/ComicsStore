@@ -42,7 +42,7 @@
                     <ColumnDefinition Width="5"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="301*"/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -61,29 +61,37 @@
 
                 <Label Grid.Column="1"
                        Grid.Row="1"
-                       Content="{Binding Id, Mode=OneWay}"/>
+                       Content="{Binding Id, Mode=OneWay}" 
+                       Margin="0,0,10,0"/>
 
                 <Label Grid.Column="1"
-                       Grid.Row="3">
+                       Grid.Row="3" 
+                       Grid.ColumnSpan="2"
+                       Margin="0,0,10,0">
                     Name
                 </Label>
                 <TextBox Grid.Column="3" 
                          Grid.Row="3"
                          CharacterCasing="Upper"
                          MaxLength="5"
-                         Text="{Binding Name, Mode=TwoWay, TargetNullValue={x:Static system:String.Empty}}"/>
+                         Text="{Binding Name, Mode=TwoWay, TargetNullValue={x:Static system:String.Empty}}" 
+                         Margin="0,0,5,0"/>
 
                 <Label Grid.Column="1"
-                       Grid.Row="5">
+                       Grid.Row="5" 
+                       Grid.ColumnSpan="2"
+                       Margin="0,0,10,0">
                     Remark
                 </Label>
                 <TextBox Grid.Column="3"
                          Grid.Row="5"
-                         Text="{Binding Remark, Mode=TwoWay, TargetNullValue={x:Static system:String.Empty}}"/>
+                         Text="{Binding Remark, Mode=TwoWay, TargetNullValue={x:Static system:String.Empty}}" 
+                         Margin="0,0,5,0"/>
 
                 <TextBlock Grid.Column="3" 
                            Grid.Row="7" 
                            Foreground="Red"
+                           TextWrapping="Wrap"
                            Text="{Binding DataContext.Error, RelativeSource={RelativeSource AncestorType=StackPanel}}"/>
             </Grid>
             <Grid Grid.Column="1">

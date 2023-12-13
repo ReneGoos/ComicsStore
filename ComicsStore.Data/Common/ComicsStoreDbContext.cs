@@ -1,6 +1,7 @@
 ﻿using ComicsStore.Data.Model;
 using ComicsStore.Data.Model.Output;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 
 namespace ComicsStore.Data.Common
@@ -14,6 +15,18 @@ namespace ComicsStore.Data.Common
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            ArgumentNullException.ThrowIfNull(modelBuilder);
+
+            // for the other conventions, we do a metadata model loop
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes().Where(et => et.ClrType.Name.Equals("Series") || et.ClrType.Name.Equals("Stories")))
+            {
+                // equivalent of modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+                entityType.GetForeignKeys()
+                    .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade)
+                    .ToList()
+                    .ForEach(fk => fk.DeleteBehavior = DeleteBehavior.Restrict);
+            }
+
             base.OnModelCreating(modelBuilder);
 
             _ = modelBuilder.Entity<Story>()

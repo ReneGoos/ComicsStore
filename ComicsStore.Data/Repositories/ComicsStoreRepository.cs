@@ -33,6 +33,10 @@ namespace ComicsStore.Data.Repositories
             {
                 ThrowDataException(e);
             }
+            catch (InvalidOperationException e)
+            {
+                ThrowDataException(e);
+            }
         }
 
         private static void ThrowDataException(Exception e)
@@ -58,7 +62,14 @@ namespace ComicsStore.Data.Repositories
 
         protected async Task RemoveItemAsync(DbSet<T> collection, T item)
         {
-            _ = collection.Remove(item);
+            try
+            {
+                _ = collection.Remove(item);
+            }
+            catch (InvalidOperationException e)
+            {
+                ThrowDataException(e);
+            }
 
             await SaveChangesAsync();
         }

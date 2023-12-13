@@ -10,7 +10,7 @@ namespace ComicsLibrary.EditModels
 
         public CharacterEditModel() : base()
         {
-            StoryCharacter = new ObservableChangedCollection<CharacterStoryEditModel>();
+            StoryCharacter = [];
         }
 
         public ObservableChangedCollection<CharacterStoryEditModel> StoryCharacter { get => _storyCharacters; set => Set(ref _storyCharacters, value); }

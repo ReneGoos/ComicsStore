@@ -23,24 +23,39 @@ namespace ComicsStore.MiddleWare
             _ = CreateMap<ArtistType, ICollection<string>>().ConstructUsing(src => EnumHelper<ArtistType>.GetDisplayValues(src));
 
             _ = CreateMap<ArtistInputModel, Artist>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s)
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.LastName))
                 .ForSourceMember(src => src.Name, opt => opt.DoNotValidate());
-            _ = CreateMap<BookInputModel, Book>();
-            _ = CreateMap<CharacterInputModel, Character>();
-            _ = CreateMap<CodeInputModel, Code>();
-            _ = CreateMap<PublisherInputModel, Publisher>();
-            _ = CreateMap<SeriesInputModel, Series>();
-            _ = CreateMap<StoryInputModel, Story>();
+            _ = CreateMap<BookInputModel, Book>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<CharacterInputModel, Character>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<CodeInputModel, Code>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<PublisherInputModel, Publisher>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<SeriesInputModel, Series>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<StoryInputModel, Story>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
 
-            _ = CreateMap<BookInputPatchModel, Book>();
-            _ = CreateMap<StoryInputPatchModel, Story>();
+            _ = CreateMap<BookInputPatchModel, Book>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<StoryInputPatchModel, Story>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
 
-            _ = CreateMap<BookPublisherInputModel, BookPublisher>();
-            _ = CreateMap<BookSeriesInputModel, BookSeries>();
-            _ = CreateMap<PseudonymInputModel, Pseudonym>();
-            _ = CreateMap<StoryArtistInputModel, StoryArtist>();
-            _ = CreateMap<StoryBookInputModel, StoryBook>();
-            _ = CreateMap<StoryCharacterInputModel, StoryCharacter>();
+            _ = CreateMap<BookPublisherInputModel, BookPublisher>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<BookSeriesInputModel, BookSeries>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<PseudonymInputModel, Pseudonym>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<StoryArtistInputModel, StoryArtist>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<StoryBookInputModel, StoryBook>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
+            _ = CreateMap<StoryCharacterInputModel, StoryCharacter>()
+                .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
 
             _ = CreateMap<Artist, ArtistOutputModel>()
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Name))

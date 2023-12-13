@@ -11,8 +11,8 @@ namespace ComicsLibrary.EditModels
 
         public CodeEditModel() : base()
         {
-            Series = new ObservableChangedCollection<CodeSeriesEditModel>();
-            Story = new ObservableChangedCollection<CodeStoryEditModel>();
+            Series = [];
+            Story = [];
         }
 
         public ObservableChangedCollection<CodeSeriesEditModel> Series { get => _seriesCodes; set => Set(ref _seriesCodes, value); }

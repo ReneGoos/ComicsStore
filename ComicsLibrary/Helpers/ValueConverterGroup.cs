@@ -20,7 +20,7 @@ namespace ComicsLibrary.Helpers
     [System.Windows.Markup.ContentProperty("Converters")]
     public class ValueConverterGroup : IValueConverter
     {
-        private readonly Dictionary<IValueConverter, ValueConversionAttribute> _cachedAttributes = new();
+        private readonly Dictionary<IValueConverter, ValueConversionAttribute> _cachedAttributes = [];
 
         public ValueConverterGroup()
         {
@@ -30,7 +30,7 @@ namespace ComicsLibrary.Helpers
         /// <summary>
         /// Returns the list of IValueConverters contained in this converter.
         /// </summary>
-        public ObservableCollection<IValueConverter> Converters { get; } = new();
+        public ObservableCollection<IValueConverter> Converters { get; } = [];
 
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

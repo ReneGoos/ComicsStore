@@ -15,10 +15,10 @@ namespace ComicsLibrary.EditModels
 
         public StoryEditModel() : base()
         {
-            StoryFromOrigin = new ObservableChangedCollection<StoryOriginEditModel>();
-            StoryArtist = new ObservableChangedCollection<StoryArtistEditModel>();
-            StoryBook = new ObservableChangedCollection<StoryBookEditModel>();
-            StoryCharacter = new ObservableChangedCollection<StoryCharacterEditModel>();
+            StoryFromOrigin = [];
+            StoryArtist = [];
+            StoryBook = [];
+            StoryCharacter = [];
         }
 
         public CodeOnlyEditModel Code { get; set; }

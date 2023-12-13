@@ -62,8 +62,6 @@
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="5"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="5"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="*"/>
@@ -122,16 +120,16 @@
                          Text="{Binding RealFirstName, Mode=TwoWay, TargetNullValue={x:Static system:String.Empty}}"/>
 
                 <Label Grid.Column="1"
-                       Grid.Row="13">
+                       Grid.Row="11">
                     Remark
                 </Label>
                 <TextBox Grid.Column="3"  
-                         Grid.Row="13" 
+                         Grid.Row="11" 
                          Grid.ColumnSpan="3"
                          Text="{Binding Remark, Mode=TwoWay, TargetNullValue={x:Static system:String.Empty}}"/>
 
                 <TextBlock Grid.Column="3" 
-                           Grid.Row="15" 
+                           Grid.Row="13" 
                            Foreground="Red"
                            Text="{Binding DataContext.Error, RelativeSource={RelativeSource AncestorType=StackPanel}}"/>
             </Grid>

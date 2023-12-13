@@ -33,11 +33,11 @@ namespace ComicsLibrary.Navigation
         private Window _navigationWindow;
         private string _title;
 
-        private Dictionary<string, Type> Pages { get; } = new Dictionary<string, Type>();
-        private Dictionary<string, Page> LoadedPages { get; } = new Dictionary<string, Page>();
+        private Dictionary<string, Type> Pages { get; } = [];
+        private Dictionary<string, Page> LoadedPages { get; } = [];
         private Stack<NavigationContext> ActivePages { get; } = new Stack<NavigationContext>();
 
-        private Dictionary<string, Type> Windows { get; } = new Dictionary<string, Type>();
+        private Dictionary<string, Type> Windows { get; } = [];
 
         public string PageChain
         {
