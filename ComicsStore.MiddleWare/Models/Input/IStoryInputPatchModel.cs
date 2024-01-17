@@ -5,7 +5,7 @@
         int? CodeId { get; set; }
         string ExtraInfo { get; set; }
         double? Pages { get; set; }
-        int? StoryNumber { get; set; }
+        decimal? StoryNumber { get; set; }
         string StoryType { get; set; }
     }
 }

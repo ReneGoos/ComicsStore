@@ -12,7 +12,7 @@ namespace ComicsStore.Data.Model.Output
         public string Title { get; set; }
         public string OriginalTitle { get; set; }
         [Column("Story number")]
-        public int? StoryNumber { get; set; }
+        public decimal? StoryNumber { get; set; }
         public string ExtraInfo { get; set; }
         [Column("Type")]
         public StoryType StoryType { get; set; }

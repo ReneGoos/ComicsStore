@@ -5,7 +5,7 @@ namespace ComicsLibrary.EditModels
     public class StoryOnlyEditModel : TableEditModel
     {
         private string _storyType;
-        private int? _storyNumber;
+        private decimal? _storyNumber;
         private double? _pages;
         private string _extraInfo;
         private string _language;
@@ -14,7 +14,7 @@ namespace ComicsLibrary.EditModels
 
         [Required]
         public string StoryType { get => _storyType; set => Set(ref _storyType, value); }
-        public int? StoryNumber { get => _storyNumber; set => Set(ref _storyNumber, value); }
+        public decimal? StoryNumber { get => _storyNumber; set => Set(ref _storyNumber, value); }
         public double? Pages { get => _pages; set => Set(ref _pages, value); }
         public string ExtraInfo { get => _extraInfo; set => Set(ref _extraInfo, value); }
         [Required]

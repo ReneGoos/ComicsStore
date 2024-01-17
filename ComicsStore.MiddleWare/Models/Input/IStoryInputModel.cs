@@ -14,7 +14,7 @@ namespace ComicsStore.MiddleWare.Models.Input
         ICollection<StoryArtistInputModel> StoryArtist { get; set; }
         ICollection<StoryBookInputModel> StoryBook { get; set; }
         ICollection<StoryCharacterInputModel> StoryCharacter { get; set; }
-        int? StoryNumber { get; set; }
+        decimal? StoryNumber { get; set; }
         string StoryType { get; set; }
     }
 }

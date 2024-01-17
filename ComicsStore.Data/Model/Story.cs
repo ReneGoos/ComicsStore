@@ -19,7 +19,7 @@ namespace ComicsStore.Data.Model
 
         [EnumDataType(typeof(StoryType), ErrorMessage = "Story type value doesn't exist within enum")]
         public StoryType StoryType { get; set; }
-        public int? StoryNumber { get; set; }
+        public decimal? StoryNumber { get; set; }
         public double? Pages { get; set; }
         [MaxLength(255)]
         public string ExtraInfo { get; set; }

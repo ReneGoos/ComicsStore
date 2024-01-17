@@ -29,9 +29,10 @@ namespace ComicsStore.Data.Repositories.CrossRepository
                                 storySeries.CharacterName.ToLower().Contains(model.Filter.ToLower()) ||
                                 storySeries.ArtistName.ToLower().Contains(model.Filter.ToLower())
                                 )
-                          orderby storySeries.StoryName,
-                          storySeries.StoryNumber,
+                          orderby storySeries.StoryCode, 
                           storySeries.StoryType,
+                          storySeries.StoryNumber,
+                          storySeries.StoryName,
                           storySeries.Issue,
                           storySeries.IssueTitle,
                           storySeries.StoryId,

@@ -6,7 +6,7 @@ namespace ComicsStore.MiddleWare.Models.Output
     {
         public string Title { get; set; }
         public string OriginalTitle { get; set; }
-        public int? StoryNumber { get; set; }
+        public decimal? StoryNumber { get; set; }
         public string ExtraInfo { get; set; }
         public string StoryType { get; set; }
         public string BookType { get; set; }

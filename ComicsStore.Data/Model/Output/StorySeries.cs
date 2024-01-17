@@ -12,7 +12,7 @@ namespace ComicsStore.Data.Model.Output
         public int StoryCodeId { get; set; }
         public string StoryName { get; set; }
         public string OriginalStoryName { get; set; }
-        public int? StoryNumber { get; set; }
+        public decimal? StoryNumber { get; set; }
         public string ExtraInfo { get; set; }
         public StoryType StoryType { get; set; }
         public BookType BookType { get; set; }

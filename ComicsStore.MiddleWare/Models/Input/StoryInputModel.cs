@@ -6,7 +6,7 @@ namespace ComicsStore.MiddleWare.Models.Input
     public class StoryInputModel : BasicInputModel, IStoryInputModel
     {
         public string StoryType { get; set; }
-        public int? StoryNumber { get; set; }
+        public decimal? StoryNumber { get; set; }
         public double? Pages { get; set; }
         [MaxLength(255)]
         public string ExtraInfo { get; set; }

@@ -124,7 +124,8 @@ namespace ComicsStore.Data.Common
 
             _ = modelBuilder.Entity<StorySeries>()
                 .HasNoKey()
-                .ToView("StorySeries");
+                .ToView("StorySeries")
+                .Property(ss => ss.StoryNumber).HasConversion<double>();
         }
 
         public void DetachAllEntities()

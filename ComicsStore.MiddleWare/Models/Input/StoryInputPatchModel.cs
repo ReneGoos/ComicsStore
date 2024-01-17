@@ -3,7 +3,7 @@
     public class StoryInputPatchModel : BasicInputModel, IStoryInputPatchModel
     {
         public string StoryType { get; set; }
-        public int? StoryNumber { get; set; }
+        public decimal? StoryNumber { get; set; }
         public double? Pages { get; set; }
         public string ExtraInfo { get; set; }
 
