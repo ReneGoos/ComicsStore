@@ -77,7 +77,10 @@ namespace ComicsLibrary.ViewModels
                 {
                     _originStories = value.ToList();
                 }
+
+                StoryOnlyEditModel.ListUpdating = true;
                 RaisePropertyChanged();
+                StoryOnlyEditModel.ListUpdating = false;
             }
         }
 

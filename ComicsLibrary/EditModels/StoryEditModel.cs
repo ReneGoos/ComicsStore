@@ -73,7 +73,7 @@ namespace ComicsLibrary.EditModels
                 return oldOriginStoryId.HasValue;
             }
 
-            if (oldOriginStoryId.HasValue && story.Id.Value == oldOriginStoryId.Value && CodeId != oldOriginStoryId.Value)
+            if (oldOriginStoryId.HasValue && story.Id.Value == oldOriginStoryId.Value && OriginStoryId != oldOriginStoryId.Value)
             {
                 return false;
             }

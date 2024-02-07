@@ -109,16 +109,7 @@
                         Content="{Binding CodeId}"
                         IsEnabled="{Binding DataContext.OpenCode, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                         />
-
-                <Button Grid.Row ="5"
-                        Grid.Column="7"
-                        Background="Transparent"
-                        Command="{Binding DataContext.ShowCodeFromSeriesWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                        Visibility="{Binding DataContext.OpenCode, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
-                        >
-                    +
-                </Button>
-
+                
                 <Label Grid.Column="1"
                        Grid.Row="7">
                     Number
