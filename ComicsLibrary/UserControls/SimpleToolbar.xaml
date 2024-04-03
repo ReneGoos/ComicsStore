@@ -97,6 +97,7 @@
         <Button Grid.Row="1" 
                 Grid.Column="13" 
                 Height="45"
+                IsDefault="True"
                 Name="OkButton"
                 Command="{Binding ExitCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 CommandParameter = "{StaticResource True}" >
@@ -105,6 +106,7 @@
         <Button Grid.Row="1" 
                 Grid.Column="15" 
                 Height="45"
+                IsCancel="True"
                 Name="CancelButton"
                 Command="{Binding ExitCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 CommandParameter = "{StaticResource False}" >

@@ -2,7 +2,7 @@
 
 namespace ComicsLibrary.Core;
 
-internal interface INotifyItemChanged
+public interface INotifyItemChanged
 {
     event ItemChangedEventHandler? ItemChanged;
 }

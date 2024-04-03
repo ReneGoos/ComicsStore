@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComicsLibrary.Core;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace ComicsStore.Controls
 
     public class FilteredListView : ListView
     {
-        private CancellationTokenSource src = new();
+        private CancellationTokenSource _src = new();
 
         static FilteredListView()
         {
@@ -45,13 +46,18 @@ namespace ComicsStore.Controls
 
         private async Task OnChangeTask(DependencyPropertyChangedEventArgs args)
         {
-            src.Cancel();
-            src.Dispose();
+            if ((DataContext as ObservableObject).IsDirty)
+            {
+                return;
+            }
+
+            _src.Cancel();
+            _src.Dispose();
 
             try
             {
-                src = new();
-                await Task.Delay(700, src.Token).ContinueWith(DoSomeWork, src.Token);
+                _src = new();
+                await Task.Delay(700, _src.Token).ContinueWith(DoSomeWork, _src.Token);
             }
             catch (TaskCanceledException) { }
         }
@@ -68,7 +74,7 @@ namespace ComicsStore.Controls
 
         private void DoSomeWork(Task obj)
         {
-            var collectionView = CollectionViewSource.GetDefaultView(ItemsSource);
+           var collectionView = CollectionViewSource.GetDefaultView(ItemsSource);
             if (collectionView == null) return;
 
             this.Dispatcher.Invoke(() =>

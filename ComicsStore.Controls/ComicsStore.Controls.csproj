@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ComicsLibrary.Core\ComicsLibrary.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
  	<Resource Include="fonts\FontAwesome.otf" />
 	<Resource Include="fonts\fontawesome-webfont.ttf" />
 	<Resource Include="fonts\fontawesome-webfont.eot" />
