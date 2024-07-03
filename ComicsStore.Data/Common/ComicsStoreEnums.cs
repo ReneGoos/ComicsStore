@@ -33,7 +33,10 @@ namespace ComicsStore.Data.Common
         story = 0,
         one = 1,
         gag = 2,
-        cartoon = 3
+        cartoon = 3,
+        illustrated = 4,
+        excerpt = 5,
+        review = 6
     }
 
     public enum TableType
