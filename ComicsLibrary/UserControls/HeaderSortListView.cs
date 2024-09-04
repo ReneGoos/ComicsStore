@@ -11,8 +11,15 @@ namespace ComicsLibrary.UserControls
 {
     public class HeaderSortListView : ListView
     {
+        public enum ListSortDirectionSwitch
+        {
+            Ascending = 0,
+            Descending = 1,
+            None = 2
+        }
+
         GridViewColumnHeader _lastHeaderClicked = null;
-        ListSortDirection _lastDirection = ListSortDirection.Ascending;
+        ListSortDirectionSwitch _lastDirection = ListSortDirectionSwitch.None;
 
         public int Page
         {
@@ -153,13 +160,18 @@ namespace ComicsLibrary.UserControls
             return 1;
         }
 
-        private void Sort(string sortBy, ListSortDirection direction)
+        private void Sort(string sortBy, ListSortDirectionSwitch direction)
         {
             var dataView = CollectionViewSource.GetDefaultView(ItemsSource);
 
             dataView.SortDescriptions.Clear();
-            var sd = new SortDescription(sortBy, direction);
-            dataView.SortDescriptions.Add(sd);
+
+            if (direction != ListSortDirectionSwitch.None)
+            {
+                var sd = new SortDescription(sortBy, (ListSortDirection)direction);
+                dataView.SortDescriptions.Add(sd);
+            }
+
             dataView.Refresh();
         }
 
@@ -229,8 +241,6 @@ namespace ComicsLibrary.UserControls
 
         void HeaderSortListViewClickEvent(object sender, RoutedEventArgs e)
         {
-            ListSortDirection direction;
-
             if (e.OriginalSource is GridViewColumnHeader headerClicked)
             {
                 if (headerClicked.Tag is string sortBy)
@@ -239,44 +249,45 @@ namespace ComicsLibrary.UserControls
                     {
                         if (headerClicked != _lastHeaderClicked)
                         {
-                            direction = ListSortDirection.Ascending;
+                            // Remove arrow from previously sorted header
+                            if (_lastHeaderClicked != null)
+                            {
+                                _lastHeaderClicked.Column.HeaderTemplate = null;
+                            }
+
+                            _lastDirection = ListSortDirectionSwitch.Ascending;
                         }
                         else
                         {
-                            if (_lastDirection == ListSortDirection.Ascending)
+                            if (_lastDirection == ListSortDirectionSwitch.None)
                             {
-                                direction = ListSortDirection.Descending;
+                                _lastDirection = ListSortDirectionSwitch.Ascending;
                             }
                             else
                             {
-                                direction = ListSortDirection.Ascending;
+                                _lastDirection = _lastDirection + 1;
                             }
                         }
 
                         //var columnBinding = headerClicked.Column.DisplayMemberBinding as Binding;
                         //var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
-                        Sort(sortBy, direction);
+                        Sort(sortBy, _lastDirection);
                         ResetDataView();
 
-                        if (direction == ListSortDirection.Ascending)
+                        switch (_lastDirection)
                         {
-                            headerClicked.Column.HeaderTemplate =
-                              TryFindResource("HeaderTemplateArrowUp") as DataTemplate;
-                        }
-                        else
-                        {
-                            headerClicked.Column.HeaderTemplate =
-                              TryFindResource("HeaderTemplateArrowDown") as DataTemplate;
-                        }
-
-                        // Remove arrow from previously sorted header
-                        if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked)
-                        {
-                            _lastHeaderClicked.Column.HeaderTemplate = null;
+                            case ListSortDirectionSwitch.Ascending:
+                                headerClicked.Column.HeaderTemplate = TryFindResource("HeaderTemplateArrowUp") as DataTemplate;
+                                break;
+                            case ListSortDirectionSwitch.Descending:
+                                headerClicked.Column.HeaderTemplate = TryFindResource("HeaderTemplateArrowDown") as DataTemplate;
+                                break;
+                            default:
+                                headerClicked.Column.HeaderTemplate = null;
+                                break;
                         }
 
                         _lastHeaderClicked = headerClicked;
-                        _lastDirection = direction;
                     }
                 }
             }

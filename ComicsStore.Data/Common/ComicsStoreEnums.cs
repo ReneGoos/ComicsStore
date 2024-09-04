@@ -13,7 +13,8 @@ namespace ComicsStore.Data.Common
     {
         book = 0,
         collection = 1,
-        periodical = 2
+        periodical = 2,
+        secundary = 3
     }
 
     public enum YesNoInd
@@ -34,7 +35,7 @@ namespace ComicsStore.Data.Common
         one = 1,
         gag = 2,
         cartoon = 3,
-        illustrated = 4,
+        illustrations = 4,
         excerpt = 5,
         review = 6
     }
