@@ -28,6 +28,13 @@ namespace ComicsLibrary.ViewModels
         private readonly ICharactersService _charactersService;
         private readonly ICodesService _codesService;
 
+        private ICollection<int> _pinnedArtists = [];
+        private ICollection<int> _pinnedBooks = [];
+        private ICollection<int> _pinnedCharacters = [];
+        private int? _pinnedCodeId = null;
+        private string _pinnedStoryType;
+        private string _pinnedLanguage;
+
         private void StoryViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Items" )
@@ -154,6 +161,47 @@ namespace ComicsLibrary.ViewModels
         public void DeleteOriginFromList(int? originStoryId)
         {
             IsDirty |= Item.HandleStoryOrigin(originStoryId, null);
+        }
+
+        protected override void SetPinnedLinks()
+        {
+            base.SetPinnedLinks();
+
+            _pinnedArtists = Item.StoryArtist.Select(sa => sa.ArtistId.Value).ToList();
+            _pinnedBooks = Item.StoryBook.Select(sb => sb.BookId.Value).ToList();
+            _pinnedCharacters = Item.StoryCharacter.Select(sc => sc.CharacterId.Value).ToList();
+
+            _pinnedCodeId = Item.CodeId;
+            _pinnedStoryType = Item.StoryType;
+            _pinnedLanguage =  Item.Language;
+        }
+
+        protected override void AddPinnedLinks()
+        {
+            base.AddPinnedLinks();
+
+            foreach (var pinnedArtist in _pinnedArtists)
+            {
+                HandleArtist(pinnedArtist, null);
+            }
+
+            foreach (var pinnedBook in _pinnedBooks)
+            {
+                HandleBook(pinnedBook, null);
+            }
+
+            foreach (var pinnedCharacter in _pinnedCharacters)
+            {
+                HandleCharacter(pinnedCharacter, null);
+            }
+
+            if (_pinnedCodeId.HasValue)
+            {
+                HandleCode(_pinnedCodeId, null);
+            }
+
+            Item.StoryType = _pinnedStoryType;
+            Item.Language = _pinnedLanguage;
         }
 
         public override async void ItemChange(TableType table, int? id, ActionType actionType)

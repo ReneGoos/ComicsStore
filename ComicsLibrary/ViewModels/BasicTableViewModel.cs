@@ -279,19 +279,26 @@ namespace ComicsLibrary.ViewModels
 
         protected virtual void NewItem(bool bKeep = false)
         {
-            var item = new TEdit();
+            if (bKeep)
+            {
+                SetPinnedLinks();
+            }
+
+            Item = new TEdit();
+            Item.PropertyChanged += ItemPropertyChanged;
+            ClearError();
 
             if (bKeep)
             {
-                item = Item.CloneJson();
-                //item.ResetId();
+                AddPinnedLinks();
             }
 
-            Item = item;
-            Item.PropertyChanged += ItemPropertyChanged;
-            ClearError();
             IsDirty = false;
         }
+
+        protected virtual void SetPinnedLinks() { }
+
+        protected virtual void AddPinnedLinks() { }
 
         private void ItemsPropertyChanged()
         {
