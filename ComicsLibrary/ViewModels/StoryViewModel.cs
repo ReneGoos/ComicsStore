@@ -28,7 +28,7 @@ namespace ComicsLibrary.ViewModels
         private readonly ICharactersService _charactersService;
         private readonly ICodesService _codesService;
 
-        private ICollection<int> _pinnedArtists = [];
+        private ICollection<StoryArtistEditModel> _pinnedArtists = [];
         private ICollection<int> _pinnedBooks = [];
         private ICollection<int> _pinnedCharacters = [];
         private int? _pinnedCodeId = null;
@@ -167,7 +167,7 @@ namespace ComicsLibrary.ViewModels
         {
             base.SetPinnedLinks();
 
-            _pinnedArtists = Item.StoryArtist.Select(sa => sa.ArtistId.Value).ToList();
+            _pinnedArtists = Item.StoryArtist.Select(sa => new StoryArtistEditModel { ArtistId = sa.ArtistId, ArtistType = sa.ArtistType }).ToList();
             _pinnedBooks = Item.StoryBook.Select(sb => sb.BookId.Value).ToList();
             _pinnedCharacters = Item.StoryCharacter.Select(sc => sc.CharacterId.Value).ToList();
 
@@ -182,7 +182,14 @@ namespace ComicsLibrary.ViewModels
 
             foreach (var pinnedArtist in _pinnedArtists)
             {
-                HandleArtist(pinnedArtist, null);
+                HandleArtist(pinnedArtist.ArtistId, null);
+                foreach ( var storyArtist in Item.StoryArtist )
+                {
+                    if ( storyArtist.ArtistId == pinnedArtist.ArtistId )
+                    {
+                        storyArtist.ArtistType = pinnedArtist.ArtistType;
+                    }
+                }
             }
 
             foreach (var pinnedBook in _pinnedBooks)

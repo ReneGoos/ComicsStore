@@ -78,6 +78,15 @@
                     <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
 
+                <CheckBox Grid.Row="1"
+                          Grid.Column="3"
+                          Grid.ColumnSpan="5"
+                          FlowDirection="RightToLeft"
+                          IsChecked="{Binding DataContext.Pinned, Mode=TwoWay, RelativeSource={RelativeSource  AncestorType=StackPanel}}"
+                          >
+                    Pinned
+                </CheckBox>
+
                 <Label Grid.Column="1"
                        Grid.Row="1" Content="{Binding Id, Mode=OneWay}"/>
 

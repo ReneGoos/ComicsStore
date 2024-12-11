@@ -74,7 +74,7 @@ namespace ComicsLibrary.ViewModels
         {
             _itemService = service;
             GetCommand = new RelayCommand<int>(new Action<int>(GetItemAsync));
-            NewCommand = new RelayCommand<bool>(new Action<bool>(NewItem));
+            NewCommand = new RelayCommand(new Action(NewItem));
             SaveCommand = new RelayCommand(new Action(SaveAsync));
             UndoCommand = new RelayCommand(new Action(CancelSaveAsync));
             DeleteCommand = new RelayCommand<int>(new Action<int>(DeleteAsync));
@@ -82,6 +82,7 @@ namespace ComicsLibrary.ViewModels
             NewItem();
         }
 
+        public bool Pinned { get; set; }
         public string Error { get => _error; set => Set(ref _error, value); }
 
         protected virtual void QueryResults(object sender, FilterEventArgs e)
@@ -277,9 +278,9 @@ namespace ComicsLibrary.ViewModels
             }
         }
 
-        protected virtual void NewItem(bool bKeep = false)
+        protected virtual void NewItem()
         {
-            if (bKeep)
+            if (Pinned)
             {
                 SetPinnedLinks();
             }
@@ -288,7 +289,7 @@ namespace ComicsLibrary.ViewModels
             Item.PropertyChanged += ItemPropertyChanged;
             ClearError();
 
-            if (bKeep)
+            if (Pinned)
             {
                 AddPinnedLinks();
             }
