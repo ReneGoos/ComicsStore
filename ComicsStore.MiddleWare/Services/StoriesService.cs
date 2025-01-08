@@ -11,65 +11,64 @@ using ComicsStore.Data.Model.Interfaces;
 using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
-namespace ComicsStore.MiddleWare.Services
+namespace ComicsStore.MiddleWare.Services;
+
+public class StoriesService : ComicsStoreService<Story, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearch>, IStoriesService
 {
-    public class StoriesService : ComicsStoreService<Story, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearch>, IStoriesService
+    private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
+    private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository;
+    private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository;
+
+    public StoriesService(IComicsStoreMainRepository<Story, StorySearch> storiesRepository,
+        IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository,
+        IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
+        IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository,
+        IMapper mapper) : base(storiesRepository, mapper)
     {
-        private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
-        private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository;
-        private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository;
+        _storyArtistsRepository = storyArtistsRepository;
+        _storyBooksRepository = storyBooksRepository;
+        _storyCharactersRepository = storyCharactersRepository;
+    }
 
-        public StoriesService(IComicsStoreMainRepository<Story, StorySearch> storiesRepository,
-            IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository,
-            IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
-            IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository,
-            IMapper mapper) : base(storiesRepository, mapper)
+    public async Task<ICollection<StoryArtistOutputModel>> GetArtistsAsync(int storyId)
+    {
+        var storyArtists = await _storyArtistsRepository.GetAsync(storyId, null);
+
+        try
         {
-            _storyArtistsRepository = storyArtistsRepository;
-            _storyBooksRepository = storyBooksRepository;
-            _storyCharactersRepository = storyCharactersRepository;
+            return Mapper.Map<ICollection<StoryArtistOutputModel>>(storyArtists);
         }
-
-        public async Task<ICollection<StoryArtistOutputModel>> GetArtistsAsync(int storyId)
+        catch (Exception)
         {
-            var storyArtists = await _storyArtistsRepository.GetAsync(storyId, null);
-
-            try
-            {
-                return Mapper.Map<ICollection<StoryArtistOutputModel>>(storyArtists);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return null;
         }
+    }
 
-        public async Task<ICollection<StoryBookOutputModel>> GetBooksAsync(int storyId)
+    public async Task<ICollection<StoryBookOutputModel>> GetBooksAsync(int storyId)
+    {
+        var storyBooks = await _storyBooksRepository.GetAsync(storyId, null);
+
+        try
         {
-            var storyBooks = await _storyBooksRepository.GetAsync(storyId, null);
-
-            try
-            {
-                return Mapper.Map<ICollection<StoryBookOutputModel>>(storyBooks);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return Mapper.Map<ICollection<StoryBookOutputModel>>(storyBooks);
         }
-
-        public async Task<ICollection<StoryCharacterOutputModel>> GetCharactersAsync(int storyId)
+        catch (Exception)
         {
-            var storyCharacters = await _storyCharactersRepository.GetAsync(storyId, null);
+            return null;
+        }
+    }
 
-            try
-            {
-                return Mapper.Map<ICollection<StoryCharacterOutputModel>>(storyCharacters);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+    public async Task<ICollection<StoryCharacterOutputModel>> GetCharactersAsync(int storyId)
+    {
+        var storyCharacters = await _storyCharactersRepository.GetAsync(storyId, null);
+
+        try
+        {
+            return Mapper.Map<ICollection<StoryCharacterOutputModel>>(storyCharacters);
+        }
+        catch (Exception)
+        {
+            return null;
         }
     }
 }

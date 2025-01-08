@@ -217,6 +217,22 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
+                                <GridViewColumn Header="Info" 
+                                                Width="40"
+                                                >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ShowStoryInformationWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding StoryId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="28"
+                                                    >
+                                                <TextBlock Text="i" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Width="250">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Story.Name">Story</GridViewColumnHeader>
@@ -348,6 +364,22 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
+                            <GridViewColumn Header="Info" 
+                                                Width="40"
+                                                >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.ShowArtistInformationWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding MainArtistId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="28"
+                                                    >
+                                            <TextBlock Text="i" HorizontalAlignment="Center" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Width="400">
                                 <GridViewColumn.Header>
                                     <GridViewColumnHeader Tag="MainArtist.Name">Main Artist</GridViewColumnHeader>
@@ -409,6 +441,22 @@
                                                 BorderThickness="0"
                                                 Width="28">
                                             <TextBlock Text="-" HorizontalAlignment="Center" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Info" 
+                                                Width="40"
+                                                >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.ShowArtistInformationWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding PseudonymArtistId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="28"
+                                                    >
+                                            <TextBlock Text="i" HorizontalAlignment="Center" />
                                         </Button>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>

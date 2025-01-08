@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace ComicsStore.MiddleWare.Models.Output
+namespace ComicsStore.MiddleWare.Models.Output;
+
+public interface ICharacterOutputModel : IBasicOutputModel
 {
-    public interface ICharacterOutputModel : IBasicOutputModel
-    {
-        ICollection<CharacterStoryOutputModel> StoryCharacter { get; set; }
-    }
+    ICollection<CharacterStoryOutputModel> StoryCharacter { get; set; }
 }

@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace ComicsLibrary.Navigation
+namespace ComicsLibrary.Navigation;
+
+public interface IActivable
 {
-    public interface IActivable
-    {
-        Task ActivateAsync(object parameter);
-    }
+    Task ActivateAsync(object parameter);
 }

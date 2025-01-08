@@ -7,97 +7,96 @@ using ComicsStore.Data.Model.Interfaces;
 using ComicsStore.Data.Common;
 using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 
-namespace ComicsStore.Data.Repositories.CrossRepository
+namespace ComicsStore.Data.Repositories.CrossRepository;
+
+public class StoryBooksRepository : ComicsStoreCrossRepository<StoryBook, IStoryBook>, IComicsStoreCrossRepository<StoryBook, IStoryBook>
 {
-    public class StoryBooksRepository : ComicsStoreCrossRepository<StoryBook, IStoryBook>, IComicsStoreCrossRepository<StoryBook, IStoryBook>
+    public StoryBooksRepository(ComicsStoreDbContext context)
+        : base(context)
     {
-        public StoryBooksRepository(ComicsStoreDbContext context)
-            : base(context)
+    }
+
+    public override Task<StoryBook> AddAsync(StoryBook value)
+    {
+        return AddItemAsync(_context.StoryBooks, value);
+    }
+
+    public override Task<List<StoryBook>> AddAsync(IEnumerable<StoryBook> value)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override Task DeleteAsync(StoryBook value)
+    {
+        return RemoveItemAsync(_context.StoryBooks, value);
+    }
+
+    public override Task DeleteAsync(IEnumerable<StoryBook> value)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override Task<List<StoryBook>> GetAsync()
+    {
+        return _context.StoryBooks
+            .ToListAsync();
+    }
+
+    public override Task<List<StoryBook>> GetAsync(int? id, int? crossId)
+    {
+        if (id == null && crossId == null)
         {
+            return null;
         }
 
-        public override Task<StoryBook> AddAsync(StoryBook value)
-        {
-            return AddItemAsync(_context.StoryBooks, value);
-        }
+        return _context.StoryBooks
+            .Include(sb => sb.Book)
+            .Include(sb => sb.Story)
+            .ThenInclude(s => s.Code)
+            .Include(sb => sb.Story)
+            .ThenInclude(s => s.OriginStory)
+            .Where(s => id != null ? s.StoryId == id : s.BookId == crossId)
+            .ToListAsync();
+    }
 
-        public override Task<List<StoryBook>> AddAsync(IEnumerable<StoryBook> value)
-        {
-            throw new System.NotImplementedException();
-        }
+    public override Task<StoryBook> UpdateAsync(StoryBook value)
+    {
+        return UpdateItemAsync(_context.StoryBooks, value, value.StoryId, value.BookId);
+    }
 
-        public override Task DeleteAsync(StoryBook value)
-        {
-            return RemoveItemAsync(_context.StoryBooks, value);
-        }
+    public override Task<List<StoryBook>> UpdateAsync(IEnumerable<StoryBook> value)
+    {
+        throw new System.NotImplementedException();
+    }
 
-        public override Task DeleteAsync(IEnumerable<StoryBook> value)
+    public override void UpdateLinkedItems(IStoryBook itemCurrent, IStoryBook itemNew)
+    {
+        if (itemNew.StoryBook is not null)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override Task<List<StoryBook>> GetAsync()
-        {
-            return _context.StoryBooks
-                .ToListAsync();
-        }
-
-        public override Task<List<StoryBook>> GetAsync(int? id, int? crossId)
-        {
-            if (id == null && crossId == null)
+            // Delete children
+            foreach (var existingChild in itemCurrent.StoryBook.ToList())
             {
-                return null;
+                if (!itemNew.StoryBook.Any(c => c.StoryId == existingChild.StoryId && c.BookId == existingChild.BookId))
+                {
+                    _ = itemCurrent.StoryBook.Remove(existingChild);
+                }
             }
 
-            return _context.StoryBooks
-                .Include(sb => sb.Book)
-                .Include(sb => sb.Story)
-                .ThenInclude(s => s.Code)
-                .Include(sb => sb.Story)
-                .ThenInclude(s => s.OriginStory)
-                .Where(s => id != null ? s.StoryId == id : s.BookId == crossId)
-                .ToListAsync();
-        }
-
-        public override Task<StoryBook> UpdateAsync(StoryBook value)
-        {
-            return UpdateItemAsync(_context.StoryBooks, value, value.StoryId, value.BookId);
-        }
-
-        public override Task<List<StoryBook>> UpdateAsync(IEnumerable<StoryBook> value)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UpdateLinkedItems(IStoryBook itemCurrent, IStoryBook itemNew)
-        {
-            if (itemNew.StoryBook is not null)
+            // Update and Insert children
+            foreach (var childModel in itemNew.StoryBook.ToList())
             {
-                // Delete children
-                foreach (var existingChild in itemCurrent.StoryBook.ToList())
-                {
-                    if (!itemNew.StoryBook.Any(c => c.StoryId == existingChild.StoryId && c.BookId == existingChild.BookId))
-                    {
-                        _ = itemCurrent.StoryBook.Remove(existingChild);
-                    }
-                }
+                var existingChild = itemCurrent.StoryBook
+                        .SingleOrDefault(c => c.StoryId == childModel.StoryId && c.BookId == childModel.BookId && c.BookId != default && c.StoryId != default);
 
-                // Update and Insert children
-                foreach (var childModel in itemNew.StoryBook.ToList())
+                if (existingChild is null && childModel.BookId > 0 && childModel.StoryId > 0)
                 {
-                    var existingChild = itemCurrent.StoryBook
-                            .SingleOrDefault(c => c.StoryId == childModel.StoryId && c.BookId == childModel.BookId && c.BookId != default && c.StoryId != default);
-
-                    if (existingChild is null && childModel.BookId > 0 && childModel.StoryId > 0)
+                    // Insert child
+                    var newChild = new StoryBook
                     {
-                        // Insert child
-                        var newChild = new StoryBook
-                        {
-                            BookId = childModel.BookId,
-                            StoryId = childModel.StoryId
-                        };
-                        itemCurrent.StoryBook.Add(newChild);
-                    }
+                        BookId = childModel.BookId,
+                        StoryId = childModel.StoryId
+                    };
+                    itemCurrent.StoryBook.Add(newChild);
                 }
             }
         }

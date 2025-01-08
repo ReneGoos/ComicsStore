@@ -1,6 +1,5 @@
-﻿namespace ComicsStore.MiddleWare.Models.Input
+﻿namespace ComicsStore.MiddleWare.Models.Input;
+
+public interface IBasicCrossInputModel
 {
-    public interface IBasicCrossInputModel
-    {
-    }
 }

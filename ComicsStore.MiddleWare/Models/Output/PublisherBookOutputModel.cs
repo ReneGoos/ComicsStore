@@ -1,10 +1,9 @@
-﻿namespace ComicsStore.MiddleWare.Models.Output
-{
-    public class PublisherBookOutputModel : IPublisherBookOutputModel
-    {
-        public int BookId { get; set; }
-        public int PublisherId { get; set; }
+﻿namespace ComicsStore.MiddleWare.Models.Output;
 
-        public BookOnlyOutputModel Book { get; set; }
-    }
+public class PublisherBookOutputModel : IPublisherBookOutputModel
+{
+    public int BookId { get; set; }
+    public int PublisherId { get; set; }
+
+    public BookOnlyOutputModel Book { get; set; }
 }

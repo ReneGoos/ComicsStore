@@ -3,38 +3,37 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using ComicsLibrary.EditModels.Interfaces;
 
-namespace ComicsLibrary.EditModels
-{
-    public class BookSeriesEditModel : BasicEditModel, ICrossEditModel
-    {
-        private int? _bookId;
-        private int? _seriesId;
-        private string _issue;
-        private decimal? _seriesOrder;
-        private SeriesOnlyEditModel _series;
+namespace ComicsLibrary.EditModels;
 
-        public int? BookId { get => _bookId; set => SetIfValue(ref _bookId, value); }
-        public int? SeriesId { get => _seriesId; set => SetIfValue(ref _seriesId, value); }
-        [Required]
-        public string Issue
+public class BookSeriesEditModel : BasicEditModel, ICrossEditModel
+{
+    private int? _bookId;
+    private int? _seriesId;
+    private string _issue;
+    private decimal? _seriesOrder;
+    private SeriesOnlyEditModel _series;
+
+    public int? BookId { get => _bookId; set => SetIfValue(ref _bookId, value); }
+    public int? SeriesId { get => _seriesId; set => SetIfValue(ref _seriesId, value); }
+    [Required]
+    public string Issue
+    {
+        get => _issue;
+        set
         {
-            get => _issue;
-            set
+            Set(ref _issue, value);
+            if (_seriesOrder == null)
             {
-                Set(ref _issue, value);
-                if (_seriesOrder == null)
-                {
-                    SeriesOrder = decimal.Parse(new String(_issue.Where(c => (Char.IsDigit(c) || c.Equals('.'))).ToArray()));
-                }
+                SeriesOrder = decimal.Parse(new String(_issue.Where(c => (Char.IsDigit(c) || c.Equals('.'))).ToArray()));
             }
         }
-
-        [Required]
-        public decimal? SeriesOrder { get => _seriesOrder; set => Set(ref _seriesOrder, value); }
-        public SeriesOnlyEditModel Series { get => _series; set => SetIfValue(ref _series, value); }
-
-        public int? MainId { get => BookId; set => BookId = value; }
-        public int? LinkedId { get => SeriesId; set => SeriesId = value; }
-        public TableEditModel ChildItem { get => Series; set => Series = value as SeriesOnlyEditModel; }
     }
+
+    [Required]
+    public decimal? SeriesOrder { get => _seriesOrder; set => Set(ref _seriesOrder, value); }
+    public SeriesOnlyEditModel Series { get => _series; set => SetIfValue(ref _series, value); }
+
+    public int? MainId { get => BookId; set => BookId = value; }
+    public int? LinkedId { get => SeriesId; set => SeriesId = value; }
+    public TableEditModel ChildItem { get => Series; set => Series = value as SeriesOnlyEditModel; }
 }

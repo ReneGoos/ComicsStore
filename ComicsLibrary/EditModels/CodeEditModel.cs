@@ -2,35 +2,34 @@
 using ComicsLibrary.Extensions;
 using System.ComponentModel;
 
-namespace ComicsLibrary.EditModels
+namespace ComicsLibrary.EditModels;
+
+public class CodeEditModel : CodeOnlyEditModel
 {
-    public class CodeEditModel : CodeOnlyEditModel
+    private ObservableChangedCollection<CodeSeriesEditModel> _seriesCodes;
+    private ObservableChangedCollection<CodeStoryEditModel> _storyCodes;
+
+    public CodeEditModel() : base()
     {
-        private ObservableChangedCollection<CodeSeriesEditModel> _seriesCodes;
-        private ObservableChangedCollection<CodeStoryEditModel> _storyCodes;
+        Series = [];
+        Story = [];
+    }
 
-        public CodeEditModel() : base()
-        {
-            Series = [];
-            Story = [];
-        }
+    public ObservableChangedCollection<CodeSeriesEditModel> Series { get => _seriesCodes; set => Set(ref _seriesCodes, value); }
+    public ObservableChangedCollection<CodeStoryEditModel> Story { get => _storyCodes; set => Set(ref _storyCodes, value); }
 
-        public ObservableChangedCollection<CodeSeriesEditModel> Series { get => _seriesCodes; set => Set(ref _seriesCodes, value); }
-        public ObservableChangedCollection<CodeStoryEditModel> Story { get => _storyCodes; set => Set(ref _storyCodes, value); }
+    public bool HandleSeries(int? oldSeriesId, SeriesOnlyEditModel series, PropertyChangedEventHandler propertyChanged = null)
+    {
+        return Series.HandleItem(Id, oldSeriesId, series, propertyChanged);
+    }
 
-        public bool HandleSeries(int? oldSeriesId, SeriesOnlyEditModel series, PropertyChangedEventHandler propertyChanged = null)
-        {
-            return Series.HandleItem(Id, oldSeriesId, series, propertyChanged);
-        }
+    public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story, PropertyChangedEventHandler propertyChanged = null)
+    {
+        return Story.HandleItem(Id, oldStoryId, story, propertyChanged);
+    }
 
-        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story, PropertyChangedEventHandler propertyChanged = null)
-        {
-            return Story.HandleItem(Id, oldStoryId, story, propertyChanged);
-        }
-
-        public void ResetId()
-        {
-            Id = null;
-        }
+    public void ResetId()
+    {
+        Id = null;
     }
 }

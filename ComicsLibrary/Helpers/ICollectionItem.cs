@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace ComicsLibrary.Helpers
+namespace ComicsLibrary.Helpers;
+
+public interface ICollectionItem
 {
-    public interface ICollectionItem
-    {
-        bool ItemContains(string value);
-        SortDescriptionCollection ItemSort(List<string> sortKey);
-    }
+    bool ItemContains(string value);
+    SortDescriptionCollection ItemSort(List<string> sortKey);
 }

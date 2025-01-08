@@ -10,56 +10,55 @@ using ComicsLibrary.Core;
 using System;
 using ComicsStore.Data.Common;
 
-namespace ComicsLibrary.ViewModels
+namespace ComicsLibrary.ViewModels;
+
+public class CharacterViewModel : BasicTableViewModel<ICharactersService, CharacterInputModel, CharacterInputModel, CharacterOutputModel, BasicSearch, CharacterEditModel>
 {
-    public class CharacterViewModel : BasicTableViewModel<ICharactersService, CharacterInputModel, CharacterInputModel, CharacterOutputModel, BasicSearch, CharacterEditModel>
+    private readonly IStoriesService _storiesService;
+
+    public ICommand DeleteStoryFromListCommand { get; protected set; }
+
+    public CharacterViewModel(ICharactersService charactersService,
+        IStoriesService storiesService,
+        INavigationService navigationService,
+        IMapper mapper) : base(charactersService, navigationService, mapper)
     {
-        private readonly IStoriesService _storiesService;
+        DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
+        _storiesService = storiesService;
+    }
 
-        public ICommand DeleteStoryFromListCommand { get; protected set; }
+    public async void HandleStory(int? storyId, int? oldStoryId)
+    {
+        var story = storyId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _storiesService.GetAsync(storyId.Value)) : null;
+        IsDirty |= Item.HandleStory(oldStoryId, story, ItemPropertyChanged);
+    }
 
-        public CharacterViewModel(ICharactersService charactersService,
-            IStoriesService storiesService,
-            INavigationService navigationService,
-            IMapper mapper) : base(charactersService, navigationService, mapper)
+    private void DeleteStoryFromList(int? storyId)
+    {
+        IsDirty |= Item.HandleStory(storyId, null);
+    }
+
+    public override void ItemChange(TableType table, int? id, ActionType actionType)
+    {
+        switch (actionType)
         {
-            DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
-            _storiesService = storiesService;
-        }
+            case ActionType.deleteItem:
+                switch (table)
+                {
+                    case TableType.story:
+                        DeleteStoryFromList(id);
+                        break;
+                }
+                break;
 
-        public async void HandleStory(int? storyId, int? oldStoryId)
-        {
-            var story = storyId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _storiesService.GetAsync(storyId.Value)) : null;
-            IsDirty |= Item.HandleStory(oldStoryId, story, ItemPropertyChanged);
-        }
-
-        private void DeleteStoryFromList(int? storyId)
-        {
-            IsDirty |= Item.HandleStory(storyId, null);
-        }
-
-        public override void ItemChange(TableType table, int? id, ActionType actionType)
-        {
-            switch (actionType)
-            {
-                case ActionType.deleteItem:
-                    switch (table)
-                    {
-                        case TableType.story:
-                            DeleteStoryFromList(id);
-                            break;
-                    }
-                    break;
-
-                case ActionType.updateItem:
-                    switch (table)
-                    {
-                        case TableType.story:
-                            HandleStory(id, id);
-                            break;
-                    }
-                    break;
-            }
+            case ActionType.updateItem:
+                switch (table)
+                {
+                    case TableType.story:
+                        HandleStory(id, id);
+                        break;
+                }
+                break;
         }
     }
 }

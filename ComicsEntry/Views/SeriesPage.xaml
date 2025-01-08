@@ -233,6 +233,22 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
+                                <GridViewColumn Header="Info" 
+                                                Width="40"
+                                                >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ShowBookInformationWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding BookId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="28"
+                                                    >
+                                                <TextBlock Text="i" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Width="250">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Book.Name">Book</GridViewColumnHeader>

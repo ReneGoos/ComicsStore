@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 
-namespace ComicsStore.MiddleWare.Models.Input
+namespace ComicsStore.MiddleWare.Models.Input;
+
+public interface IBookInputModel : IBasicInputModel
 {
-    public interface IBookInputModel : IBasicInputModel
-    {
-        string Active { get; set; }
-        ICollection<BookPublisherInputModel> BookPublisher { get; set; }
-        ICollection<BookSeriesInputModel> BookSeries { get; set; }
-        string BookType { get; set; }
-        string FirstPrint { get; set; }
-        string Signed { get; set; }
-        string Checked { get; set; }
-        string CoverType { get; set; }
-        int FirstYear { get; set; }
-        ICollection<StoryBookInputModel> StoryBook { get; set; }
-        int? ThisYear { get; set; }
-    }
+    string Active { get; set; }
+    ICollection<BookPublisherInputModel> BookPublisher { get; set; }
+    ICollection<BookSeriesInputModel> BookSeries { get; set; }
+    string BookType { get; set; }
+    string FirstPrint { get; set; }
+    string Signed { get; set; }
+    string Checked { get; set; }
+    string CoverType { get; set; }
+    int FirstYear { get; set; }
+    ICollection<StoryBookInputModel> StoryBook { get; set; }
+    int? ThisYear { get; set; }
 }

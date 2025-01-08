@@ -4,28 +4,27 @@ using ComicsStore.Data.Model.Search;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ComicsStore.MiddleWare.Services.Interfaces
+namespace ComicsStore.MiddleWare.Services.Interfaces;
+
+public interface IComicsStoreService<TIn, TPatch, TOut, TSearch>
+    where TIn : BasicInputModel
+    where TPatch : BasicInputModel
+    where TOut : BasicOutputModel
+    where TSearch : BasicSearch
 {
-    public interface IComicsStoreService<TIn, TPatch, TOut, TSearch>
-        where TIn : BasicInputModel
-        where TPatch : BasicInputModel
-        where TOut : BasicOutputModel
-        where TSearch : BasicSearch
-    {
-        Task<TOut> AddAsync(TIn input);
+    Task<TOut> AddAsync(TIn input);
 
-        Task DeleteAsync(int id);
+    Task DeleteAsync(int id);
 
-        Task<bool> ExistsAsync(int id);
+    Task<bool> ExistsAsync(int id);
 
-        Task<ICollection<TOut>> GetAsync();
+    Task<ICollection<TOut>> GetAsync();
 
-        Task<ICollection<TOut>> GetAsync(TSearch searchModel);
+    Task<ICollection<TOut>> GetAsync(TSearch searchModel);
 
-        Task<TOut> GetAsync(int id, bool extended = false);
+    Task<TOut> GetAsync(int id, bool extended = false);
 
-        Task<TOut> UpdateAsync(int id, TIn input);
+    Task<TOut> UpdateAsync(int id, TIn input);
 
-        Task<TOut> PatchAsync(int id, TPatch input);
-    }
+    Task<TOut> PatchAsync(int id, TPatch input);
 }

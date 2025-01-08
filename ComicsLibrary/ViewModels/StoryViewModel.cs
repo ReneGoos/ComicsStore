@@ -13,264 +13,263 @@ using ComicsLibrary.Core;
 using System;
 using ComicsStore.Data.Common;
 
-namespace ComicsLibrary.ViewModels
+namespace ComicsLibrary.ViewModels;
+
+public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearch, StoryEditModel>
 {
-    public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearch, StoryEditModel>
+    public ICommand DeleteArtistFromListCommand { get; protected set; }
+    public ICommand DeleteBookFromListCommand { get; protected set; }
+    public ICommand DeleteCharacterFromListCommand { get; protected set; }
+    public ICommand DeleteOriginFromListCommand { get; protected set; }
+
+    private ICollection<StoryOutputModel> _originStories;
+    private readonly IArtistsService _artistsService;
+    private readonly IBooksService _booksService;
+    private readonly ICharactersService _charactersService;
+    private readonly ICodesService _codesService;
+
+    private ICollection<StoryArtistEditModel> _pinnedArtists = [];
+    private ICollection<int> _pinnedBooks = [];
+    private ICollection<int> _pinnedCharacters = [];
+    private int? _pinnedCodeId = null;
+    private string _pinnedStoryType;
+    private string _pinnedLanguage;
+
+    private void StoryViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        public ICommand DeleteArtistFromListCommand { get; protected set; }
-        public ICommand DeleteBookFromListCommand { get; protected set; }
-        public ICommand DeleteCharacterFromListCommand { get; protected set; }
-        public ICommand DeleteOriginFromListCommand { get; protected set; }
-
-        private ICollection<StoryOutputModel> _originStories;
-        private readonly IArtistsService _artistsService;
-        private readonly IBooksService _booksService;
-        private readonly ICharactersService _charactersService;
-        private readonly ICodesService _codesService;
-
-        private ICollection<StoryArtistEditModel> _pinnedArtists = [];
-        private ICollection<int> _pinnedBooks = [];
-        private ICollection<int> _pinnedCharacters = [];
-        private int? _pinnedCodeId = null;
-        private string _pinnedStoryType;
-        private string _pinnedLanguage;
-
-        private void StoryViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        if (e.PropertyName == "Items" )
         {
-            if (e.PropertyName == "Items" )
+            GetOriginStories();
+        }
+    }
+
+    public StoryViewModel(IStoriesService storiesService,
+        IArtistsService artistsService,
+        IBooksService booksService,
+        ICharactersService charactersService, 
+        ICodesService codesService,
+        INavigationService navigationService,
+        IMapper mapper) : base(storiesService, navigationService, mapper)
+    {
+        DeleteArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteArtistFromList));
+        DeleteBookFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteBookFromList));
+        DeleteCharacterFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteCharacterFromList));
+        DeleteOriginFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteOriginFromList));
+
+        PropertyChanged += StoryViewModel_PropertyChanged;
+        _artistsService = artistsService;
+        _booksService = booksService;
+        _charactersService = charactersService;
+        _codesService = codesService;
+    }
+
+    public IEnumerable<StoryOutputModel> OriginStories
+    {
+        get
+        {
+            if (_originStories is null)
             {
                 GetOriginStories();
             }
+
+            return _originStories;
         }
-
-        public StoryViewModel(IStoriesService storiesService,
-            IArtistsService artistsService,
-            IBooksService booksService,
-            ICharactersService charactersService, 
-            ICodesService codesService,
-            INavigationService navigationService,
-            IMapper mapper) : base(storiesService, navigationService, mapper)
+        private set
         {
-            DeleteArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteArtistFromList));
-            DeleteBookFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteBookFromList));
-            DeleteCharacterFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteCharacterFromList));
-            DeleteOriginFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteOriginFromList));
-
-            PropertyChanged += StoryViewModel_PropertyChanged;
-            _artistsService = artistsService;
-            _booksService = booksService;
-            _charactersService = charactersService;
-            _codesService = codesService;
-        }
-
-        public IEnumerable<StoryOutputModel> OriginStories
-        {
-            get
+            if (value is null)
             {
-                if (_originStories is null)
-                {
-                    GetOriginStories();
-                }
-
-                return _originStories;
+                GetOriginStories();
             }
-            private set
+            else
             {
-                if (value is null)
-                {
-                    GetOriginStories();
-                }
-                else
-                {
-                    _originStories = value.ToList();
-                }
-
-                StoryOnlyEditModel.ListUpdating = true;
-                RaisePropertyChanged();
-                StoryOnlyEditModel.ListUpdating = false;
+                _originStories = value.ToList();
             }
+
+            StoryOnlyEditModel.ListUpdating = true;
+            RaisePropertyChanged();
+            StoryOnlyEditModel.ListUpdating = false;
         }
+    }
 
-        private void GetOriginStories()
+    private void GetOriginStories()
+    {
+        OriginStories = _items.Where(item => item.OriginStoryId is null).OrderBy(item => item.Name);
+        //RaisePropertyChanged("OriginStories");
+    }
+
+    public async void HandleArtist(int? artistId, int? oldArtistId)
+    {
+        var artist = artistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _artistsService.GetAsync(artistId.Value)) : null;
+        IsDirty |= Item.HandleArtist(oldArtistId, artist, ItemPropertyChanged);
+    }
+
+    public void DeleteArtistFromList(int? artistId)
+    {
+        IsDirty |= Item.HandleArtist(artistId, null);
+    }
+
+    public async void HandleBook(int? bookId, int? oldBookId)
+    {
+        var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
+        IsDirty |= Item.HandleBook(oldBookId, book, ItemPropertyChanged);
+    }
+
+    public void DeleteBookFromList(int? bookId)
+    {
+        IsDirty |= Item.HandleBook(bookId, null);
+    }
+
+    public async void HandleCharacter(int? characterId, int? oldCharacterId)
+    {
+        var character = characterId.HasValue ? Mapper.Map<CharacterOnlyEditModel>(await _charactersService.GetAsync(characterId.Value)) : null;
+        IsDirty |= Item.HandleCharacter(oldCharacterId, character, ItemPropertyChanged);
+    }
+
+    public void DeleteCharacterFromList(int? characterId)
+    {
+        IsDirty |= Item.HandleCharacter(characterId, null);
+    }
+
+    public async void HandleCode(int? codeId, int? oldCodeId)
+    {
+        var code = codeId.HasValue ? Mapper.Map<CodeOnlyEditModel>(await _codesService.GetAsync(codeId.Value)) : null;
+        IsDirty |= Item.HandleCode(oldCodeId, code);
+    }
+
+    public void DeleteCode(int? codeId)
+    {
+        IsDirty |= Item.HandleCode(codeId, null);
+    }
+
+    public async void HandleOriginStory(int? originStoryId, int? oldOriginStoryId)
+    {
+        var story = originStoryId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _itemService.GetAsync(originStoryId.Value)) : null;
+        IsDirty |= Item.HandleOriginStory(oldOriginStoryId, story);
+    }
+
+    public void DeleteOriginStory(int? originStoryId)
+    {
+        IsDirty |= Item.HandleOriginStory(originStoryId, null);
+    }
+
+    public async void HandleStoryOrigin(int? originStoryId, int? oldOriginStoryId)
+    {
+        var originStory = originStoryId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _itemService.GetAsync(originStoryId.Value)) : null;
+        IsDirty |= Item.HandleStoryOrigin(oldOriginStoryId, originStory, ItemPropertyChanged);
+    }
+
+    public void DeleteOriginFromList(int? originStoryId)
+    {
+        IsDirty |= Item.HandleStoryOrigin(originStoryId, null);
+    }
+
+    protected override void SetPinnedLinks()
+    {
+        base.SetPinnedLinks();
+
+        _pinnedArtists = Item.StoryArtist.Select(sa => new StoryArtistEditModel { ArtistId = sa.ArtistId, ArtistType = sa.ArtistType }).ToList();
+        _pinnedBooks = Item.StoryBook.Select(sb => sb.BookId.Value).ToList();
+        _pinnedCharacters = Item.StoryCharacter.Select(sc => sc.CharacterId.Value).ToList();
+
+        _pinnedCodeId = Item.CodeId;
+        _pinnedStoryType = Item.StoryType;
+        _pinnedLanguage =  Item.Language;
+    }
+
+    protected override void AddPinnedLinks()
+    {
+        base.AddPinnedLinks();
+
+        foreach (var pinnedArtist in _pinnedArtists)
         {
-            OriginStories = _items.Where(item => item.OriginStoryId is null).OrderBy(item => item.Name);
-            //RaisePropertyChanged("OriginStories");
-        }
-
-        public async void HandleArtist(int? artistId, int? oldArtistId)
-        {
-            var artist = artistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _artistsService.GetAsync(artistId.Value)) : null;
-            IsDirty |= Item.HandleArtist(oldArtistId, artist, ItemPropertyChanged);
-        }
-
-        public void DeleteArtistFromList(int? artistId)
-        {
-            IsDirty |= Item.HandleArtist(artistId, null);
-        }
-
-        public async void HandleBook(int? bookId, int? oldBookId)
-        {
-            var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
-            IsDirty |= Item.HandleBook(oldBookId, book, ItemPropertyChanged);
-        }
-
-        public void DeleteBookFromList(int? bookId)
-        {
-            IsDirty |= Item.HandleBook(bookId, null);
-        }
-
-        public async void HandleCharacter(int? characterId, int? oldCharacterId)
-        {
-            var character = characterId.HasValue ? Mapper.Map<CharacterOnlyEditModel>(await _charactersService.GetAsync(characterId.Value)) : null;
-            IsDirty |= Item.HandleCharacter(oldCharacterId, character, ItemPropertyChanged);
-        }
-
-        public void DeleteCharacterFromList(int? characterId)
-        {
-            IsDirty |= Item.HandleCharacter(characterId, null);
-        }
-
-        public async void HandleCode(int? codeId, int? oldCodeId)
-        {
-            var code = codeId.HasValue ? Mapper.Map<CodeOnlyEditModel>(await _codesService.GetAsync(codeId.Value)) : null;
-            IsDirty |= Item.HandleCode(oldCodeId, code);
-        }
-
-        public void DeleteCode(int? codeId)
-        {
-            IsDirty |= Item.HandleCode(codeId, null);
-        }
-
-        public async void HandleOriginStory(int? originStoryId, int? oldOriginStoryId)
-        {
-            var story = originStoryId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _itemService.GetAsync(originStoryId.Value)) : null;
-            IsDirty |= Item.HandleOriginStory(oldOriginStoryId, story);
-        }
-
-        public void DeleteOriginStory(int? originStoryId)
-        {
-            IsDirty |= Item.HandleOriginStory(originStoryId, null);
-        }
-
-        public async void HandleStoryOrigin(int? originStoryId, int? oldOriginStoryId)
-        {
-            var originStory = originStoryId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _itemService.GetAsync(originStoryId.Value)) : null;
-            IsDirty |= Item.HandleStoryOrigin(oldOriginStoryId, originStory, ItemPropertyChanged);
-        }
-
-        public void DeleteOriginFromList(int? originStoryId)
-        {
-            IsDirty |= Item.HandleStoryOrigin(originStoryId, null);
-        }
-
-        protected override void SetPinnedLinks()
-        {
-            base.SetPinnedLinks();
-
-            _pinnedArtists = Item.StoryArtist.Select(sa => new StoryArtistEditModel { ArtistId = sa.ArtistId, ArtistType = sa.ArtistType }).ToList();
-            _pinnedBooks = Item.StoryBook.Select(sb => sb.BookId.Value).ToList();
-            _pinnedCharacters = Item.StoryCharacter.Select(sc => sc.CharacterId.Value).ToList();
-
-            _pinnedCodeId = Item.CodeId;
-            _pinnedStoryType = Item.StoryType;
-            _pinnedLanguage =  Item.Language;
-        }
-
-        protected override void AddPinnedLinks()
-        {
-            base.AddPinnedLinks();
-
-            foreach (var pinnedArtist in _pinnedArtists)
+            HandleArtist(pinnedArtist.ArtistId, null);
+            foreach ( var storyArtist in Item.StoryArtist )
             {
-                HandleArtist(pinnedArtist.ArtistId, null);
-                foreach ( var storyArtist in Item.StoryArtist )
+                if ( storyArtist.ArtistId == pinnedArtist.ArtistId )
                 {
-                    if ( storyArtist.ArtistId == pinnedArtist.ArtistId )
-                    {
-                        storyArtist.ArtistType = pinnedArtist.ArtistType;
-                    }
+                    storyArtist.ArtistType = pinnedArtist.ArtistType;
                 }
             }
-
-            foreach (var pinnedBook in _pinnedBooks)
-            {
-                HandleBook(pinnedBook, null);
-            }
-
-            foreach (var pinnedCharacter in _pinnedCharacters)
-            {
-                HandleCharacter(pinnedCharacter, null);
-            }
-
-            if (_pinnedCodeId.HasValue)
-            {
-                HandleCode(_pinnedCodeId, null);
-            }
-
-            Item.StoryType = _pinnedStoryType;
-            Item.Language = _pinnedLanguage;
         }
 
-        public override async void ItemChange(TableType table, int? id, ActionType actionType)
+        foreach (var pinnedBook in _pinnedBooks)
         {
-            switch (actionType)
-            {
-                case ActionType.deleteItem:
-                    switch (table)
-                    {
-                        case TableType.artist:
-                            DeleteArtistFromList(id);
-                            break;
+            HandleBook(pinnedBook, null);
+        }
 
-                        case TableType.book:
-                            DeleteBookFromList(id);
-                            break;
+        foreach (var pinnedCharacter in _pinnedCharacters)
+        {
+            HandleCharacter(pinnedCharacter, null);
+        }
 
-                        case TableType.character:
-                            DeleteCharacterFromList(id);
-                            break;
+        if (_pinnedCodeId.HasValue)
+        {
+            HandleCode(_pinnedCodeId, null);
+        }
 
-                        case TableType.code:
-                            DeleteCode(id);
-                            break;
+        Item.StoryType = _pinnedStoryType;
+        Item.Language = _pinnedLanguage;
+    }
 
-                        case TableType.story:
-                            DeleteOriginStory(id);
-                            DeleteOriginFromList(id);
-                            UpdateItemsList(new StoryOutputModel { Id = id.Value }, true);
-                            break;
-                    }
-                    break;
+    public override async void ItemChange(TableType table, int? id, ActionType actionType)
+    {
+        switch (actionType)
+        {
+            case ActionType.deleteItem:
+                switch (table)
+                {
+                    case TableType.artist:
+                        DeleteArtistFromList(id);
+                        break;
 
-                case ActionType.updateItem:
-                    switch (table)
-                    {
-                        case TableType.artist:
-                            HandleArtist(id, id);
-                            break;
+                    case TableType.book:
+                        DeleteBookFromList(id);
+                        break;
 
-                        case TableType.book:
-                            HandleBook(id, id);
-                            break;
+                    case TableType.character:
+                        DeleteCharacterFromList(id);
+                        break;
 
-                        case TableType.character:
-                            HandleCharacter(id, id);
-                            break;
+                    case TableType.code:
+                        DeleteCode(id);
+                        break;
 
-                        case TableType.code:
-                            HandleCode(id, id);
-                            break;
+                    case TableType.story:
+                        DeleteOriginStory(id);
+                        DeleteOriginFromList(id);
+                        UpdateItemsList(new StoryOutputModel { Id = id.Value }, true);
+                        break;
+                }
+                break;
 
-                        case TableType.story:
-                            HandleOriginStory(id, id);
-                            HandleStoryOrigin(id, id);
+            case ActionType.updateItem:
+                switch (table)
+                {
+                    case TableType.artist:
+                        HandleArtist(id, id);
+                        break;
 
-                            var originStory = id.HasValue ? Mapper.Map<StoryOutputModel>(await _itemService.GetAsync(id.Value)) : null;
-                            UpdateItemsList(originStory);
-                            break;
-                    }
-                    break;
-            }
+                    case TableType.book:
+                        HandleBook(id, id);
+                        break;
+
+                    case TableType.character:
+                        HandleCharacter(id, id);
+                        break;
+
+                    case TableType.code:
+                        HandleCode(id, id);
+                        break;
+
+                    case TableType.story:
+                        HandleOriginStory(id, id);
+                        HandleStoryOrigin(id, id);
+
+                        var originStory = id.HasValue ? Mapper.Map<StoryOutputModel>(await _itemService.GetAsync(id.Value)) : null;
+                        UpdateItemsList(originStory);
+                        break;
+                }
+                break;
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace ComicsStore.MiddleWare.Models.Input
+﻿namespace ComicsStore.MiddleWare.Models.Input;
+
+public class PseudonymInputModel : BasicCrossInputModel, IPseudonymInputModel
 {
-    public class PseudonymInputModel : BasicCrossInputModel, IPseudonymInputModel
-    {
-        public int MainArtistId { get; set; }
-        public int PseudonymArtistId { get; set; }
-    }
+    public int MainArtistId { get; set; }
+    public int PseudonymArtistId { get; set; }
 }

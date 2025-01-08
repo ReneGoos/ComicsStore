@@ -1,6 +1,5 @@
-﻿namespace ComicsStore.MiddleWare.Models.Output
+﻿namespace ComicsStore.MiddleWare.Models.Output;
+
+public class CharacterOnlyOutputModel : BasicOutputModel
 {
-    public class CharacterOnlyOutputModel : BasicOutputModel
-    {
-    }
 }

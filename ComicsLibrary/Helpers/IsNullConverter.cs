@@ -2,21 +2,20 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace ComicsLibrary.Helpers
+namespace ComicsLibrary.Helpers;
+
+[ValueConversion(typeof(object), typeof(bool))]
+public class IsNullConverter : IValueConverter
 {
-    [ValueConversion(typeof(object), typeof(bool))]
-    public class IsNullConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var test = value == null;
+        var test = value == null;
 
-            return test;
-        }
+        return test;
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,6 +1,5 @@
-﻿namespace ComicsStore.MiddleWare.Models.Input
+﻿namespace ComicsStore.MiddleWare.Models.Input;
+
+public interface ICodeInputModel : IBasicInputModel
 {
-    public interface ICodeInputModel : IBasicInputModel
-    {
-    }
 }

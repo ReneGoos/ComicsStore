@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace ComicsStore.MiddleWare.Models.Input
+namespace ComicsStore.MiddleWare.Models.Input;
+
+public class StoryArtistInputModel : BasicCrossInputModel, IStoryArtistInputModel
 {
-    public class StoryArtistInputModel : BasicCrossInputModel, IStoryArtistInputModel
-    {
-        public int StoryId { get; set; }
-        public int ArtistId { get; set; }
-        public ICollection<string> ArtistType { get; set; }
-    }
+    public int StoryId { get; set; }
+    public int ArtistId { get; set; }
+    public ICollection<string> ArtistType { get; set; }
 }

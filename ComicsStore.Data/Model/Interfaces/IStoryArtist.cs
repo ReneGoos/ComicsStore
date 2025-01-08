@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace ComicsStore.Data.Model.Interfaces
+namespace ComicsStore.Data.Model.Interfaces;
+
+public interface IStoryArtist
 {
-    public interface IStoryArtist
-    {
-        ICollection<StoryArtist> StoryArtist { get; set; }
-    }
+    ICollection<StoryArtist> StoryArtist { get; set; }
 }

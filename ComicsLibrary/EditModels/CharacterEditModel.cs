@@ -2,32 +2,31 @@
 using ComicsLibrary.Extensions;
 using System.ComponentModel;
 
-namespace ComicsLibrary.EditModels
+namespace ComicsLibrary.EditModels;
+
+public class CharacterEditModel : CharacterOnlyEditModel
 {
-    public class CharacterEditModel : CharacterOnlyEditModel
+    private ObservableChangedCollection<CharacterStoryEditModel> _storyCharacters;
+
+    public CharacterEditModel() : base()
     {
-        private ObservableChangedCollection<CharacterStoryEditModel> _storyCharacters;
+        StoryCharacter = [];
+    }
 
-        public CharacterEditModel() : base()
+    public ObservableChangedCollection<CharacterStoryEditModel> StoryCharacter { get => _storyCharacters; set => Set(ref _storyCharacters, value); }
+
+    public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story, PropertyChangedEventHandler propertyChanged = null)
+    {
+        return StoryCharacter.HandleItem(Id, oldStoryId, story, propertyChanged);
+    }
+
+    public void ResetId()
+    {
+        Id = null;
+
+        foreach (var story in StoryCharacter)
         {
-            StoryCharacter = [];
-        }
-
-        public ObservableChangedCollection<CharacterStoryEditModel> StoryCharacter { get => _storyCharacters; set => Set(ref _storyCharacters, value); }
-
-        public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story, PropertyChangedEventHandler propertyChanged = null)
-        {
-            return StoryCharacter.HandleItem(Id, oldStoryId, story, propertyChanged);
-        }
-
-        public void ResetId()
-        {
-            Id = null;
-
-            foreach (var story in StoryCharacter)
-            {
-                story.CharacterId = null;
-            }
+            story.CharacterId = null;
         }
     }
 }

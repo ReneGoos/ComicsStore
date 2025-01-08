@@ -9,78 +9,77 @@ using ComicsStore.Data.Common;
 using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
-namespace ComicsStore.Data.Repositories.MainRepository
+namespace ComicsStore.Data.Repositories.MainRepository;
+
+public class SeriesRepository : ComicsStoreMainRepository<Series, SeriesSearch>, IComicsStoreMainRepository<Series, SeriesSearch>
 {
-    public class SeriesRepository : ComicsStoreMainRepository<Series, SeriesSearch>, IComicsStoreMainRepository<Series, SeriesSearch>
+    private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository;
+
+    public SeriesRepository(ComicsStoreDbContext context,
+                           IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository)
+        : base(context)
     {
-        private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository;
+        _bookSeriesRepository = bookSeriesRepository;
+    }
 
-        public SeriesRepository(ComicsStoreDbContext context,
-                               IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository)
-            : base(context)
+    public override Task<Series> AddAsync(Series value)
+    {
+        return AddItemAsync(_context.Series, value);
+    }
+
+    public override Task DeleteAsync(Series value)
+    {
+        return RemoveItemAsync(_context.Series, value);
+    }
+
+    public override Task<List<Series>> GetAsync()
+    {
+        var series = _context.Series
+            .ToListAsync();
+
+        return series;
+    }
+
+    public override Task<List<Series>> GetAsync(SeriesSearch model)
+    {
+        var series = _context.Series
+            .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower()))
+            .Where(s => !model.CodeId.HasValue || s.CodeId == model.CodeId)
+            .ToListAsync();
+
+        return series;
+    }
+
+    public override Task<Series> GetAsync(int seriesId, bool extended)
+    {
+        if (extended)
         {
-            _bookSeriesRepository = bookSeriesRepository;
-        }
-
-        public override Task<Series> AddAsync(Series value)
-        {
-            return AddItemAsync(_context.Series, value);
-        }
-
-        public override Task DeleteAsync(Series value)
-        {
-            return RemoveItemAsync(_context.Series, value);
-        }
-
-        public override Task<List<Series>> GetAsync()
-        {
-            var series = _context.Series
-                .ToListAsync();
-
-            return series;
-        }
-
-        public override Task<List<Series>> GetAsync(SeriesSearch model)
-        {
-            var series = _context.Series
-                .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower()))
-                .Where(s => !model.CodeId.HasValue || s.CodeId == model.CodeId)
-                .ToListAsync();
-
-            return series;
-        }
-
-        public override Task<Series> GetAsync(int seriesId, bool extended)
-        {
-            if (extended)
-            {
-                return _context.Series
-                    .Include(s => s.BookSeries)
-                    .ThenInclude(sb => sb.Book)
-                    .Include(s => s.Code)
-                    .SingleOrDefaultAsync(s => s.Id == seriesId);
-            }
-
             return _context.Series
                 .Include(s => s.BookSeries)
+                .ThenInclude(sb => sb.Book)
+                .Include(s => s.Code)
                 .SingleOrDefaultAsync(s => s.Id == seriesId);
         }
 
-        public override Task<Series> UpdateAsync(Series value)
-        {
-            return UpdateItemAsync(_context.Series, value, UpdateLinkedItems);
-        }
+        return _context.Series
+            .Include(s => s.BookSeries)
+            .SingleOrDefaultAsync(s => s.Id == seriesId);
+    }
 
-        private bool UpdateLinkedItems(Series seriesCurrent, Series seriesNew)
-        {
-            _bookSeriesRepository.UpdateLinkedItems(seriesCurrent, seriesNew);
+    public override Task<Series> UpdateAsync(Series value)
+    {
+        return UpdateItemAsync(_context.Series, value, UpdateLinkedItems);
+    }
 
-            return true;
-        }
+    private bool UpdateLinkedItems(Series seriesCurrent, Series seriesNew)
+    {
+        _bookSeriesRepository.UpdateLinkedItems(seriesCurrent, seriesNew);
 
-        public override Task<Series> PatchAsync(int id, IDictionary<string, object> data = null)
-        {
-            return PatchItemAsync(_context.Series, id, data);
-        }
+        return true;
+    }
+
+    public override Task<Series> PatchAsync(int id, IDictionary<string, object> data = null)
+    {
+        return PatchItemAsync(_context.Series, id, data);
     }
 }

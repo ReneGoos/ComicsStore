@@ -1,6 +1,5 @@
-﻿namespace ComicsLibrary.EditModels
+﻿namespace ComicsLibrary.EditModels;
+
+public class PublisherOnlyEditModel : TableEditModel
 {
-    public class PublisherOnlyEditModel : TableEditModel
-    {
-    }
 }

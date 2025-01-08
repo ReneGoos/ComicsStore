@@ -4,10 +4,9 @@ using ComicsStore.Data.Model.Search;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ComicsStore.MiddleWare.Services.Interfaces
+namespace ComicsStore.MiddleWare.Services.Interfaces;
+
+public interface ICharactersService : IComicsStoreService<CharacterInputModel, CharacterInputModel, CharacterOutputModel, BasicSearch>
 {
-    public interface ICharactersService : IComicsStoreService<CharacterInputModel, CharacterInputModel, CharacterOutputModel, BasicSearch>
-    {
-        Task<ICollection<CharacterStoryOutputModel>> GetStoriesAsync(int characterId);
-    }
+    Task<ICollection<CharacterStoryOutputModel>> GetStoriesAsync(int characterId);
 }

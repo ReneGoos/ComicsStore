@@ -1,15 +1,14 @@
 ﻿using System.Windows;
 
-namespace ComicsEntry.Views
+namespace ComicsEntry.Views;
+
+/// <summary>
+/// Interaction logic for ReportWindow.xaml
+/// </summary>
+public partial class ReportWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for ReportWindow.xaml
-    /// </summary>
-    public partial class ReportWindow : Window
+    public ReportWindow()
     {
-        public ReportWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace ComicsStore.MiddleWare.Models.Input
+﻿namespace ComicsStore.MiddleWare.Models.Input;
+
+public class BookPublisherInputModel : BasicCrossInputModel, IBookPublisherInputModel
 {
-    public class BookPublisherInputModel : BasicCrossInputModel, IBookPublisherInputModel
-    {
-        public int BookId { get; set; }
-        public int PublisherId { get; set; }
-    }
+    public int BookId { get; set; }
+    public int PublisherId { get; set; }
 }

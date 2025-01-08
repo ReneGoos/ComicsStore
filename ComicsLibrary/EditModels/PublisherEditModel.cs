@@ -2,33 +2,32 @@
 using ComicsLibrary.Extensions;
 using System.ComponentModel;
 
-namespace ComicsLibrary.EditModels
+namespace ComicsLibrary.EditModels;
+
+public class PublisherEditModel : PublisherOnlyEditModel
 {
-    public class PublisherEditModel : PublisherOnlyEditModel
+    private ObservableChangedCollection<PublisherBookEditModel> _bookPublishers;
+
+    public PublisherEditModel() : base()
     {
-        private ObservableChangedCollection<PublisherBookEditModel> _bookPublishers;
+        BookPublisher = [];
+    }
 
-        public PublisherEditModel() : base()
+    public ObservableChangedCollection<PublisherBookEditModel> BookPublisher { get => _bookPublishers; set => Set(ref _bookPublishers, value); }
+
+    public bool HandleBook(int? oldBookId, BookOnlyEditModel book, PropertyChangedEventHandler propertyChanged = null)
+    {
+
+        return BookPublisher.HandleItem(Id, oldBookId, book, propertyChanged);
+    }
+
+    public void ResetId()
+    {
+        Id = null;
+
+        foreach (var book in BookPublisher)
         {
-            BookPublisher = [];
-        }
-
-        public ObservableChangedCollection<PublisherBookEditModel> BookPublisher { get => _bookPublishers; set => Set(ref _bookPublishers, value); }
-
-        public bool HandleBook(int? oldBookId, BookOnlyEditModel book, PropertyChangedEventHandler propertyChanged = null)
-        {
-
-            return BookPublisher.HandleItem(Id, oldBookId, book, propertyChanged);
-        }
-
-        public void ResetId()
-        {
-            Id = null;
-
-            foreach (var book in BookPublisher)
-            {
-                book.PublisherId = null;
-            }
+            book.PublisherId = null;
         }
     }
 }

@@ -143,6 +143,22 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
+                                <GridViewColumn Header="Info" 
+                                                Width="40"
+                                                >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ShowSeriesInformationWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding SeriesId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="28"
+                                                    >
+                                                <TextBlock Text="i" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Width="350">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Series.Name">Series</GridViewColumnHeader>
@@ -198,6 +214,22 @@
                                                     IsEnabled="{Binding DataContext.OpenStory, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                                                     >
                                                 <TextBlock Text="{Binding StoryId}" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Info" 
+                                                Width="40"
+                                                >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ShowStoryInformationWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding StoryId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="28"
+                                                    >
+                                                <TextBlock Text="i" HorizontalAlignment="Center" />
                                             </Button>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>

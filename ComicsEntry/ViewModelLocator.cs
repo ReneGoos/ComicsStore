@@ -1,10 +1,9 @@
 ﻿using ComicsLibrary.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ComicsEntry
+namespace ComicsEntry;
+
+public class ViewModelLocator
 {
-    public class ViewModelLocator
-    {
-        public ComicsViewModel ComicsViewModel => App.ServiceProvider.GetRequiredService<ComicsViewModel>();
-    }
+    public ComicsViewModel ComicsViewModel => App.ServiceProvider.GetRequiredService<ComicsViewModel>();
 }

@@ -10,56 +10,55 @@ using ComicsLibrary.Core;
 using System;
 using ComicsStore.Data.Common;
 
-namespace ComicsLibrary.ViewModels
+namespace ComicsLibrary.ViewModels;
+
+public class PublisherViewModel : BasicTableViewModel<IPublishersService, PublisherInputModel, PublisherInputModel, PublisherOutputModel, BasicSearch, PublisherEditModel>
 {
-    public class PublisherViewModel : BasicTableViewModel<IPublishersService, PublisherInputModel, PublisherInputModel, PublisherOutputModel, BasicSearch, PublisherEditModel>
+    private readonly IBooksService _booksService;
+
+    public ICommand DeleteBookFromListCommand { get; protected set; }
+
+    public PublisherViewModel(IPublishersService publishersService,
+        IBooksService booksService,
+        INavigationService navigationService,
+        IMapper mapper) : base(publishersService, navigationService, mapper)
     {
-        private readonly IBooksService _booksService;
+        DeleteBookFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteBookFromList));
+        _booksService = booksService;
+    }
 
-        public ICommand DeleteBookFromListCommand { get; protected set; }
+    public async void HandleBook(int? bookId, int? oldBookId)
+    {
+        var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
+        IsDirty |= Item.HandleBook(oldBookId, book, ItemPropertyChanged);
+    }
 
-        public PublisherViewModel(IPublishersService publishersService,
-            IBooksService booksService,
-            INavigationService navigationService,
-            IMapper mapper) : base(publishersService, navigationService, mapper)
+    public void DeleteBookFromList(int? bookId)
+    {
+        IsDirty |= Item.HandleBook(bookId, null);
+    }
+
+    public override void ItemChange(TableType table, int? id, ActionType actionType)
+    {
+        switch (actionType)
         {
-            DeleteBookFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteBookFromList));
-            _booksService = booksService;
-        }
+            case ActionType.deleteItem:
+                switch (table)
+                {
+                    case TableType.book:
+                        DeleteBookFromList(id);
+                        break;
+                }
+                break;
 
-        public async void HandleBook(int? bookId, int? oldBookId)
-        {
-            var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
-            IsDirty |= Item.HandleBook(oldBookId, book, ItemPropertyChanged);
-        }
-
-        public void DeleteBookFromList(int? bookId)
-        {
-            IsDirty |= Item.HandleBook(bookId, null);
-        }
-
-        public override void ItemChange(TableType table, int? id, ActionType actionType)
-        {
-            switch (actionType)
-            {
-                case ActionType.deleteItem:
-                    switch (table)
-                    {
-                        case TableType.book:
-                            DeleteBookFromList(id);
-                            break;
-                    }
-                    break;
-
-                case ActionType.updateItem:
-                    switch (table)
-                    {
-                        case TableType.book:
-                            HandleBook(id, id);
-                            break;
-                    }
-                    break;
-            }
+            case ActionType.updateItem:
+                switch (table)
+                {
+                    case TableType.book:
+                        HandleBook(id, id);
+                        break;
+                }
+                break;
         }
     }
 }

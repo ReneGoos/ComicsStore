@@ -1,7 +1,6 @@
-﻿namespace ComicsStore.Data.Model.Search
+﻿namespace ComicsStore.Data.Model.Search;
+
+public interface IBasicSearch : ISearch
 {
-    public interface IBasicSearch
-    {
-        string Name { get; set; }
-    }
+    string Name { get; set; }
 }

@@ -11,31 +11,30 @@ using ComicsStore.Data.Model.Interfaces;
 using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
-namespace ComicsStore.MiddleWare.Services
+namespace ComicsStore.MiddleWare.Services;
+
+public class PublishersService : ComicsStoreService<Publisher, PublisherInputModel, PublisherInputModel, PublisherOutputModel, BasicSearch>, IPublishersService
 {
-    public class PublishersService : ComicsStoreService<Publisher, PublisherInputModel, PublisherInputModel, PublisherOutputModel, BasicSearch>, IPublishersService
+    private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository;
+
+    public PublishersService(IComicsStoreMainRepository<Publisher, BasicSearch> publishersRepository,
+        IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
+        IMapper mapper) : base(publishersRepository, mapper)
     {
-        private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository;
+        _bookPublishersRepository = bookPublishersRepository;
+    }
 
-        public PublishersService(IComicsStoreMainRepository<Publisher, BasicSearch> publishersRepository,
-            IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
-            IMapper mapper) : base(publishersRepository, mapper)
+    public async Task<ICollection<PublisherBookOutputModel>> GetBooksAsync(int publisherId)
+    {
+        var bookPublishers = await _bookPublishersRepository.GetAsync(null, publisherId);
+
+        try
         {
-            _bookPublishersRepository = bookPublishersRepository;
+            return Mapper.Map<ICollection<PublisherBookOutputModel>>(bookPublishers);
         }
-
-        public async Task<ICollection<PublisherBookOutputModel>> GetBooksAsync(int publisherId)
+        catch (Exception)
         {
-            var bookPublishers = await _bookPublishersRepository.GetAsync(null, publisherId);
-
-            try
-            {
-                return Mapper.Map<ICollection<PublisherBookOutputModel>>(bookPublishers);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

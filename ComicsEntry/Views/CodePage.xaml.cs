@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace ComicsEntry.Views
+namespace ComicsEntry.Views;
+
+/// <summary>
+/// Interaction logic for CodePage.xaml
+/// </summary>
+public partial class CodePage : Page
 {
-    /// <summary>
-    /// Interaction logic for CodePage.xaml
-    /// </summary>
-    public partial class CodePage : Page
+    public CodePage()
     {
-        public CodePage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -1,9 +1,8 @@
-﻿namespace ComicsLibrary.EditModels.Interfaces
+﻿namespace ComicsLibrary.EditModels.Interfaces;
+
+public interface ICrossEditModel : IBasicEditModel
 {
-    public interface ICrossEditModel : IBasicEditModel
-    {
-        int? LinkedId { get; set; }
-        int? MainId { get; set; }
-        TableEditModel ChildItem { get; set; }
-    }
+    int? LinkedId { get; set; }
+    int? MainId { get; set; }
+    TableEditModel ChildItem { get; set; }
 }

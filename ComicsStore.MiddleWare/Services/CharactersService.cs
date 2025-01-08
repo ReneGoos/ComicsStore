@@ -11,31 +11,30 @@ using ComicsStore.Data.Model.Interfaces;
 using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
-namespace ComicsStore.MiddleWare.Services
+namespace ComicsStore.MiddleWare.Services;
+
+public class CharactersService : ComicsStoreService<Character, CharacterInputModel, CharacterInputModel, CharacterOutputModel, BasicSearch>, ICharactersService
 {
-    public class CharactersService : ComicsStoreService<Character, CharacterInputModel, CharacterInputModel, CharacterOutputModel, BasicSearch>, ICharactersService
+    private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository;
+
+    public CharactersService(IComicsStoreMainRepository<Character, BasicSearch> charactersRepository,
+        IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository,
+        IMapper mapper) : base(charactersRepository, mapper)
     {
-        private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository;
+        _storyCharactersRepository = storyCharactersRepository;
+    }
 
-        public CharactersService(IComicsStoreMainRepository<Character, BasicSearch> charactersRepository,
-            IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository,
-            IMapper mapper) : base(charactersRepository, mapper)
+    public async Task<ICollection<CharacterStoryOutputModel>> GetStoriesAsync(int characterId)
+    {
+        var storyCharacters = await _storyCharactersRepository.GetAsync(null, characterId);
+
+        try
         {
-            _storyCharactersRepository = storyCharactersRepository;
+            return Mapper.Map<ICollection<CharacterStoryOutputModel>>(storyCharacters);
         }
-
-        public async Task<ICollection<CharacterStoryOutputModel>> GetStoriesAsync(int characterId)
+        catch (Exception)
         {
-            var storyCharacters = await _storyCharactersRepository.GetAsync(null, characterId);
-
-            try
-            {
-                return Mapper.Map<ICollection<CharacterStoryOutputModel>>(storyCharacters);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

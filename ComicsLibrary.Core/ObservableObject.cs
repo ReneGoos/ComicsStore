@@ -1,33 +1,32 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ComicsLibrary.Core
+namespace ComicsLibrary.Core;
+
+public class ObservableObject : INotifyPropertyChanged
 {
-    public class ObservableObject : INotifyPropertyChanged
+    private bool _isDirty;
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void RaisePropertyChanged([CallerMemberName] string info = null)
     {
-        private bool _isDirty;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaisePropertyChanged([CallerMemberName] string info = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
-        }
-
-        protected void Set<T>(ref T input, T value, [CallerMemberName] string info = null)
-        {
-            input = value;
-            RaisePropertyChanged(info);
-        }
-
-        protected void SetIfValue<T>(ref T input, T value, [CallerMemberName] string info = null)
-        {
-            if (value == null)
-                return;
-            input = value;
-            RaisePropertyChanged(info);
-        }
-
-        public virtual bool IsDirty { get => _isDirty; set { Set(ref _isDirty, value); RaisePropertyChanged("IsClean"); } }
-        public bool IsClean { get => !IsDirty; }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
     }
+
+    protected void Set<T>(ref T input, T value, [CallerMemberName] string info = null)
+    {
+        input = value;
+        RaisePropertyChanged(info);
+    }
+
+    protected void SetIfValue<T>(ref T input, T value, [CallerMemberName] string info = null)
+    {
+        if (value == null)
+            return;
+        input = value;
+        RaisePropertyChanged(info);
+    }
+
+    public virtual bool IsDirty { get => _isDirty; set { Set(ref _isDirty, value); RaisePropertyChanged("IsClean"); } }
+    public bool IsClean { get => !IsDirty; }
 }

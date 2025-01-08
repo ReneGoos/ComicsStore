@@ -7,97 +7,96 @@ using ComicsStore.Data.Model.Interfaces;
 using ComicsStore.Data.Common;
 using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 
-namespace ComicsStore.Data.Repositories.CrossRepository
+namespace ComicsStore.Data.Repositories.CrossRepository;
+
+public class StoryCharactersRepository : ComicsStoreCrossRepository<StoryCharacter, IStoryCharacter>, IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter>
 {
-    public class StoryCharactersRepository : ComicsStoreCrossRepository<StoryCharacter, IStoryCharacter>, IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter>
+    public StoryCharactersRepository(ComicsStoreDbContext context)
+        : base(context)
     {
-        public StoryCharactersRepository(ComicsStoreDbContext context)
-            : base(context)
+    }
+
+    public override Task<StoryCharacter> AddAsync(StoryCharacter value)
+    {
+        return AddItemAsync(_context.StoryCharacters, value);
+    }
+
+    public override Task<List<StoryCharacter>> AddAsync(IEnumerable<StoryCharacter> value)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override Task DeleteAsync(StoryCharacter value)
+    {
+        return RemoveItemAsync(_context.StoryCharacters, value);
+    }
+
+    public override Task DeleteAsync(IEnumerable<StoryCharacter> value)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override Task<List<StoryCharacter>> GetAsync()
+    {
+        return _context.StoryCharacters
+            .ToListAsync();
+    }
+
+    public override Task<List<StoryCharacter>> GetAsync(int? id, int? crossId)
+    {
+        if (id == null && crossId == null)
         {
+            return null;
         }
 
-        public override Task<StoryCharacter> AddAsync(StoryCharacter value)
-        {
-            return AddItemAsync(_context.StoryCharacters, value);
-        }
+        return _context.StoryCharacters
+            .Include(sc => sc.Character)
+            .Include(sc => sc.Story)
+            .ThenInclude(s => s.Code)
+            .Include(sc => sc.Story)
+            .ThenInclude(s => s.OriginStory)
+            .Where(s => id != null ? s.StoryId == id.Value : s.CharacterId == crossId)
+            .ToListAsync();
+    }
 
-        public override Task<List<StoryCharacter>> AddAsync(IEnumerable<StoryCharacter> value)
-        {
-            throw new System.NotImplementedException();
-        }
+    public override Task<StoryCharacter> UpdateAsync(StoryCharacter value)
+    {
+        return UpdateItemAsync(_context.StoryCharacters, value, value.StoryId, value.CharacterId);
+    }
 
-        public override Task DeleteAsync(StoryCharacter value)
-        {
-            return RemoveItemAsync(_context.StoryCharacters, value);
-        }
+    public override Task<List<StoryCharacter>> UpdateAsync(IEnumerable<StoryCharacter> value)
+    {
+        throw new System.NotImplementedException();
+    }
 
-        public override Task DeleteAsync(IEnumerable<StoryCharacter> value)
+    public override void UpdateLinkedItems(IStoryCharacter itemCurrent, IStoryCharacter itemNew)
+    {
+        if (itemNew.StoryCharacter is not null)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override Task<List<StoryCharacter>> GetAsync()
-        {
-            return _context.StoryCharacters
-                .ToListAsync();
-        }
-
-        public override Task<List<StoryCharacter>> GetAsync(int? id, int? crossId)
-        {
-            if (id == null && crossId == null)
+            // Delete children
+            foreach (var existingChild in itemCurrent.StoryCharacter.ToList())
             {
-                return null;
+                if (!itemNew.StoryCharacter.Any(c => c.CharacterId == existingChild.CharacterId && c.StoryId == existingChild.StoryId))
+                {
+                    _ = itemCurrent.StoryCharacter.Remove(existingChild);
+                }
             }
 
-            return _context.StoryCharacters
-                .Include(sc => sc.Character)
-                .Include(sc => sc.Story)
-                .ThenInclude(s => s.Code)
-                .Include(sc => sc.Story)
-                .ThenInclude(s => s.OriginStory)
-                .Where(s => id != null ? s.StoryId == id.Value : s.CharacterId == crossId)
-                .ToListAsync();
-        }
-
-        public override Task<StoryCharacter> UpdateAsync(StoryCharacter value)
-        {
-            return UpdateItemAsync(_context.StoryCharacters, value, value.StoryId, value.CharacterId);
-        }
-
-        public override Task<List<StoryCharacter>> UpdateAsync(IEnumerable<StoryCharacter> value)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UpdateLinkedItems(IStoryCharacter itemCurrent, IStoryCharacter itemNew)
-        {
-            if (itemNew.StoryCharacter is not null)
+            // Update and Insert children
+            foreach (var childModel in itemNew.StoryCharacter.ToList())
             {
-                // Delete children
-                foreach (var existingChild in itemCurrent.StoryCharacter.ToList())
-                {
-                    if (!itemNew.StoryCharacter.Any(c => c.CharacterId == existingChild.CharacterId && c.StoryId == existingChild.StoryId))
-                    {
-                        _ = itemCurrent.StoryCharacter.Remove(existingChild);
-                    }
-                }
+                var existingChild = itemCurrent.StoryCharacter
+                    .SingleOrDefault(c => c.CharacterId == childModel.CharacterId && c.StoryId == childModel.StoryId && c.StoryId != default && c.CharacterId != default);
 
-                // Update and Insert children
-                foreach (var childModel in itemNew.StoryCharacter.ToList())
+                if (existingChild is null && childModel.CharacterId > 0 && childModel.StoryId > 0)
                 {
-                    var existingChild = itemCurrent.StoryCharacter
-                        .SingleOrDefault(c => c.CharacterId == childModel.CharacterId && c.StoryId == childModel.StoryId && c.StoryId != default && c.CharacterId != default);
-
-                    if (existingChild is null && childModel.CharacterId > 0 && childModel.StoryId > 0)
+                    // Insert child
+                    var newChild = new StoryCharacter
                     {
-                        // Insert child
-                        var newChild = new StoryCharacter
-                        {
-                            CharacterId = childModel.CharacterId,
-                            StoryId = childModel.StoryId
-                        };
-                        itemCurrent.StoryCharacter.Add(newChild);
-                    }
+                        CharacterId = childModel.CharacterId,
+                        StoryId = childModel.StoryId
+                    };
+                    itemCurrent.StoryCharacter.Add(newChild);
                 }
             }
         }

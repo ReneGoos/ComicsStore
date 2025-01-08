@@ -9,154 +9,153 @@ using ComicsStore.Data.Common;
 using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
-namespace ComicsStore.Data.Repositories.MainRepository
+namespace ComicsStore.Data.Repositories.MainRepository;
+
+public class ArtistsRepository : ComicsStoreMainRepository<Artist, BasicSearch>, IComicsStoreMainRepository<Artist, BasicSearch>
 {
-    public class ArtistsRepository : ComicsStoreMainRepository<Artist, BasicSearch>, IComicsStoreMainRepository<Artist, BasicSearch>
+    private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
+
+    public ArtistsRepository(ComicsStoreDbContext context,
+        IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository)
+        : base(context)
     {
-        private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
+        _storyArtistsRepository = storyArtistsRepository;
+    }
 
-        public ArtistsRepository(ComicsStoreDbContext context,
-            IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository)
-            : base(context)
+    public override Task<Artist> AddAsync(Artist value)
+    {
+        return AddItemAsync(_context.Artists, value);
+    }
+
+    public override Task DeleteAsync(Artist value)
+    {
+        return RemoveItemAsync(_context.Artists, value);
+    }
+
+    public override Task<List<Artist>> GetAsync()
+    {
+        var artists = _context.Artists
+            .ToListAsync();
+
+        return artists;
+    }
+
+    public override Task<List<Artist>> GetAsync(BasicSearch model)
+    {
+        var artists = _context.Artists
+            .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
+
+        return artists;
+    }
+
+    public override Task<Artist> GetAsync(int artistId, bool extended)
+    {
+        if (extended)
         {
-            _storyArtistsRepository = storyArtistsRepository;
-        }
-
-        public override Task<Artist> AddAsync(Artist value)
-        {
-            return AddItemAsync(_context.Artists, value);
-        }
-
-        public override Task DeleteAsync(Artist value)
-        {
-            return RemoveItemAsync(_context.Artists, value);
-        }
-
-        public override Task<List<Artist>> GetAsync()
-        {
-            var artists = _context.Artists
-                .ToListAsync();
-
-            return artists;
-        }
-
-        public override Task<List<Artist>> GetAsync(BasicSearch model)
-        {
-            var artists = _context.Artists
-                .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
-
-            return artists;
-        }
-
-        public override Task<Artist> GetAsync(int artistId, bool extended)
-        {
-            if (extended)
-            {
-                return _context.Artists
-                    .Include(a => a.StoryArtist)
-                    .ThenInclude(sa => sa.Story)
-                    .Include(a => a.MainArtist)
-                    .Include(a => a.PseudonymArtist)
-                    .SingleOrDefaultAsync(a => a.Id == artistId);
-            }
-
-            var artists = _context.Artists
+            return _context.Artists
                 .Include(a => a.StoryArtist)
+                .ThenInclude(sa => sa.Story)
                 .Include(a => a.MainArtist)
                 .Include(a => a.PseudonymArtist)
                 .SingleOrDefaultAsync(a => a.Id == artistId);
-            return artists;
         }
 
-        public override Task<Artist> UpdateAsync(Artist value)
-        {
-            return UpdateItemAsync(_context.Artists, value, UpdateLinkedItems);
-        }
+        var artists = _context.Artists
+            .Include(a => a.StoryArtist)
+            .Include(a => a.MainArtist)
+            .Include(a => a.PseudonymArtist)
+            .SingleOrDefaultAsync(a => a.Id == artistId);
+        return artists;
+    }
 
-        private void UpdateMainArtistLinkedItems(IMainArtist itemCurrent, IMainArtist itemNew)
+    public override Task<Artist> UpdateAsync(Artist value)
+    {
+        return UpdateItemAsync(_context.Artists, value, UpdateLinkedItems);
+    }
+
+    private void UpdateMainArtistLinkedItems(IMainArtist itemCurrent, IMainArtist itemNew)
+    {
+        if (itemNew.MainArtist is not null)
         {
-            if (itemNew.MainArtist is not null)
+            // Delete children
+            foreach (var existingChild in itemCurrent.MainArtist.ToList())
             {
-                // Delete children
-                foreach (var existingChild in itemCurrent.MainArtist.ToList())
+                if (!itemNew.MainArtist.Any(c => c.MainArtistId == existingChild.MainArtistId && c.PseudonymArtistId == existingChild.PseudonymArtistId))
                 {
-                    if (!itemNew.MainArtist.Any(c => c.MainArtistId == existingChild.MainArtistId && c.PseudonymArtistId == existingChild.PseudonymArtistId))
-                    {
-                        _ = itemCurrent.MainArtist.Remove(existingChild);
-                    }
+                    _ = itemCurrent.MainArtist.Remove(existingChild);
                 }
+            }
 
-                // Update and Insert children
-                foreach (var childModel in itemNew.MainArtist.ToList())
+            // Update and Insert children
+            foreach (var childModel in itemNew.MainArtist.ToList())
+            {
+                var existingChild = itemCurrent.MainArtist
+                    .SingleOrDefault(c => c.MainArtistId == childModel.MainArtistId && c.PseudonymArtistId == childModel.PseudonymArtistId && c.PseudonymArtistId != default && c.MainArtistId != default);
+
+                if (existingChild is null)
                 {
-                    var existingChild = itemCurrent.MainArtist
-                        .SingleOrDefault(c => c.MainArtistId == childModel.MainArtistId && c.PseudonymArtistId == childModel.PseudonymArtistId && c.PseudonymArtistId != default && c.MainArtistId != default);
-
-                    if (existingChild is null)
+                    if (childModel.MainArtistId > 0 && childModel.PseudonymArtistId > 0)
                     {
-                        if (childModel.MainArtistId > 0 && childModel.PseudonymArtistId > 0)
+                        // Insert child
+                        var newChild = new Pseudonym
                         {
-                            // Insert child
-                            var newChild = new Pseudonym
-                            {
-                                MainArtistId = childModel.MainArtistId,
-                                PseudonymArtistId = childModel.PseudonymArtistId
-                            };
-                            itemCurrent.MainArtist.Add(newChild);
-                        }
+                            MainArtistId = childModel.MainArtistId,
+                            PseudonymArtistId = childModel.PseudonymArtistId
+                        };
+                        itemCurrent.MainArtist.Add(newChild);
                     }
                 }
             }
         }
+    }
 
-        private void UpdatePseudonymArtistLinkedItems(IPseudonymArtist itemCurrent, IPseudonymArtist itemNew)
+    private void UpdatePseudonymArtistLinkedItems(IPseudonymArtist itemCurrent, IPseudonymArtist itemNew)
+    {
+        if (itemNew.PseudonymArtist is not null)
         {
-            if (itemNew.PseudonymArtist is not null)
+            // Delete children
+            foreach (var existingChild in itemCurrent.PseudonymArtist.ToList())
             {
-                // Delete children
-                foreach (var existingChild in itemCurrent.PseudonymArtist.ToList())
+                if (!itemNew.PseudonymArtist.Any(c => c.MainArtistId == existingChild.MainArtistId && c.PseudonymArtistId == existingChild.PseudonymArtistId))
                 {
-                    if (!itemNew.PseudonymArtist.Any(c => c.MainArtistId == existingChild.MainArtistId && c.PseudonymArtistId == existingChild.PseudonymArtistId))
-                    {
-                        _ = itemCurrent.PseudonymArtist.Remove(existingChild);
-                    }
+                    _ = itemCurrent.PseudonymArtist.Remove(existingChild);
                 }
+            }
 
-                // Update and Insert children
-                foreach (var childModel in itemNew.PseudonymArtist.ToList())
+            // Update and Insert children
+            foreach (var childModel in itemNew.PseudonymArtist.ToList())
+            {
+                var existingChild = itemCurrent.PseudonymArtist
+                    .SingleOrDefault(c => c.MainArtistId == childModel.MainArtistId && c.PseudonymArtistId == childModel.PseudonymArtistId && c.PseudonymArtistId != default && c.MainArtistId != default);
+
+                if (existingChild is null)
                 {
-                    var existingChild = itemCurrent.PseudonymArtist
-                        .SingleOrDefault(c => c.MainArtistId == childModel.MainArtistId && c.PseudonymArtistId == childModel.PseudonymArtistId && c.PseudonymArtistId != default && c.MainArtistId != default);
-
-                    if (existingChild is null)
+                    if (childModel.MainArtistId > 0 && childModel.PseudonymArtistId > 0)
                     {
-                        if (childModel.MainArtistId > 0 && childModel.PseudonymArtistId > 0)
+                        // Insert child
+                        var newChild = new Pseudonym
                         {
-                            // Insert child
-                            var newChild = new Pseudonym
-                            {
-                                MainArtistId = childModel.MainArtistId,
-                                PseudonymArtistId = childModel.PseudonymArtistId
-                            };
-                            itemCurrent.PseudonymArtist.Add(newChild);
-                        }
+                            MainArtistId = childModel.MainArtistId,
+                            PseudonymArtistId = childModel.PseudonymArtistId
+                        };
+                        itemCurrent.PseudonymArtist.Add(newChild);
                     }
                 }
             }
         }
+    }
 
-        private bool UpdateLinkedItems(Artist artistCurrent, Artist artistNew)
-        {
-            _storyArtistsRepository.UpdateLinkedItems(artistCurrent, artistNew);
-            UpdateMainArtistLinkedItems(artistCurrent, artistNew);
-            UpdatePseudonymArtistLinkedItems(artistCurrent, artistNew);
+    private bool UpdateLinkedItems(Artist artistCurrent, Artist artistNew)
+    {
+        _storyArtistsRepository.UpdateLinkedItems(artistCurrent, artistNew);
+        UpdateMainArtistLinkedItems(artistCurrent, artistNew);
+        UpdatePseudonymArtistLinkedItems(artistCurrent, artistNew);
 
-            return true;
-        }
+        return true;
+    }
 
-        public override Task<Artist> PatchAsync(int id, IDictionary<string, object> data = null)
-        {
-            return PatchItemAsync(_context.Artists, id, data);
-        }
+    public override Task<Artist> PatchAsync(int id, IDictionary<string, object> data = null)
+    {
+        return PatchItemAsync(_context.Artists, id, data);
     }
 }

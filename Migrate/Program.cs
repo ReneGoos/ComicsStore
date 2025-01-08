@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Migrate
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
+namespace Migrate;
 
-            Console.WriteLine("Hello World!");
-        }
+class Program
+{
+    static void Main(string[] args)
+    {
+
+        Console.WriteLine("Hello World!");
     }
 }

@@ -151,10 +151,8 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="40">
-                                    <GridViewColumn.Header>
-                                        <GridViewColumnHeader>Del</GridViewColumnHeader>
-                                    </GridViewColumn.Header>
+                                <GridViewColumn Header="Del" 
+                                                Width="40">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Button Command="{Binding DataContext.DeleteBookFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel, AncestorLevel=2}}"
@@ -163,6 +161,22 @@
                                                     BorderThickness="0"
                                                     Width="28">
                                                 <TextBlock Text="-" HorizontalAlignment="Center" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Info" 
+                                                Width="40"
+                                                >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ShowBookInformationWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding BookId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="28"
+                                                    >
+                                                <TextBlock Text="i" HorizontalAlignment="Center" />
                                             </Button>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>

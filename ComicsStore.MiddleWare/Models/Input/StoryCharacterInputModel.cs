@@ -1,8 +1,7 @@
-﻿namespace ComicsStore.MiddleWare.Models.Input
+﻿namespace ComicsStore.MiddleWare.Models.Input;
+
+public class StoryCharacterInputModel : BasicCrossInputModel, IStoryCharacterInputModel
 {
-    public class StoryCharacterInputModel : BasicCrossInputModel, IStoryCharacterInputModel
-    {
-        public int StoryId { get; set; }
-        public int CharacterId { get; set; }
-    }
+    public int StoryId { get; set; }
+    public int CharacterId { get; set; }
 }

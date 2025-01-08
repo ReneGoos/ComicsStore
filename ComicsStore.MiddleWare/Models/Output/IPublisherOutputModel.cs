@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace ComicsStore.MiddleWare.Models.Output
+namespace ComicsStore.MiddleWare.Models.Output;
+
+public interface IPublisherOutputModel
 {
-    public interface IPublisherOutputModel
-    {
-        ICollection<PublisherBookOutputModel> BookPublisher { get; set; }
-    }
+    ICollection<PublisherBookOutputModel> BookPublisher { get; set; }
 }

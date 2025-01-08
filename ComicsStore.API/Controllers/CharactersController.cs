@@ -7,107 +7,106 @@ using ComicsStore.Data.Model.Search;
 using Microsoft.AspNetCore.Mvc;
 using ComicsStore.MiddleWare.Services.Interfaces;
 
-namespace ComicsStore.API.Controllers
+namespace ComicsStore.API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CharactersController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CharactersController : ControllerBase
+    private readonly ICharactersService _charactersService;
+
+    public CharactersController(ICharactersService charactersService)
     {
-        private readonly ICharactersService _charactersService;
+        _charactersService = charactersService;
+    }
 
-        public CharactersController(ICharactersService charactersService)
+    [HttpGet]
+    [ProducesResponseType(typeof(ICollection<CharacterOutputModel>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetAsync([FromQuery] BasicSearch characterSearch)
+    {
+        return Ok(await _charactersService.GetAsync(characterSearch));
+    }
+
+    [HttpGet("{id}", Name = "CharacterGetAsync")]
+    [ProducesResponseType(typeof(CharacterOutputModel), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetAsync(int id)
+    {
+        var showModel = await _charactersService.GetAsync(id, true);
+
+        if (showModel == null)
         {
-            _charactersService = charactersService;
+            return NotFound();
         }
 
-        [HttpGet]
-        [ProducesResponseType(typeof(ICollection<CharacterOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync([FromQuery] BasicSearch characterSearch)
+        return Ok(showModel);
+    }
+
+    [Route("{characterId}/Stories")]
+    [HttpGet]
+    [ProducesResponseType(typeof(ICollection<CharacterStoryOutputModel>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetStoriesAsync(int characterId)
+    {
+        var storyCharacters = await _charactersService.GetStoriesAsync(characterId);
+
+        if (storyCharacters == null)
         {
-            return Ok(await _charactersService.GetAsync(characterSearch));
+            return NotFound();
         }
 
-        [HttpGet("{id}", Name = "CharacterGetAsync")]
-        [ProducesResponseType(typeof(CharacterOutputModel), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync(int id)
+        return Ok(storyCharacters);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(CharacterOutputModel), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PostAsync([FromBody] CharacterInputModel value)
+    {
+        if (value == null)
         {
-            var showModel = await _charactersService.GetAsync(id, true);
-
-            if (showModel == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(showModel);
+            return BadRequest("Invalid input");
         }
 
-        [Route("{characterId}/Stories")]
-        [HttpGet]
-        [ProducesResponseType(typeof(ICollection<CharacterStoryOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetStoriesAsync(int characterId)
+        var result = await _charactersService.AddAsync(value);
+
+        if (result == null)
         {
-            var storyCharacters = await _charactersService.GetStoriesAsync(characterId);
-
-            if (storyCharacters == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(storyCharacters);
+            return BadRequest("Character not inserted");
         }
 
-        [HttpPost]
-        [ProducesResponseType(typeof(CharacterOutputModel), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> PostAsync([FromBody] CharacterInputModel value)
+        return CreatedAtRoute("CharacterGetAsync",
+                              new
+                              {
+                                  id = result.Id
+                              },
+                              result);
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(CharacterOutputModel), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PutAsync(int id, [FromBody] CharacterInputModel value)
+    {
+        if (value == null)
         {
-            if (value == null)
-            {
-                return BadRequest("Invalid input");
-            }
-
-            var result = await _charactersService.AddAsync(value);
-
-            if (result == null)
-            {
-                return BadRequest("Character not inserted");
-            }
-
-            return CreatedAtRoute("CharacterGetAsync",
-                                  new
-                                  {
-                                      id = result.Id
-                                  },
-                                  result);
+            return BadRequest("Invalid input");
         }
 
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(CharacterOutputModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] CharacterInputModel value)
+        var result = await _charactersService.UpdateAsync(id, value);
+
+        if (result == null)
         {
-            if (value == null)
-            {
-                return BadRequest("Invalid input");
-            }
-
-            var result = await _charactersService.UpdateAsync(id, value);
-
-            if (result == null)
-            {
-                return BadRequest($"Update of character {id} failed");
-            }
-
-            return Ok(result);
+            return BadRequest($"Update of character {id} failed");
         }
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            await _charactersService.DeleteAsync(id);
+        return Ok(result);
+    }
 
-            return NoContent();
-        }
+    [HttpDelete("{id}")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        await _charactersService.DeleteAsync(id);
+
+        return NoContent();
     }
 }

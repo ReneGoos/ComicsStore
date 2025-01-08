@@ -1,7 +1,6 @@
-﻿namespace ComicsStore.MiddleWare.Models.Output
+﻿namespace ComicsStore.MiddleWare.Models.Output;
+
+public interface ICodeStoryOutputModel
 {
-    public interface ICodeStoryOutputModel
-    {
-        int StoryId { get; set; }
-    }
+    int StoryId { get; set; }
 }

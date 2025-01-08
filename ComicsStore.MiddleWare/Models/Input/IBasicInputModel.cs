@@ -1,8 +1,7 @@
-﻿namespace ComicsStore.MiddleWare.Models.Input
+﻿namespace ComicsStore.MiddleWare.Models.Input;
+
+public interface IBasicInputModel
 {
-    public interface IBasicInputModel
-    {
-        string Name { get; set; }
-        string Remark { get; set; }
-    }
+    string Name { get; set; }
+    string Remark { get; set; }
 }

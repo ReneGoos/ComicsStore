@@ -1,10 +1,9 @@
-﻿namespace ComicsStore.MiddleWare.Models.Output
+﻿namespace ComicsStore.MiddleWare.Models.Output;
+
+public interface IBookSeriesOutputModel
 {
-    public interface IBookSeriesOutputModel
-    {
-        int BookId { get; set; }
-        string Issue { get; set; }
-        int SeriesId { get; set; }
-        decimal? SeriesOrder { get; set; }
-    }
+    int BookId { get; set; }
+    string Issue { get; set; }
+    int SeriesId { get; set; }
+    decimal? SeriesOrder { get; set; }
 }

@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace ComicsEntry.Views
+namespace ComicsEntry.Views;
+
+/// <summary>
+/// Interaction logic for OriginStoryPage.xaml
+/// </summary>
+public partial class OriginStoryPage : Page
 {
-    /// <summary>
-    /// Interaction logic for OriginStoryPage.xaml
-    /// </summary>
-    public partial class OriginStoryPage : Page
+    public OriginStoryPage()
     {
-        public OriginStoryPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

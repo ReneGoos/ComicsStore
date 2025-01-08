@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace ComicsStore.Data.Model.Interfaces
+namespace ComicsStore.Data.Model.Interfaces;
+
+public interface IPseudonymArtist
 {
-    public interface IPseudonymArtist
-    {
-        ICollection<Pseudonym> PseudonymArtist { get; set; }
-    }
+    ICollection<Pseudonym> PseudonymArtist { get; set; }
 }

@@ -8,39 +8,38 @@ using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using ComicsStore.Data.Model.Output;
 
-namespace ComicsStore.MiddleWare.Services
+namespace ComicsStore.MiddleWare.Services;
+
+public class ViewService : IViewService
 {
-    public class ViewService : IViewService
+    private readonly IViewRepository<ExportBook, ViewSearch> _exportBooksRepository;
+    private readonly IMapper _mapper;
+
+    public ViewService(IViewRepository<ExportBook, ViewSearch> exportBooksRepository,
+        IMapper mapper)
     {
-        private readonly IViewRepository<ExportBook, ViewSearch> _exportBooksRepository;
-        private readonly IMapper _mapper;
+        _exportBooksRepository = exportBooksRepository;
+        _mapper = mapper;
+    }
 
-        public ViewService(IViewRepository<ExportBook, ViewSearch> exportBooksRepository,
-            IMapper mapper)
+    public async Task<ICollection<ExportBooksOutputModel>> GetAsync(ViewSearch searchModel)
+    {
+        var exportBooks = await _exportBooksRepository.GetAsync(searchModel);
+
+        try
         {
-            _exportBooksRepository = exportBooksRepository;
-            _mapper = mapper;
-        }
+            var exportBooksOutput = _mapper.Map<ICollection<ExportBooksOutputModel>>(exportBooks);
 
-        public async Task<ICollection<ExportBooksOutputModel>> GetAsync(ViewSearch searchModel)
+            return exportBooksOutput;
+        }
+        catch (Exception)
         {
-            var exportBooks = await _exportBooksRepository.GetAsync(searchModel);
-
-            try
-            {
-                var exportBooksOutput = _mapper.Map<ICollection<ExportBooksOutputModel>>(exportBooks);
-
-                return exportBooksOutput;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return null;
         }
+    }
 
-        public async Task<string> GetExportAsync(ViewSearch searchModel)
-        {
-            return Reports.Reports.DataExport(await _exportBooksRepository.GetAsync(searchModel));
-        }
+    public async Task<string> GetExportAsync(ViewSearch searchModel)
+    {
+        return Reports.Reports.DataExport(await _exportBooksRepository.GetAsync(searchModel));
     }
 }

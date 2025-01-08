@@ -7,107 +7,106 @@ using ComicsStore.Data.Model.Search;
 using Microsoft.AspNetCore.Mvc;
 using ComicsStore.MiddleWare.Services.Interfaces;
 
-namespace ComicsStore.API.Controllers
+namespace ComicsStore.API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class ArtistsController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ArtistsController : ControllerBase
+    private readonly IArtistsService _artistsService;
+
+    public ArtistsController(IArtistsService artistsService)
     {
-        private readonly IArtistsService _artistsService;
+        _artistsService = artistsService;
+    }
 
-        public ArtistsController(IArtistsService artistsService)
+    [HttpGet]
+    [ProducesResponseType(typeof(ICollection<ArtistOutputModel>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetAsync([FromQuery] BasicSearch artistSearch)
+    {
+        return Ok(await _artistsService.GetAsync(artistSearch));
+    }
+
+    [HttpGet("{id}", Name = "ArtistGetAsync")]
+    [ProducesResponseType(typeof(ArtistOutputModel), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetAsync(int id)
+    {
+        var showModel = await _artistsService.GetAsync(id, true);
+
+        if (showModel == null)
         {
-            _artistsService = artistsService;
+            return NotFound();
         }
 
-        [HttpGet]
-        [ProducesResponseType(typeof(ICollection<ArtistOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync([FromQuery] BasicSearch artistSearch)
+        return Ok(showModel);
+    }
+
+    [Route("{artistId}/Stories")]
+    [HttpGet]
+    [ProducesResponseType(typeof(ICollection<ArtistStoryOutputModel>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetStoriesAsync(int artistId)
+    {
+        var storiesOutput = await _artistsService.GetStoriesAsync(artistId);
+
+        if (storiesOutput == null)
         {
-            return Ok(await _artistsService.GetAsync(artistSearch));
+            return NotFound();
         }
 
-        [HttpGet("{id}", Name = "ArtistGetAsync")]
-        [ProducesResponseType(typeof(ArtistOutputModel), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync(int id)
+        return Ok(storiesOutput);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(ArtistOutputModel), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PostAsync([FromBody] ArtistInputModel value)
+    {
+        if (value == null)
         {
-            var showModel = await _artistsService.GetAsync(id, true);
-
-            if (showModel == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(showModel);
+            return BadRequest("Invalid input");
         }
 
-        [Route("{artistId}/Stories")]
-        [HttpGet]
-        [ProducesResponseType(typeof(ICollection<ArtistStoryOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetStoriesAsync(int artistId)
+        var result = await _artistsService.AddAsync(value);
+
+        if (result == null)
         {
-            var storiesOutput = await _artistsService.GetStoriesAsync(artistId);
-
-            if (storiesOutput == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(storiesOutput);
+            return BadRequest("Artist not inserted");
         }
 
-        [HttpPost]
-        [ProducesResponseType(typeof(ArtistOutputModel), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> PostAsync([FromBody] ArtistInputModel value)
+        return CreatedAtRoute("ArtistGetAsync",
+                              new
+                              {
+                                  id = result.Id
+                              },
+                              result);
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ArtistOutputModel), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PutAsync(int id, [FromBody] ArtistInputModel value)
+    {
+        if (value == null)
         {
-            if (value == null)
-            {
-                return BadRequest("Invalid input");
-            }
-
-            var result = await _artistsService.AddAsync(value);
-
-            if (result == null)
-            {
-                return BadRequest("Artist not inserted");
-            }
-
-            return CreatedAtRoute("ArtistGetAsync",
-                                  new
-                                  {
-                                      id = result.Id
-                                  },
-                                  result);
+            return BadRequest("Invalid input");
         }
 
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(ArtistOutputModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] ArtistInputModel value)
+        var result = await _artistsService.UpdateAsync(id, value);
+
+        if (result == null)
         {
-            if (value == null)
-            {
-                return BadRequest("Invalid input");
-            }
-
-            var result = await _artistsService.UpdateAsync(id, value);
-
-            if (result == null)
-            {
-                return BadRequest($"Update of artist {id} failed");
-            }
-
-            return Ok(result);
+            return BadRequest($"Update of artist {id} failed");
         }
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            await _artistsService.DeleteAsync(id);
+        return Ok(result);
+    }
 
-            return NoContent();
-        }
+    [HttpDelete("{id}")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        await _artistsService.DeleteAsync(id);
+
+        return NoContent();
     }
 }

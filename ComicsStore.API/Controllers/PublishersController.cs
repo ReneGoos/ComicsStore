@@ -7,107 +7,106 @@ using ComicsStore.Data.Model.Search;
 using Microsoft.AspNetCore.Mvc;
 using ComicsStore.MiddleWare.Services.Interfaces;
 
-namespace ComicsStore.API.Controllers
+namespace ComicsStore.API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class PublishersController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PublishersController : ControllerBase
+    private readonly IPublishersService _publishersService;
+
+    public PublishersController(IPublishersService publishersService)
     {
-        private readonly IPublishersService _publishersService;
+        _publishersService = publishersService;
+    }
 
-        public PublishersController(IPublishersService publishersService)
+    [HttpGet]
+    [ProducesResponseType(typeof(ICollection<PublisherOutputModel>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetAsync([FromQuery] BasicSearch publisherSearch)
+    {
+        return Ok(await _publishersService.GetAsync(publisherSearch));
+    }
+
+    [HttpGet("{id}", Name = "PublisherGetAsync")]
+    [ProducesResponseType(typeof(PublisherOutputModel), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetAsync(int id)
+    {
+        var showModel = await _publishersService.GetAsync(id, true);
+
+        if (showModel == null)
         {
-            _publishersService = publishersService;
+            return NotFound();
         }
 
-        [HttpGet]
-        [ProducesResponseType(typeof(ICollection<PublisherOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync([FromQuery] BasicSearch publisherSearch)
+        return Ok(showModel);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(PublisherOutputModel), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PostAsync([FromBody] PublisherInputModel value)
+    {
+        if (value == null)
         {
-            return Ok(await _publishersService.GetAsync(publisherSearch));
+            return BadRequest("Invalid input");
         }
 
-        [HttpGet("{id}", Name = "PublisherGetAsync")]
-        [ProducesResponseType(typeof(PublisherOutputModel), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync(int id)
+        var result = await _publishersService.AddAsync(value);
+
+        if (result == null)
         {
-            var showModel = await _publishersService.GetAsync(id, true);
-
-            if (showModel == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(showModel);
+            return BadRequest("Publisher not inserted");
         }
 
-        [HttpPost]
-        [ProducesResponseType(typeof(PublisherOutputModel), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> PostAsync([FromBody] PublisherInputModel value)
+        return CreatedAtRoute("PublisherGetAsync",
+                              new
+                              {
+                                  id = result.Id
+                              },
+                              result);
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(PublisherOutputModel), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PutAsync(int id, [FromBody] PublisherInputModel value)
+    {
+        if (value == null)
         {
-            if (value == null)
-            {
-                return BadRequest("Invalid input");
-            }
-
-            var result = await _publishersService.AddAsync(value);
-
-            if (result == null)
-            {
-                return BadRequest("Publisher not inserted");
-            }
-
-            return CreatedAtRoute("PublisherGetAsync",
-                                  new
-                                  {
-                                      id = result.Id
-                                  },
-                                  result);
+            return BadRequest("Invalid input");
         }
 
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(PublisherOutputModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] PublisherInputModel value)
+        var result = await _publishersService.UpdateAsync(id, value);
+
+        if (result == null)
         {
-            if (value == null)
-            {
-                return BadRequest("Invalid input");
-            }
-
-            var result = await _publishersService.UpdateAsync(id, value);
-
-            if (result == null)
-            {
-                return BadRequest($"Update of publisher {id} failed");
-            }
-
-            return Ok(result);
+            return BadRequest($"Update of publisher {id} failed");
         }
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            await _publishersService.DeleteAsync(id);
+        return Ok(result);
+    }
 
-            return NoContent();
+    [HttpDelete("{id}")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        await _publishersService.DeleteAsync(id);
+
+        return NoContent();
+    }
+
+    [Route("{publisherId}/Books")]
+    [HttpGet]
+    [ProducesResponseType(typeof(ICollection<BookOutputModel>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetBooksAsync(int publisherId)
+    {
+        var bookOutput = await _publishersService.GetBooksAsync(publisherId);
+
+        if (bookOutput == null)
+        {
+            return NotFound();
         }
 
-        [Route("{publisherId}/Books")]
-        [HttpGet]
-        [ProducesResponseType(typeof(ICollection<BookOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetBooksAsync(int publisherId)
-        {
-            var bookOutput = await _publishersService.GetBooksAsync(publisherId);
-
-            if (bookOutput == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(bookOutput);
-        }
+        return Ok(bookOutput);
     }
 }

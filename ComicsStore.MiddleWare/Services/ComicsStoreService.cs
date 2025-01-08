@@ -9,95 +9,94 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
-namespace ComicsStore.MiddleWare.Services
+namespace ComicsStore.MiddleWare.Services;
+
+public class ComicsStoreService<T, TIn, TPatch, TOut, TSearch> : IComicsStoreService<TIn, TPatch, TOut, TSearch>
+    where T : MainTable
+    where TIn : BasicInputModel
+    where TPatch : BasicInputModel
+    where TOut : BasicOutputModel
+    where TSearch : BasicSearch
 {
-    public class ComicsStoreService<T, TIn, TPatch, TOut, TSearch> : IComicsStoreService<TIn, TPatch, TOut, TSearch>
-        where T : MainTable
-        where TIn : BasicInputModel
-        where TPatch : BasicInputModel
-        where TOut : BasicOutputModel
-        where TSearch : BasicSearch
+
+    private readonly IComicsStoreMainRepository<T, TSearch> _tableRepository;
+    private readonly IMapper _mapper;
+
+    public ComicsStoreService(IComicsStoreMainRepository<T, TSearch> tableRepository,
+        IMapper mapper)
     {
+        _tableRepository = tableRepository;
+        _mapper = mapper;
+    }
 
-        private readonly IComicsStoreMainRepository<T, TSearch> _tableRepository;
-        private readonly IMapper _mapper;
+    protected IMapper Mapper
+    {
+        get => _mapper;
+    }
 
-        public ComicsStoreService(IComicsStoreMainRepository<T, TSearch> tableRepository,
-            IMapper mapper)
+    public async Task<TOut> AddAsync(TIn itemInput)
+    {
+        var item = _mapper.Map<T>(itemInput);
+
+        var itemResult = await _tableRepository.AddAsync(item);
+
+        return _mapper.Map<TOut>(itemResult);
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var item = await _tableRepository.GetAsync(id, false);
+
+        if (item == null)
         {
-            _tableRepository = tableRepository;
-            _mapper = mapper;
+            return;
         }
 
-        protected IMapper Mapper
-        {
-            get => _mapper;
-        }
+        await _tableRepository.DeleteAsync(item);
+    }
 
-        public async Task<TOut> AddAsync(TIn itemInput)
-        {
-            var item = _mapper.Map<T>(itemInput);
+    public async Task<bool> ExistsAsync(int id)
+    {
+        return await _tableRepository.GetAsync(id, false) != null;
+    }
 
-            var itemResult = await _tableRepository.AddAsync(item);
+    public async Task<ICollection<TOut>> GetAsync()
+    {
+        var items = await _tableRepository.GetAsync();
 
-            return _mapper.Map<TOut>(itemResult);
-        }
+        return _mapper.Map<ICollection<TOut>>(items);
+    }
 
-        public async Task DeleteAsync(int id)
-        {
-            var item = await _tableRepository.GetAsync(id, false);
+    public async Task<ICollection<TOut>> GetAsync(TSearch searchModel)
+    {
+        var items = await _tableRepository.GetAsync(searchModel);
 
-            if (item == null)
-            {
-                return;
-            }
+        return _mapper.Map<ICollection<TOut>>(items);
+    }
 
-            await _tableRepository.DeleteAsync(item);
-        }
+    public async Task<TOut> GetAsync(int id, bool extended = false)
+    {
+        var item = await _tableRepository.GetAsync(id, extended);
 
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _tableRepository.GetAsync(id, false) != null;
-        }
+        return _mapper.Map<TOut>(item);
+    }
 
-        public async Task<ICollection<TOut>> GetAsync()
-        {
-            var items = await _tableRepository.GetAsync();
+    public async Task<TOut> UpdateAsync(int id, TIn itemInput)
+    {
+        var item = _mapper.Map<T>(itemInput);
+        item.Id = id;
 
-            return _mapper.Map<ICollection<TOut>>(items);
-        }
+        item = await _tableRepository.UpdateAsync(item);
 
-        public async Task<ICollection<TOut>> GetAsync(TSearch searchModel)
-        {
-            var items = await _tableRepository.GetAsync(searchModel);
+        return _mapper.Map<TOut>(item);
+    }
 
-            return _mapper.Map<ICollection<TOut>>(items);
-        }
+    public async Task<TOut> PatchAsync(int id, TPatch itemInput)
+    {
+        var modifiedData = JsonHelper.ModifiedData<TPatch, T>(itemInput, _mapper);
 
-        public async Task<TOut> GetAsync(int id, bool extended = false)
-        {
-            var item = await _tableRepository.GetAsync(id, extended);
+        var item = await _tableRepository.PatchAsync(id, modifiedData);
 
-            return _mapper.Map<TOut>(item);
-        }
-
-        public async Task<TOut> UpdateAsync(int id, TIn itemInput)
-        {
-            var item = _mapper.Map<T>(itemInput);
-            item.Id = id;
-
-            item = await _tableRepository.UpdateAsync(item);
-
-            return _mapper.Map<TOut>(item);
-        }
-
-        public async Task<TOut> PatchAsync(int id, TPatch itemInput)
-        {
-            var modifiedData = JsonHelper.ModifiedData<TPatch, T>(itemInput, _mapper);
-
-            var item = await _tableRepository.PatchAsync(id, modifiedData);
-
-            return _mapper.Map<TOut>(item);
-        }
+        return _mapper.Map<TOut>(item);
     }
 }

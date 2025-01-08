@@ -7,122 +7,121 @@ using ComicsStore.Data.Model.Search;
 using Microsoft.AspNetCore.Mvc;
 using ComicsStore.MiddleWare.Services.Interfaces;
 
-namespace ComicsStore.API.Controllers
+namespace ComicsStore.API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CodesController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CodesController : ControllerBase
+    private readonly ICodesService _codesService;
+
+    public CodesController(ICodesService codesService)
     {
-        private readonly ICodesService _codesService;
+        _codesService = codesService;
+    }
 
-        public CodesController(ICodesService codesService)
+    [HttpGet]
+    [ProducesResponseType(typeof(ICollection<CodeOutputModel>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetAsync([FromQuery] BasicSearch codeSearch)
+    {
+        return Ok(await _codesService.GetAsync(codeSearch));
+    }
+
+    [HttpGet("{id}", Name = "CodeGetAsync")]
+    [ProducesResponseType(typeof(CodeOutputModel), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetAsync(int id)
+    {
+        var showModel = await _codesService.GetAsync(id, true);
+
+        if (showModel == null)
         {
-            _codesService = codesService;
+            return NotFound();
         }
 
-        [HttpGet]
-        [ProducesResponseType(typeof(ICollection<CodeOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync([FromQuery] BasicSearch codeSearch)
+        return Ok(showModel);
+    }
+
+    [Route("{codeId}/Series")]
+    [HttpGet]
+    [ProducesResponseType(typeof(ICollection<SeriesOutputModel>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetSeriesAsync(int codeId)
+    {
+        var seriesOutput = await _codesService.GetSeriesAsync(codeId);
+
+        if (seriesOutput == null)
         {
-            return Ok(await _codesService.GetAsync(codeSearch));
+            return NotFound();
         }
 
-        [HttpGet("{id}", Name = "CodeGetAsync")]
-        [ProducesResponseType(typeof(CodeOutputModel), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync(int id)
+        return Ok(seriesOutput);
+    }
+
+    [Route("{codeId}/Stories")]
+    [HttpGet]
+    [ProducesResponseType(typeof(ICollection<CodeStoryOutputModel>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetStoriesAsync(int codeId)
+    {
+        var storyOutput = await _codesService.GetStoriesAsync(codeId);
+
+        if (storyOutput == null)
         {
-            var showModel = await _codesService.GetAsync(id, true);
-
-            if (showModel == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(showModel);
+            return NotFound();
         }
 
-        [Route("{codeId}/Series")]
-        [HttpGet]
-        [ProducesResponseType(typeof(ICollection<SeriesOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetSeriesAsync(int codeId)
+        return Ok(storyOutput);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(CodeOutputModel), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PostAsync([FromBody] CodeInputModel value)
+    {
+        if (value == null)
         {
-            var seriesOutput = await _codesService.GetSeriesAsync(codeId);
-
-            if (seriesOutput == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(seriesOutput);
+            return BadRequest("Invalid input");
         }
 
-        [Route("{codeId}/Stories")]
-        [HttpGet]
-        [ProducesResponseType(typeof(ICollection<CodeStoryOutputModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetStoriesAsync(int codeId)
+        var result = await _codesService.AddAsync(value);
+
+        if (result == null)
         {
-            var storyOutput = await _codesService.GetStoriesAsync(codeId);
-
-            if (storyOutput == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(storyOutput);
+            return BadRequest("Code not inserted");
         }
 
-        [HttpPost]
-        [ProducesResponseType(typeof(CodeOutputModel), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> PostAsync([FromBody] CodeInputModel value)
+        return CreatedAtRoute("CodeGetAsync",
+                              new
+                              {
+                                  id = result.Id
+                              },
+                              result);
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(CodeOutputModel), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PutAsync(int id, [FromBody] CodeInputModel value)
+    {
+        if (value == null)
         {
-            if (value == null)
-            {
-                return BadRequest("Invalid input");
-            }
-
-            var result = await _codesService.AddAsync(value);
-
-            if (result == null)
-            {
-                return BadRequest("Code not inserted");
-            }
-
-            return CreatedAtRoute("CodeGetAsync",
-                                  new
-                                  {
-                                      id = result.Id
-                                  },
-                                  result);
+            return BadRequest("Invalid input");
         }
 
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(CodeOutputModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] CodeInputModel value)
+        var result = await _codesService.UpdateAsync(id, value);
+
+        if (result == null)
         {
-            if (value == null)
-            {
-                return BadRequest("Invalid input");
-            }
-
-            var result = await _codesService.UpdateAsync(id, value);
-
-            if (result == null)
-            {
-                return BadRequest($"Update of code {id} failed");
-            }
-
-            return Ok(result);
+            return BadRequest($"Update of code {id} failed");
         }
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            await _codesService.DeleteAsync(id);
+        return Ok(result);
+    }
 
-            return NoContent();
-        }
+    [HttpDelete("{id}")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        await _codesService.DeleteAsync(id);
+
+        return NoContent();
     }
 }

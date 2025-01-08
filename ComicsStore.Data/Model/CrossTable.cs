@@ -1,9 +1,8 @@
-﻿namespace ComicsStore.Data.Model
+﻿namespace ComicsStore.Data.Model;
+
+public abstract class CrossTable : BasicsTable
 {
-    public abstract class CrossTable : BasicsTable
+    public CrossTable() : base()
     {
-        public CrossTable() : base()
-        {
-        }
     }
 }

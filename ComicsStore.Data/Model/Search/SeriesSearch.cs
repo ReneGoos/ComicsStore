@@ -1,7 +1,6 @@
-﻿namespace ComicsStore.Data.Model.Search
+﻿namespace ComicsStore.Data.Model.Search;
+
+public class SeriesSearch : BasicSearch
 {
-    public class SeriesSearch : BasicSearch
-    {
-        public int? CodeId { get; set; }
-    }
+    public int? CodeId { get; set; }
 }

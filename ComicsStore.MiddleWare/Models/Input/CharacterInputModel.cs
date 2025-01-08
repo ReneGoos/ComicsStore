@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace ComicsStore.MiddleWare.Models.Input
+namespace ComicsStore.MiddleWare.Models.Input;
+
+public class CharacterInputModel : BasicInputModel, ICharacterInputModel
 {
-    public class CharacterInputModel : BasicInputModel, ICharacterInputModel
-    {
-        public ICollection<StoryCharacterInputModel> StoryCharacter { get; set; }
-    }
+    public ICollection<StoryCharacterInputModel> StoryCharacter { get; set; }
 }

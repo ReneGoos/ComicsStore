@@ -10,78 +10,77 @@ using ComicsLibrary.Core;
 using System;
 using ComicsStore.Data.Common;
 
-namespace ComicsLibrary.ViewModels
+namespace ComicsLibrary.ViewModels;
+
+public class SeriesViewModel : BasicTableViewModel<ISeriesService, SeriesInputModel, SeriesInputModel, SeriesOutputModel, SeriesSearch, SeriesEditModel>
 {
-    public class SeriesViewModel : BasicTableViewModel<ISeriesService, SeriesInputModel, SeriesInputModel, SeriesOutputModel, SeriesSearch, SeriesEditModel>
+    private readonly IBooksService _booksService;
+    private readonly ICodesService _codesService;
+
+    public ICommand DeleteBookFromListCommand { get; protected set; }
+
+    public SeriesViewModel(ISeriesService seriesService,
+        IBooksService booksService,
+        ICodesService codesService,
+        INavigationService navigationService,
+        IMapper mapper) : base(seriesService, navigationService, mapper)
     {
-        private readonly IBooksService _booksService;
-        private readonly ICodesService _codesService;
+        DeleteBookFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteBookFromList));
+        _booksService = booksService;
+        _codesService = codesService;
+    }
 
-        public ICommand DeleteBookFromListCommand { get; protected set; }
+    public async void HandleBook(int? bookId, int? oldBookId)
+    {
+        var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
+        IsDirty |= Item.HandleBook(oldBookId, book, ItemPropertyChanged);
+    }
 
-        public SeriesViewModel(ISeriesService seriesService,
-            IBooksService booksService,
-            ICodesService codesService,
-            INavigationService navigationService,
-            IMapper mapper) : base(seriesService, navigationService, mapper)
+    public void DeleteBookFromList(int? bookId)
+    {
+        IsDirty |= Item.HandleBook(bookId, null);
+    }
+
+    public async void HandleCode(int? codeId, int? oldCodeId)
+    {
+        var code = codeId.HasValue ? Mapper.Map<CodeOnlyEditModel>(await _codesService.GetAsync(codeId.Value)) : null;
+        IsDirty |= Item.HandleCode(oldCodeId, code);
+    }
+
+    public void DeleteCode(int? codeId)
+    {
+        IsDirty |= Item.HandleCode(codeId, null);
+    }
+
+    public override void ItemChange(TableType table, int? id, ActionType actionType)
+    {
+        switch (actionType)
         {
-            DeleteBookFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteBookFromList));
-            _booksService = booksService;
-            _codesService = codesService;
-        }
+            case ActionType.deleteItem:
+                switch (table)
+                {
+                    case TableType.book:
+                        DeleteBookFromList(id);
+                        break;
 
-        public async void HandleBook(int? bookId, int? oldBookId)
-        {
-            var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
-            IsDirty |= Item.HandleBook(oldBookId, book, ItemPropertyChanged);
-        }
+                    case TableType.code:
+                        DeleteCode(id);
+                        break;
+                }
+                break;
 
-        public void DeleteBookFromList(int? bookId)
-        {
-            IsDirty |= Item.HandleBook(bookId, null);
-        }
+            case ActionType.updateItem:
+                switch (table)
+                {
+                    case TableType.book:
+                        HandleBook(id, id);
+                        break;
 
-        public async void HandleCode(int? codeId, int? oldCodeId)
-        {
-            var code = codeId.HasValue ? Mapper.Map<CodeOnlyEditModel>(await _codesService.GetAsync(codeId.Value)) : null;
-            IsDirty |= Item.HandleCode(oldCodeId, code);
-        }
-
-        public void DeleteCode(int? codeId)
-        {
-            IsDirty |= Item.HandleCode(codeId, null);
-        }
-
-        public override void ItemChange(TableType table, int? id, ActionType actionType)
-        {
-            switch (actionType)
-            {
-                case ActionType.deleteItem:
-                    switch (table)
-                    {
-                        case TableType.book:
-                            DeleteBookFromList(id);
-                            break;
-
-                        case TableType.code:
-                            DeleteCode(id);
-                            break;
-                    }
-                    break;
-
-                case ActionType.updateItem:
-                    switch (table)
-                    {
-                        case TableType.book:
-                            HandleBook(id, id);
-                            break;
-
-                        case TableType.code:
-                            HandleCode(id, id);
-                            break;
-                    }
-                    break;
-            }
+                    case TableType.code:
+                        HandleCode(id, id);
+                        break;
+                }
+                break;
         }
     }
 }

@@ -10,96 +10,95 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Input;
 
-namespace ComicsLibrary.ViewModels
+namespace ComicsLibrary.ViewModels;
+
+public class ReportViewModel : BasicEditModel
 {
-    public class ReportViewModel : BasicEditModel
+    private readonly IViewService _exportBooksService;
+    private readonly IMapper _mapper;
+    private PagingCollectionView<ReportEditModel> _pagingCollection;
+
+    private bool? _active = true;
+    private string _itemFilter;
+    private string _itemSort;
+
+    public ICommand StoreReportWindowCommand { get; protected set; }
+
+    public ReportViewModel(IViewService exportBooksService,
+                            IMapper mapper) : base()
     {
-        private readonly IViewService _exportBooksService;
-        private readonly IMapper _mapper;
-        private PagingCollectionView<ReportEditModel> _pagingCollection;
+        _exportBooksService = exportBooksService;
+        _mapper = mapper;
 
-        private bool? _active = true;
-        private string _itemFilter;
-        private string _itemSort;
+        StoreReportWindowCommand = new RelayCommand(new Action(StoreReportWindow));
+    }
 
-        public ICommand StoreReportWindowCommand { get; protected set; }
-
-        public ReportViewModel(IViewService exportBooksService,
-                                IMapper mapper) : base()
+    private async void StoreReportWindow()
+    {
+        var saveFileDialog = new SaveFileDialog
         {
-            _exportBooksService = exportBooksService;
-            _mapper = mapper;
+            Filter = "Text file (*.txt)|*.txt|CSV file (*.csv)|*.csv"
+        };
 
-            StoreReportWindowCommand = new RelayCommand(new Action(StoreReportWindow));
-        }
-
-        private async void StoreReportWindow()
+        if (saveFileDialog.ShowDialog() == true)
         {
-            var saveFileDialog = new SaveFileDialog
-            {
-                Filter = "Text file (*.txt)|*.txt|CSV file (*.csv)|*.csv"
-            };
-
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                var report = await _exportBooksService.GetExportAsync(new ViewSearch
-                {
-                    Filter = _itemFilter,
-                    Active = _active.HasValue ? (_active.Value ? ComicsStore.Data.Common.Active.active : ComicsStore.Data.Common.Active.deleted) : null
-                });
-
-                await File.WriteAllTextAsync(saveFileDialog.FileName, report);
-            }
-        }
-
-        private async void Refresh()
-        {
-            var list = _mapper.Map<List<ReportEditModel>>(await _exportBooksService.GetAsync(new ViewSearch
+            var report = await _exportBooksService.GetExportAsync(new ViewSearch
             {
                 Filter = _itemFilter,
                 Active = _active.HasValue ? (_active.Value ? ComicsStore.Data.Common.Active.active : ComicsStore.Data.Common.Active.deleted) : null
-            })); ; ;
-            PagingCollection = new PagingCollectionView<ReportEditModel>(list, 50);
+            });
+
+            await File.WriteAllTextAsync(saveFileDialog.FileName, report);
         }
+    }
 
-        public PagingCollectionView<ReportEditModel> PagingCollection
+    private async void Refresh()
+    {
+        var list = _mapper.Map<List<ReportEditModel>>(await _exportBooksService.GetAsync(new ViewSearch
         {
-            get
-            {
-                if (_pagingCollection is null)
-                {
-                    Refresh();
-                }
+            Filter = _itemFilter,
+            Active = _active.HasValue ? (_active.Value ? ComicsStore.Data.Common.Active.active : ComicsStore.Data.Common.Active.deleted) : null
+        })); ; ;
+        PagingCollection = new PagingCollectionView<ReportEditModel>(list, 50);
+    }
 
-                return _pagingCollection;
-            }
-            private set => Set(ref _pagingCollection, value);
-        }
-
-        public string ItemFilter
+    public PagingCollectionView<ReportEditModel> PagingCollection
+    {
+        get
         {
-            get => _itemFilter;
-            set
+            if (_pagingCollection is null)
             {
-                Set(ref _itemFilter, value);
                 Refresh();
             }
-        }
 
-        public string ItemSort
-        {
-            get => _itemSort;
-            set => Set(ref _itemSort, value);
+            return _pagingCollection;
         }
+        private set => Set(ref _pagingCollection, value);
+    }
 
-        public bool? Active
+    public string ItemFilter
+    {
+        get => _itemFilter;
+        set
         {
-            get => _active;
-            set
-            {
-                Set(ref _active, value);
-                Refresh();
-            }
+            Set(ref _itemFilter, value);
+            Refresh();
+        }
+    }
+
+    public string ItemSort
+    {
+        get => _itemSort;
+        set => Set(ref _itemSort, value);
+    }
+
+    public bool? Active
+    {
+        get => _active;
+        set
+        {
+            Set(ref _active, value);
+            Refresh();
         }
     }
 }

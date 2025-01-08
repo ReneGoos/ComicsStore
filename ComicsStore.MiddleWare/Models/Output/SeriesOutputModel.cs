@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace ComicsStore.MiddleWare.Models.Output
+namespace ComicsStore.MiddleWare.Models.Output;
+
+public class SeriesOutputModel : SeriesOnlyOutputModel, ISeriesOutputModel
 {
-    public class SeriesOutputModel : SeriesOnlyOutputModel, ISeriesOutputModel
-    {
-        public CodeOutputModel Code { get; set; }
-        public ICollection<SeriesBookOutputModel> BookSeries { get; set; }
-    }
+    public CodeOutputModel Code { get; set; }
+    public ICollection<SeriesBookOutputModel> BookSeries { get; set; }
 }
