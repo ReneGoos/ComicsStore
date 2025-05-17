@@ -3,13 +3,17 @@ using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
 using ComicsLibrary.Helpers;
 using ComicsStore.Data.Common;
+using ComicsStore.Data.Model;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Policy;
 using System.Windows.Input;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ComicsLibrary.ViewModels;
 
@@ -21,6 +25,7 @@ public class InformationViewModel : BasicEditModel
 
     private IdSearch _search;
     private string _itemSort;
+    private StoryEditModel _item;
 
     public ICommand GetCommand { get; protected set; }
     public ICommand StoreInformationWindowCommand { get; protected set; }
@@ -61,6 +66,12 @@ public class InformationViewModel : BasicEditModel
     {
         var list = _mapper.Map<List<InformationEditModel>>(await _informationViewService.GetAsync(_search)); ; ;
         PagingCollection = new PagingCollectionView<InformationEditModel>(list, 50);
+
+        //var storyBooks = list.Where(s => s.Title.Equals(list[0].Title)).ToList();
+
+        //Item = new StoryEditModel { 
+        //    StoryBook = new StoryBookEditModel { new BookOnlyEditModel { Name = list[0].Title } }
+        //};
     }
 
     public PagingCollectionView<InformationEditModel> PagingCollection
@@ -114,5 +125,11 @@ public class InformationViewModel : BasicEditModel
             Set(ref _search, value);
             Refresh();
         }
+    }
+
+    public StoryEditModel Item
+    {
+        get => _item;
+        private set => Set(ref _item, value);
     }
 }

@@ -126,6 +126,11 @@ public class ComicsStoreDbContext : DbContext
             .HasNoKey()
             .ToView("StorySeries")
             .Property(ss => ss.StoryNumber).HasConversion<double>();
+
+        _ = modelBuilder.Entity<Information>()
+            .HasNoKey()
+            .ToView("Information")
+            .Property(ss => ss.StoryNumber).HasConversion<double>();
     }
 
     public void DetachAllEntities()
@@ -146,6 +151,7 @@ public class ComicsStoreDbContext : DbContext
     public virtual DbSet<Character> Characters { get; set; }
     public virtual DbSet<Artist> Artists { get; set; }
     public virtual DbSet<Book> Books { get; set; }
+    public virtual DbSet<DigitalBook> DigitalBooks { get; set; }
     public virtual DbSet<Series> Series { get; set; }
     public virtual DbSet<Publisher> Publishers { get; set; }
 
@@ -159,4 +165,5 @@ public class ComicsStoreDbContext : DbContext
     public virtual DbSet<ExportBook> ExportBooks { get; set; }
     public virtual DbSet<ExportStory> ExportStory { get; set; }
     public virtual DbSet<StorySeries> StorySeries { get; set; }
+    public virtual DbSet<Information> Information { get; set; }
 }

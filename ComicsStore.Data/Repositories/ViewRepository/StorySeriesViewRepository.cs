@@ -17,6 +17,7 @@ public class StorySeriesViewRepository(ComicsStoreDbContext context) : IViewRepo
     {
         var exports = from storySeries in _context.StorySeries
                       where (!model.Active.HasValue || storySeries.Deleted == model.Active.Value)
+                      && (!storySeries.PeriodicalGroups.Equals("U"))
                       && (model.Filter == null ||
                             model.Filter.Length == 0 ||
                             storySeries.StoryName.ToLower().Contains(model.Filter.ToLower()) ||

@@ -1,4 +1,5 @@
 ﻿using ComicsStore.Data.Common;
+using ComicsStore.Data.Model;
 using ComicsStore.Data.Model.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.Data.Repositories.Interfaces;
@@ -30,7 +31,7 @@ public class InformationViewRepository(ComicsStoreDbContext context) : IViewRepo
             .AsNoTracking();
         */
 
-        var exports = from comicsInformation in _context.StorySeries
+        var exports = from comicsInformation in _context.Information
                       where (!model.Active.HasValue || comicsInformation.Deleted == model.Active.Value) &&
                             (model.Filter == null ||
                             model.Filter.Length == 0 ||
@@ -44,7 +45,8 @@ public class InformationViewRepository(ComicsStoreDbContext context) : IViewRepo
                             (!model.CodeId.HasValue || comicsInformation.StoryCodeId == model.CodeId.Value || comicsInformation.SeriesCodeId == model.CodeId.Value) &&
                             (!model.PublisherId.HasValue || comicsInformation.PublisherId == model.PublisherId.Value) &&
                             (!model.SeriesId.HasValue || comicsInformation.SeriesId == model.SeriesId.Value) &&
-                            (!model.StoryId.HasValue || comicsInformation.StoryId == model.StoryId.Value)
+                            (!model.StoryId.HasValue || comicsInformation.StoryId == model.StoryId.Value) && 
+                            ((!model.BookId.HasValue && !comicsInformation.PeriodicalGroups.Equals("U")) || (model.BookId.HasValue && !comicsInformation.PeriodicalGroups.Equals("G")))
                       orderby comicsInformation.StoryCode,
                       comicsInformation.StoryType,
                       comicsInformation.StoryNumber,
@@ -87,5 +89,20 @@ public class InformationViewRepository(ComicsStoreDbContext context) : IViewRepo
 
         return exports
             .ToListAsync();
+    }
+
+    public Task<Story> GetInformationAsync(IdSearch model)
+    {
+        return _context.Stories
+            .Include(s => s.Code)
+            .Include(s => s.OriginStory)
+            .Include(s => s.StoryArtist)
+            .ThenInclude(sa => sa.Artist)
+            .Include(s => s.StoryCharacter)
+            .ThenInclude(sc => sc.Character)
+            .Include(s => s.StoryBook)
+            .ThenInclude(sb => sb.Book)
+            .Include(s => s.StoryFromOrigin)
+            .SingleOrDefaultAsync(s => s.Id == model.StoryId || s.Code.Id == model.CodeId);
     }
 }

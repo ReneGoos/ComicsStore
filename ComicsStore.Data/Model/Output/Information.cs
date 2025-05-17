@@ -3,7 +3,7 @@ using System;
 
 namespace ComicsStore.Data.Model.Output;
 
-public class StorySeries : ResultView
+public class Information : ResultView
 {
     public int StoryId { get; set; }
     public int BookId { get; set; }

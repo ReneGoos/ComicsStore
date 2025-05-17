@@ -65,6 +65,7 @@ public partial class App : Application
             navigationService.Configure(StoreWindows.Series, typeof(SeriesPage));
             navigationService.Configure(StoreWindows.Story, typeof(StoryPage));
 
+            navigationService.Configure(StoreWindows.Informational, typeof(InformationalWindow), false);
             navigationService.Configure(StoreWindows.Information, typeof(InformationWindow), false);
             navigationService.Configure(StoreWindows.Report, typeof(ReportWindow), false);
             return navigationService;
@@ -76,6 +77,7 @@ public partial class App : Application
 
         // Register all the Windows of the applications.
         _ = services.AddSingleton<StartWindow>();
+        _ = services.AddTransient<InformationalWindow>();
         _ = services.AddTransient<InformationWindow>();
         _ = services.AddTransient<ReportWindow>();
         _ = services.AddTransient<MainWindow>();

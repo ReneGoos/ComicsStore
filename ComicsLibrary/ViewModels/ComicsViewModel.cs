@@ -561,7 +561,8 @@ public class ComicsViewModel : ObservableObject, IActivable
 
         InformationView.Search = search;
 
-        await _navigationService.ShowWindowAsync(StoreWindows.Information);
+        await _navigationService.ShowWindowAsync(StoreWindows.Informational);
+//        await _navigationService.ShowWindowAsync(StoreWindows.Information);
     }
 
     private async void ShowArtistInformationWindow(int itemId)

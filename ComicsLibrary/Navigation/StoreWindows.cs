@@ -12,6 +12,7 @@ public static class StoreWindows
     public const string Series = nameof(Series);
     public const string Story = nameof(Story);
     public const string Start = nameof(Start);
+    public const string Informational = nameof(Informational);
     public const string Information = nameof(Information);
     public const string Report = nameof(Report);
 }
