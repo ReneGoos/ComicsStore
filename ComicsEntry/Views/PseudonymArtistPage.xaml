@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
+        xmlns:converters="clr-namespace:SoftGoosR.Windows.Converters;assembly=SoftGoosR.Windows"
         xmlns:local="clr-namespace:ComicsEntry"
         xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
         mc:Ignorable="d"
@@ -14,9 +15,9 @@
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}"
         >
     <Page.Resources>
-        <helpers:ArrayConverter x:Key="ArrayConverter"/>
-        <helpers:NotConverter x:Key="NotConverter"/>
-        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:ArrayConverter x:Key="ArrayConverter"/>
+        <converters:NotConverter x:Key="NotConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Page.Resources>
     <StackPanel DataContext="{Binding PseudonymArtistView}">
         <Grid Background="LightGray" 

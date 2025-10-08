@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace ComicsLibrary.Core;
+﻿namespace ComicsLibrary.Core;
 
 public interface INotifyItemChanged
 {

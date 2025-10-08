@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ComicsStore.Data.Model;
 using ComicsStore.Data.Model.Output;
 using ComicsStore.Data.Model.Search;
 

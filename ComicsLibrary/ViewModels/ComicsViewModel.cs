@@ -14,6 +14,8 @@ using ComicsStore.Data.Common;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using ComicsStore.Data.Model.Search;
+using SoftGoosR.Common.Core;
+using SoftGoosR.Windows.Core;
 
 namespace ComicsLibrary.ViewModels;
 
@@ -62,7 +64,6 @@ public class ComicsViewModel : ObservableObject, IActivable
             return connectionString[connectionString.LastIndexOf('\\')..];
         }
     }
-
 
     public ICommand ShowArtistFromStoryWindowCommand { get; protected set; }
     public ICommand ShowArtistFromOriginStoryWindowCommand { get; protected set; }

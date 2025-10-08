@@ -2,8 +2,7 @@
 using ComicsLibrary.Core;
 using ComicsLibrary.Navigation;
 using ComicsLibrary.ViewModels.Interfaces;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using SoftGoosR.Common.Core;
 using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels;

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
+        xmlns:converters="clr-namespace:SoftGoosR.Windows.Converters;assembly=SoftGoosR.Windows"
         xmlns:local="clr-namespace:ComicsEntry.Views"
         mc:Ignorable="d"
         Title="InformationalWindow"
@@ -11,7 +12,7 @@
         Width="1800"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}">
     <Window.Resources>
-        <helpers:NotConverter x:Key="NotConverter"/>
+        <converters:NotConverter x:Key="NotConverter"/>
     </Window.Resources>
     <Grid DataContext="{Binding InformationView}">
         <Grid.RowDefinitions>

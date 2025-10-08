@@ -1,6 +1,5 @@
 ﻿namespace ComicsLibrary.Core;
 
-
 public class ItemChangedEventArgs
 {
     public ItemChangedEventArgs(string? itemName, int? id, ActionType actionType)

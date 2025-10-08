@@ -1,6 +1,6 @@
 ﻿using ComicsLibrary.Core;
-using ComicsStore.Data.Model.Search;
 using Microsoft.Extensions.DependencyInjection;
+using SoftGoosR.Common.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;

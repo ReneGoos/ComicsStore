@@ -1,5 +1,6 @@
 ﻿using ComicsLibrary.Core;
 using ComicsLibrary.Extensions;
+using SoftGoosR.Common.Core;
 using System.ComponentModel;
 
 namespace ComicsLibrary.EditModels;

@@ -9,6 +9,7 @@ using ComicsLibrary.Core;
 using System;
 using System.Windows.Input;
 using ComicsStore.Data.Common;
+using SoftGoosR.Windows.Core;
 
 namespace ComicsLibrary.ViewModels;
 

@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
+        xmlns:converters="clr-namespace:SoftGoosR.Windows.Converters;assembly=SoftGoosR.Windows"
         xmlns:local="clr-namespace:ComicsEntry.Views"
         xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
         mc:Ignorable="d"
@@ -13,14 +14,14 @@
         Width="1800"
         DataContext="{Binding Source={StaticResource Locator}, Path=ComicsViewModel}">
     <Window.Resources>
-        <helpers:NotConverter x:Key="NotConverter"/>
-        <helpers:ArrayConverter x:Key="ArrayConverter"/>
-        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-        <helpers:IsNullConverter x:Key="IsNullConverter"/>
-        <helpers:ValueConverterGroup x:Key="NotNullConverter">
-            <helpers:IsNullConverter />
-            <helpers:NotConverter />
-        </helpers:ValueConverterGroup>
+        <converters:NotConverter x:Key="NotConverter"/>
+        <converters:ArrayConverter x:Key="ArrayConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:IsNullConverter x:Key="IsNullConverter"/>
+        <converters:ValueConverterGroup x:Key="NotNullConverter">
+            <converters:IsNullConverter />
+            <converters:NotConverter />
+        </converters:ValueConverterGroup>
     </Window.Resources>
     <Grid DataContext="{Binding InformationView}">
         <Grid.RowDefinitions>

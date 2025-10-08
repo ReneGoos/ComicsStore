@@ -1,6 +1,4 @@
 ﻿using ComicsStore.Data.Common;
-using ComicsStore.Data.Model.Interfaces;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ComicsStore.Data.Model;

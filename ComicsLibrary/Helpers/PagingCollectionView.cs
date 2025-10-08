@@ -1,4 +1,5 @@
 ﻿using ComicsLibrary.Core;
+using SoftGoosR.Windows.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

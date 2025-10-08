@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ComicsStore.Data.Common;
-using System.ComponentModel.DataAnnotations;
 using ComicsLibrary.Helpers;
 using ComicsLibrary.Core;
 using ComicsLibrary.EditModels.Interfaces;

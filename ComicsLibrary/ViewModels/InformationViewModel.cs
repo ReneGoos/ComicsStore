@@ -2,18 +2,14 @@
 using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
 using ComicsLibrary.Helpers;
-using ComicsStore.Data.Common;
-using ComicsStore.Data.Model;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using Microsoft.Win32;
+using SoftGoosR.Windows.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Policy;
 using System.Windows.Input;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ComicsLibrary.ViewModels;
 

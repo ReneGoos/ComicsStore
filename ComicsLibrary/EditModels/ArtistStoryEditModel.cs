@@ -2,7 +2,6 @@
 using ComicsStore.Data.Common;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System;
 using System.Linq;

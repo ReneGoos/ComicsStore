@@ -12,13 +12,12 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
 using System.Linq;
-using ComicsLibrary.Helpers;
 using ComicsLibrary.Navigation;
 using ComicsStore.Data.Common;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text;
 using ComicsLibrary.EditModels.Interfaces;
 using System.Data;
+using SoftGoosR.Windows.Core;
 
 namespace ComicsLibrary.ViewModels;
 
