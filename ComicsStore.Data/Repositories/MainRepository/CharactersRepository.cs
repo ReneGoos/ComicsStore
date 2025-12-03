@@ -11,22 +11,16 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.Data.Repositories.MainRepository;
 
-public class CharactersRepository : ComicsStoreMainRepository<Character, BasicSearch>, IComicsStoreMainRepository<Character, BasicSearch>
+public class CharactersRepository(ComicsStoreDbContext context,
+    IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository) : ComicsStoreMainRepository<Character, BasicSearch>(context), IComicsStoreMainRepository<Character, BasicSearch>
 {
-    private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository;
+    private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository = storyCharactersRepository;
 
     private bool UpdateLinkedItems(Character characterCurrent, Character characterNew)
     {
         _storyCharactersRepository.UpdateLinkedItems(characterCurrent, characterNew);
 
         return true;
-    }
-
-    public CharactersRepository(ComicsStoreDbContext context,
-        IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository)
-        : base(context)
-    {
-        _storyCharactersRepository = storyCharactersRepository;
     }
 
     public override Task<Character> AddAsync(Character value)

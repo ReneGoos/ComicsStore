@@ -11,11 +11,15 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.Data.Repositories.MainRepository;
 
-public class BooksRepository : ComicsStoreMainRepository<Book, BasicSearch>, IComicsStoreMainRepository<Book, BasicSearch>
+public class BooksRepository(ComicsStoreDbContext context,
+                       IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
+                       IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,
+                       IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository
+                           ) : ComicsStoreMainRepository<Book, BasicSearch>(context), IComicsStoreMainRepository<Book, BasicSearch>
 {
-    private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository;
-    private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository;
-    private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository;
+    private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository = bookPublishersRepository;
+    private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository = bookSeriesRepository;
+    private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository = storyBooksRepository;
 
     private bool UpdateLinkedItems(Book bookCurrent, Book bookNew)
     {
@@ -24,18 +28,6 @@ public class BooksRepository : ComicsStoreMainRepository<Book, BasicSearch>, ICo
         _storyBooksRepository.UpdateLinkedItems(bookCurrent, bookNew);
 
         return true;
-    }
-
-    public BooksRepository(ComicsStoreDbContext context,
-                           IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
-                           IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,
-                           IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository
-                           )
-        : base(context)
-    {
-        _bookPublishersRepository = bookPublishersRepository;
-        _bookSeriesRepository = bookSeriesRepository;
-        _storyBooksRepository = storyBooksRepository;
     }
 
     public override Task<Book> AddAsync(Book value)

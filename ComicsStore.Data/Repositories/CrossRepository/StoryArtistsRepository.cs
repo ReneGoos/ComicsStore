@@ -9,13 +9,8 @@ using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 
 namespace ComicsStore.Data.Repositories.CrossRepository;
 
-public class StoryArtistsRepository : ComicsStoreCrossRepository<StoryArtist, IStoryArtist>, IComicsStoreCrossRepository<StoryArtist, IStoryArtist>
+public class StoryArtistsRepository(ComicsStoreDbContext context) : ComicsStoreCrossRepository<StoryArtist, IStoryArtist>(context), IComicsStoreCrossRepository<StoryArtist, IStoryArtist>
 {
-    public StoryArtistsRepository(ComicsStoreDbContext context)
-        : base(context)
-    {
-    }
-
     public override Task<StoryArtist> AddAsync(StoryArtist value)
     {
         return AddItemAsync(_context.StoryArtists, value);

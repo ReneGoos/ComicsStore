@@ -9,15 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ComicsStore.Data.Repositories;
 
-public abstract class ComicsStoreRepository<T> : IComicsStoreRepository<T>
+public abstract class ComicsStoreRepository<T>(ComicsStoreDbContext context) : IComicsStoreRepository<T>
     where T : BasicsTable
 {
-    protected readonly ComicsStoreDbContext _context;
-
-    public ComicsStoreRepository(ComicsStoreDbContext context)
-    {
-        _context = context;
-    }
+    protected readonly ComicsStoreDbContext _context = context;
 
     protected async Task SaveChangesAsync()
     {

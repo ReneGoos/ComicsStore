@@ -9,14 +9,9 @@ using ComicsStore.Data.Model.Output;
 
 namespace ComicsStore.Data.Repositories.ViewRepository;
 
-public class ExportBooksViewRepository : IViewRepository<ExportBook, ViewSearch>
+public class ExportBooksViewRepository(ComicsStoreDbContext context) : IViewRepository<ExportBook, ViewSearch>
 {
-    protected readonly ComicsStoreDbContext _context;
-
-    public ExportBooksViewRepository(ComicsStoreDbContext context)
-    {
-        _context = context;
-    }
+    protected readonly ComicsStoreDbContext _context = context;
 
     public Task<List<ExportBook>> GetAsync(ViewSearch model)
     {

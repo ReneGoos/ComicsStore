@@ -11,14 +11,9 @@ namespace ComicsStore.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PublishersController : ControllerBase
+public class PublishersController(IPublishersService publishersService) : ControllerBase
 {
-    private readonly IPublishersService _publishersService;
-
-    public PublishersController(IPublishersService publishersService)
-    {
-        _publishersService = publishersService;
-    }
+    private readonly IPublishersService _publishersService = publishersService;
 
     [HttpGet]
     [ProducesResponseType(typeof(ICollection<PublisherOutputModel>), (int)HttpStatusCode.OK)]

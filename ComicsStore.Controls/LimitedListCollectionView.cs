@@ -4,17 +4,11 @@ using System.Collections;
 
 namespace ComicsStore.Controls;
 
-public class LimitedListCollectionView : CollectionView, IEnumerable
+public class LimitedListCollectionView(IEnumerable list) : CollectionView(list), IEnumerable
 {
-    public int Limit { get; set; }
+    public int Limit { get; set; } = int.MaxValue;
 
-    public LimitedListCollectionView(IEnumerable list)
-        : base(list)
-    {
-        Limit = int.MaxValue;
-    }
-
-    public override int Count { get { return Math.Min(base.Count, Limit); } }
+    public override int Count => Math.Min(base.Count, Limit);
 
     public override bool MoveCurrentToLast()
     {

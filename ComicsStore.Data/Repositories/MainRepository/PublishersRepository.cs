@@ -11,22 +11,16 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.Data.Repositories.MainRepository;
 
-public class PublishersRepository : ComicsStoreMainRepository<Publisher, BasicSearch>, IComicsStoreMainRepository<Publisher, BasicSearch>
+public class PublishersRepository(ComicsStoreDbContext context,
+                       IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository) : ComicsStoreMainRepository<Publisher, BasicSearch>(context), IComicsStoreMainRepository<Publisher, BasicSearch>
 {
-    private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository;
+    private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository = bookPublishersRepository;
 
     private bool UpdateLinkedItems(Publisher publisherCurrent, Publisher publisherNew)
     {
         _bookPublishersRepository.UpdateLinkedItems(publisherCurrent, publisherNew);
 
         return true;
-    }
-
-    public PublishersRepository(ComicsStoreDbContext context,
-                           IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository)
-        : base(context)
-    {
-        _bookPublishersRepository = bookPublishersRepository;
     }
 
     public override Task<Publisher> AddAsync(Publisher value)

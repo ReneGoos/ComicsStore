@@ -6,13 +6,8 @@ using System.Linq;
 
 namespace ComicsStore.Data.Common;
 
-public class ComicsStoreDbContext : DbContext
+public class ComicsStoreDbContext(DbContextOptions<ComicsStoreDbContext> options) : DbContext(options)
 {
-    public ComicsStoreDbContext(DbContextOptions<ComicsStoreDbContext> options)
-        : base(options)
-    {
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);

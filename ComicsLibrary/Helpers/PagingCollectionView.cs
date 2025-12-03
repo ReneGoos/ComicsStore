@@ -73,16 +73,10 @@ public class PagingCollectionView<T> : CollectionView
         }
     }
 
-    public int ItemsPerPage { get { return _itemsPerPage; } }
+    public int ItemsPerPage => _itemsPerPage;
 
-    public int PageCount
-    {
-        get
-        {
-            return (_innerList.Count + _itemsPerPage - 1)
+    public int PageCount => (_innerList.Count + _itemsPerPage - 1)
                 / _itemsPerPage;
-        }
-    }
 
     public int EndIndex
     {
@@ -93,13 +87,7 @@ public class PagingCollectionView<T> : CollectionView
         }
     }
 
-    public int StartIndex
-    {
-        get
-        {
-            return (_currentPage - 1) * _itemsPerPage;
-        }
-    }
+    public int StartIndex => (_currentPage - 1) * _itemsPerPage;
 
     public override object GetItemAt(int index)
     {
@@ -137,6 +125,6 @@ public class PagingCollectionView<T> : CollectionView
         Refresh();
     }
 
-    public bool LastPage { get => _currentPage == PageCount; }
-    public bool FirstPage { get => _currentPage == 1; }
+    public bool LastPage => _currentPage == PageCount;
+    public bool FirstPage => _currentPage == 1;
 }

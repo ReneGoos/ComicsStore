@@ -13,16 +13,11 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.MiddleWare.Services;
 
-public class ArtistsService : ComicsStoreService<Artist, ArtistInputModel, ArtistInputModel, ArtistOutputModel, BasicSearch>, IArtistsService
+public class ArtistsService(IComicsStoreMainRepository<Artist, BasicSearch> artistsRepository,
+    IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository,
+    IMapper mapper) : ComicsStoreService<Artist, ArtistInputModel, ArtistInputModel, ArtistOutputModel, BasicSearch>(artistsRepository, mapper), IArtistsService
 {
-    private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
-
-    public ArtistsService(IComicsStoreMainRepository<Artist, BasicSearch> artistsRepository,
-        IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository,
-        IMapper mapper) : base(artistsRepository, mapper)
-    {
-        _storyArtistsRepository = storyArtistsRepository;
-    }
+    private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository = storyArtistsRepository;
 
     public async Task<ICollection<ArtistStoryOutputModel>> GetStoriesAsync(int artistId)
     {

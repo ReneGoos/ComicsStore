@@ -11,11 +11,14 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.Data.Repositories.MainRepository;
 
-public class StoriesRepository : ComicsStoreMainRepository<Story, StorySearch>, IComicsStoreMainRepository<Story, StorySearch>
+public class StoriesRepository(ComicsStoreDbContext context,
+    IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository,
+    IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
+    IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository) : ComicsStoreMainRepository<Story, StorySearch>(context), IComicsStoreMainRepository<Story, StorySearch>
 {
-    private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
-    private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository;
-    private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository;
+    private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository = storyArtistsRepository;
+    private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository = storyBooksRepository;
+    private readonly IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> _storyCharactersRepository = storyCharactersRepository;
 
     private bool UpdateLinkedItems(Story storyCurrent, Story storyNew)
     {
@@ -24,17 +27,6 @@ public class StoriesRepository : ComicsStoreMainRepository<Story, StorySearch>, 
         _storyCharactersRepository.UpdateLinkedItems(storyCurrent, storyNew);
 
         return true;
-    }
-
-    public StoriesRepository(ComicsStoreDbContext context,
-        IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository,
-        IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
-        IComicsStoreCrossRepository<StoryCharacter, IStoryCharacter> storyCharactersRepository)
-        : base(context)
-    {
-        _storyArtistsRepository = storyArtistsRepository;
-        _storyBooksRepository = storyBooksRepository;
-        _storyCharactersRepository = storyCharactersRepository;
     }
 
     public override Task<Story> AddAsync(Story value)

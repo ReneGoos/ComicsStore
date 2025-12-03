@@ -11,14 +11,9 @@ namespace ComicsStore.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SeriesController : ControllerBase
+public class SeriesController(ISeriesService seriesService) : ControllerBase
 {
-    private readonly ISeriesService _seriesService;
-
-    public SeriesController(ISeriesService seriesService)
-    {
-        _seriesService = seriesService;
-    }
+    private readonly ISeriesService _seriesService = seriesService;
 
     [HttpGet]
     [ProducesResponseType(typeof(ICollection<SeriesOutputModel>), (int)HttpStatusCode.OK)]

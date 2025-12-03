@@ -7,7 +7,8 @@ using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels;
 
-public abstract class BasicViewModel : ObservableObject, IBasicViewModel, INotifyItemChanged
+public abstract class BasicViewModel(INavigationService navigationService,
+    IMapper mapper) : ObservableObject, IBasicViewModel, INotifyItemChanged
 {
     private ICommand _getCommand;
     private ICommand _newCommand;
@@ -30,15 +31,8 @@ public abstract class BasicViewModel : ObservableObject, IBasicViewModel, INotif
     public ICommand DeleteCommand { get => _deleteCommand; protected set => _deleteCommand = value; }
     public ICommand ExitCommand { get => _exitCommand; protected set => _exitCommand = value; }
 
-    public IMapper Mapper { get; }
-    public INavigationService NavigationService { get; }
-
-    public BasicViewModel(INavigationService navigationService,
-        IMapper mapper)
-    {
-        Mapper = mapper;
-        NavigationService = navigationService;
-    }
+    public IMapper Mapper { get; } = mapper;
+    public INavigationService NavigationService { get; } = navigationService;
 
     //public abstract TableEditModel Item { get; }
 

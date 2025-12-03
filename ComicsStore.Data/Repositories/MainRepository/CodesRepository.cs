@@ -9,13 +9,8 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.Data.Repositories.MainRepository;
 
-public class CodesRepository : ComicsStoreMainRepository<Code, BasicSearch>, IComicsStoreMainRepository<Code, BasicSearch>
+public class CodesRepository(ComicsStoreDbContext context) : ComicsStoreMainRepository<Code, BasicSearch>(context), IComicsStoreMainRepository<Code, BasicSearch>
 {
-    public CodesRepository(ComicsStoreDbContext context)
-        : base(context)
-    {
-    }
-
     public override Task<Code> AddAsync(Code value)
     {
         return AddItemAsync(_context.Codes, value);

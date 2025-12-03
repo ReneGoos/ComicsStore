@@ -10,17 +10,11 @@ using ComicsStore.Data.Model.Output;
 
 namespace ComicsStore.MiddleWare.Services;
 
-public class InformationService : IInformationService
+public class InformationService(IViewRepository<ExportBook, IdSearch> informationRepository,
+    IMapper mapper) : IInformationService
 {
-    private readonly IViewRepository<ExportBook, IdSearch> _informationRepository;
-    private readonly IMapper _mapper;
-
-    public InformationService(IViewRepository<ExportBook, IdSearch> informationRepository,
-        IMapper mapper)
-    {
-        _informationRepository = informationRepository;
-        _mapper = mapper;
-    }
+    private readonly IViewRepository<ExportBook, IdSearch> _informationRepository = informationRepository;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<ICollection<ExportBooksOutputModel>> GetAsync(IdSearch searchModel)
     {

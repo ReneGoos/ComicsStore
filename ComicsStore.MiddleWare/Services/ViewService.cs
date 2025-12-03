@@ -10,17 +10,11 @@ using ComicsStore.Data.Model.Output;
 
 namespace ComicsStore.MiddleWare.Services;
 
-public class ViewService : IViewService
+public class ViewService(IViewRepository<ExportBook, ViewSearch> exportBooksRepository,
+    IMapper mapper) : IViewService
 {
-    private readonly IViewRepository<ExportBook, ViewSearch> _exportBooksRepository;
-    private readonly IMapper _mapper;
-
-    public ViewService(IViewRepository<ExportBook, ViewSearch> exportBooksRepository,
-        IMapper mapper)
-    {
-        _exportBooksRepository = exportBooksRepository;
-        _mapper = mapper;
-    }
+    private readonly IViewRepository<ExportBook, ViewSearch> _exportBooksRepository = exportBooksRepository;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<ICollection<ExportBooksOutputModel>> GetAsync(ViewSearch searchModel)
     {

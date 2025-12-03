@@ -10,14 +10,9 @@ namespace ComicsStore.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ExportBooksController : ControllerBase
+public class ExportBooksController(IViewService exportBooksService) : ControllerBase
 {
-    private readonly IViewService _exportBooksService;
-
-    public ExportBooksController(IViewService exportBooksService)
-    {
-        _exportBooksService = exportBooksService;
-    }
+    private readonly IViewService _exportBooksService = exportBooksService;
 
     [HttpGet]
     [ProducesResponseType(typeof(ICollection<ExportBooksOutputModel>), (int)HttpStatusCode.OK)]

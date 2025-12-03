@@ -13,22 +13,15 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.MiddleWare.Services;
 
-public class BooksService : ComicsStoreService<Book, BookInputModel, BookInputPatchModel, BookOutputModel, BasicSearch>, IBooksService
+public class BooksService(IComicsStoreMainRepository<Book, BasicSearch> booksRepository,
+    IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
+    IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,
+    IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
+    IMapper mapper) : ComicsStoreService<Book, BookInputModel, BookInputPatchModel, BookOutputModel, BasicSearch>(booksRepository, mapper), IBooksService
 {
-    private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository;
-    private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository;
-    private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository;
-
-    public BooksService(IComicsStoreMainRepository<Book, BasicSearch> booksRepository,
-        IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
-        IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,
-        IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
-        IMapper mapper) : base(booksRepository, mapper)
-    {
-        _bookPublishersRepository = bookPublishersRepository;
-        _bookSeriesRepository = bookSeriesRepository;
-        _storyBooksRepository = storyBooksRepository;
-    }
+    private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository = bookPublishersRepository;
+    private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository = bookSeriesRepository;
+    private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository = storyBooksRepository;
 
     public async Task<ICollection<BookPublisherOutputModel>> GetPublishersAsync(int bookId)
     {

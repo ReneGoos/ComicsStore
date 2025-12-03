@@ -10,26 +10,19 @@ using System.Windows.Controls;
 
 namespace ComicsLibrary.Navigation;
 
-public class NavigationService : ObservableObject, INavigationService
+public class NavigationService(IServiceProvider serviceProvider) : ObservableObject, INavigationService
 {
-    private class NavigationContext
-    {
-        public NavigationContext(string windowKey
+    private class NavigationContext(string windowKey
             , int? itemId
             , Action<int?, int?> HandleItem
             )
-        {
-            WindowKey = windowKey;
-            ItemId = itemId;
-            this.HandleItem = HandleItem;
-        }
-
-        public string WindowKey { get; }
-        public int? ItemId { get; }
-        public Action<int?, int?> HandleItem { get; }
+    {
+        public string WindowKey { get; } = windowKey;
+        public int? ItemId { get; } = itemId;
+        public Action<int?, int?> HandleItem { get; } = HandleItem;
     }
 
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
     private Frame _navigationFrame;
     private Window _navigationWindow;
     private string _title;
@@ -40,18 +33,7 @@ public class NavigationService : ObservableObject, INavigationService
 
     private Dictionary<string, Type> Windows { get; } = [];
 
-    public string PageChain
-    {
-        get
-        {
-            return String.Join("<", ActivePages.Select(c => c.WindowKey));
-        }
-    }
-
-    public NavigationService(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
+    public string PageChain => String.Join("<", ActivePages.Select(c => c.WindowKey));
 
     public Window NavigationWindow
     {
@@ -132,17 +114,18 @@ public class NavigationService : ObservableObject, INavigationService
 
     private async Task<Page> GetAndActivatePageAsync(string windowKey, object parameter = null)
     {
-        if (!LoadedPages.ContainsKey(windowKey))
+        if (!LoadedPages.TryGetValue(windowKey, out var value))
         {
-            LoadedPages[windowKey] = _serviceProvider.GetRequiredService(Pages[windowKey]) as Page;
+            value = _serviceProvider.GetRequiredService(Pages[windowKey]) as Page;
+            LoadedPages[windowKey] = value;
         }
 
-        if (LoadedPages[windowKey].DataContext is IActivable activable)
+        if (value.DataContext is IActivable activable)
         {
             await activable.ActivateAsync(parameter);
         }
 
-        return LoadedPages[windowKey];
+        return value;
     }
 
     private async Task SetPage(string windowKey, NavigationContext context = null)

@@ -11,19 +11,13 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.MiddleWare.Services;
 
-public class CodesService : ComicsStoreService<Code, CodeInputModel, CodeInputModel, CodeOutputModel, BasicSearch>, ICodesService
+public class CodesService(IComicsStoreMainRepository<Code, BasicSearch> codesRepository,
+    IComicsStoreMainRepository<Story, StorySearch> storiesRepository,
+    IComicsStoreMainRepository<Series, SeriesSearch> seriesRepository,
+    IMapper mapper) : ComicsStoreService<Code, CodeInputModel, CodeInputModel, CodeOutputModel, BasicSearch>(codesRepository, mapper), ICodesService
 {
-    private readonly IComicsStoreMainRepository<Story, StorySearch> _storiesRepository;
-    private readonly IComicsStoreMainRepository<Series, SeriesSearch> _seriesRepository;
-
-    public CodesService(IComicsStoreMainRepository<Code, BasicSearch> codesRepository,
-        IComicsStoreMainRepository<Story, StorySearch> storiesRepository,
-        IComicsStoreMainRepository<Series, SeriesSearch> seriesRepository,
-        IMapper mapper) : base(codesRepository, mapper)
-    {
-        _storiesRepository = storiesRepository;
-        _seriesRepository = seriesRepository;
-    }
+    private readonly IComicsStoreMainRepository<Story, StorySearch> _storiesRepository = storiesRepository;
+    private readonly IComicsStoreMainRepository<Series, SeriesSearch> _seriesRepository = seriesRepository;
 
     public async Task<ICollection<CodeStoryOutputModel>> GetStoriesAsync(int codeId)
     {

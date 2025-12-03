@@ -11,7 +11,8 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.MiddleWare.Services;
 
-public class ComicsStoreService<T, TIn, TPatch, TOut, TSearch> : IComicsStoreService<TIn, TPatch, TOut, TSearch>
+public class ComicsStoreService<T, TIn, TPatch, TOut, TSearch>(IComicsStoreMainRepository<T, TSearch> tableRepository,
+    IMapper mapper) : IComicsStoreService<TIn, TPatch, TOut, TSearch>
     where T : MainTable
     where TIn : BasicInputModel
     where TPatch : BasicInputModel
@@ -19,20 +20,10 @@ public class ComicsStoreService<T, TIn, TPatch, TOut, TSearch> : IComicsStoreSer
     where TSearch : BasicSearch
 {
 
-    private readonly IComicsStoreMainRepository<T, TSearch> _tableRepository;
-    private readonly IMapper _mapper;
+    private readonly IComicsStoreMainRepository<T, TSearch> _tableRepository = tableRepository;
+    private readonly IMapper _mapper = mapper;
 
-    public ComicsStoreService(IComicsStoreMainRepository<T, TSearch> tableRepository,
-        IMapper mapper)
-    {
-        _tableRepository = tableRepository;
-        _mapper = mapper;
-    }
-
-    protected IMapper Mapper
-    {
-        get => _mapper;
-    }
+    protected IMapper Mapper => _mapper;
 
     public async Task<TOut> AddAsync(TIn itemInput)
     {

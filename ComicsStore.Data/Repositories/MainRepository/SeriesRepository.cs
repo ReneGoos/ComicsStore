@@ -11,16 +11,10 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.Data.Repositories.MainRepository;
 
-public class SeriesRepository : ComicsStoreMainRepository<Series, SeriesSearch>, IComicsStoreMainRepository<Series, SeriesSearch>
+public class SeriesRepository(ComicsStoreDbContext context,
+                       IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository) : ComicsStoreMainRepository<Series, SeriesSearch>(context), IComicsStoreMainRepository<Series, SeriesSearch>
 {
-    private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository;
-
-    public SeriesRepository(ComicsStoreDbContext context,
-                           IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository)
-        : base(context)
-    {
-        _bookSeriesRepository = bookSeriesRepository;
-    }
+    private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository = bookSeriesRepository;
 
     public override Task<Series> AddAsync(Series value)
     {

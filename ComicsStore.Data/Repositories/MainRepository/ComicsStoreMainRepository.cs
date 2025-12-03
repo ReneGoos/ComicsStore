@@ -8,14 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ComicsStore.Data.Repositories.MainRepository;
 
-public abstract class ComicsStoreMainRepository<T, TSearch> : ComicsStoreRepository<T>
+public abstract class ComicsStoreMainRepository<T, TSearch>(ComicsStoreDbContext context) : ComicsStoreRepository<T>(context)
     where T : MainTable
     where TSearch : BasicSearch
 {
-    public ComicsStoreMainRepository(ComicsStoreDbContext context) : base(context)
-    {
-    }
-
     public abstract Task<T> GetAsync(int id, bool extended);
     public abstract Task<List<T>> GetAsync(TSearch model);
     public abstract Task<T> PatchAsync(int id, IDictionary<string, object> data);

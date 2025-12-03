@@ -11,16 +11,10 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 
 namespace ComicsStore.Data.Repositories.MainRepository;
 
-public class ArtistsRepository : ComicsStoreMainRepository<Artist, BasicSearch>, IComicsStoreMainRepository<Artist, BasicSearch>
+public class ArtistsRepository(ComicsStoreDbContext context,
+    IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository) : ComicsStoreMainRepository<Artist, BasicSearch>(context), IComicsStoreMainRepository<Artist, BasicSearch>
 {
-    private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository;
-
-    public ArtistsRepository(ComicsStoreDbContext context,
-        IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository)
-        : base(context)
-    {
-        _storyArtistsRepository = storyArtistsRepository;
-    }
+    private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository = storyArtistsRepository;
 
     public override Task<Artist> AddAsync(Artist value)
     {

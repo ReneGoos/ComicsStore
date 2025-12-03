@@ -7,13 +7,9 @@ using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 
 namespace ComicsStore.Data.Repositories.CrossRepository;
 
-public abstract class ComicsStoreCrossRepository<T, IObject> : ComicsStoreRepository<T>, IComicsStoreCrossRepository<T, IObject>
+public abstract class ComicsStoreCrossRepository<T, IObject>(ComicsStoreDbContext context) : ComicsStoreRepository<T>(context), IComicsStoreCrossRepository<T, IObject>
     where T : CrossTable
 {
-    public ComicsStoreCrossRepository(ComicsStoreDbContext context) : base(context)
-    {
-    }
-
     protected async Task<T> UpdateItemAsync(DbSet<T> collection, T item, int id, int crossId)
     {
         var entity = await collection.FindAsync(id, crossId);
