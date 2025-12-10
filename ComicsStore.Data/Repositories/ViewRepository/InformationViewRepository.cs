@@ -29,15 +29,20 @@ public class InformationViewRepository(ComicsStoreDbContext context) : IViewRepo
             .ThenBy(e => e.SeriesId)
             .AsNoTracking();
         */
+        var lowerFilter = model.Filter?.ToLower();
 
         var exports = from comicsInformation in _context.Information
                       where (!model.Active.HasValue || comicsInformation.Deleted == model.Active.Value) &&
-                            (model.Filter == null ||
-                            model.Filter.Length == 0 ||
-                            comicsInformation.StoryName.Contains(model.Filter, StringComparison.CurrentCultureIgnoreCase) ||
-                            comicsInformation.SeriesName.Contains(model.Filter, StringComparison.CurrentCultureIgnoreCase) ||
-                            comicsInformation.CharacterName.Contains(model.Filter, StringComparison.CurrentCultureIgnoreCase) ||
-                            comicsInformation.ArtistName.Contains(model.Filter, StringComparison.CurrentCultureIgnoreCase)) &&
+                            (lowerFilter == null ||
+                            lowerFilter.Length == 0 ||
+                            comicsInformation.StoryName.ToLower().Contains(lowerFilter) ||
+                            comicsInformation.OriginalStoryName.ToLower().Contains(lowerFilter) ||
+                            comicsInformation.ExtraInfo.ToLower().Contains(lowerFilter) ||
+                            comicsInformation.IssueTitle.ToLower().Contains(lowerFilter) ||
+                            comicsInformation.SeriesName.ToLower().Contains(lowerFilter) ||
+                            comicsInformation.CharacterName.ToLower().Contains(lowerFilter) ||
+                            comicsInformation.PublisherName.ToLower().Contains(lowerFilter) ||
+                            comicsInformation.ArtistName.ToLower().Contains(lowerFilter)) &&
                             (!model.ArtistId.HasValue || comicsInformation.ArtistId == model.ArtistId.Value) &&
                             (!model.BookId.HasValue || comicsInformation.BookId == model.BookId.Value) &&
                             (!model.CharacterId.HasValue || comicsInformation.CharacterId == model.CharacterId.Value) &&

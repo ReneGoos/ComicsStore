@@ -193,6 +193,11 @@ public class HeaderSortListView : ListView
     protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
     {
         base.OnItemsSourceChanged(oldValue, newValue);
+        if (ItemsSource is null)
+        {
+            return;
+        }
+
         ((INotifyCollectionChanged)ItemsSource).CollectionChanged += new NotifyCollectionChangedEventHandler(SourceCollectionChanged);
 
         if (ItemsSource is ICollection collection && MaxItems > 0)

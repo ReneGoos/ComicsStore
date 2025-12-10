@@ -15,16 +15,20 @@ public class StorySeriesViewRepository(ComicsStoreDbContext context) : IViewRepo
 
     public Task<List<ExportBook>> GetAsync(ViewSearch model)
     {
+        var lowerFilter = model.Filter?.ToLower();
         var exports = from storySeries in _context.StorySeries
                       where (!model.Active.HasValue || storySeries.Deleted == model.Active.Value)
                       && (!storySeries.PeriodicalGroups.Equals("U"))
                       && (model.Filter == null ||
                             model.Filter.Length == 0 ||
-                            storySeries.StoryName.ToLower().Contains(model.Filter.ToLower()) ||
-                            storySeries.SeriesName.ToLower().Contains(model.Filter.ToLower()) ||
-                            storySeries.CharacterName.ToLower().Contains(model.Filter.ToLower()) ||
-                            storySeries.ArtistName.ToLower().Contains(model.Filter.ToLower())
-                            )
+                            storySeries.StoryName.ToLower().Contains(lowerFilter) ||
+                            storySeries.OriginalStoryName.ToLower().Contains(lowerFilter) ||
+                            storySeries.ExtraInfo.ToLower().Contains(lowerFilter) ||
+                            storySeries.IssueTitle.ToLower().Contains(lowerFilter) ||
+                            storySeries.SeriesName.ToLower().Contains(lowerFilter) ||
+                            storySeries.CharacterName.ToLower().Contains(lowerFilter) ||
+                            storySeries.PublisherName.ToLower().Contains(lowerFilter) ||
+                            storySeries.ArtistName.ToLower().Contains(lowerFilter))
                       orderby storySeries.StoryCode,
                       storySeries.StoryType,
                       storySeries.StoryNumber,
