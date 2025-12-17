@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+using ComicsEntry.Views;
 using ComicsLibrary.Helpers;
 using ComicsLibrary.Navigation;
 using ComicsLibrary.ViewModels;
-using ComicsEntry.Views;
 using ComicsStore.MiddleWare.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Windows;
 
@@ -46,7 +47,8 @@ public partial class App : Application
         var mappingConfig = new MapperConfiguration(cfg =>
         {
             cfg.AddProfile<ComicsLibraryProfile>();
-        });
+        },
+        NullLoggerFactory.Instance);
 
         var mapper = mappingConfig.CreateMapper();
         _ = services.AddSingleton(mapper);
