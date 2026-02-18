@@ -24,7 +24,11 @@ public class BookSeriesEditModel : BasicEditModel, ICrossEditModel
             Set(ref _issue, value);
             if (_seriesOrder == null)
             {
-                SeriesOrder = decimal.Parse(new String(_issue.Where(c => (Char.IsDigit(c) || c.Equals('.'))).ToArray()));
+                var issueNumbers = new String([.. _issue.Where(c => (Char.IsDigit(c) || c.Equals('.')))]);
+                if (issueNumbers.Length > 0)
+                {
+                    SeriesOrder = decimal.Parse(issueNumbers);
+                }
             }
         }
     }
