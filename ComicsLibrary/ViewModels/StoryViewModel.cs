@@ -5,12 +5,9 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using System.ComponentModel;
-using System.Collections.Generic;
-using System.Linq;
 using ComicsLibrary.Navigation;
 using System.Windows.Input;
 using ComicsLibrary.Core;
-using System;
 using ComicsStore.Data.Common;
 using SoftGoosR.Windows.Core;
 

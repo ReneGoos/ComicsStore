@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ComicsStore.Data.Common;
+﻿namespace ComicsStore.Data.Common;
 
 public enum Active
 {

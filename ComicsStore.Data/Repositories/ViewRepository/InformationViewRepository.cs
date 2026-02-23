@@ -4,10 +4,6 @@ using ComicsStore.Data.Model.Output;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ComicsStore.Data.Repositories.ViewRepository;
 public class InformationViewRepository(ComicsStoreDbContext context) : IViewRepository<ExportBook, IdSearch>
@@ -49,7 +45,7 @@ public class InformationViewRepository(ComicsStoreDbContext context) : IViewRepo
                             (!model.CodeId.HasValue || comicsInformation.StoryCodeId == model.CodeId.Value || comicsInformation.SeriesCodeId == model.CodeId.Value) &&
                             (!model.PublisherId.HasValue || comicsInformation.PublisherId == model.PublisherId.Value) &&
                             (!model.SeriesId.HasValue || comicsInformation.SeriesId == model.SeriesId.Value) &&
-                            (!model.StoryId.HasValue || comicsInformation.StoryId == model.StoryId.Value) && 
+                            (!model.StoryId.HasValue || comicsInformation.StoryId == model.StoryId.Value || comicsInformation.OriginStoryId == model.StoryId.Value) && 
                             ((!model.BookId.HasValue && !comicsInformation.PeriodicalGroups.Equals("U")) || (model.BookId.HasValue && !comicsInformation.PeriodicalGroups.Equals("G")))
                       orderby comicsInformation.StoryCode,
                       comicsInformation.StoryType,

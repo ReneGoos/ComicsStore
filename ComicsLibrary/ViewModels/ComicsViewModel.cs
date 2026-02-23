@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using ComicsStore.MiddleWare.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using ComicsLibrary.Navigation;
 using System.Windows.Input;
 using ComicsLibrary.Core;
@@ -12,7 +9,6 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.Data.Common;
 using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 using ComicsStore.Data.Model.Search;
 using SoftGoosR.Common.Core;
 using SoftGoosR.Windows.Core;

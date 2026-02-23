@@ -1,5 +1,4 @@
 ﻿using ComicsStore.Data.Common;
-using System;
 
 namespace ComicsStore.Data.Model.Output;
 

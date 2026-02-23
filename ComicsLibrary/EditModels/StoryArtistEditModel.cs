@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using ComicsStore.Data.Common;
 using ComicsLibrary.Helpers;
 using ComicsLibrary.Core;

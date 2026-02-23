@@ -1,5 +1,4 @@
 ﻿using ComicsStore.Data.Common;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComicsStore.Data.Model.Output;

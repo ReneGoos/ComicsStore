@@ -1,6 +1,5 @@
 using ComicsStore.Data.Common;
 using ComicsStore.MiddleWare.Common;
-using System.Collections.Generic;
 using Xunit;
 
 namespace ComicsStore.Tests;

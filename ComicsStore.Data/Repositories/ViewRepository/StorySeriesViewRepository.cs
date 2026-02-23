@@ -1,8 +1,5 @@
 ﻿using ComicsStore.Data.Model.Search;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ComicsStore.Data.Repositories.Interfaces;
 using ComicsStore.Data.Common;
 using ComicsStore.Data.Model.Output;

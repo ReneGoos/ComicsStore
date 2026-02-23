@@ -1,7 +1,5 @@
-﻿using System.Threading.Tasks;
-using ComicsStore.Data.Model;
+﻿using ComicsStore.Data.Model;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using ComicsStore.Data.Common;
 using ComicsStore.Data.Repositories.Interfaces.CrossRepository;
 

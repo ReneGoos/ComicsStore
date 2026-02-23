@@ -1,5 +1,4 @@
-﻿using ComicsLibrary.Core;
-using SoftGoosR.Common.Core;
+﻿using SoftGoosR.Common.Core;
 
 namespace ComicsLibrary.Helpers;
 

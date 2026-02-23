@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ComicsStore.Data.Model;
+﻿using ComicsStore.Data.Model;
 
 namespace ComicsStore.Data.Repositories.Interfaces;
 

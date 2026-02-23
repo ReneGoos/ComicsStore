@@ -6,7 +6,6 @@ using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.Data.Model.Search;
 using ComicsLibrary.Navigation;
 using ComicsLibrary.Core;
-using System;
 using System.Windows.Input;
 using ComicsStore.Data.Common;
 using SoftGoosR.Windows.Core;

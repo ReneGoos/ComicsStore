@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace ComicsStore.Data.Model;
 
 public class StoryBook : CrossTable

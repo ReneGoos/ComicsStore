@@ -1,5 +1,4 @@
-﻿using ComicsLibrary.Core;
-using ComicsLibrary.Extensions;
+﻿using ComicsLibrary.Extensions;
 using ComicsStore.MiddleWare.Models.Output;
 using SoftGoosR.Common.Core;
 using System.ComponentModel;

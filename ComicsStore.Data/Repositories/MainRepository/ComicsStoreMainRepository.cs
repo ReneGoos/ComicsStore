@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ComicsStore.Data.Common;
+﻿using ComicsStore.Data.Common;
 using ComicsStore.Data.Model;
 using ComicsStore.Data.Model.Search;
 using Microsoft.EntityFrameworkCore;

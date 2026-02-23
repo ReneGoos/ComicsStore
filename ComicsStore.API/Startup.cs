@@ -2,12 +2,8 @@ using AutoMapper;
 using ComicsStore.Data.Common;
 using ComicsStore.MiddleWare;
 using ComicsStore.MiddleWare.Common;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.OpenApi;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -41,9 +37,10 @@ public class Startup(IConfiguration configuration)
         ResolveDependencies.AddServices(services, Configuration);
 
         var mappingConfig = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile<ComicsStoreProfile>();
-        });
+                                                        {
+                                                            cfg.AddProfile<ComicsStoreProfile>();
+                                                        },
+                                                    NullLoggerFactory.Instance);
 
         var mapper = mappingConfig.CreateMapper();
         _ = services.AddSingleton(mapper);

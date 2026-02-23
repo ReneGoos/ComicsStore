@@ -1,5 +1,4 @@
 ﻿using ComicsStore.Data.Model.Interfaces;
-using System.Collections.Generic;
 
 namespace ComicsStore.Data.Model;
 

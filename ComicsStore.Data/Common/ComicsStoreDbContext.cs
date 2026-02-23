@@ -1,8 +1,6 @@
 ﻿using ComicsStore.Data.Model;
 using ComicsStore.Data.Model.Output;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 
 namespace ComicsStore.Data.Common;
 

@@ -3,7 +3,6 @@ using ComicsStore.Data.Common;
 using ComicsStore.MiddleWare;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using System.Collections.Generic;
 
 namespace ComicsLibrary.Helpers;
 

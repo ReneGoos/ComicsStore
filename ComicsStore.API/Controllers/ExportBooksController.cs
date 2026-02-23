@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.Data.Model.Search;
 using Microsoft.AspNetCore.Mvc;

@@ -7,7 +7,6 @@ using ComicsStore.MiddleWare.Services.Interfaces;
 using ComicsLibrary.Navigation;
 using System.Windows.Input;
 using ComicsLibrary.Core;
-using System;
 using ComicsStore.Data.Common;
 using SoftGoosR.Windows.Core;
 

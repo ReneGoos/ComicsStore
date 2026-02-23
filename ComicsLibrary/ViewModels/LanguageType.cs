@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ComicsLibrary.ViewModels;
+﻿namespace ComicsLibrary.ViewModels;
 
 public class LanguageType
 {

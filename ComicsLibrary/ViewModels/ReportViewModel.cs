@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
 using ComicsLibrary.Helpers;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using Microsoft.Win32;
 using SoftGoosR.Windows.Core;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows.Input;
 

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ComicsLibrary.Navigation;
+﻿namespace ComicsLibrary.Navigation;
 
 public interface IActivable
 {

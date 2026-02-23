@@ -1,11 +1,11 @@
 ﻿using ComicsStore.Data.Common;
-using System;
 
 namespace ComicsStore.Data.Model.Output;
 
 public class Information : ResultView
 {
     public int StoryId { get; set; }
+    public int OriginStoryId { get; set; }
     public int BookId { get; set; }
     public int SeriesId { get; set; }
     public int SeriesCodeId { get; set; }
