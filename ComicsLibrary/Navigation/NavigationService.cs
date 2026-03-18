@@ -2,6 +2,7 @@
 using SoftGoosR.Common.Core;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Markup;
 
 namespace ComicsLibrary.Navigation;
 
@@ -58,14 +59,20 @@ public class NavigationService(IServiceProvider serviceProvider) : ObservableObj
         window.Show();
     }
 
-    public async Task<bool?> ShowPageAsync(string windowKey, int? itemId, Action<int?, int?> AddItemToList)
+    public async Task<bool?> ShowPageAsync(string windowKey, int? itemId, Action<int?, int?> HandleItem)
     {
-        ActivePages.Push(new NavigationContext(windowKey, itemId, AddItemToList));
+        ActivePages.Push(new NavigationContext(windowKey, itemId, HandleItem));
         RaisePropertyChanged("ActivePages");
 
         await SetPage(windowKey);
 
         return true;
+    }
+
+    public async Task HandleItem(int? itemId = null)
+    {
+        var currContext = ActivePages.Peek();
+        currContext.HandleItem?.Invoke(itemId, currContext.ItemId);
     }
 
     public async Task ClosePageAsync(bool result, int? itemId = null)
@@ -88,6 +95,16 @@ public class NavigationService(IServiceProvider serviceProvider) : ObservableObj
             _navigationWindow.Title = _title;
             _navigationFrame.Content = null;
         }
+    }
+
+    public bool LastPageActive(string windowKey)
+    {
+        if (ActivePages.Count <= 1)
+        {
+            return false;
+        }
+        var context = ActivePages.Take(2).Last();
+        return context.WindowKey == windowKey && !ActivePages.First().ItemId.HasValue;
     }
 
     public bool PageActive(string windowKey)

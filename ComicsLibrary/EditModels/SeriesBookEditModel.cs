@@ -22,7 +22,7 @@ public class SeriesBookEditModel : BasicEditModel, ICrossEditModel
             Set(ref _issue, value);
             if (_seriesOrder == null)
             {
-                SeriesOrder = decimal.Parse(new String(_issue.Where(c => (Char.IsDigit(c) || c.Equals('.'))).ToArray()));
+                SeriesOrder = decimal.Parse(new String([.. _issue.Where(c => (Char.IsDigit(c) || c.Equals('.')))]));
             }
         }
     }

@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "ComicsEntry": {
+      "commandName": "Project"
+    },
+    "ComicsEntry Debug": {
+      "commandName": "Project",
+      "commandLineArgs": "debug"
+    }
+  }
+}

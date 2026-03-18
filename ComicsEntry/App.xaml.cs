@@ -18,14 +18,16 @@ public partial class App : Application
 
     public static IServiceProvider ServiceProvider { get; private set; }
 
-    public App()
+    public App(params string[] args)
     {
+        var setting = (args.Length == 0) ? "local" : args[0];
+
         _host = Host.CreateDefaultBuilder()  // Use default settings
                                              //new HostBuilder()          // Initialize an empty HostBuilder
                 .ConfigureAppConfiguration((context, builder) =>
                 {
                     // Add other configuration files...
-                    _ = builder.AddJsonFile("appsettings.local.json", optional: true);
+                    _ = builder.AddJsonFile($"appsettings.{setting}.json", optional: true);
                 }).ConfigureServices((context, services) =>
                 {
                     ConfigureServices(context.Configuration, services);

@@ -16,6 +16,10 @@
     <Page.Resources>
         <converters:ArrayConverter x:Key="ArrayConverter"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:ValueConverterGroup x:Key="NotToVisibilityConverter">
+            <converters:NotConverter />
+            <converters:BoolToVisibilityConverter />
+        </converters:ValueConverterGroup>
         <converters:IsNullConverter x:Key="IsNullConverter"/>
         <converters:NotConverter x:Key="NotConverter"/>
         <converters:ValueConverterGroup x:Key="NotNullConverter">
@@ -37,7 +41,7 @@
                                    UndoCommand = "{Binding UndoCommand}"
                                    DeleteCommand = "{Binding DeleteCommand}"
                                    ExitCommand = "{Binding ExitCommand}"
-                                   /> 
+                                   />
         </Grid>
         <Grid DataContext="{Binding Item}">
             <Grid.ColumnDefinitions>
@@ -257,7 +261,8 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="5"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="9.056"/>
+                    <RowDefinition Height="14.944"/>
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
@@ -276,13 +281,13 @@
                         >
                     +
                 </Button-->
-                <control:HeaderSortListView DockPanel.Dock="Top"
+                <control:HeaderSortListView
                                             Grid.Row ="1"
                                             Grid.Column="1"
-                                            VerticalAlignment="Top" 
+                                            VerticalAlignment="Center" 
                                             AlternationCount="2"
                                             ItemsSource="{Binding Path=StoryFromOrigin}"
-                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.RowSpan="2"
                                             >
                     <ListView.View>
                         <GridView>
@@ -354,20 +359,20 @@
                         </GridView>
                     </ListView.View>
                 </control:HeaderSortListView>
-                <Button Grid.Row ="3"
+                <Button Grid.Row ="4"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
-                        VerticalAlignment="Top"
+                        VerticalAlignment="Center"
                         Visibility="{Binding DataContext.OpenCharacter, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                         Command="{Binding DataContext.ShowCharacterFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                         >
                     +
                 </Button>
-                <control:HeaderSortListView DockPanel.Dock="Top"
-                                            Grid.Row ="3"
+                <control:HeaderSortListView
+                                            Grid.Row ="4"
                                             Grid.Column="1"
-                                            VerticalAlignment="Top" 
+                                            VerticalAlignment="Center" 
                                             AlternationCount="2"
                                             ItemsSource="{Binding Path=StoryCharacter}"
                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -436,17 +441,17 @@
                         </GridView>
                     </ListView.View>
                 </control:HeaderSortListView>
-                <Button Grid.Row ="5"
+                <Button Grid.Row ="6"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
-                        VerticalAlignment="Top"
+                        VerticalAlignment="Center"
                         Command="{Binding DataContext.ShowArtistFromStoryWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                         Visibility="{Binding DataContext.OpenArtist, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                         >
                     +
                 </Button>
-                <StackPanel Grid.Row="5"
+                <StackPanel Grid.Row="6"
                             Grid.Column="1">
                     <control:HeaderSortListView DockPanel.Dock="Top"
                                                 Name="ArtistStoryList"
@@ -552,7 +557,7 @@
                                            Page ="{Binding Page, ElementName=ArtistStoryList, Mode=TwoWay}"
                                            />
                 </StackPanel>
-                <Button Grid.Row ="7"
+                <Button Grid.Row ="8"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
@@ -562,9 +567,18 @@
                         >
                     +
                 </Button>
-                <StackPanel DockPanel.Dock="Top"
-                            Grid.Row ="7"
-                            Grid.Column="1"
+                <CheckBox Grid.Row ="8"
+                          Grid.Column="3"
+                          Background="Transparent"
+                          Height="25"
+                          VerticalAlignment="Top"
+                          ToolTip="Add to parent when saving"                          
+                          IsChecked="{Binding DataContext.AddToParent, Mode=TwoWay, RelativeSource={RelativeSource  AncestorType=StackPanel}}"
+                          Visibility="{Binding DataContext.LastBook, Converter={StaticResource NotToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                          />
+                <StackPanel
+                            Grid.Row ="8"
+                            Grid.Column="1" Margin="0,0,0,5" Grid.RowSpan="2"
                             >
                     <control:HeaderSortListView Name="StoryBookList"
                                                 VerticalAlignment="Top" 

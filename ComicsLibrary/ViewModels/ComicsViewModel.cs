@@ -41,6 +41,16 @@ public class ComicsViewModel : ObservableObject, IActivable
     public List<string> YesNoInds { get; set; }
     public List<LanguageType> Languages { get; set; }
 
+    public bool LastArtist => _navigationService.LastPageActive(StoreWindows.Artist);
+    public bool LastBook => _navigationService.LastPageActive(StoreWindows.Book);
+    public bool LastCharacter => _navigationService.LastPageActive(StoreWindows.Character);
+    public bool LastCode => _navigationService.LastPageActive(StoreWindows.Code);
+    public bool LastOriginStory => _navigationService.LastPageActive(StoreWindows.OriginStory);
+    public bool LastPseudonymArtist => _navigationService.LastPageActive(StoreWindows.PseudonymArtist);
+    public bool LastPublisher => _navigationService.LastPageActive(StoreWindows.Publisher);
+    public bool LastSeries => _navigationService.LastPageActive(StoreWindows.Series);
+    public bool LastStory => _navigationService.LastPageActive(StoreWindows.Story);
+
     public bool OpenArtist => _navigationService.PageActive(StoreWindows.Artist);
     public bool OpenBook => _navigationService.PageActive(StoreWindows.Book);
     public bool OpenCharacter => _navigationService.PageActive(StoreWindows.Character);
@@ -279,6 +289,15 @@ public class ComicsViewModel : ObservableObject, IActivable
             RaisePropertyChanged("OpenPublisher");
             RaisePropertyChanged("OpenSeries");
             RaisePropertyChanged("OpenStory");
+            RaisePropertyChanged("LastArtist");
+            RaisePropertyChanged("LastBook");
+            RaisePropertyChanged("LastCharacter");
+            RaisePropertyChanged("LastCode");
+            RaisePropertyChanged("LastOriginStory");
+            RaisePropertyChanged("LastPseudonymArtist");
+            RaisePropertyChanged("LastPublisher");
+            RaisePropertyChanged("LastSeries");
+            RaisePropertyChanged("OpenStory");
             RaisePropertyChanged("PageChain");
         }
     }
@@ -310,7 +329,7 @@ public class ComicsViewModel : ObservableObject, IActivable
 
     private static List<string> FillEnum<T>() where T : Enum
     {
-        return EnumHelper<T>.GetNames().ToList();
+        return [.. EnumHelper<T>.GetNames()];
     }
 
     private static void GetItem<TEdit, TOut>(IBasicTableViewModel<TEdit, TOut> itemView, int? itemId)

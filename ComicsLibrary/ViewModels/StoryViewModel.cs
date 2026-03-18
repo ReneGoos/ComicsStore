@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
+using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
+using ComicsLibrary.Navigation;
+using ComicsStore.Data.Common;
+using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
-using System.ComponentModel;
-using ComicsLibrary.Navigation;
-using System.Windows.Input;
-using ComicsLibrary.Core;
-using ComicsStore.Data.Common;
 using SoftGoosR.Windows.Core;
+using System.ComponentModel;
+using System.Security.Policy;
+using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels;
 
@@ -80,7 +81,7 @@ public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputMod
             }
             else
             {
-                _originStories = value.ToList();
+                _originStories = [.. value];
             }
 
             StoryOnlyEditModel.ListUpdating = true;
@@ -165,9 +166,9 @@ public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputMod
     {
         base.SetPinnedLinks();
 
-        _pinnedArtists = Item.StoryArtist.Select(sa => new StoryArtistEditModel { ArtistId = sa.ArtistId, ArtistType = sa.ArtistType }).ToList();
-        _pinnedBooks = Item.StoryBook.Select(sb => sb.BookId.Value).ToList();
-        _pinnedCharacters = Item.StoryCharacter.Select(sc => sc.CharacterId.Value).ToList();
+        _pinnedArtists = [.. Item.StoryArtist.Select(sa => new StoryArtistEditModel { ArtistId = sa.ArtistId, ArtistType = sa.ArtistType })];
+        _pinnedBooks = [.. Item.StoryBook.Select(sb => sb.BookId.Value)];
+        _pinnedCharacters = [.. Item.StoryCharacter.Select(sc => sc.CharacterId.Value)];
 
         _pinnedCodeId = Item.CodeId;
         _pinnedStoryType = Item.StoryType;
@@ -207,6 +208,11 @@ public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputMod
 
         Item.StoryType = _pinnedStoryType;
         Item.Language = _pinnedLanguage;
+    }
+
+    protected override async void SaveAsync()
+    {
+        base.SaveAsync();
     }
 
     public override async void ItemChange(TableType table, int? id, ActionType actionType)

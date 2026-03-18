@@ -20,26 +20,24 @@ public static class EnumHelper<T> where T : Enum
 
     public static ICollection<T> GetValues()
     {
-        return Enum.GetValues(typeof(T))
-                        .Cast<T>()
-                        .ToList();
+        return [.. Enum.GetValues(typeof(T)).Cast<T>()];
     }
 
     public static ICollection<string> GetNames()
     {
-        return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Select(fi => fi.Name).ToList();
+        return [.. typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Select(fi => fi.Name)];
     }
 
     public static ICollection<string> GetDisplayValues()
     {
-        return GetNames().Select(obj => GetDisplayValueOneValue(Parse(obj))).ToList();
+        return [.. GetNames().Select(obj => GetDisplayValueOneValue(Parse(obj)))];
     }
 
     public static ICollection<T> GetValues(T value)
     {
         if (IsFlag(value))
         {
-            return GetValues().Where(val => value.IsSet(val)).ToList();
+            return [.. GetValues().Where(val => value.IsSet(val))];
         }
 
         return new List<T> { value };
@@ -49,7 +47,7 @@ public static class EnumHelper<T> where T : Enum
     {
         if (IsFlag(value))
         {
-            return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => value.IsSet((T)fi.GetValue(null))).Select(fi => fi.Name).ToList();
+            return [.. typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => value.IsSet((T)fi.GetValue(null))).Select(fi => fi.Name)];
         }
 
         return new List<string> { value.ToString() };
@@ -68,7 +66,7 @@ public static class EnumHelper<T> where T : Enum
 
     public static ICollection<string> GetDisplayValues(T value)
     {
-        return GetNames(value).Select(obj => GetDisplayValueOneValue(Parse(obj))).ToList();
+        return [.. GetNames(value).Select(obj => GetDisplayValueOneValue(Parse(obj)))];
     }
 
     public static T Parse(string value)

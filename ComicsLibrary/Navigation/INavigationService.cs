@@ -14,6 +14,8 @@ public interface INavigationService : INotifyPropertyChanged
     bool CanClose();
     Task ClosePageAsync(bool result, int? itemId = null);
     void Configure(string key, Type pageFile, bool isPage = true);
+    Task HandleItem(int? itemId);
+    bool LastPageActive(string windowKey);
     bool PageActive(string windowKey);
     Task<bool?> ShowPageAsync(string windowKey, int? itemId, Action<int?, int?> AddItemToList);
     Task ShowWindowAsync(string windowKey);

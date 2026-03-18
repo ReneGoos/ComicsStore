@@ -32,6 +32,8 @@ public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, 
     private string _queryText;
     private string _error;
 
+    private bool _addToParent = false;
+
     private CollectionViewSource _itemsFilteredViewSource;
     private CollectionViewSource _itemsQueryViewSource;
 
@@ -80,6 +82,7 @@ public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, 
 
     public bool Pinned { get; set; }
     public string Error { get => _error; set => Set(ref _error, value); }
+    public bool AddToParent { get => _addToParent; set => Set(ref _addToParent, value); }
 
     protected virtual void QueryResults(object sender, FilterEventArgs e)
     {
@@ -98,7 +101,7 @@ public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, 
     protected virtual void GetItems()
     {
         var _itemsUnsorted = _itemService.GetAsync().Result;
-        _items = _itemsUnsorted.OrderBy(item => item.Name).ToList();
+        _items = [.. _itemsUnsorted.OrderBy(item => item.Name)];
 
         _itemsFilteredViewSource = new CollectionViewSource
         {
@@ -234,6 +237,13 @@ public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, 
         //child items PropertyChanged
         ItemsPropertyChanged();
         IsDirty = false;
+
+        //if add to book, put logic here
+        if (_addToParent)
+        {
+            // trigger HandleItem on NavigationService
+            await NavigationService.HandleItem(Item.Id);
+        }
     }
 
     private async void ExitAsync(bool save)
