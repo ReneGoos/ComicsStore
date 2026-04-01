@@ -17,6 +17,10 @@
         <converters:ArrayConverter x:Key="ArrayConverter"/>
         <converters:NotConverter x:Key="NotConverter"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:ValueConverterGroup x:Key="NotToVisibilityConverter">
+            <converters:NotConverter />
+            <converters:BoolToVisibilityConverter />
+        </converters:ValueConverterGroup>
     </Page.Resources>
     <StackPanel DataContext="{Binding ArtistView}">
         <Grid Background="LightGray" 
@@ -173,6 +177,24 @@
                         >
                     +
                 </Button>
+                <CheckBox Grid.Row ="1"
+                          Grid.Column="3"
+                          Background="Transparent"
+                          Height="25"
+                          VerticalAlignment="Top"
+                          ToolTip="Add to parent when saving"                          
+                          IsChecked="{Binding DataContext.AddToParent, Mode=TwoWay, RelativeSource={RelativeSource  AncestorType=StackPanel}}"
+                          Visibility="{Binding DataContext.LastStory, Converter={StaticResource NotToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                          />
+                <CheckBox Grid.Row ="1"
+                          Grid.Column="3"
+                          Background="Transparent"
+                          Height="25"
+                          VerticalAlignment="Top"
+                          ToolTip="Add to parent when saving"                          
+                          IsChecked="{Binding DataContext.AddToParent, Mode=TwoWay, RelativeSource={RelativeSource  AncestorType=StackPanel}}"
+                          Visibility="{Binding DataContext.LastOriginStory, Converter={StaticResource NotToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                          />
                 <StackPanel Grid.Row="1"
                             Grid.Column="1">
                     <control:HeaderSortListView Name="StoryArtistList"

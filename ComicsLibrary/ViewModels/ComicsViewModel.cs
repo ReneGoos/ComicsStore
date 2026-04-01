@@ -297,7 +297,7 @@ public class ComicsViewModel : ObservableObject, IActivable
             RaisePropertyChanged("LastPseudonymArtist");
             RaisePropertyChanged("LastPublisher");
             RaisePropertyChanged("LastSeries");
-            RaisePropertyChanged("OpenStory");
+            RaisePropertyChanged("LastStory");
             RaisePropertyChanged("PageChain");
         }
     }
