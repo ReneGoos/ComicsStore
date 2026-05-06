@@ -88,7 +88,10 @@ public static class Reports
                 storyType = story.StoryType;
                 bookType = story.BookType;
                 _ = characters.Add(story.Character);
-                artists[story.Artist] = story.ArtistType;
+                if (story.Artist is not null && artists.ContainsKey(story.Artist))
+                {
+                    artists[story.Artist] = story.ArtistType;
+                }
                 bookIssue = story.Issue;
                 bookIssueTitle = story.IssueTitle;
                 language = story.Language.Length == 0 ? "nl" : story.Language;
