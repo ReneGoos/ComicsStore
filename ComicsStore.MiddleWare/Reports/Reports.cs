@@ -88,7 +88,7 @@ public static class Reports
                 storyType = story.StoryType;
                 bookType = story.BookType;
                 _ = characters.Add(story.Character);
-                if (story.Artist is not null && artists.ContainsKey(story.Artist))
+                if (story.Artist is not null && !artists.ContainsKey(story.Artist))
                 {
                     artists[story.Artist] = story.ArtistType;
                 }
