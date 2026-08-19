@@ -31,14 +31,14 @@ public class InformationViewRepository(ComicsStoreDbContext context) : IViewRepo
                       where (!model.Active.HasValue || comicsInformation.Deleted == model.Active.Value) &&
                             (lowerFilter == null ||
                             lowerFilter.Length == 0 ||
-                            comicsInformation.StoryName.ToLower().Contains(lowerFilter) ||
-                            comicsInformation.OriginalStoryName.ToLower().Contains(lowerFilter) ||
-                            comicsInformation.ExtraInfo.ToLower().Contains(lowerFilter) ||
-                            comicsInformation.IssueTitle.ToLower().Contains(lowerFilter) ||
-                            comicsInformation.SeriesName.ToLower().Contains(lowerFilter) ||
-                            comicsInformation.CharacterName.ToLower().Contains(lowerFilter) ||
-                            comicsInformation.PublisherName.ToLower().Contains(lowerFilter) ||
-                            comicsInformation.ArtistName.ToLower().Contains(lowerFilter)) &&
+                            comicsInformation.StoryName.Contains(lowerFilter, StringComparison.InvariantCultureIgnoreCase) ||
+                            comicsInformation.OriginalStoryName.Contains(lowerFilter, StringComparison.InvariantCultureIgnoreCase) ||
+                            comicsInformation.ExtraInfo.Contains(lowerFilter, StringComparison.InvariantCultureIgnoreCase) ||
+                            comicsInformation.IssueTitle.Contains(lowerFilter, StringComparison.InvariantCultureIgnoreCase) ||
+                            comicsInformation.SeriesName.Contains(lowerFilter, StringComparison.InvariantCultureIgnoreCase) ||
+                            comicsInformation.CharacterName.Contains(lowerFilter, StringComparison.InvariantCultureIgnoreCase) ||
+                            comicsInformation.PublisherName.Contains(lowerFilter, StringComparison.InvariantCultureIgnoreCase) ||
+                            comicsInformation.ArtistName.Contains(lowerFilter, StringComparison.InvariantCultureIgnoreCase)) &&
                             (!model.ArtistId.HasValue || comicsInformation.ArtistId == model.ArtistId.Value) &&
                             (!model.BookId.HasValue || comicsInformation.BookId == model.BookId.Value) &&
                             (!model.CharacterId.HasValue || comicsInformation.CharacterId == model.CharacterId.Value) &&

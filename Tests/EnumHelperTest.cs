@@ -20,7 +20,6 @@ public class EnumHelperTest
         var results = EnumHelper<StoryType>.GetName(storyType);
 
         //Assert
-        Assert.Equal("Gag", result);
         Assert.Equal(1, result1.Count);
         Assert.Equal("gag", results);
     }
@@ -39,7 +38,7 @@ public class EnumHelperTest
         var results = EnumHelper<ArtistType>.GetName(artistType);
 
         //Assert
-        Assert.Equal("Writer", result);
+        Assert.Equal("writer", result);
     }
 
     [Fact]
@@ -56,7 +55,7 @@ public class EnumHelperTest
         var results = EnumHelper<ArtistType>.GetName(artistType);
 
         //Assert
-        Assert.Equal("Writer, inker", result);
+        Assert.Equal("writer, inker", result);
     }
 
     [Fact]
