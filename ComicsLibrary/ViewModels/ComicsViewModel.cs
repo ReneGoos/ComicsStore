@@ -22,17 +22,16 @@ public class ComicsViewModel : ObservableObject, IActivable
     private readonly IConfiguration _configuration;
 
     public ArtistViewModel ArtistView { get; private set; }
+    public ArtistViewModel PseudonymArtistView { get; private set; }
     public BookViewModel BookView { get; private set; }
     public CharacterViewModel CharacterView { get; private set; }
     public CodeViewModel CodeView { get; private set; }
     public PublisherViewModel PublisherView { get; private set; }
     public SeriesViewModel SeriesView { get; private set; }
     public StoryViewModel StoryView { get; private set; }
+    public StoryViewModel OriginStoryView { get; private set; }
     public ReportViewModel ReportView { get; private set; }
     public InformationViewModel InformationView { get; private set; }
-
-    public ArtistViewModel PseudonymArtistView { get; private set; }
-    public StoryViewModel OriginStoryView { get; private set; }
 
     public List<string> Actives { get; set; }
     public List<string> BookTypes { get; set; }

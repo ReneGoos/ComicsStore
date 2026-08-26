@@ -7,4 +7,5 @@ public interface IStoryOutputModel
     ICollection<StoryArtistOutputModel> StoryArtist { get; set; }
     ICollection<StoryBookOutputModel> StoryBook { get; set; }
     ICollection<StoryCharacterOutputModel> StoryCharacter { get; set; }
+    ICollection<StoryOriginOutputModel> StoryFromOrigin { get; set; }
 }
