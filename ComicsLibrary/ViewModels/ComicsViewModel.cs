@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
-using ComicsStore.MiddleWare.Services.Interfaces;
-using ComicsLibrary.Navigation;
-using System.Windows.Input;
 using ComicsLibrary.Core;
-using ComicsStore.MiddleWare.Common;
 using ComicsLibrary.EditModels;
-using ComicsStore.MiddleWare.Models.Output;
+using ComicsLibrary.Navigation;
 using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.Data.Common;
-using Microsoft.Extensions.Configuration;
 using ComicsStore.Data.Model.Search;
+using ComicsStore.MiddleWare.Common;
+using ComicsStore.MiddleWare.Models.Output;
+using ComicsStore.MiddleWare.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 using SoftGoosR.Common.Core;
 using SoftGoosR.Windows.Core;
+using System.Globalization;
+using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels;
 
@@ -112,6 +113,7 @@ public class ComicsViewModel : ObservableObject, IActivable
     public ICommand ShowPublisherInformationWindowCommand { get; protected set; }
     public ICommand ShowSeriesInformationWindowCommand { get; protected set; }
     public ICommand ShowStoryInformationWindowCommand { get; protected set; }
+    public ICommand CheckArtistDuplicatesCommand { get; protected set; }
 
     public ComicsViewModel(ComicsStoreDbContext comicsStoreDbContext,
         IArtistsService artistsService,
@@ -207,6 +209,8 @@ public class ComicsViewModel : ObservableObject, IActivable
         ShowPublisherInformationWindowCommand = new RelayCommand<int>(new Action<int>(ShowPublisherInformationWindow));
         ShowSeriesInformationWindowCommand = new RelayCommand<int>(new Action<int>(ShowSeriesInformationWindow));
         ShowStoryInformationWindowCommand = new RelayCommand<int>(new Action<int>(ShowStoryInformationWindow));
+
+        CheckArtistDuplicatesCommand = new RelayCommand(new Action(CheckArtistDuplicates));
     }
 
     private void ArtistView_ItemChanged(object sender, ItemChangedEventArgs e)
@@ -430,6 +434,25 @@ public class ComicsViewModel : ObservableObject, IActivable
         GetItem(PseudonymArtistView, itemId);
 
         _ = await _navigationService.ShowPageAsync(StoreWindows.PseudonymArtist, itemId, ArtistView.HandleMainArtist);
+    }
+    private void CheckArtistDuplicates()
+    {
+        var artists = ArtistView.Items;
+        var artistsEquals = new Dictionary<int, int>();
+
+        foreach (var artist in artists)
+        {
+            foreach (var artistCompare in artists)
+            {
+                if (artistCompare.Id > artist.Id && string.Compare(artistCompare.Name, artist.Name, CultureInfo.CurrentCulture, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) == 0)
+                {
+                    artistsEquals.Add(artistCompare.Id, artist.Id);
+                }
+            }
+        }
+
+        var count = artistsEquals.Count;
+        //return artistsEquals.Any();
     }
 
     private async void ShowBookFromPublisherWindow(int? itemId)

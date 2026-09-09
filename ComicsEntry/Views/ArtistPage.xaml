@@ -137,6 +137,14 @@
                            Grid.Row="13" 
                            Foreground="Red"
                            Text="{Binding DataContext.Error, RelativeSource={RelativeSource AncestorType=StackPanel}}"/>
+                <Button Grid.Row ="1"
+                        Grid.Column="5"
+                        Background="Transparent"
+                        VerticalAlignment="Top"
+                        Command="{Binding DataContext.CheckArtistDuplicatesCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                        >
+                    Check
+                </Button>
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.Resources>
