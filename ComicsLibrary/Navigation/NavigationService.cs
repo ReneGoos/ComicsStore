@@ -2,7 +2,6 @@
 using SoftGoosR.Common.Core;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 
 namespace ComicsLibrary.Navigation;
 

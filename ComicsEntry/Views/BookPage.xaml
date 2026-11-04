@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
         xmlns:converters="clr-namespace:SoftGoosR.Windows.Converters;assembly=SoftGoosR.Windows"
+        xmlns:windowscore="clr-namespace:SoftGoosR.Windows.Core;assembly=SoftGoosR.Windows"
         xmlns:local="clr-namespace:ComicsEntry.Views"
         xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
         mc:Ignorable="d"
@@ -17,6 +18,11 @@
     <Page.Resources>
         <converters:NotConverter x:Key="NotConverter"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Style.Setters>
+                <Setter Property="windowscore:InputBindingsManager.UpdatePropertySourceWhenEnterPressed" Value="TextBox.Text"/>
+            </Style.Setters>
+        </Style>
     </Page.Resources>
     <StackPanel DataContext="{Binding BookView}">
         <Grid Background="LightGray">
@@ -343,6 +349,18 @@
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Label Content="{Binding Story.StoryNumber}"
+                                                   Width="40"
+                                                   HorizontalContentAlignment="Right"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="50">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Story.Pages">Pages</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Story.Pages}"
                                                    Width="40"
                                                    HorizontalContentAlignment="Right"/>
                                         </DataTemplate>

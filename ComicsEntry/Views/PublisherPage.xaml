@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helpers="clr-namespace:ComicsLibrary.Helpers;assembly=ComicsLibrary"
         xmlns:converters="clr-namespace:SoftGoosR.Windows.Converters;assembly=SoftGoosR.Windows"
+        xmlns:windowscore="clr-namespace:SoftGoosR.Windows.Core;assembly=SoftGoosR.Windows"
         xmlns:local="clr-namespace:ComicsEntry.Views"
         xmlns:control="clr-namespace:ComicsLibrary.UserControls;assembly=ComicsLibrary"
         mc:Ignorable="d"
@@ -17,6 +18,11 @@
     <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:NotConverter x:Key="NotConverter"/>
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Style.Setters>
+                <Setter Property="windowscore:InputBindingsManager.UpdatePropertySourceWhenEnterPressed" Value="TextBox.Text"/>
+            </Style.Setters>
+        </Style>
     </Page.Resources>
     <StackPanel DataContext="{Binding PublisherView}">
         <Grid Background="LightGray" 

@@ -9,7 +9,6 @@ using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using SoftGoosR.Windows.Core;
 using System.ComponentModel;
-using System.Security.Policy;
 using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels;

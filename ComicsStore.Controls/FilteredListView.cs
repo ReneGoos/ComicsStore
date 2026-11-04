@@ -65,7 +65,7 @@ public class FilteredListView : ListView
 
     private void SetDefaultFilterPredicate()
     {
-        FilterPredicate = (obj, text) => obj.ToString().ToLower().Contains(text);
+        FilterPredicate = (obj, text) => obj.ToString().Contains(text, StringComparison.InvariantCultureIgnoreCase);
     }
 
     private void DoSomeWork(Task obj)

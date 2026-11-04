@@ -1,20 +1,21 @@
 ﻿using AutoMapper;
 using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
+using ComicsLibrary.EditModels.Interfaces;
+using ComicsLibrary.Navigation;
 using ComicsLibrary.ViewModels.Interfaces;
+using ComicsStore.Data.Common;
+using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
+using SoftGoosR.Windows.Core;
 using System.ComponentModel;
+using System.Data;
+using System.Globalization;
+using System.Text;
 using System.Windows;
 using System.Windows.Data;
-using ComicsLibrary.Navigation;
-using ComicsStore.Data.Common;
-using System.Text;
-using ComicsLibrary.EditModels.Interfaces;
-using System.Data;
-using SoftGoosR.Windows.Core;
 
 namespace ComicsLibrary.ViewModels;
 
@@ -117,9 +118,16 @@ public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, 
         _itemsQueryViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
     }
 
+    private static bool ComplexContains(string source, string value)
+    {
+        var index = CultureInfo.CurrentCulture.CompareInfo.IndexOf
+            (source, value, CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace);
+        return index != -1;
+    }
+
     public bool FilterByString (object item, string text)
     {
-        return item is BasicOutputModel basicOutput && basicOutput.Name.Contains(text, StringComparison.InvariantCultureIgnoreCase);
+        return item is BasicOutputModel basicOutput && ComplexContains(basicOutput.Name, text);
     }
 
     public Func<object, string, bool> NameFilter => FilterByString;
