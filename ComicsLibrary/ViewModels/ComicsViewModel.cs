@@ -71,10 +71,12 @@ public class ComicsViewModel : ObservableObject, IActivable
         }
     }
 
+    public ICommand ShowArtistFromBookWindowCommand { get; protected set; }
     public ICommand ShowArtistFromStoryWindowCommand { get; protected set; }
     public ICommand ShowArtistFromOriginStoryWindowCommand { get; protected set; }
     public ICommand ShowMainArtistFromArtistWindowCommand { get; protected set; }
     public ICommand ShowPseudonymArtistFromArtistWindowCommand { get; protected set; }
+    public ICommand ShowBookFromArtistWindowCommand { get; protected set; }
     public ICommand ShowBookFromPublisherWindowCommand { get; protected set; }
     public ICommand ShowBookFromSeriesWindowCommand { get; protected set; }
     public ICommand ShowBookFromOriginStoryWindowCommand { get; protected set; }
@@ -137,9 +139,9 @@ public class ComicsViewModel : ObservableObject, IActivable
         _navigationService.PropertyChanged += NavigationService_PropertyChanged;
 
         _configuration = configuration;
-        ArtistView = new ArtistViewModel(artistsService, storiesService, navigationService, mapper);
+        ArtistView = new ArtistViewModel(artistsService, booksService, storiesService, navigationService, mapper);
         ArtistView.ItemChanged += ArtistView_ItemChanged;
-        BookView = new BookViewModel(booksService, publishersService, seriesService, storiesService, navigationService, mapper);
+        BookView = new BookViewModel(booksService, artistsService, publishersService, seriesService, storiesService, navigationService, mapper);
         BookView.ItemChanged += BookView_ItemChanged;
         CharacterView = new CharacterViewModel(charactersService, storiesService, navigationService, mapper);
         CharacterView.ItemChanged += CharacterView_ItemChanged;
@@ -152,7 +154,7 @@ public class ComicsViewModel : ObservableObject, IActivable
         StoryView = new StoryViewModel(storiesService, artistsService, booksService, charactersService, codesService, navigationService, mapper);
         StoryView.ItemChanged += StoryView_ItemChanged;
 
-        PseudonymArtistView = new ArtistViewModel(artistsService, storiesService, navigationService, mapper);
+        PseudonymArtistView = new ArtistViewModel(artistsService, booksService, storiesService, navigationService, mapper);
         PseudonymArtistView.ItemChanged += PseudonymArtistView_ItemChanged;
         OriginStoryView = new StoryViewModel(storiesService, artistsService, booksService, charactersService, codesService, navigationService, mapper);
         OriginStoryView.ItemChanged += OriginStoryView_ItemChanged;
@@ -168,9 +170,11 @@ public class ComicsViewModel : ObservableObject, IActivable
         YesNoInds = FillEnum<YesNoInd>();
 
         ShowArtistFromOriginStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowArtistFromOriginStoryWindow));
+        ShowArtistFromBookWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowArtistFromBookWindow));
         ShowArtistFromStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowArtistFromStoryWindow));                         
         ShowMainArtistFromArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowMainArtistFromArtistWindow));
         ShowPseudonymArtistFromArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowPseudonymArtistFromArtistWindow));
+        ShowBookFromArtistWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromArtistWindow));
         ShowBookFromPublisherWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromPublisherWindow));
         ShowBookFromSeriesWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromSeriesWindow));
         ShowBookFromOriginStoryWindowCommand = new RelayCommand<int?>(new Action<int?>(ShowBookFromOriginStoryWindow));
@@ -216,6 +220,7 @@ public class ComicsViewModel : ObservableObject, IActivable
     private void ArtistView_ItemChanged(object sender, ItemChangedEventArgs e)
     {
         PseudonymArtistView.ItemChange(TableType.artist, e.Id, e.ActionType);
+        BookView.ItemChange(TableType.artist, e.Id, e.ActionType);
         StoryView.ItemChange(TableType.artist, e.Id, e.ActionType);
         OriginStoryView.ItemChange(TableType.artist, e.Id, e.ActionType);
     }
@@ -229,6 +234,7 @@ public class ComicsViewModel : ObservableObject, IActivable
 
     private void BookView_ItemChanged(object sender, ItemChangedEventArgs e)
     {
+        ArtistView.ItemChange(TableType.book, e.Id, e.ActionType);
         PublisherView.ItemChange(TableType.book, e.Id, e.ActionType);
         SeriesView.ItemChange(TableType.book, e.Id, e.ActionType);
         StoryView.ItemChange(TableType.book, e.Id, e.ActionType);
@@ -415,6 +421,13 @@ public class ComicsViewModel : ObservableObject, IActivable
         _ = await _navigationService.ShowPageAsync(StoreWindows.Artist, itemId, OriginStoryView.HandleArtist);
     }
 
+    private async void ShowArtistFromBookWindow(int? itemId)
+    {
+        GetItem(ArtistView, itemId);
+
+        _ = await _navigationService.ShowPageAsync(StoreWindows.Artist, itemId, BookView.HandleArtist);
+    }
+
     private async void ShowArtistFromStoryWindow(int? itemId)
     {
         GetItem(ArtistView, itemId);
@@ -453,6 +466,13 @@ public class ComicsViewModel : ObservableObject, IActivable
 
         var count = artistsEquals.Count;
         //return artistsEquals.Any();
+    }
+
+    private async void ShowBookFromArtistWindow(int? itemId)
+    {
+        GetItem(BookView, itemId);
+
+        _ = await _navigationService.ShowPageAsync(StoreWindows.Book, itemId, ArtistView.HandleBook);
     }
 
     private async void ShowBookFromPublisherWindow(int? itemId)

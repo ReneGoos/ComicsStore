@@ -48,6 +48,7 @@ public class ResolveDependencies
         _ = services.AddScoped<IViewRepository<ExportBook, ViewSearch>, StorySeriesViewRepository>();
         _ = services.AddScoped<IViewRepository<ExportBook, IdSearch>, InformationViewRepository>();
 
+        _ = services.AddScoped<IComicsStoreCrossRepository<BookArtist, IBookArtist>, BookArtistsRepository>();
         _ = services.AddScoped<IComicsStoreCrossRepository<BookPublisher, IBookPublisher>, BookPublishersRepository>();
         _ = services.AddScoped<IComicsStoreCrossRepository<BookSeries, IBookSeries>, BookSeriesRepository>();
         _ = services.AddScoped<IComicsStoreCrossRepository<StoryArtist, IStoryArtist>, StoryArtistsRepository>();

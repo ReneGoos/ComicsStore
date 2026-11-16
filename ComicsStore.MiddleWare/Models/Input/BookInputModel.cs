@@ -13,6 +13,7 @@ public class BookInputModel : BasicInputModel, IBookInputModel
     public string Checked { get; set; }
     public string CoverType { get; set; }
 
+    public ICollection<BookArtistInputModel> BookArtist { get; set; }
     public ICollection<BookSeriesInputModel> BookSeries { get; set; }
     public ICollection<BookPublisherInputModel> BookPublisher { get; set; }
     public ICollection<StoryBookInputModel> StoryBook { get; set; }

@@ -180,6 +180,8 @@
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="5"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
                 <Button Grid.Row ="1"
                         Grid.Column="3"
@@ -354,12 +356,117 @@
                         Background="Transparent"
                         Height="25"
                         VerticalAlignment="Top"
+                        Command="{Binding DataContext.ShowBookFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                        Visibility="{Binding DataContext.OpenBook, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                        >
+                    +
+                </Button>
+                <control:HeaderSortListView Grid.Row ="3"      
+                                            Grid.Column="1"
+                                            VerticalAlignment="Top" 
+                                            AlternationCount="2"
+                                            ItemsSource="{Binding Path=BookArtist}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="60">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="BookId">Edit</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.ShowBookFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding BookId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="48"
+                                                    IsEnabled="{Binding DataContext.OpenBook, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    >
+                                            <TextBlock Text="{Binding BookId}" HorizontalAlignment="Center" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Del" 
+                                                Width="40"
+                                                >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.DeleteBookFromListCommand, RelativeSource={RelativeSource AncestorType=StackPanel, AncestorLevel=2}}"
+                                                    CommandParameter="{Binding BookId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="28">
+                                            <TextBlock Text="-" HorizontalAlignment="Center" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Info" 
+                                                Width="40"
+                                                >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.ShowArtistInformationWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding BookId}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="28"
+                                                    >
+                                            <TextBlock Text="i" HorizontalAlignment="Center" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="250">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Book.Name">Book</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Book.Name}"></Label>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="160">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader>Role</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox IsEditable="True"
+                                                      IsReadOnly="True"
+                                                      Width="148"
+                                                      ItemsSource="{Binding Path=Roles}"
+                                                      Text="{Binding ArtistType, 
+                                                                Converter={StaticResource ArrayConverter},
+                                                                ConverterParameter=EnumCheckedType}"
+                                                      IsEnabled="{Binding DataContext.OpenArtist, Converter={StaticResource NotConverter}, RelativeSource={RelativeSource AncestorType=Page}}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate DataType="{x:Type helpers:EnumCheckedType}">
+                                                    <CheckBox Content="{Binding Name}"
+                                                                  IsChecked="{Binding Checked}"
+                                                                  />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </control:HeaderSortListView>
+                <Button Grid.Row ="5"
+                        Grid.Column="3"
+                        Background="Transparent"
+                        Height="25"
+                        VerticalAlignment="Top"
                         Command="{Binding DataContext.ShowMainArtistFromArtistWindowCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                         Visibility="{Binding DataContext.OpenPseudonymArtist, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Page}}"
                         >
                     +
                 </Button>
-                <control:HeaderSortListView Grid.Row ="3"
+                <control:HeaderSortListView Grid.Row ="5"
                                             Grid.Column="1"
                                             VerticalAlignment="Top"
                                             AlternationCount="2"
@@ -430,7 +537,7 @@
                         </GridView>
                     </ListView.View>
                 </control:HeaderSortListView>
-                <Button Grid.Row ="5"
+                <Button Grid.Row ="7"
                         Grid.Column="3"
                         Background="Transparent"
                         Height="25"
@@ -440,7 +547,7 @@
                         >
                     +
                 </Button>
-                <control:HeaderSortListView  Grid.Row ="5"
+                <control:HeaderSortListView  Grid.Row ="7"
                           Grid.Column="1"                          
                           VerticalAlignment="Top" 
                           AlternationCount="2"

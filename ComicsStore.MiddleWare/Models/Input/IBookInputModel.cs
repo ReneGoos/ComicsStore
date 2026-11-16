@@ -5,6 +5,7 @@ namespace ComicsStore.MiddleWare.Models.Input;
 public interface IBookInputModel : IBasicInputModel
 {
     string Active { get; set; }
+    ICollection<BookArtistInputModel> BookArtist { get; set; }
     ICollection<BookPublisherInputModel> BookPublisher { get; set; }
     ICollection<BookSeriesInputModel> BookSeries { get; set; }
     string BookType { get; set; }

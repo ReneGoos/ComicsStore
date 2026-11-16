@@ -6,21 +6,29 @@ namespace ComicsLibrary.EditModels;
 
 public class ArtistEditModel : ArtistOnlyEditModel
 {
+    private ObservableChangedCollection<ArtistBookEditModel> _bookArtist;
     private ObservableChangedCollection<ArtistStoryEditModel> _storyArtist;
     private ObservableChangedCollection<ArtistPseudonymEditModel> _mainArtist;
     private ObservableChangedCollection<PseudonymArtistEditModel> _pseudonymArtist;
 
     public ArtistEditModel() : base()
     {
+        BookArtist = [];
         StoryArtist = [];
         MainArtist = [];
         PseudonymArtist = [];
     }
 
+    public ObservableChangedCollection<ArtistBookEditModel> BookArtist { get => _bookArtist; set => Set(ref _bookArtist, value); }
     public ObservableChangedCollection<ArtistStoryEditModel> StoryArtist { get => _storyArtist; set => Set(ref _storyArtist, value); }
     public ObservableChangedCollection<ArtistPseudonymEditModel> MainArtist { get => _mainArtist; set => Set(ref _mainArtist, value); }
     public ObservableChangedCollection<PseudonymArtistEditModel> PseudonymArtist { get => _pseudonymArtist; set => Set(ref _pseudonymArtist, value); }
 
+    public bool HandleBook(int? oldBookId, BookOnlyEditModel book, PropertyChangedEventHandler propertyChanged = null)
+    {
+        return BookArtist.HandleItem(Id, oldBookId, book, propertyChanged);
+    }
+    
     public bool HandleStory(int? oldStoryId, StoryOnlyEditModel story, PropertyChangedEventHandler propertyChanged = null)
     {
         return StoryArtist.HandleItem(Id, oldStoryId, story, propertyChanged);
@@ -39,6 +47,11 @@ public class ArtistEditModel : ArtistOnlyEditModel
     public void ResetId()
     {
         Id = null;
+
+        foreach (var book in BookArtist)
+        {
+            book.ArtistId = null;
+        }
 
         foreach (var story in StoryArtist)
         {

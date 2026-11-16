@@ -14,22 +14,37 @@ namespace ComicsLibrary.ViewModels;
 
 public class ArtistViewModel : BasicTableViewModel<IArtistsService, ArtistInputModel, ArtistInputModel, ArtistOutputModel, BasicSearch, ArtistEditModel>
 {
+    private readonly IBooksService _booksService;
     private readonly IStoriesService _storiesService;
 
     public ICommand DeleteMainArtistFromListCommand { get; protected set; }
     public ICommand DeletePseudonymArtistFromListCommand { get; protected set; }
     public ICommand DeleteStoryFromListCommand { get; protected set; }
+    public ICommand DeleteBookFromListCommand { get; protected set; }
 
     public ArtistViewModel(IArtistsService artistsService,
-        IStoriesService storiesService,
-        INavigationService navigationService,
-        IMapper mapper) : base(artistsService, navigationService, mapper)
+                           IBooksService booksService,
+                           IStoriesService storiesService,
+                           INavigationService navigationService,
+                           IMapper mapper) : base(artistsService, navigationService, mapper)
     {
         DeleteMainArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteMainArtistFromList));
         DeletePseudonymArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeletePseudonymArtistFromList));
         DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
-
+        DeleteBookFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteBookFromList));
+        _booksService = booksService;
         _storiesService = storiesService;
+    }
+
+    public async void HandleBook(int? bookId, int? oldBookId)
+    {
+        var book = bookId.HasValue ? Mapper.Map<BookOnlyEditModel>(await _booksService.GetAsync(bookId.Value)) : null;
+        IsDirty |= Item.HandleBook(oldBookId, book, ItemPropertyChanged);
+    }
+
+    private void DeleteBookFromList(int? bookId)
+    {
+        IsDirty |= Item.HandleBook(bookId, null);
     }
 
     public async void HandleStory(int? storyId, int? oldStoryId)

@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ComicsStore.Data.Model;
 
-public class Book : MainTable, IBookPublisher, IBookSeries, IStoryBook
+public class Book : MainTable, IBookArtist, IBookPublisher, IBookSeries, IStoryBook
 {
     public Book()
         : base()
     {
+        BookArtist = new HashSet<BookArtist>();
         BookSeries = new HashSet<BookSeries>();
         BookPublisher = new HashSet<BookPublisher>();
         StoryBook = new HashSet<StoryBook>();
@@ -31,6 +32,7 @@ public class Book : MainTable, IBookPublisher, IBookSeries, IStoryBook
     public YesNoInd Checked { get; set; }
     public CoverType CoverType { get; set; }
 
+    public ICollection<BookArtist> BookArtist { get; set; }
     public ICollection<BookSeries> BookSeries { get; set; }
     public ICollection<BookPublisher> BookPublisher { get; set; }
     public ICollection<StoryBook> StoryBook { get; set; }

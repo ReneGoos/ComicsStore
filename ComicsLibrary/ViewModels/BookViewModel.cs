@@ -14,6 +14,7 @@ namespace ComicsLibrary.ViewModels;
 
 public class BookViewModel : BasicTableViewModel<IBooksService, BookInputModel, BookInputPatchModel, BookOutputModel, BasicSearch, BookEditModel>
 {
+    private readonly IArtistsService _artistsService;
     private readonly IPublishersService _publishersService;
     private readonly ISeriesService _seriesService;
     private readonly IStoriesService _storiesService;
@@ -23,6 +24,7 @@ public class BookViewModel : BasicTableViewModel<IBooksService, BookInputModel, 
     public ICommand DeleteStoryFromListCommand { get; protected set; }
 
     public BookViewModel(IBooksService booksService,
+        IArtistsService artistsService,
         IPublishersService publishersService, 
         ISeriesService seriesService,
         IStoriesService storiesService,
@@ -32,9 +34,21 @@ public class BookViewModel : BasicTableViewModel<IBooksService, BookInputModel, 
         DeletePublisherFromListCommand = new RelayCommand<int?>(new Action<int?>(DeletePublisherFromList));
         DeleteSeriesFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteSeriesFromList));
         DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
+        _artistsService = artistsService;
         _publishersService = publishersService;
         _seriesService = seriesService;
         _storiesService = storiesService;
+    }
+
+    public async void HandleArtist(int? artistId, int? oldArtistId)
+    {
+        var artist = artistId.HasValue ? Mapper.Map<ArtistOnlyEditModel>(await _artistsService.GetAsync(artistId.Value)) : null;
+        IsDirty |= Item.HandleArtist(oldArtistId, artist, ItemPropertyChanged);
+    }
+
+    private void DeleteArtistFromList(int? artistId)
+    {
+        IsDirty |= Item.HandleArtist(artistId, null);
     }
 
     public async void HandlePublisher(int? publisherId, int? oldPublisherId)

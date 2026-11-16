@@ -45,8 +45,10 @@ public class ComicsLibraryProfile : ComicsStoreProfile
         _ = CreateMap<StoryOnlyOutputModel, StoryOnlyEditModel>();
 
         _ = CreateMap<ArtistPseudonymEditModel, PseudonymInputModel>();
+        _ = CreateMap<ArtistBookEditModel, BookArtistInputModel>();
         _ = CreateMap<ArtistStoryEditModel, StoryArtistInputModel>();
 
+        _ = CreateMap<BookArtistEditModel, BookArtistInputModel>();
         _ = CreateMap<BookPublisherEditModel, BookPublisherInputModel>();
         _ = CreateMap<BookSeriesEditModel, BookSeriesInputModel>();
         _ = CreateMap<BookStoryEditModel, StoryBookInputModel>();
@@ -62,8 +64,10 @@ public class ComicsLibraryProfile : ComicsStoreProfile
         _ = CreateMap<StoryBookEditModel, StoryBookInputModel>();
         _ = CreateMap<StoryCharacterEditModel, StoryCharacterInputModel>();
 
+        _ = CreateMap<ArtistBookOutputModel, ArtistBookEditModel>();
         _ = CreateMap<ArtistStoryOutputModel, ArtistStoryEditModel>();
         _ = CreateMap<ArtistPseudonymOutputModel, ArtistPseudonymEditModel>();
+        _ = CreateMap<BookArtistOutputModel, BookArtistEditModel>();
         _ = CreateMap<BookPublisherOutputModel, BookPublisherEditModel>();
         _ = CreateMap<BookSeriesOutputModel, BookSeriesEditModel>();
         _ = CreateMap<BookStoryOutputModel, BookStoryEditModel>();

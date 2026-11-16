@@ -44,6 +44,8 @@ public class ComicsStoreProfile : Profile
         _ = CreateMap<StoryInputPatchModel, Story>()
             .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
 
+        _ = CreateMap<BookArtistInputModel, BookArtist>()
+            .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
         _ = CreateMap<BookPublisherInputModel, BookPublisher>()
             .AddTransform<string>(s => string.IsNullOrEmpty(s) ? null : s);
         _ = CreateMap<BookSeriesInputModel, BookSeries>()
@@ -84,6 +86,11 @@ public class ComicsStoreProfile : Profile
         _ = CreateMap<BookSeries, SeriesBookOutputModel>();
         _ = CreateMap<Series, BookSeriesOutputModel>();
         _ = CreateMap<Book, SeriesBookOutputModel>();
+
+        _ = CreateMap<BookArtist, BookArtistOutputModel>();
+        _ = CreateMap<BookArtist, ArtistBookOutputModel>();
+        _ = CreateMap<Artist, BookArtistOutputModel>();
+        _ = CreateMap<Book, ArtistBookOutputModel>();
 
         _ = CreateMap<BookPublisher, BookPublisherOutputModel>();
         _ = CreateMap<BookPublisher, PublisherBookOutputModel>();

@@ -76,6 +76,17 @@ public class ComicsStoreDbContext(DbContextOptions<ComicsStoreDbContext> options
             .HasOne(sb => sb.Book)
             .WithMany(b => b.StoryBook);
 
+        _ = modelBuilder.Entity<BookArtist>()
+            .HasKey(bp => new { bp.BookId, bp.ArtistId });
+
+        _ = modelBuilder.Entity<BookArtist>()
+            .HasOne(bp => bp.Book)
+            .WithMany(b => b.BookArtist);
+
+        _ = modelBuilder.Entity<BookArtist>()
+            .HasOne(bp => bp.Artist)
+            .WithMany(p => p.BookArtist);
+
         _ = modelBuilder.Entity<BookSeries>()
             .HasKey(bs => new { bs.BookId, bs.SeriesId });
 
@@ -151,6 +162,7 @@ public class ComicsStoreDbContext(DbContextOptions<ComicsStoreDbContext> options
     public virtual DbSet<StoryCharacter> StoryCharacters { get; set; }
     public virtual DbSet<StoryArtist> StoryArtists { get; set; }
     public virtual DbSet<StoryBook> StoryBooks { get; set; }
+    public virtual DbSet<BookArtist> BookArtists { get; set; }
     public virtual DbSet<BookSeries> BookSeries { get; set; }
     public virtual DbSet<BookPublisher> BookPublishers { get; set; }
     public virtual DbSet<Pseudonym> Pseudonyms { get; set; }

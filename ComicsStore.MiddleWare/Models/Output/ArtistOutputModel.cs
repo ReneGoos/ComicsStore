@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using ComicsStore.MiddleWare.Models.Input;
+using System.Collections.Generic;
 
 namespace ComicsStore.MiddleWare.Models.Output;
 
 public class ArtistOutputModel : ArtistOnlyOutputModel, IArtistOutputModel
 {
+    public ICollection<ArtistBookOutputModel> BookArtist { get; set; }
     public ICollection<ArtistStoryOutputModel> StoryArtist { get; set; }
     public ICollection<ArtistPseudonymOutputModel> MainArtist { get; set; }
     public ICollection<PseudonymArtistOutputModel> PseudonymArtist { get; set; }

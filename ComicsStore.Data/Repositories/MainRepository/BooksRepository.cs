@@ -9,17 +9,20 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 namespace ComicsStore.Data.Repositories.MainRepository;
 
 public class BooksRepository(ComicsStoreDbContext context,
-                       IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
-                       IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,
-                       IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository
+                           IComicsStoreCrossRepository<BookArtist, IBookArtist> bookArtistsRepository,
+                           IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
+                           IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,
+                           IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository
                            ) : ComicsStoreMainRepository<Book, BasicSearch>(context), IComicsStoreMainRepository<Book, BasicSearch>
 {
+    private readonly IComicsStoreCrossRepository<BookArtist, IBookArtist> _bookArtistsRepository = bookArtistsRepository;
     private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository = bookPublishersRepository;
     private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository = bookSeriesRepository;
     private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository = storyBooksRepository;
 
     private bool UpdateLinkedItems(Book bookCurrent, Book bookNew)
     {
+        _bookArtistsRepository.UpdateLinkedItems(bookCurrent, bookNew);
         _bookPublishersRepository.UpdateLinkedItems(bookCurrent, bookNew);
         _bookSeriesRepository.UpdateLinkedItems(bookCurrent, bookNew);
         _storyBooksRepository.UpdateLinkedItems(bookCurrent, bookNew);
@@ -49,6 +52,7 @@ public class BooksRepository(ComicsStoreDbContext context,
     {
         var books = _context.Books
             .Include(b => b.StoryBook)
+            .Include(b => b.BookArtist)
             .Include(b => b.BookSeries)
             .Include(b => b.BookPublisher)
             .Where(s => model.Name == null || s.Name.ToLower().Contains(model.Name.ToLower())).ToListAsync();
@@ -63,6 +67,8 @@ public class BooksRepository(ComicsStoreDbContext context,
             return _context.Books
                 .Include(b => b.StoryBook)
                 .ThenInclude(sb => sb.Story)
+                .Include(b => b.BookArtist)
+                .ThenInclude(ba => ba.Artist)
                 .Include(b => b.BookSeries)
                 .ThenInclude(bs => bs.Series)
                 .ThenInclude(s => s.Code)
@@ -73,6 +79,7 @@ public class BooksRepository(ComicsStoreDbContext context,
 
         return _context.Books
             .Include(b => b.StoryBook)
+            .Include(b => b.BookArtist)
             .Include(b => b.BookSeries)
             .Include(b => b.BookPublisher)
             .SingleOrDefaultAsync(b => b.Id == bookId);

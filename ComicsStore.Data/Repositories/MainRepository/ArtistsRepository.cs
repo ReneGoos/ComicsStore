@@ -9,8 +9,11 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 namespace ComicsStore.Data.Repositories.MainRepository;
 
 public class ArtistsRepository(ComicsStoreDbContext context,
-    IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository) : ComicsStoreMainRepository<Artist, BasicSearch>(context), IComicsStoreMainRepository<Artist, BasicSearch>
+                              IComicsStoreCrossRepository<BookArtist, IBookArtist> bookArtistsRepository,
+                              IComicsStoreCrossRepository<StoryArtist, IStoryArtist> storyArtistsRepository
+                             ) : ComicsStoreMainRepository<Artist, BasicSearch>(context), IComicsStoreMainRepository<Artist, BasicSearch>
 {
+    private readonly IComicsStoreCrossRepository<BookArtist, IBookArtist> _bookArtistsRepository = bookArtistsRepository;
     private readonly IComicsStoreCrossRepository<StoryArtist, IStoryArtist> _storyArtistsRepository = storyArtistsRepository;
 
     public override Task<Artist> AddAsync(Artist value)
@@ -44,6 +47,8 @@ public class ArtistsRepository(ComicsStoreDbContext context,
         if (extended)
         {
             return _context.Artists
+                .Include(a => a.BookArtist)
+                .ThenInclude(ba => ba.Book)
                 .Include(a => a.StoryArtist)
                 .ThenInclude(sa => sa.Story)
                 .Include(a => a.MainArtist)
@@ -52,6 +57,7 @@ public class ArtistsRepository(ComicsStoreDbContext context,
         }
 
         var artists = _context.Artists
+            .Include(a => a.BookArtist)
             .Include(a => a.StoryArtist)
             .Include(a => a.MainArtist)
             .Include(a => a.PseudonymArtist)
@@ -138,6 +144,7 @@ public class ArtistsRepository(ComicsStoreDbContext context,
 
     private bool UpdateLinkedItems(Artist artistCurrent, Artist artistNew)
     {
+        _bookArtistsRepository.UpdateLinkedItems(artistCurrent, artistNew);
         _storyArtistsRepository.UpdateLinkedItems(artistCurrent, artistNew);
         UpdateMainArtistLinkedItems(artistCurrent, artistNew);
         UpdatePseudonymArtistLinkedItems(artistCurrent, artistNew);

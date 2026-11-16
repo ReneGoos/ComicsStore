@@ -14,15 +14,30 @@ using ComicsStore.Data.Repositories.Interfaces.MainRepository;
 namespace ComicsStore.MiddleWare.Services;
 
 public class BooksService(IComicsStoreMainRepository<Book, BasicSearch> booksRepository,
-    IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
-    IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,
-    IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
-    IMapper mapper) : ComicsStoreService<Book, BookInputModel, BookInputPatchModel, BookOutputModel, BasicSearch>(booksRepository, mapper), IBooksService
+                          IComicsStoreCrossRepository<BookArtist, IBookArtist> bookArtistsRepository,
+                          IComicsStoreCrossRepository<BookPublisher, IBookPublisher> bookPublishersRepository,
+                          IComicsStoreCrossRepository<BookSeries, IBookSeries> bookSeriesRepository,
+                          IComicsStoreCrossRepository<StoryBook, IStoryBook> storyBooksRepository,
+                          IMapper mapper) : ComicsStoreService<Book, BookInputModel, BookInputPatchModel, BookOutputModel, BasicSearch>(booksRepository, mapper), IBooksService
 {
+    private readonly IComicsStoreCrossRepository<BookArtist, IBookArtist> _bookArtistsRepository = bookArtistsRepository;
     private readonly IComicsStoreCrossRepository<BookPublisher, IBookPublisher> _bookPublishersRepository = bookPublishersRepository;
     private readonly IComicsStoreCrossRepository<BookSeries, IBookSeries> _bookSeriesRepository = bookSeriesRepository;
     private readonly IComicsStoreCrossRepository<StoryBook, IStoryBook> _storyBooksRepository = storyBooksRepository;
 
+    public async Task<ICollection<BookArtistOutputModel>> GetArtistsAsync(int bookId)
+    {
+        var bookArtists = await _bookArtistsRepository.GetAsync(bookId, null);
+
+        try
+        {
+            return Mapper.Map<ICollection<BookArtistOutputModel>>(bookArtists);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
     public async Task<ICollection<BookPublisherOutputModel>> GetPublishersAsync(int bookId)
     {
         var bookPublishers = await _bookPublishersRepository.GetAsync(bookId, null);

@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ComicsStore.Data.Model;
 
-public class Artist : MainTable, IStoryArtist, IMainArtist, IPseudonymArtist
+public class Artist : MainTable, IBookArtist, IStoryArtist, IMainArtist, IPseudonymArtist
 {
     public Artist()
         : base()
     {
+        BookArtist = new HashSet<BookArtist>();
         StoryArtist = new HashSet<StoryArtist>();
         PseudonymArtist = new HashSet<Pseudonym>();
         MainArtist = new HashSet<Pseudonym>();
@@ -21,6 +22,7 @@ public class Artist : MainTable, IStoryArtist, IMainArtist, IPseudonymArtist
     public string RealLastName { get; set; }
     public string RealFirstName { get; set; }
 
+    public ICollection<BookArtist> BookArtist { get; set; }
     public ICollection<StoryArtist> StoryArtist { get; set; }
     public ICollection<Pseudonym> PseudonymArtist { get; set; }
     public ICollection<Pseudonym> MainArtist { get; set; }

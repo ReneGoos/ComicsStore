@@ -10,6 +10,7 @@ public class ArtistInputModel : BasicInputModel, IArtistInputModel
     public string RealLastName { get; set; }
     public string RealFirstName { get; set; }
 
+    public ICollection<BookArtistInputModel> BookArtist { get; set; }
     public ICollection<StoryArtistInputModel> StoryArtist { get; set; }
     public ICollection<PseudonymInputModel> MainArtist { get; set; }
     public ICollection<PseudonymInputModel> PseudonymArtist { get; set; }
