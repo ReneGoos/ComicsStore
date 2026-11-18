@@ -59,5 +59,6 @@ public enum ArtistType
     master = 32,
     letterer = 64,
     translator = 128,
-    graphiclayout = 256
+    graphicdesign = 256,
+    editor = 512
 }
