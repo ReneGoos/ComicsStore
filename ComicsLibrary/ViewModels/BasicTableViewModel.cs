@@ -2,6 +2,7 @@
 using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
 using ComicsLibrary.EditModels.Interfaces;
+using ComicsLibrary.ListViewModels;
 using ComicsLibrary.Navigation;
 using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.Data.Common;
@@ -28,50 +29,26 @@ public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, 
     where TEdit : TableEditModel, new()
 {
     protected readonly TService _itemService;
-    protected ICollection<TOut> _items;
     private TEdit _item;
-    private string _queryText;
     private string _error;
-
+    private CollectionViewSource _itemsFilteredViewSource;
     private bool _addToParent = false;
 
-    private CollectionViewSource _itemsFilteredViewSource;
-    private CollectionViewSource _itemsQueryViewSource;
+    public IBasicListViewModel<TOut> ListItems { get; private set; }
 
     protected void UpdateItemsList(TOut item, bool removeOnly = false)
     {
-        if (_items == null)
-        {
-            GetItems();
-            if (_items == null)
-            { 
-                return;
-            }
-        }
-
-        var itemFind = _items.FirstOrDefault(i => i.Id == item.Id);
-        if (itemFind is not null)
-        {
-            _ = _items.Remove(itemFind);
-        }
-        if (!removeOnly)
-        {
-            _items.Add(item);
-        }
-
-        RaisePropertyChanged("Items");
-
-        _itemsFilteredViewSource.View.Refresh();
-        _itemsQueryViewSource.View.Refresh();
-        RaisePropertyChanged("FilteredItems");
-        RaisePropertyChanged("QueryItems");
+        ListItems.UpdateItemsList(item, removeOnly);
     }
 
     public BasicTableViewModel(TService service,
         INavigationService navigationService,
-        IMapper mapper) : base(navigationService, mapper)
+        IMapper mapper,
+        IBasicListViewModel<TOut> itemList) : base(navigationService, mapper)
     {
         _itemService = service;
+        ListItems = itemList;
+
         GetCommand = new RelayCommand<int>(new Action<int>(GetItemAsync));
         NewCommand = new RelayCommand(new Action(NewItem));
         SaveCommand = new RelayCommand(new Action(SaveAsync));
@@ -84,53 +61,6 @@ public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, 
     public bool Pinned { get; set; }
     public string Error { get => _error; set => Set(ref _error, value); }
     public bool AddToParent { get => _addToParent; set => Set(ref _addToParent, value); }
-
-    protected virtual void QueryResults(object sender, FilterEventArgs e)
-    {
-        if (_queryText is null || _queryText.Length == 0)
-        {
-            e.Accepted = true;
-            return;
-        }
-
-        if (e.Item is BasicOutputModel item)
-        {
-            e.Accepted = item.Name.Contains(_queryText, System.StringComparison.InvariantCultureIgnoreCase);
-        }
-    }
-
-    protected virtual void GetItems()
-    {
-        var _itemsUnsorted = _itemService.GetAsync().Result;
-        _items = [.. _itemsUnsorted.OrderBy(item => item.Name)];
-
-        _itemsFilteredViewSource = new CollectionViewSource
-        {
-            Source = _items
-        };
-        _itemsFilteredViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
-
-        _itemsQueryViewSource = new CollectionViewSource
-        {
-            Source = _items
-        };
-        _itemsQueryViewSource.Filter += QueryResults;
-        _itemsQueryViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
-    }
-
-    private static bool ComplexContains(string source, string value)
-    {
-        var index = CultureInfo.CurrentCulture.CompareInfo.IndexOf
-            (source, value, CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace);
-        return index != -1;
-    }
-
-    public bool FilterByString (object item, string text)
-    {
-        return item is BasicOutputModel basicOutput && ComplexContains(basicOutput.Name, text);
-    }
-
-    public Func<object, string, bool> NameFilter => FilterByString;
 
     private static MessageBoxResult ContinueDelete()
     {
@@ -388,16 +318,11 @@ public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, 
 
     public abstract void ItemChange(TableType table, int? id, ActionType actionType);
 
-    public string QueryText
+    public TEdit Item
     {
-        get => _queryText;
-        set
-        {
-            Set(ref _queryText, value);
-            _itemsQueryViewSource.View.Refresh();
-        }
+        get => _item;
+        private set => Set(ref _item, value);
     }
-
     public ICollectionView FilteredItems
     {
         get
@@ -411,35 +336,12 @@ public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, 
         }
     }
 
-    public ICollectionView QueryItems
+    private void GetItems()
     {
-        get
+        _itemsFilteredViewSource = new CollectionViewSource
         {
-            if (_itemsQueryViewSource is null)
-            {
-                GetItems();
-            }
-
-            return _itemsQueryViewSource.View;
-        }
-    }
-
-    public IEnumerable<TOut> Items
-    {
-        get
-        {
-            if (_items is null)
-            {
-                GetItems();
-            }
-
-            return _items; // ViewSource.View;
-        }
-    }
-
-    public TEdit Item
-    {
-        get => _item;
-        private set => Set(ref _item, value);
+            Source = ListItems.Items
+        };
+        _itemsFilteredViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
     }
 }

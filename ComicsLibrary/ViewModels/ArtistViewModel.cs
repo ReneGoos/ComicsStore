@@ -9,10 +9,16 @@ using System.Windows.Input;
 using ComicsLibrary.Navigation;
 using ComicsStore.Data.Common;
 using SoftGoosR.Windows.Core;
+using ComicsLibrary.ListViewModels;
 
 namespace ComicsLibrary.ViewModels;
 
-public class ArtistViewModel : BasicTableViewModel<IArtistsService, ArtistInputModel, ArtistInputModel, ArtistOutputModel, BasicSearch, ArtistEditModel>
+public class ArtistViewModel : BasicTableViewModel<IArtistsService, 
+                                                    ArtistInputModel, 
+                                                    ArtistInputModel, 
+                                                    ArtistOutputModel, 
+                                                    BasicSearch, 
+                                                    ArtistEditModel>
 {
     private readonly IBooksService _booksService;
     private readonly IStoriesService _storiesService;
@@ -26,7 +32,9 @@ public class ArtistViewModel : BasicTableViewModel<IArtistsService, ArtistInputM
                            IBooksService booksService,
                            IStoriesService storiesService,
                            INavigationService navigationService,
-                           IMapper mapper) : base(artistsService, navigationService, mapper)
+                           IMapper mapper,
+                           IBasicListViewModel<ArtistOutputModel> artists
+                          ) : base(artistsService, navigationService, mapper, artists)
     {
         DeleteMainArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteMainArtistFromList));
         DeletePseudonymArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeletePseudonymArtistFromList));

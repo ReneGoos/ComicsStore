@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
+using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
+using ComicsLibrary.ListViewModels;
+using ComicsLibrary.Navigation;
+using ComicsStore.Data.Common;
+using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
-using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Services.Interfaces;
-using ComicsLibrary.Navigation;
-using System.Windows.Input;
-using ComicsLibrary.Core;
-using ComicsStore.Data.Common;
 using SoftGoosR.Windows.Core;
+using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels;
 
@@ -21,7 +22,8 @@ public class PublisherViewModel : BasicTableViewModel<IPublishersService, Publis
     public PublisherViewModel(IPublishersService publishersService,
         IBooksService booksService,
         INavigationService navigationService,
-        IMapper mapper) : base(publishersService, navigationService, mapper)
+        IMapper mapper,
+        IBasicListViewModel<PublisherOutputModel> publishers) : base(publishersService, navigationService, mapper, publishers)
     {
         DeleteBookFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteBookFromList));
         _booksService = booksService;

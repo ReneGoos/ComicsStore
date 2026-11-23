@@ -32,7 +32,7 @@
                                    PageChain = "{Binding DataContext.PageChain, RelativeSource={RelativeSource AncestorType=Page}}"
                                    IsClean = "{Binding IsClean}"
                                    IsDirty = "{Binding IsDirty}"
-                                   Filter = "{Binding NameFilter}"
+                                   Filter = "{Binding ListItems.NameFilter}"
                                    NewCommand = "{Binding NewCommand}"
                                    SaveCommand = "{Binding SaveCommand}"
                                    UndoCommand = "{Binding UndoCommand}"

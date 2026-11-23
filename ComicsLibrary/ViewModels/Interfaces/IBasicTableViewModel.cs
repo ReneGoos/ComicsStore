@@ -9,7 +9,5 @@ public interface IBasicTableViewModel<TEdit, TOut> : IBasicViewModel
     where TOut : BasicOutputModel
 {
     TEdit Item { get; }
-    Func<object,string,bool> NameFilter { get; }
     ICollectionView FilteredItems { get; }
-    IEnumerable<TOut> Items { get; }
 }

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using ComicsEntry.Views;
+using ComicsLibrary.Common;
 using ComicsLibrary.Helpers;
 using ComicsLibrary.Navigation;
 using ComicsLibrary.ViewModels;
-using ComicsStore.MiddleWare.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

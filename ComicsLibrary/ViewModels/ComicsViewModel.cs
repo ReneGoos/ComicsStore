@@ -9,6 +9,7 @@ using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SoftGoosR.Common.Core;
 using SoftGoosR.Windows.Core;
 using System.Globalization;
@@ -21,6 +22,7 @@ public class ComicsViewModel : ObservableObject, IActivable
     private readonly ComicsStoreDbContext _comicsStoreDbContext;
     private readonly INavigationService _navigationService;
     private readonly IConfiguration _configuration;
+    private readonly IServiceProvider _serviceProvider;
 
     public ArtistViewModel ArtistView { get; private set; }
     public ArtistViewModel PseudonymArtistView { get; private set; }
@@ -129,7 +131,8 @@ public class ComicsViewModel : ObservableObject, IActivable
         IInformationService informationViewService,
         IMapper mapper,
         INavigationService navigationService,
-        IConfiguration configuration) : base()
+        IConfiguration configuration,
+        IServiceProvider serviceProvider) : base()
     {
         _comicsStoreDbContext = comicsStoreDbContext;
 
@@ -139,28 +142,32 @@ public class ComicsViewModel : ObservableObject, IActivable
         _navigationService.PropertyChanged += NavigationService_PropertyChanged;
 
         _configuration = configuration;
-        ArtistView = new ArtistViewModel(artistsService, booksService, storiesService, navigationService, mapper);
+        _serviceProvider = serviceProvider;
+
+        ArtistView = _serviceProvider.GetRequiredService<ArtistViewModel>();
+        BookView = _serviceProvider.GetRequiredService<BookViewModel>();
+        CharacterView = _serviceProvider.GetRequiredService<CharacterViewModel>();
+        CodeView = _serviceProvider.GetRequiredService<CodeViewModel>();
+        PublisherView = _serviceProvider.GetRequiredService<PublisherViewModel>();
+        SeriesView = _serviceProvider.GetRequiredService<SeriesViewModel>();
+        StoryView = _serviceProvider.GetRequiredService<StoryViewModel>();
+
+        PseudonymArtistView = _serviceProvider.GetRequiredService<ArtistViewModel>();
+        OriginStoryView = _serviceProvider.GetRequiredService<StoryViewModel>();
+
         ArtistView.ItemChanged += ArtistView_ItemChanged;
-        BookView = new BookViewModel(booksService, artistsService, publishersService, seriesService, storiesService, navigationService, mapper);
         BookView.ItemChanged += BookView_ItemChanged;
-        CharacterView = new CharacterViewModel(charactersService, storiesService, navigationService, mapper);
         CharacterView.ItemChanged += CharacterView_ItemChanged;
-        CodeView = new CodeViewModel(codesService, seriesService, storiesService, navigationService, mapper);
         CodeView.ItemChanged += CodeView_ItemChanged;
-        PublisherView = new PublisherViewModel(publishersService, booksService, navigationService, mapper);
         PublisherView.ItemChanged += PublisherView_ItemChanged;
-        SeriesView = new SeriesViewModel(seriesService, booksService, codesService, navigationService, mapper);
         SeriesView.ItemChanged += SeriesView_ItemChanged;
-        StoryView = new StoryViewModel(storiesService, artistsService, booksService, charactersService, codesService, navigationService, mapper);
         StoryView.ItemChanged += StoryView_ItemChanged;
 
-        PseudonymArtistView = new ArtistViewModel(artistsService, booksService, storiesService, navigationService, mapper);
         PseudonymArtistView.ItemChanged += PseudonymArtistView_ItemChanged;
-        OriginStoryView = new StoryViewModel(storiesService, artistsService, booksService, charactersService, codesService, navigationService, mapper);
         OriginStoryView.ItemChanged += OriginStoryView_ItemChanged;
 
-        InformationView = new InformationViewModel(informationViewService, mapper);
-        ReportView = new ReportViewModel(exportBooksService, mapper);
+        InformationView = _serviceProvider.GetRequiredService<InformationViewModel>();
+        ReportView = _serviceProvider.GetRequiredService<ReportViewModel>();
 
         Languages = LanguageType.FillLanguages();
         Actives = FillEnum<Active>();
@@ -450,22 +457,22 @@ public class ComicsViewModel : ObservableObject, IActivable
     }
     private void CheckArtistDuplicates()
     {
-        var artists = ArtistView.Items;
-        var artistsEquals = new Dictionary<int, int>();
+        //var artists = ArtistView.Items;
+        //var artistsEquals = new Dictionary<int, int>();
 
-        foreach (var artist in artists)
-        {
-            foreach (var artistCompare in artists)
-            {
-                if (artistCompare.Id > artist.Id && string.Compare(artistCompare.Name, artist.Name, CultureInfo.CurrentCulture, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) == 0)
-                {
-                    artistsEquals.Add(artistCompare.Id, artist.Id);
-                }
-            }
-        }
+        //foreach (var artist in artists)
+        //{
+        //    foreach (var artistCompare in artists)
+        //    {
+        //        if (artistCompare.Id > artist.Id && string.Compare(artistCompare.Name, artist.Name, CultureInfo.CurrentCulture, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) == 0)
+        //        {
+        //            artistsEquals.Add(artistCompare.Id, artist.Id);
+        //        }
+        //    }
+        //}
 
-        var count = artistsEquals.Count;
-        //return artistsEquals.Any();
+        //var count = artistsEquals.Count;
+        ////return artistsEquals.Any();
     }
 
     private async void ShowBookFromArtistWindow(int? itemId)

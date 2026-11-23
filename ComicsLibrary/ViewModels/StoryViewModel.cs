@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
+using ComicsLibrary.ListViewModels;
 using ComicsLibrary.Navigation;
 using ComicsStore.Data.Common;
 using ComicsStore.Data.Model.Search;
@@ -13,7 +14,12 @@ using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels;
 
-public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputModel, StoryInputPatchModel, StoryOutputModel, StorySearch, StoryEditModel>
+public class StoryViewModel : BasicTableViewModel<IStoriesService, 
+    StoryInputModel, 
+    StoryInputPatchModel, 
+    StoryOutputModel, 
+    StorySearch, 
+    StoryEditModel>
 {
     public ICommand DeleteArtistFromListCommand { get; protected set; }
     public ICommand DeleteBookFromListCommand { get; protected set; }
@@ -47,7 +53,8 @@ public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputMod
         ICharactersService charactersService, 
         ICodesService codesService,
         INavigationService navigationService,
-        IMapper mapper) : base(storiesService, navigationService, mapper)
+        IMapper mapper,
+        IBasicListViewModel<StoryOutputModel> stories) : base(storiesService, navigationService, mapper, stories)
     {
         DeleteArtistFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteArtistFromList));
         DeleteBookFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteBookFromList));
@@ -91,7 +98,7 @@ public class StoryViewModel : BasicTableViewModel<IStoriesService, StoryInputMod
 
     private void GetOriginStories()
     {
-        OriginStories = _items.Where(item => item.OriginStoryId is null).OrderBy(item => item.Name);
+        OriginStories = ListItems.Items.Where(item => item.OriginStoryId is null).OrderBy(item => item.Name);
         //RaisePropertyChanged("OriginStories");
     }
 

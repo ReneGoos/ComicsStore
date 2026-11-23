@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
-using ComicsStore.MiddleWare.Services.Interfaces;
-using ComicsStore.MiddleWare.Models.Output;
-using ComicsLibrary.EditModels;
-using ComicsStore.MiddleWare.Models.Input;
-using ComicsStore.Data.Model.Search;
-using ComicsLibrary.Navigation;
 using ComicsLibrary.Core;
-using System.Windows.Input;
+using ComicsLibrary.EditModels;
+using ComicsLibrary.ListViewModels;
+using ComicsLibrary.Navigation;
 using ComicsStore.Data.Common;
+using ComicsStore.Data.Model.Search;
+using ComicsStore.MiddleWare.Models.Input;
+using ComicsStore.MiddleWare.Models.Output;
+using ComicsStore.MiddleWare.Services.Interfaces;
 using SoftGoosR.Windows.Core;
+using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels;
 
@@ -24,7 +25,8 @@ public class CodeViewModel : BasicTableViewModel<ICodesService, CodeInputModel, 
         ISeriesService seriesService,
         IStoriesService storiesService,
         INavigationService navigationService,
-        IMapper mapper) : base(codesService, navigationService, mapper)
+        IMapper mapper,
+        IBasicListViewModel<CodeOutputModel> codes) : base(codesService, navigationService, mapper, codes)
     {
         DeleteSeriesFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteSeriesFromList));
         DeleteStoryFromListCommand = new RelayCommand<int?>(new Action<int?>(DeleteStoryFromList));
