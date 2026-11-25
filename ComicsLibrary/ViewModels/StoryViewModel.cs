@@ -15,23 +15,22 @@ using System.Windows.Input;
 namespace ComicsLibrary.ViewModels;
 
 public class StoryViewModel : BasicTableViewModel<IStoriesService, 
-    StoryInputModel, 
-    StoryInputPatchModel, 
-    StoryOutputModel, 
-    StorySearch, 
-    StoryEditModel>
+                                                  StoryInputModel, 
+                                                  StoryInputPatchModel, 
+                                                  StoryOutputModel, 
+                                                  StorySearch, 
+                                                  StoryEditModel>
 {
     public ICommand DeleteArtistFromListCommand { get; protected set; }
     public ICommand DeleteBookFromListCommand { get; protected set; }
     public ICommand DeleteCharacterFromListCommand { get; protected set; }
     public ICommand DeleteOriginFromListCommand { get; protected set; }
 
-    private ICollection<StoryOutputModel> _originStories;
     private readonly IArtistsService _artistsService;
     private readonly IBooksService _booksService;
     private readonly ICharactersService _charactersService;
     private readonly ICodesService _codesService;
-
+    private readonly StoryListViewModel _stories;
     private ICollection<StoryArtistEditModel> _pinnedArtists = [];
     private ICollection<int> _pinnedBooks = [];
     private ICollection<int> _pinnedCharacters = [];
@@ -41,11 +40,14 @@ public class StoryViewModel : BasicTableViewModel<IStoriesService,
 
     private void StoryViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == "Items" )
+        if (e.PropertyName == "Item" )
         {
-            GetOriginStories();
+            _stories.LoadOriginStories();
+            RaisePropertyChanged("OriginStories");
         }
     }
+
+    public IEnumerable<StoryOutputModel> OriginStories => _stories.OriginStories;
 
     public StoryViewModel(IStoriesService storiesService,
         IArtistsService artistsService,
@@ -66,40 +68,7 @@ public class StoryViewModel : BasicTableViewModel<IStoriesService,
         _booksService = booksService;
         _charactersService = charactersService;
         _codesService = codesService;
-    }
-
-    public IEnumerable<StoryOutputModel> OriginStories
-    {
-        get
-        {
-            if (_originStories is null)
-            {
-                GetOriginStories();
-            }
-
-            return _originStories;
-        }
-        private set
-        {
-            if (value is null)
-            {
-                GetOriginStories();
-            }
-            else
-            {
-                _originStories = [.. value];
-            }
-
-            StoryOnlyEditModel.ListUpdating = true;
-            RaisePropertyChanged();
-            StoryOnlyEditModel.ListUpdating = false;
-        }
-    }
-
-    private void GetOriginStories()
-    {
-        OriginStories = ListItems.Items.Where(item => item.OriginStoryId is null).OrderBy(item => item.Name);
-        //RaisePropertyChanged("OriginStories");
+        _stories = stories as StoryListViewModel;
     }
 
     public async void HandleArtist(int? artistId, int? oldArtistId)
@@ -148,6 +117,11 @@ public class StoryViewModel : BasicTableViewModel<IStoriesService,
 
     public async void HandleOriginStory(int? originStoryId, int? oldOriginStoryId)
     {
+        if (originStoryId != oldOriginStoryId)
+        {
+            _stories.LoadOriginStories();
+            RaisePropertyChanged("OriginStories");
+        }
         var story = originStoryId.HasValue ? Mapper.Map<StoryOnlyEditModel>(await _itemService.GetAsync(originStoryId.Value)) : null;
         IsDirty |= Item.HandleOriginStory(oldOriginStoryId, story);
     }

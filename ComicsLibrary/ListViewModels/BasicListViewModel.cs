@@ -1,30 +1,22 @@
 ﻿using ComicsLibrary.Core;
-using ComicsLibrary.EditModels;
-using ComicsLibrary.ViewModels;
-using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using SoftGoosR.Common.Core;
-using System.ComponentModel;
 using System.Globalization;
-using System.Windows.Data;
-using System.Windows.Documents;
 
 namespace ComicsLibrary.ListViewModels;
 
-public class BasicListViewModel<TService, TIn, TPatch, TOut, TSearch> : ObservableObject, IBasicListViewModel<TOut>, INotifyItemChanged
+public class BasicListViewModel<TService, TIn, TPatch, TOut, TSearch>(TService itemService) : ObservableObject, IBasicListViewModel<TOut>, INotifyItemChanged
     where TService : IComicsStoreService<TIn, TPatch, TOut, TSearch>
     where TIn : BasicInputModel
     where TPatch : BasicInputModel
     where TOut : BasicOutputModel, new()
     where TSearch : BasicSearch
 {
-    private readonly TService _itemService;
+    private readonly TService _itemService = itemService;
     protected ICollection<TOut> _items;
-    private string _queryText;
-    private CollectionViewSource _itemsQueryViewSource;
 
     public event ItemChangedEventHandler ItemChanged;
 
@@ -33,18 +25,9 @@ public class BasicListViewModel<TService, TIn, TPatch, TOut, TSearch> : Observab
         ItemChanged?.Invoke(this, new ItemChangedEventArgs(itemName, id, actionType));
     }
 
-    public BasicListViewModel(TService itemService)
-    {
-        _itemService = itemService;
-    }
     public void UpdateItems()
     {
         RaisePropertyChanged("Items");
-
-        //_itemsFilteredViewSource?.View.Refresh();
-        _itemsQueryViewSource?.View.Refresh();
-        RaisePropertyChanged("FilteredItems");
-        RaisePropertyChanged("QueryItems");
     }
 
     public void UpdateItemsList(TOut item, bool removeOnly = false)
@@ -71,31 +54,10 @@ public class BasicListViewModel<TService, TIn, TPatch, TOut, TSearch> : Observab
         UpdateItems();
     }
 
-    protected virtual void QueryResults(object sender, FilterEventArgs e)
-    {
-        if (_queryText is null || _queryText.Length == 0)
-        {
-            e.Accepted = true;
-            return;
-        }
-
-        if (e.Item is BasicOutputModel item)
-        {
-            e.Accepted = item.Name.Contains(_queryText, System.StringComparison.InvariantCultureIgnoreCase);
-        }
-    }
-
     private void GetItems()
     {
         var _itemsUnsorted = _itemService.GetAsync().Result;
         _items = [.. _itemsUnsorted.OrderBy(item => item.Name)];
-
-        _itemsQueryViewSource = new CollectionViewSource
-        {
-            Source = _items
-        };
-        _itemsQueryViewSource.Filter += QueryResults;
-        _itemsQueryViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
     }
 
     private static bool ComplexContains(string source, string value)
@@ -111,30 +73,6 @@ public class BasicListViewModel<TService, TIn, TPatch, TOut, TSearch> : Observab
     }
 
     public Func<object, string, bool> NameFilter => FilterByString;
-
-    public string QueryText
-    {
-        get => _queryText;
-        set
-        {
-            Set(ref _queryText, value);
-            _itemsQueryViewSource.View.Refresh();
-        }
-    }
-
-    public ICollectionView QueryItems
-    {
-        get
-        {
-            if (_itemsQueryViewSource is null)
-            {
-                GetItems();
-            }
-
-            return _itemsQueryViewSource.View;
-        }
-    }
-
     public IEnumerable<TOut> Items
     {
         get

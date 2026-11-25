@@ -1,21 +1,14 @@
-﻿using ComicsLibrary.EditModels;
-using ComicsStore.Data.Model.Search;
+﻿using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Models.Input;
 using ComicsStore.MiddleWare.Models.Output;
 using ComicsStore.MiddleWare.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ComicsLibrary.ListViewModels;
 
-public class SeriesListViewModel : BasicListViewModel<ISeriesService,
+public class SeriesListViewModel(ISeriesService itemService) : BasicListViewModel<ISeriesService,
                                                     SeriesInputModel,
                                                     SeriesInputModel,
                                                     SeriesOutputModel,
-                                                    SeriesSearch>
+                                                    SeriesSearch>(itemService)
 {
-    public SeriesListViewModel(ISeriesService itemService) : base(itemService)
-    {
-    }
 }

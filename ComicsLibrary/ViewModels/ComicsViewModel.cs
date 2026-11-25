@@ -1,18 +1,19 @@
 ﻿using AutoMapper;
 using ComicsLibrary.Core;
 using ComicsLibrary.EditModels;
+using ComicsLibrary.ListViewModels;
 using ComicsLibrary.Navigation;
 using ComicsLibrary.ViewModels.Interfaces;
 using ComicsStore.Data.Common;
 using ComicsStore.Data.Model.Search;
 using ComicsStore.MiddleWare.Common;
 using ComicsStore.MiddleWare.Models.Output;
+using ComicsStore.MiddleWare.Services;
 using ComicsStore.MiddleWare.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SoftGoosR.Common.Core;
 using SoftGoosR.Windows.Core;
-using System.Globalization;
 using System.Windows.Input;
 
 namespace ComicsLibrary.ViewModels;
@@ -23,6 +24,14 @@ public class ComicsViewModel : ObservableObject, IActivable
     private readonly INavigationService _navigationService;
     private readonly IConfiguration _configuration;
     private readonly IServiceProvider _serviceProvider;
+
+    public ArtistListViewModel ArtistListView { get; set;}
+    public BookListViewModel BookListView { get; set;}
+    public CharacterListViewModel CharacterListView { get; set;}
+    public CodeListViewModel CodeListView { get; set;}
+    public PublisherListViewModel PublisherListView { get; set;}
+    public SeriesListViewModel SeriesListView { get; set;}
+    public StoryListViewModel StoryListView { get; set; }
 
     public ArtistViewModel ArtistView { get; private set; }
     public ArtistViewModel PseudonymArtistView { get; private set; }
@@ -144,6 +153,7 @@ public class ComicsViewModel : ObservableObject, IActivable
         _configuration = configuration;
         _serviceProvider = serviceProvider;
 
+        /*
         ArtistView = _serviceProvider.GetRequiredService<ArtistViewModel>();
         BookView = _serviceProvider.GetRequiredService<BookViewModel>();
         CharacterView = _serviceProvider.GetRequiredService<CharacterViewModel>();
@@ -168,6 +178,40 @@ public class ComicsViewModel : ObservableObject, IActivable
 
         InformationView = _serviceProvider.GetRequiredService<InformationViewModel>();
         ReportView = _serviceProvider.GetRequiredService<ReportViewModel>();
+        */
+        ArtistListView = new ArtistListViewModel(artistsService);
+        BookListView = new BookListViewModel(booksService);
+        CharacterListView = new CharacterListViewModel(charactersService);
+        CodeListView = new CodeListViewModel(codesService);
+        PublisherListView = new PublisherListViewModel(publishersService);
+        SeriesListView = new SeriesListViewModel(seriesService);
+        StoryListView = new StoryListViewModel(storiesService);
+
+        ArtistView = new ArtistViewModel(artistsService, booksService, storiesService, navigationService, mapper, ArtistListView);
+        BookView = new BookViewModel(booksService, artistsService, publishersService, seriesService, storiesService, navigationService, mapper, BookListView);
+        CharacterView = new CharacterViewModel(charactersService, storiesService, navigationService, mapper, CharacterListView);
+        CodeView = new CodeViewModel(codesService, seriesService, storiesService, navigationService, mapper, CodeListView);
+        PublisherView = new PublisherViewModel(publishersService, booksService, navigationService, mapper, PublisherListView);
+        SeriesView = new SeriesViewModel(seriesService, booksService, codesService, navigationService, mapper, SeriesListView);
+        StoryView = new StoryViewModel(storiesService, artistsService, booksService, charactersService, codesService, navigationService, mapper, StoryListView);
+
+        PseudonymArtistView = new ArtistViewModel(artistsService, booksService, storiesService, navigationService, mapper, ArtistListView);
+        OriginStoryView = new StoryViewModel(storiesService, artistsService, booksService, charactersService, codesService, navigationService, mapper, StoryListView);
+
+        ArtistView.ItemChanged += ArtistView_ItemChanged;
+        BookView.ItemChanged += BookView_ItemChanged;
+        CharacterView.ItemChanged += CharacterView_ItemChanged;
+        CodeView.ItemChanged += CodeView_ItemChanged;
+        PublisherView.ItemChanged += PublisherView_ItemChanged;
+        SeriesView.ItemChanged += SeriesView_ItemChanged;
+        StoryView.ItemChanged += StoryView_ItemChanged;
+
+        PseudonymArtistView.ItemChanged += PseudonymArtistView_ItemChanged;
+        OriginStoryView.ItemChanged += OriginStoryView_ItemChanged;
+
+        InformationView = new InformationViewModel(informationViewService, mapper);
+        ReportView = new ReportViewModel(exportBooksService, mapper);
+
 
         Languages = LanguageType.FillLanguages();
         Actives = FillEnum<Active>();

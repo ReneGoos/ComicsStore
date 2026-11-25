@@ -13,7 +13,6 @@ using ComicsStore.MiddleWare.Services.Interfaces;
 using SoftGoosR.Windows.Core;
 using System.ComponentModel;
 using System.Data;
-using System.Globalization;
 using System.Text;
 using System.Windows;
 using System.Windows.Data;
@@ -39,6 +38,8 @@ public abstract class BasicTableViewModel<TService, TIn, TPatch, TOut, TSearch, 
     protected void UpdateItemsList(TOut item, bool removeOnly = false)
     {
         ListItems.UpdateItemsList(item, removeOnly);
+        _itemsFilteredViewSource?.View.Refresh();
+        RaisePropertyChanged("FilteredItems");
     }
 
     public BasicTableViewModel(TService service,

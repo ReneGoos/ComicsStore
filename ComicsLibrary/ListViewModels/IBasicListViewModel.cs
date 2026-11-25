@@ -1,5 +1,4 @@
 ﻿using ComicsStore.MiddleWare.Models.Output;
-using System.ComponentModel;
 
 namespace ComicsLibrary.ListViewModels;
 

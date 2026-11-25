@@ -1,7 +1,7 @@
 using AutoMapper;
+using ComicsStore.API.Common;
 using ComicsStore.Data.Common;
 using ComicsStore.MiddleWare;
-using ComicsStore.MiddleWare.Common;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.OpenApi;
 using Newtonsoft.Json.Converters;

@@ -98,7 +98,7 @@
                           SelectedValuePath = "Id" 
                           DisplayMemberPath = "Name" 
                           IsEditable="True" 
-                          ItemsSource="{Binding Path=DataContext.CodeView.Items, RelativeSource={RelativeSource AncestorType=Page}}"
+                          ItemsSource="{Binding Path=DataContext.CodeView.ListItems.Items, RelativeSource={RelativeSource AncestorType=Page}}"
                           IsSynchronizedWithCurrentItem ="False"
                          >
                     <ComboBox.ItemsPanel>
